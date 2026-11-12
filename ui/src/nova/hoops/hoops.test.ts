@@ -13,6 +13,8 @@ import type { PrefsStore } from "../core/prefs";
 import { HOOPS } from "../../lib/hoops";
 import { MACHINES } from "../../lib/machines";
 import { installHoops, presetHoops, USER_HOOPS_FILE } from "./hoops";
+import { CAP_FRAMES, CAP_HOOPS } from "./capHoops";
+import { openPrefs, PREFS_FILE } from "../core/prefs";
 import { openUserHoops } from "./userHoops";
 import type { StitchDocument } from "../../types";
 
@@ -27,6 +29,8 @@ const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b)
 const state = () => useStore.getState();
 
 (async () => {
+  // module 0's single settings, in the same config folder
+  await (await openPrefs(disk)).set("grid.step", 2);
   const hoops = await openUserHoops(disk);
   const off = installHoops(hoops);
   check(!!getCommand("a.hoop.select") && !!getCommand("a.hoop.custom"), "the commands a.hoop.select and a.hoop.custom are registered");
@@ -37,9 +41,17 @@ const state = () => useStore.getState();
   const id = await hoops.add({ name: "Mio 15×25", width: 150, height: 250, shape: "rect", kind: "flat" });
   check(typeof id === "string" && id.length > 0 && hoops.list().length === 1, `a.10 the hoop is in the list, with an id (${id})`);
   check(changes.length === 1 && same(changes[0], { hoops: hoops.list() }), "adding emits userHoops.changed with the list");
-  check(readdirSync(dir).join() === USER_HOOPS_FILE && USER_HOOPS_FILE === "user-hoops.json", `the list is saved in user-hoops.json, no temporary left (${readdirSync(dir).join()})`);
+  check(readdirSync(dir).sort().join() === [PREFS_FILE, USER_HOOPS_FILE].sort().join() && USER_HOOPS_FILE === "user-hoops.json", `a.16 the list is saved in its own user-hoops.json, no temporary left (${readdirSync(dir).join()})`);
   const file = JSON.parse(readFileSync(path.join(dir, USER_HOOPS_FILE), "utf8"));
   check(file.schemaVersion === 1 && file.hoops[0].name === "Mio 15×25" && file.hoops[0].id === id, "user-hoops.json has its schemaVersion and the hoop");
+
+  // a.16: the user's hoop is in user-hoops.json, with its schemaVersion; nova-prefs.json does not change
+  const prefsBefore = readFileSync(path.join(dir, PREFS_FILE), "utf8");
+  await hoops.add({ name: "Altro", width: 100, height: 100, shape: "oval", kind: "flat" });
+  check(readFileSync(path.join(dir, PREFS_FILE), "utf8") === prefsBefore, "a.16 nova-prefs.json is unchanged");
+  check(JSON.parse(readFileSync(path.join(dir, USER_HOOPS_FILE), "utf8")).hoops.length === 2, "a.16 the second hoop is in user-hoops.json");
+  await hoops.remove(hoops.list()[1].id, () => true);
+  changes.length = 1;
 
   const past = state().past.length;
   runCommand("a.hoop.select", { source: "user", id });
@@ -75,22 +87,32 @@ const state = () => useStore.getState();
   runCommand("a.hoop.select", { source: "user", id });
   check(state().doc === before, "selecting a deleted hoop changes nothing");
 
-  // ---- hoopKind: cap frames of the industrial machines (note «cap» in machines.ts) and user hoops of kind cap
+  // ---- hoopKind: an explicit list of cap frames (contract, module a), never guessed from the name
   const presets = presetHoops();
-  const capFrames = MACHINES.flatMap((m) => m.frames.filter((f) => /\bcap\b/i.test(f.note ?? "")).map((f) => `machine:${m.id}/${f.id}`));
-  check(capFrames.length >= 2, `machines.ts has cap frames (${capFrames.join(", ")})`);
+  const kindOf = (id: string) => {
+    runCommand("a.hoop.select", { source: "preset", id });
+    return state().doc.nova?.hoopKind;
+  };
   check(new Set(presets.map((p) => p.id)).size === presets.length, "every preset hoop has its own id");
   check(presets.length === HOOPS.length + MACHINES.reduce((n, m) => n + m.frames.length, 0), "the presets are Filum's hoops and every machine's frames");
-  for (const p of presets) {
-    runCommand("a.hoop.select", { source: "preset", id: p.id });
-    const d = state().doc;
-    const wantCap = capFrames.includes(p.id);
-    if (d.nova?.hoopKind !== (wantCap ? "cap" : "flat") || d.nova?.hoopRef !== null || d.hoop.width !== p.hoop.width || d.hoop.height !== p.hoop.height || d.hoop.name !== p.hoop.name)
-      check(false, `preset ${p.id}: hoopKind ${d.nova?.hoopKind}, hoopRef ${JSON.stringify(d.nova?.hoopRef)}, hoop ${JSON.stringify(d.hoop)}`);
-  }
-  check(true, `every preset writes doc.hoop, hoopRef null, and hoopKind cap only for the ${capFrames.length} cap frames`);
-  runCommand("a.hoop.select", { source: "preset", id: capFrames[0] });
-  check(state().doc.nova?.hoopKind === "cap", `a cap frame writes hoopKind cap (${capFrames[0]})`);
+  check(CAP_HOOPS.every((n) => HOOPS.some((h) => h.name === n)), `every hoop of lib/hoops.ts in the cap list exists (${CAP_HOOPS.join(", ")})`);
+  check(CAP_FRAMES.every((id) => MACHINES.some((m) => m.frames.some((f) => f.id === id))), `every frame of machines.ts in the cap list exists (${CAP_FRAMES.join(", ")})`);
+
+  // a.13: the generic «Cap 130 × 60 mm»
+  check(kindOf("hoops:Cap 130 × 60 mm") === "cap", "a.13 the generic «Cap 130 × 60 mm» writes hoopKind cap");
+  // a.14: Brother PR «Cap frame 13 × 6 cm», from lib/hoops.ts and from machines.ts
+  check(kindOf("hoops:Brother PR Cap frame 13 × 6 cm") === "cap", "a.14 Brother PR «Cap frame 13 × 6 cm» from lib/hoops.ts writes cap");
+  const prCaps = MACHINES.flatMap((m) => m.frames.filter((f) => f.id === "pr-cap").map((f) => `machine:${m.id}/${f.id}`));
+  check(prCaps.length > 0 && prCaps.every((id) => kindOf(id) === "cap"), `a.14 …and from machines.ts, on every machine that has it (${prCaps.join(", ")})`);
+  check(kindOf("hoops:Brother PR Wide cap frame 36 × 6 cm (10-needle)") === "cap", "the wide cap frame of lib/hoops.ts writes cap");
+  const wide = MACHINES.flatMap((m) => m.frames.filter((f) => f.id === "pr-widecap").map((f) => `machine:${m.id}/${f.id}`));
+  check(wide.length > 0 && wide.every((id) => kindOf(id) === "cap"), "pr-widecap of machines.ts writes cap");
+  // a.15: the generic «130 × 180 mm»
+  check(kindOf("hoops:130 × 180 mm") === "flat", "a.15 the generic «130 × 180 mm» writes hoopKind flat");
+  // every other preset is flat, and hoopRef is null for presets
+  const capIds = new Set(["hoops:Cap 130 × 60 mm", "hoops:Brother PR Cap frame 13 × 6 cm", "hoops:Brother PR Wide cap frame 36 × 6 cm (10-needle)", ...prCaps, ...wide]);
+  const wrong = presets.filter((p) => kindOf(p.id) !== (capIds.has(p.id) ? "cap" : "flat") || state().doc.nova?.hoopRef !== null || !same(state().doc.hoop, p.hoop));
+  check(wrong.length === 0, `every other preset writes flat, hoopRef null and its own doc.hoop (wrong: ${wrong.map((p) => p.id).join(", ") || "none"})`);
 
   const capId = await hoops.add({ name: "Cappello mio", width: 120, height: 50, shape: "rect", kind: "cap" });
   runCommand("a.hoop.select", { source: "user", id: capId });
