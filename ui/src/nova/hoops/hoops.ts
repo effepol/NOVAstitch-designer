@@ -1,8 +1,8 @@
 // Hoop commands (module a): a.hoop.select picks a preset or one of the user's
 // hoops, a.hoop.custom sets free sizes. Both write doc.hoop (what the engine
 // uses), nova.hoopRef (the link to the user's list, null otherwise) and
-// nova.hoopKind: "cap" for the cap frames of the industrial machines (frames
-// with note «cap» in machines.ts) and for user hoops of kind cap, else "flat".
+// nova.hoopKind: "cap" for the cap frames of the industrial machines (the ones
+// listed in capHoops.ts) and for user hoops of kind cap, else "flat".
 
 import type { Hoop, HoopShape, NovaDocument, StitchDocument } from "../../types";
 import { HOOPS } from "../../lib/hoops";
@@ -10,6 +10,7 @@ import { MACHINES } from "../../lib/machines";
 import { registerCommand } from "../core/commands";
 import { t } from "../core/i18n";
 import type { UserHoops } from "./userHoops";
+import { CAP_FRAMES, CAP_HOOPS } from "./capHoops";
 import "./texts";
 
 export { USER_HOOPS_FILE } from "./userHoops";
@@ -21,15 +22,14 @@ export interface PresetHoop {
   kind: "flat" | "cap";
 }
 
-const capNote = (note?: string) => /\bcap\b/i.test(note ?? "");
 const shaped = (name: string, width: number, height: number, shape?: HoopShape): Hoop => ({ name, width, height, ...(shape && shape !== "rect" ? { shape } : {}) });
 
 /** Every preset: Filum's hoop list, then every machine's frames (named as Filum names them). */
 export function presetHoops(): PresetHoop[] {
   return [
-    ...HOOPS.map((h) => ({ id: `hoops:${h.name}`, hoop: shaped(h.name, h.width, h.height, h.shape), kind: "flat" as const })),
+    ...HOOPS.map((h) => ({ id: `hoops:${h.name}`, hoop: shaped(h.name, h.width, h.height, h.shape), kind: CAP_HOOPS.includes(h.name) ? ("cap" as const) : ("flat" as const) })),
     ...MACHINES.flatMap((m) =>
-      m.frames.map((f) => ({ id: `machine:${m.id}/${f.id}`, hoop: shaped(`${m.brand} ${f.name}`.trim(), f.width, f.height, f.shape), kind: capNote(f.note) ? ("cap" as const) : ("flat" as const) })),
+      m.frames.map((f) => ({ id: `machine:${m.id}/${f.id}`, hoop: shaped(`${m.brand} ${f.name}`.trim(), f.width, f.height, f.shape), kind: CAP_FRAMES.includes(f.id) ? ("cap" as const) : ("flat" as const) })),
     ),
   ];
 }
