@@ -327,6 +327,17 @@ export function transformObject(o: DesignObject, m: Mat, rotationDeg = 0): Desig
         ...(stitch.gradient.points ? { points: stitch.gradient.points.map((q) => ({ ...q, p: applyMat(m, q.p), spread: Math.max(0.5, q.spread * scale) })) } : {}),
       },
     };
+  // NOVAstitch: the centre (relative to the shape's box) stays on the same point of the shape;
+  // a move or a scale leaves it as it is, a mirror or a turn moves it with the shape
+  if (stitch.type === "fill" && stitch.center && (m[1] || m[2] || m[0] < 0 || m[3] < 0)) {
+    const before = boundsOfPoints(o.paths.flatMap((p) => flatten(p, 8)));
+    const after = boundsOfPoints(transformPaths(o.paths, m).flatMap((p) => flatten(p, 8)));
+    if (before && after && after.w > 1e-9 && after.h > 1e-9) {
+      const [x, y] = applyMat(m, [before.x + before.w * stitch.center[0], before.y + before.h * stitch.center[1]]);
+      const rel = (v: number) => Math.round(v * 1e6) / 1e6;
+      stitch = { ...stitch, center: [rel((x - after.x) / after.w), rel((y - after.y) / after.h)] };
+    }
+  }
   if (stitch.type === "fill" && stitch.guide) stitch = { ...stitch, guide: transformPaths([stitch.guide], m)[0] };
   if (stitch.type === "fill" && stitch.flow) stitch = { ...stitch, flow: transformFlow(stitch.flow, m) };
   if (stitch.type === "running" && stitch.ripple?.target) stitch = { ...stitch, ripple: { ...stitch.ripple, target: applyMat(m, stitch.ripple.target) } };
