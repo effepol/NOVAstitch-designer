@@ -13,6 +13,7 @@ import { repairLayers } from "./lib/fillLayers";
 import { safeSetItem } from "./lib/storage";
 import { checkDoc } from "./lib/docCheck";
 import { INKSTITCH_DEFAULTS } from "./lib/machines";
+import { recordEdits } from "./nova/core/edited";
 import type {
   DensityField,
   DesignObject,
@@ -343,12 +344,13 @@ export const useStore = create<State>((set, get) => ({
     if (cp && s.doc === cp.doc && s.past[s.past.length - 1] === cp.doc) set({ past: s.past.slice(0, -1), future: cp.future, saved: cp.saved });
   },
   // clones follow their originals; a lettering moved apart letter by letter becomes plain shapes
-  liveUpdate: (fn) => set({ doc: settleTexts(syncClones(fn(get().doc), get().doc), get().doc), saved: false }),
-  liveTransform: (live, fn) => set(fn ? { live, doc: settleTexts(syncClones(fn(get().doc), get().doc), get().doc), saved: false } : { live }),
+  // NOVAstitch: recordEdits notes the parameters changed by hand (nova.edited)
+  liveUpdate: (fn) => set({ doc: recordEdits(get().doc, settleTexts(syncClones(fn(get().doc), get().doc), get().doc)), saved: false }),
+  liveTransform: (live, fn) => set(fn ? { live, doc: recordEdits(get().doc, settleTexts(syncClones(fn(get().doc), get().doc), get().doc)), saved: false } : { live }),
   commit: (fn) => {
     const s = get();
     pendingCheckpoint = null;
-    const doc = settleTexts(syncClones(fn(s.doc), s.doc), s.doc);
+    const doc = recordEdits(s.doc, settleTexts(syncClones(fn(s.doc), s.doc), s.doc));
     // ids of objects the change removed leave the selection
     let selection = s.selection;
     if (selection.length && doc.objects !== s.doc.objects) {
