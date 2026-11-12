@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Editor window: dialogs, user-chosen file access, links in the system browser and its own title bar (no native frame)",
+  "description": "Editor window: dialogs, user-chosen file access, NOVAstitch settings in the app config folder, links in the system browser and its own title bar (no native frame)",
   "windows": ["main"],
   "permissions": [
     "core:default",
@@ -18,6 +18,11 @@
     { "identifier": "fs:allow-read-file", "allow": [{ "path": "**" }] },
     { "identifier": "fs:allow-read-dir", "allow": [{ "path": "**" }] },
     { "identifier": "fs:allow-read-text-file", "allow": [{ "path": "**" }] },
-    { "identifier": "fs:allow-write-file", "allow": [{ "path": "**" }] }
+    { "identifier": "fs:allow-write-file", "allow": [{ "path": "**" }] },
+    { "identifier": "fs:allow-exists", "allow": [{ "path": "$APPCONFIG/**" }] },
+    { "identifier": "fs:allow-mkdir", "allow": [{ "path": "$APPCONFIG" }, { "path": "$APPCONFIG/**" }] },
+    { "identifier": "fs:allow-write-text-file", "allow": [{ "path": "$APPCONFIG/**" }] },
+    { "identifier": "fs:allow-rename", "allow": [{ "path": "$APPCONFIG/**" }] },
+    { "identifier": "fs:allow-remove", "allow": [{ "path": "$APPCONFIG/**" }] }
   ]
 }
