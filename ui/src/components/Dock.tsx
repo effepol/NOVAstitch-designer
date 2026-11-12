@@ -39,9 +39,9 @@ import {
 } from "../lib/geometry";
 import { useStore, type StitchPatch } from "../store";
 import type { DesignObject, DesignOptions } from "../types";
-import { HoopOptions } from "./Bars";
+import { HoopOptions, hoopValue, pickHoopOption } from "./Bars";
+import { chooseHoop } from "../nova/core/hoopChoice";
 import { HoopShapeRow, MaterialSection } from "./MaterialPanel";
-import { HOOPS, hoopIndex, hoopOf } from "../lib/hoops";
 import { Num, PatternInput, Row, Section, Slider, Toggle } from "./ui";
 import { beansToPasses, formatPattern, parsePattern, passesToBeans } from "../lib/patterns";
 import { defaultRippleGuide, guidePair, isRipple, useAsRippleGuide } from "../lib/rippleGuide";
@@ -733,11 +733,8 @@ export function ScenePanel() {
           <select
             className="select"
             style={{ width: "100%" }}
-            value={hoopIndex(doc.hoop)}
-            onChange={(e) => {
-              const h = HOOPS[+e.target.value];
-              if (h) commit((d) => ({ ...d, hoop: hoopOf(h) }));
-            }}
+            value={hoopValue(doc.hoop, doc.nova?.hoopRef)}
+            onChange={(e) => pickHoopOption(e.target.value)}
           >
             <option value={-1}>Custom</option>
             <HoopOptions />
@@ -746,11 +743,11 @@ export function ScenePanel() {
         <div className="grid2">
           <div className="row">
             <label>W</label>
-            <Num value={doc.hoop.width} unit="mm" step={5} min={20} onChange={(v) => commit((d) => ({ ...d, hoop: { ...d.hoop, width: v, name: "Custom" } }))} />
+            <Num value={doc.hoop.width} unit="mm" step={5} min={20} onChange={(v) => chooseHoop({ source: "custom", hoop: { ...doc.hoop, width: v, name: "Custom" } }, () => commit((d) => ({ ...d, hoop: { ...d.hoop, width: v, name: "Custom" } })))} />
           </div>
           <div className="row">
             <label>H</label>
-            <Num value={doc.hoop.height} unit="mm" step={5} min={20} onChange={(v) => commit((d) => ({ ...d, hoop: { ...d.hoop, height: v, name: "Custom" } }))} />
+            <Num value={doc.hoop.height} unit="mm" step={5} min={20} onChange={(v) => chooseHoop({ source: "custom", hoop: { ...doc.hoop, height: v, name: "Custom" } }, () => commit((d) => ({ ...d, hoop: { ...d.hoop, height: v, name: "Custom" } })))} />
           </div>
         </div>
         <HoopShapeRow />

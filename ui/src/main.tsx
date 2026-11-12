@@ -13,6 +13,7 @@ import { calibratedDefaults } from "./lib/calibration";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { isTauri } from "./lib/platform";
 import { installBridge } from "./nova/core/bridge";
+import { startModules } from "./nova/core/modules";
 
 // NOVAstitch: Filum's changes of document, selection, view and plan go on the event bus
 installBridge();
@@ -64,8 +65,10 @@ window.addEventListener("drop", (e) => {
   if (!document.querySelector(".backdrop")) void openDroppedFile(f);
 });
 
+// NOVAstitch: the modules start (nova/<module>/install.ts), then a file the app
+// was opened with is read (a .nsd needs module a's project format).
 // Desktop: a file Filum was opened with replaces the restored design.
-void openLaunchFiles();
+void startModules().then(() => openLaunchFiles());
 
 // dev builds, and production builds made with VITE_PERF=1 for profiling
 if (import.meta.env.DEV || import.meta.env.VITE_PERF) Object.assign(window, { __store: useStore, __engine: engine });

@@ -89,7 +89,7 @@ const design = (name: string): StitchDocument => ({ ...state().doc, name, object
   reads.length = 0;
   await openBytes("Vecchio.filum", "/disegni/Vecchio.filum", enc.encode(JSON.stringify(design("Vecchio"))));
   check(reads.length === 0 && state().doc.name === "Vecchio", "without a format, Filum opens a .filum itself");
-  loadDoc(design("x"), null);
+  loadDoc({ ...design("x"), nova: undefined }, null);
   const plain = loaded.at(-1) as { fromSchema: number; migrated: boolean; readOnly: boolean };
   check(plain.fromSchema === 0 && !plain.migrated && !plain.readOnly, "loadDoc without information: schema 0, not migrated, writable (as before)");
 

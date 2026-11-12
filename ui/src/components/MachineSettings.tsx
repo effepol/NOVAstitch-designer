@@ -8,6 +8,7 @@ import type { ReactNode } from "react";
 import { cutterOf } from "../lib/cuts";
 import { currentPreset, MACHINES, presetById } from "../lib/machines";
 import { useStore } from "../store";
+import { chooseHoop } from "../nova/core/hoopChoice";
 import { LockPicker } from "./LockPicker";
 import { FrameButtons, SettingsPresetOptions } from "./MachineOptions";
 import { Num, Row, Section as DockSection, Toggle } from "./ui";
@@ -96,7 +97,7 @@ export function MachineSettings() {
                   className="mc-frames"
                   frames={profile.frames}
                   isOn={(f) => hoop.width === f.width && hoop.height === f.height && (hoop.shape ?? "rect") === (f.shape ?? "rect")}
-                  onPick={(f) => commit((d) => ({ ...d, hoop: { name: `${profile.brand} ${f.name}`, width: f.width, height: f.height, ...(f.shape ? { shape: f.shape } : {}) } }))}
+                  onPick={(f) => chooseHoop({ source: "preset", id: `machine:${profile.id}/${f.id}` }, () => commit((d) => ({ ...d, hoop: { name: `${profile.brand} ${f.name}`, width: f.width, height: f.height, ...(f.shape ? { shape: f.shape } : {}) } })))}
                 />
               </div>
             )}
