@@ -333,6 +333,9 @@ export function transformObject(o: DesignObject, m: Mat, rotationDeg = 0): Desig
   if (stitch.type === "running" && stitch.ripple?.guide?.length) stitch = { ...stitch, ripple: { ...stitch.ripple, guide: transformPaths(stitch.ripple.guide, m) } };
   if (stitch.type === "running" && stitch.ripple?.anchor)
     stitch = { ...stitch, ripple: { ...stitch.ripple, anchor: [applyMat(m, stitch.ripple.anchor[0]), applyMat(m, stitch.ripple.anchor[1])] } };
+  // NOVAstitch: the direction guides (rungs) travel with the rails
+  if (stitch.type === "satin" && stitch.guides?.length)
+    stitch = { ...stitch, guides: stitch.guides.map(([a, b]) => [applyMat(m, a), applyMat(m, b)] as [Vec2, Vec2]) };
   if (stitch.type === "satin" && (o.paths.length === 1 || stitch.multi) && Math.abs(scale - 1) > 1e-6)
     stitch = { ...stitch, width: Math.max(0.3, +(stitch.width * scale).toFixed(2)) };
   const out: DesignObject = { ...o, paths: transformPaths(o.paths, m), stitch };
