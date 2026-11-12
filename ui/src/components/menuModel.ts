@@ -62,6 +62,27 @@ import { chooseThreadList } from "./ThreadListDialog";
 import { lastChart } from "./ThreadPicker";
 import { compoundSelection, joinSelection, releaseSelection } from "../lib/pathActions";
 import { averageSelectedNodes } from "../lib/nodeActions";
+import { menuItems } from "../nova/core/registry";
+import { t } from "../nova/core/i18n";
+
+/** Filum's menus with the registered items: each menu's own after a separator, new menus before Help. */
+function withRegisteredItems(menus: Record<string, MenuItem[]>): Record<string, MenuItem[]> {
+  const items = menuItems();
+  if (!items.length) return menus;
+  const out: Record<string, MenuItem[]> = {};
+  const added = (name: string): MenuItem[] =>
+    items
+      .filter((i) => i.menu === name)
+      .map((i) => ({ label: t(i.label), kbd: i.kbd, hint: i.hint ? t(i.hint) : undefined, run: i.run, checked: i.checked?.(), disabled: i.disabled?.() }));
+  const fresh = [...new Set(items.map((i) => i.menu))].filter((m) => !(m in menus));
+  for (const [name, list] of Object.entries(menus)) {
+    if (name === "Help") for (const m of fresh) out[m] = added(m);
+    const more = added(name);
+    out[name] = more.length ? [...list, "-", ...more] : list;
+  }
+  if (!("Help" in menus)) for (const m of fresh) out[m] = added(m);
+  return out;
+}
 
 export type MenuItem =
   | {
@@ -125,7 +146,8 @@ export function buildMenus(): Record<string, MenuItem[]> {
     s.toast(toast);
   };
 
-  return {
+  // NOVAstitch: the items modules registered (nova/core/registry) go in after Filum's own
+  return withRegisteredItems({
     File: [
       { label: "New design", icon: FilePlus, kbd: `${mod}N`, run: newDocument },
       { label: "Open…", icon: FolderOpen, kbd: `${mod}O`, run: openDocument },
@@ -477,7 +499,7 @@ export function buildMenus(): Record<string, MenuItem[]> {
       { label: "Licences…", run: () => s.setDialog("licenses") },
       { label: "About Filum", run: () => s.setDialog("about") },
     ],
-  };
+  });
 }
 
 /** Every runnable command with its menu path (for the command palette). */

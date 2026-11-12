@@ -1,5 +1,7 @@
 {
   "core.language.it": "Italian",
   "core.language.en": "English",
-  "core.language.title": "Language"
+  "core.language.title": "Language",
+  "core.menu.language.it": "Language: Italian",
+  "core.menu.language.en": "Language: English"
 }

@@ -6,8 +6,13 @@ import { useStore } from "../store";
 import { fmtTime } from "./ui";
 import { STITCH_COLORS, colorSequence, threadUsage } from "../lib/threads";
 import { threadTitle } from "./ThreadPicker";
+import { toolbarButtons, useRegistry } from "../nova/core/registry";
+import { t, useLanguage } from "../nova/core/i18n";
 
 export function BottomBar() {
+  // NOVAstitch: registered buttons and their texts follow registrations and the language
+  useRegistry();
+  useLanguage();
   const doc = useStore((s) => s.doc);
   const plan = useStore((s) => s.plan);
   // only whether the player is open: the bar doesn't redraw on every stitch while it plays
@@ -95,6 +100,12 @@ export function BottomBar() {
           onClick={() => fit(z)}
         >
           {z}×
+        </button>
+      ))}
+      {/* NOVAstitch: buttons registered by the modules (nova/core/registry) */}
+      {toolbarButtons().map((b) => (
+        <button key={b.id} className="btn sm ghost" title={b.title ? t(b.title) : undefined} onClick={b.run} style={b.active?.() ? { color: "var(--accent-text)", fontWeight: "var(--fw-semibold)" } : undefined}>
+          {t(b.label)}
         </button>
       ))}
       <div className="vsep" />

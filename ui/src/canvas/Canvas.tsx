@@ -100,6 +100,7 @@ import { pruneGroups } from "../lib/layerRows";
 import { freshCopies } from "../lib/copies";
 import { transformable } from "../lib/textSettle";
 import { loadFont } from "../lib/fonts";
+import { onCanvasRedraw } from "../nova/core/registry";
 
 /**
  * The points a node-tool box picks on the selected paths: those inside it,
@@ -655,8 +656,11 @@ export function Canvas() {
       draw();
     });
     window.addEventListener("filum:fit", fitHandler);
+    // NOVAstitch: registered canvas layers ask for a redraw (nova/core/registry)
+    const offNova = onCanvasRedraw(draw);
     return () => {
       unsub();
+      offNova();
       window.removeEventListener("filum:fit", fitHandler);
     };
     function fitHandler(e: Event) {
