@@ -4,6 +4,7 @@
 
 import { useStore } from "../../store";
 import type { StitchDocument } from "../../types";
+import { emit } from "./events";
 
 export interface Command<P = unknown> {
   /** "<module>.<name>", e.g. "b.reorder". */
@@ -39,11 +40,13 @@ export function runCommand<P>(id: string, params: P): void {
   if (!cmd) throw new Error(`Unknown command "${id}"`);
   const store = useStore.getState();
   const next = cmd.apply(store.doc, params);
-  if (next === store.doc) return;
-  running = cmd as unknown as Command<never>;
-  try {
-    store.commit(() => next);
-  } finally {
-    running = null;
+  if (next !== store.doc) {
+    running = cmd as unknown as Command<never>;
+    try {
+      store.commit(() => next);
+    } finally {
+      running = null;
+    }
   }
+  emit("command.executed", { id, params });
 }

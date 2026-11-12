@@ -27,6 +27,10 @@ if (!w.Worker)
     terminate() {}
   };
 
+// a window to send events on (fit, …); no Tauri in it
+const gw = globalThis as unknown as { window?: unknown };
+if (!gw.window) gw.window = new EventTarget();
+
 let failed = 0;
 export const check = (ok: boolean, msg: string) => {
   console.log(`${ok ? "ok  " : "FAIL"} ${msg}`);
