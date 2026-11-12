@@ -5,6 +5,7 @@
 import { useStore } from "../../store";
 import type { StitchDocument } from "../../types";
 import { emit } from "./events";
+import { withRunning } from "./running";
 
 export interface Command<P = unknown> {
   /** "<module>.<name>", e.g. "b.reorder". */
@@ -19,8 +20,7 @@ export interface Command<P = unknown> {
 const commands = new Map<string, Command<never>>();
 
 /** The command whose commit is running, if any (read by the manual-edit record and the bus). */
-let running: Command<never> | null = null;
-export const runningCommand = (): { id: string; system: boolean } | null => (running ? { id: running.id, system: !!running.system } : null);
+export { runningCommand } from "./running";
 
 /** Register a command; returns a function that removes it. */
 export function registerCommand<P>(cmd: Command<P>): () => void {
@@ -40,13 +40,6 @@ export function runCommand<P>(id: string, params: P): void {
   if (!cmd) throw new Error(`Unknown command "${id}"`);
   const store = useStore.getState();
   const next = cmd.apply(store.doc, params);
-  if (next !== store.doc) {
-    running = cmd as unknown as Command<never>;
-    try {
-      store.commit(() => next);
-    } finally {
-      running = null;
-    }
-  }
+  if (next !== store.doc) withRunning({ id: cmd.id, system: !!cmd.system }, () => store.commit(() => next));
   emit("command.executed", { id, params });
 }
