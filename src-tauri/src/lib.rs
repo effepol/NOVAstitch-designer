@@ -1,6 +1,6 @@
-//! Tauri shell. The editor UI and the WebAssembly engine are shared with the
-//! browser build; native code adds file dialogs and filesystem access, the
-//! files Filum is opened with, and one window at a time.
+//! Tauri shell (desktop only: Windows, macOS, Linux). It hosts the editor UI
+//! and the WebAssembly engine; native code adds file dialogs and filesystem
+//! access, the files the app is opened with, and one window at a time.
 
 use std::sync::Mutex;
 
@@ -30,7 +30,6 @@ fn launch_files() -> Vec<String> {
     files_in(std::env::args_os())
 }
 
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let app = tauri::Builder::default()
         // one Filum at a time: a file opened while it runs goes to the open
@@ -55,7 +54,7 @@ pub fn run() {
         .build(tauri::generate_context!())
         .expect("error while running Filum");
     app.run(|_app, _event| {
-        // macOS (and mobile) pass opened files as an event, not as arguments
+        // macOS passes opened files as an event, not as arguments
         #[cfg(any(target_os = "macos", target_os = "ios", target_os = "android"))]
         if let tauri::RunEvent::Opened { urls } = _event {
             use tauri::{Emitter, Manager};

@@ -6,7 +6,7 @@
 
 <p align="center">
   <b>A friendly machine-embroidery editor: draw, digitize, letter and stitch out.</b><br>
-  Free and open source · runs in the browser and on Windows, macOS and Linux
+  Free and open source · runs on Windows, macOS and Linux
 </p>
 
 <p align="center">
@@ -83,7 +83,6 @@ You need Rust (stable, with the `wasm32-unknown-unknown` target), `wasm-bindgen-
 ```bash
 npm install && npm --prefix ui install
 npm run wasm              # compile the stitch engine to WebAssembly
-npm run dev               # the editor in your browser → http://localhost:1420
 npm run desktop:dev       # the desktop app (Tauri 2)
 npm run desktop:build     # installers for your OS (.deb, .rpm and AppImage on Linux)
 ```

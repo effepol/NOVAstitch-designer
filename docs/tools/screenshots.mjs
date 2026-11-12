@@ -1,6 +1,6 @@
 // Takes the screenshots for the README and the wiki (docs/wiki/images/*.webp).
 //
-//   npm run dev                                   # the editor on http://localhost:1420
+//   npm --prefix ui run dev                       # the UI on http://localhost:1420
 //   mkdir -p /tmp/shots && cd /tmp/shots && npm i playwright@1 && npx playwright install chromium
 //   NODE_PATH=/tmp/shots/node_modules node docs/tools/screenshots.mjs          # every shot
 //   NODE_PATH=/tmp/shots/node_modules node docs/tools/screenshots.mjs digitize # just some

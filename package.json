@@ -1,18 +1,14 @@
 {
   "name": "filum",
   "private": true,
-  "description": "Filum workspace scripts (Rust engine + React UI + Tauri shells)",
+  "description": "NOVAstitch Designer workspace scripts (Rust engine + React UI + Tauri desktop shell)",
   "scripts": {
     "setup": "npm --prefix ui install && npm run wasm",
     "wasm": "node ui/scripts/build-wasm.mjs",
     "fonts": "node ui/scripts/bundle-fonts.mjs",
     "licenses": "node ui/scripts/gen-licenses.mjs",
-    "dev": "npm --prefix ui run dev",
-    "build:web": "npm run wasm && npm --prefix ui run build",
     "desktop:dev": "npm run wasm && tauri dev",
     "desktop:build": "npm run wasm && tauri build",
-    "android:dev": "tauri android dev",
-    "ios:dev": "tauri ios dev",
     "test": "cargo test --workspace --exclude filum-desktop && npm --prefix ui run typecheck && npm --prefix ui run test:match && node scripts/check-wording.mjs && node ui/scripts/check-design.mjs"
   },
   "devDependencies": {
