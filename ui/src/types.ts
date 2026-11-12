@@ -425,6 +425,8 @@ export interface DesignObject {
   hidden?: HiddenRule;
   /** Linked clone: follows another object through its own transform (see lib/clones). */
   clone?: import("./lib/clones").CloneLink;
+  /** NOVAstitch: per-object data (contract, section 2). */
+  nova?: NovaObject;
 }
 
 export interface Thread {
@@ -541,6 +543,67 @@ export interface StitchDocument {
   groupNames?: Record<string, string>;
   /** Nested groups: the group each group sits in (absent: the top level). */
   groupParents?: Record<string, string>;
+  /** NOVAstitch: everything of its own (contract, section 2). The engine never reads it. */
+  nova?: NovaDocument;
+}
+
+// ---------------------------------------------------------------------------
+// NOVAstitch block (contract, section 2). Filum's fields keep their meaning:
+// doc.hoop, doc.fabric and each object's stitch parameters stay the truth for
+// the engine; these are references, settings and metadata.
+
+/** The document's `nova` block. Absent in a Filum file (schema version 0). */
+export interface NovaDocument {
+  /** Version of the NOVAstitch schema: up by 1 only for an incompatible change. */
+  schemaVersion: number;
+  /** Who wrote the file, for diagnosis. */
+  app?: { name: string; version: string };
+  /** The hoop picked from the user's list (sizes stay in doc.hoop). */
+  hoopRef?: { id: string; name: string } | null;
+  /** Flat hoop (default) or a cap frame. */
+  hoopKind?: "flat" | "cap";
+  /** Fabric preset in force (module e); doc.fabric stays what the engine uses. */
+  fabricPreset?: { id: string; rev: number } | null;
+  /** Last editing choices, saved with the project. */
+  edit?: { mirrorPivot: "selection" | "hoop"; duplicateOffset: Vec2 };
+  /** Grids of copies (a record, not a link). */
+  patchGroups?: PatchGroup[];
+  /** The mode the project was saved in; changes no object. */
+  mode?: NovaMode;
+  /** A project born from, or in the middle of, a lesson. */
+  lesson?: LessonState | null;
+  /** Extended fields of third parties, keys with a prefix ("org.example.field"). */
+  ext?: Record<string, unknown>;
+}
+
+export type NovaMode = "assisted" | "studio";
+
+/** A grid of patch copies: every cell's objects are ordinary, independent objects. */
+export interface PatchGroup {
+  id: string;
+  sourceIds: string[];
+  rows: number;
+  cols: number;
+  /** Gap between the edges of neighbouring copies (mm). */
+  gap: Vec2;
+  order: "rows" | "serpentine";
+  colorGrouping: "byColor" | "byCopy";
+  cells: { row: number; col: number; objectIds: string[] }[];
+}
+
+export interface LessonState {
+  lessonId: string;
+  lessonRev: number;
+  lang: "it" | "en";
+  stepId: string;
+  status: "inProgress" | "done";
+  completedSteps: string[];
+}
+
+/** An object's `nova` block. */
+export interface NovaObject {
+  /** Parameters changed by hand in Studio (e.g. "stitch.underlay", "ties"): a new preset leaves them alone. */
+  edited?: string[];
 }
 
 /** A reference picture on the canvas, for tracing. */
