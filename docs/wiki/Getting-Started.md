@@ -4,21 +4,21 @@ This page gets Filum running and walks you through your first design.
 
 ## 1. Run Filum
 
-Filum is the same app everywhere: in a web browser, or as a desktop app for Windows, macOS and Linux.
+NOVAstitch Designer is a desktop app for Windows, macOS and Linux.
 
 **On Windows**, download the installer from the [latest release](https://github.com/benkl/filum/releases/latest) and run it. The installer isn't code-signed yet, so if Windows shows "Windows protected your PC", choose *More info → Run anyway*.
 
-**On macOS, Linux or in the browser**, build it once from the source code. It takes a few minutes.
+**On macOS or Linux**, build it once from the source code. It takes a few minutes. [Building from source](Building-from-Source.md) lists what to install first.
 
 ```bash
 npm install && npm --prefix ui install
 npm run wasm               # build the stitch engine
-npm run dev                # open http://localhost:1420 in your browser
+npm run desktop:build      # the app and its installers in target/release/bundle/
 ```
 
-Prefer a real desktop app? Run `npm run desktop:build`. On Linux this gives you a `.deb`, an `.rpm` and an AppImage in `target/release/bundle/`. On Windows and macOS you get the matching installers. [Building from source](Building-from-Source.md) lists what to install first.
+On Linux this gives you a `.deb`, an `.rpm` and an AppImage. On Windows and macOS you get the matching installers.
 
-> **Browser or desktop?** Both do the same things. The desktop app saves straight back to the file you opened and uses your system's file dialogs. You can also double-click a design, or use *Open with Filum*, to open it: a `.filum` project, a machine file such as PES or DST, or a picture to digitize. In the browser, saving goes through the browser's save picker (or a download), and your work is autosaved in the browser.
+> The app saves straight back to the file you opened and uses your system's file dialogs. You can also double-click a design, or use *Open with*, to open it: a `.filum` project, a machine file such as PES or DST, or a picture to digitize.
 
 ## 2. Meet the sample design
 

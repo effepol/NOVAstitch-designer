@@ -26,7 +26,7 @@ Filum only includes content it may share with everyone, including people who sel
 ## Saving
 
 **Where is my work saved?**
-In the desktop app, **Save** writes a `.filum` file wherever you choose, and saves back to it next time. In the browser, Filum also **autosaves** the current design in the browser's storage, so it's still there when you come back. Autosave can be turned off, and the autosaved design cleared, under **Preferences → Files & data**. Save a `.filum` file for anything you want to keep.
+In the desktop app, **Save** writes a `.filum` file wherever you choose, and saves back to it next time. Filum also **autosaves** the current design, so it's still there when you come back. Autosave can be turned off, and the autosaved design cleared, under **Preferences → Files & data**. Save a `.filum` file for anything you want to keep.
 
 **I exported a PES/DST. Why can't I edit my lettering in it any more?**
 Machine files hold only stitches. Keep the `.filum` project. It keeps every shape, setting and text editable.
@@ -61,11 +61,8 @@ Press <kbd>Ctrl</kbd>+<kbd>K</kbd> and type. Press <kbd>?</kbd> for every keyboa
 **Something looks wrong. How do I reset Filum?**
 **Preferences → Editing → Reset every tool's settings**, **Preferences → Digitizer → Reset digitizer settings** and **Preferences → Files & data → Reset preferences** each reset one area. **View → Panels → Reset panel layout** puts the panels back where they started.
 
-**Is the browser version different from the desktop app?**
-They do the same things. A few features depend on the browser: the **System fonts** tab needs a browser that can list local fonts, and **Video** needs one that can record (MediaRecorder). The desktop app uses your system's file dialogs, saves straight back to your file, and opens designs and pictures you double-click or open with Filum.
-
 **Is there a phone or tablet version?**
-Not yet. Tauri can build for Android and iOS, but the mobile apps are still experimental.
+No. NOVAstitch Designer is a desktop app for Windows, macOS and Linux.
 
 **I found a bug or have an idea.**
 Please open an issue on GitHub, with the design file if you can.

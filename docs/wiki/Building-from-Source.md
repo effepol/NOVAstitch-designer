@@ -23,7 +23,6 @@ Filum is a Rust stitch engine compiled to WebAssembly, a React + TypeScript edit
 ```bash
 npm install && npm --prefix ui install   # JavaScript dependencies
 npm run wasm                             # Rust engine → ui/src/wasm/pkg
-npm run dev                              # editor in the browser: http://localhost:1420
 npm run desktop:dev                      # desktop app with live reload
 npm run desktop:build                    # release build and installers
 ```
@@ -31,8 +30,6 @@ npm run desktop:build                    # release build and installers
 `npm run desktop:build` writes its output to `target/release/`:
 - the app itself, `filum-desktop`
 - the installers, under `bundle/`. On Linux these are `deb/`, `rpm/` and `appimage/`. To build the AppImage, Tauri downloads `linuxdeploy` the first time.
-
-`npm run build:web` builds the browser version into `ui/dist`, ready for any static web host.
 
 > **npm and install scripts:** recent npm versions block install scripts unless you allow them. Filum builds fine without them. npm will mention esbuild, protobufjs and tesseract.js, but their scripts are optional.
 
@@ -102,7 +99,7 @@ npx tauri icon assets/logo/filum-icon-1024.png -o src-tauri/icons
 The README and wiki screenshots come from `docs/tools/screenshots.mjs`. It drives the dev server with Playwright, so the pictures can be retaken whenever the UI changes:
 
 ```bash
-npm run dev    # in one terminal
+npm --prefix ui run dev    # the UI's dev server, in one terminal (screenshots only: no file access outside the desktop app)
 mkdir -p /tmp/shots && (cd /tmp/shots && npm i playwright@1 && npx playwright install chromium)
 NODE_PATH=/tmp/shots/node_modules node docs/tools/screenshots.mjs            # all of them
 NODE_PATH=/tmp/shots/node_modules node docs/tools/screenshots.mjs export     # just one
@@ -110,6 +107,6 @@ NODE_PATH=/tmp/shots/node_modules node docs/tools/screenshots.mjs export     # j
 
 It needs ImageMagick (`magick`) and `rsvg-convert`. The digitizer shots use the test picture `docs/tools/cactus.svg`.
 
-## Mobile
+## Desktop only
 
-`npm run android:dev` and `npm run ios:dev` are wired up through Tauri. The mobile projects aren't generated yet, so mobile is experimental.
+NOVAstitch Designer is built for Windows, macOS and Linux only: the browser version and the mobile targets of Filum were removed.

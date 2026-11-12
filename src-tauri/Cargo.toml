@@ -1,13 +1,13 @@
 [package]
 name = "filum-desktop"
-description = "Filum — embroidery editor (Tauri shell for Windows, macOS, Linux, iOS and Android)"
+description = "NOVAstitch Designer — embroidery editor (Tauri shell for Windows, macOS and Linux)"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 
 [lib]
 name = "filum_desktop_lib"
-crate-type = ["staticlib", "cdylib", "rlib"]
+crate-type = ["rlib"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
