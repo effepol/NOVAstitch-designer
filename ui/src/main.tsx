@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./styles.css";
+import { startLanguage } from "./nova/core/language";
 import { flushAutosave, loadAutosave, useStore } from "./store";
 import { sampleDocument } from "./sample";
 import { engine } from "./engine/client";
@@ -17,6 +18,9 @@ installBridge();
 
 // New objects start from the design fabric's calibrated numbers (Calibrate fabric…).
 setFabricDefaults(() => calibratedDefaults(useStore.getState().doc.fabric));
+
+// NOVAstitch: the interface language (the system's, or the one chosen and saved)
+void startLanguage();
 
 // Restore the last session (when autosave is on), or open the sample design
 // on first launch. A restored design with changes not in a file stays unsaved.
