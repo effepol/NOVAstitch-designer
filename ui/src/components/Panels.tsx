@@ -36,6 +36,8 @@ import { useStore } from "../store";
 import { FoldAllGroups, IssuesPanel, LayersPanel, PropertiesPanel, ScenePanel, useIssueCount } from "./Dock";
 import { ElementInfoSection } from "./ElementInfo";
 import { openSection, SectionScope } from "./ui";
+import { panels, useRegistry } from "../nova/core/registry";
+import { t, useLanguage } from "../nova/core/i18n";
 
 /* ---------------- layout ---------------- */
 
@@ -242,6 +244,10 @@ function OutlinePanel({ side, mainRef }: { side: "left" | "right"; mainRef: Main
   const issues = useIssueCount();
   const count = useStore((s) => s.doc.objects.length);
   const Close = side === "left" ? PanelLeftClose : PanelRightClose;
+  useRegistry();
+  useLanguage();
+  const extra = panels();
+  const own = extra.find((p) => p.id === tab);
   return (
     <section className={`side-panel outline ${side}`} aria-label="Layers and issues">
       <PanelTabs
@@ -250,6 +256,8 @@ function OutlinePanel({ side, mainRef }: { side: "left" | "right"; mainRef: Main
         tabs={[
           { id: "layers", label: <>Layers{count > 0 && <span className="ptab-n">{count}</span>}</> },
           { id: "issues", label: <>Issues{issues > 0 && <span className="count">{issues}</span>}</>, title: "Problems that would sew badly — markers show on the canvas while this tab is open" },
+          // NOVAstitch: panels registered by the modules (nova/core/registry)
+          ...extra.map((p) => ({ id: p.id, label: <>{t(p.title)}</> })),
         ]}
         actions={
           <>
@@ -260,7 +268,7 @@ function OutlinePanel({ side, mainRef }: { side: "left" | "right"; mainRef: Main
           </>
         }
       />
-      <div className="panel-body">{tab === "layers" ? <LayersPanel /> : <IssuesPanel />}</div>
+      <div className="panel-body">{tab === "layers" ? <LayersPanel /> : own ? own.render() : <IssuesPanel />}</div>
       {side === "left" && <WidthSash prop="outlineW" edge="right" mainRef={mainRef} />}
     </section>
   );

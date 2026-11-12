@@ -142,7 +142,8 @@ export interface State {
   toasts: Toast[];
   activeThread: string | null;
   /** The tab of the layers panel. */
-  outlineTab: "layers" | "issues";
+  /** "layers", "issues", or the id of a panel a NOVAstitch module registered. */
+  outlineTab: "layers" | "issues" | (string & {});
   /** Object groups folded in the Layers tab (UI state: remembered, not undone). */
   foldedGroups: string[];
   /** The properties panel: the selection, or the design (follows the selection). */

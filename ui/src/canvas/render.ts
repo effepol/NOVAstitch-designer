@@ -7,6 +7,7 @@ import { threadWidth } from "../lib/materials";
 import { paintInteractive, paintUnderlays, type InteractiveOverlay } from "./interactive";
 import { colourGroup, groupPicture } from "./vectorGradient";
 import type { DensityMode } from "../lib/density";
+import { canvasLayersVersion, drawCanvasLayers } from "../nova/core/registry";
 
 // Rendering model
 // ---------------
@@ -576,6 +577,15 @@ function resetState(ctx: CanvasRenderingContext2D) {
 const mmTransform = (ctx: CanvasRenderingContext2D, r: RenderInput) =>
   ctx.setTransform(r.dpr * r.view.scale, 0, 0, r.dpr * r.view.scale, r.dpr * r.view.ox, r.dpr * r.view.oy);
 
+/** NOVAstitch: the modules' canvas layers, in mm; none in previews (dialogs). */
+function paintNovaLayers(ctx: CanvasRenderingContext2D, r: RenderInput, z: "under" | "over") {
+  if (r.preview) return;
+  ctx.save();
+  mmTransform(ctx, r);
+  drawCanvasLayers(ctx, { scale: r.view.scale, ox: r.view.ox, oy: r.view.oy, width: r.width, height: r.height, dpr: r.dpr, mode: r.mode, dark: r.theme.dark }, z);
+  ctx.restore();
+}
+
 interface MmRect {
   x0: number;
   y0: number;
@@ -671,6 +681,8 @@ function paintBackground(ctx: CanvasRenderingContext2D, r: RenderInput, area: Mm
     }
   }
   if (opts.hoop !== false) paintHoop(ctx, r);
+  // NOVAstitch: registered layers under the design (nova/core/registry)
+  paintNovaLayers(ctx, r, "under");
   if (r.mode === "vector" || !r.plan) {
     const colors = new Map(doc.threads.map((t) => [t.id, t.color]));
     const color = (o: DesignObject) => colors.get(o.thread) ?? "#222";
@@ -816,6 +828,8 @@ export class Renderer {
       r.dpr,
       r.doc.references,
       referencesLoaded(),
+      // NOVAstitch: a registered layer under the design changed (nova/core/registry)
+      canvasLayersVersion(),
     ];
   }
 
@@ -1171,6 +1185,8 @@ export class Renderer {
 
     mmTransform(ctx, r);
     paintInteractive(ictx, { selected: sel, overlay: interactive });
+    // NOVAstitch: registered layers over the design, under the rulers (nova/core/registry)
+    paintNovaLayers(ctx, r, "over");
     if (!r.preview) drawRulers(ctx, r, doc.hoop.width / 2, doc.hoop.height / 2);
   }
 }

@@ -11,9 +11,11 @@ import { calibratedDefaults } from "./lib/calibration";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { isTauri } from "./lib/platform";
 import { startLanguage } from "./nova/core/language";
+import { registerCoreItems } from "./nova/core/menu";
 
 // NOVAstitch: the interface language (the system's, or the one chosen and saved)
 void startLanguage();
+registerCoreItems();
 
 // New objects start from the design fabric's calibrated numbers (Calibrate fabric…).
 setFabricDefaults(() => calibratedDefaults(useStore.getState().doc.fabric));
