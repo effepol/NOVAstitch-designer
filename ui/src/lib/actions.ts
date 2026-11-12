@@ -8,6 +8,7 @@ import { dec, enc, isTauri, openFile, saveFile } from "./platform";
 import { pendingThreadList, THREAD_LIST_EXT } from "./threadList";
 import { freshCopies } from "./copies";
 import { checkDoc } from "./docCheck";
+import { emit } from "../nova/core/events";
 
 // every embroidery format the engine reads (crates/formats), extension aliases included
 export const MACHINE_EXT = [
@@ -21,7 +22,8 @@ const IMAGE_EXT = ["png", "jpg", "jpeg", "webp", "bmp", "gif"];
 export const fit = (what: "hoop" | "design" | number = "hoop") =>
   window.dispatchEvent(new CustomEvent("filum:fit", { detail: what }));
 
-function loadDoc(doc: StitchDocument, path: string | null) {
+/** Exported for NOVAstitch (module 0): the one place a design replaces the open one. */
+export function loadDoc(doc: StitchDocument, path: string | null, warnings: string[] = []) {
   const s = useStore.getState();
   // a design from a file: the fields every part of the app reads are there
   const checked = checkDoc(doc, emptyDoc());
@@ -30,6 +32,14 @@ function loadDoc(doc: StitchDocument, path: string | null) {
   s.setDoc(checked.doc);
   s.set({ filePath: path, saved: true, past: [], future: [], selection: [], nodeSel: [], gradNodes: [], activeThread: null, anim: { ...s.anim, index: null, playing: false } });
   setTimeout(() => fit("hoop"), 0);
+  // NOVAstitch: schema 0 = a Filum file; migrations and read-only are module a's (they fill these in)
+  emit("doc.loaded", {
+    path,
+    fromSchema: checked.doc.nova?.schemaVersion ?? 0,
+    migrated: false,
+    readOnly: false,
+    warnings: [...warnings, ...(checked.dropped ? [`${checked.dropped} damaged object(s) left out`] : [])],
+  });
 }
 
 /** Whether the design may be replaced: saved, empty, or the user says so. */
@@ -87,7 +97,7 @@ async function handleBytes(name: string, path: string | null, bytes: Uint8Array,
     }
     if (mode === "launch" || (mode === "open" && (ext === "filum" || ext === "json" || !s.doc.objects.length))) {
       if (mode !== "launch" && !confirmDiscard()) return;
-      loadDoc(doc, ext === "filum" ? path : null);
+      loadDoc(doc, ext === "filum" ? path : null, warnings);
     } else {
       // merge into the current design, centred in the hoop
       const box = unionBoxes(doc.objects.map(objectBounds));
@@ -193,6 +203,7 @@ export async function saveDocument(saveAs = false): Promise<boolean> {
   // saved is what was written: edits made while the file was written stay unsaved
   s.set({ saved: useStore.getState().doc === doc, filePath: path.includes("/") || path.includes("\\") ? path : s.filePath });
   s.toast("Saved", "success");
+  emit("doc.saved", { path });
   return true;
 }
 

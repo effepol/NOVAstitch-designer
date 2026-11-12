@@ -10,6 +10,10 @@ import { setFabricDefaults } from "./lib/geometry";
 import { calibratedDefaults } from "./lib/calibration";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { isTauri } from "./lib/platform";
+import { installBridge } from "./nova/core/bridge";
+
+// NOVAstitch: Filum's changes of document, selection, view and plan go on the event bus
+installBridge();
 
 // New objects start from the design fabric's calibrated numbers (Calibrate fabric…).
 setFabricDefaults(() => calibratedDefaults(useStore.getState().doc.fabric));
