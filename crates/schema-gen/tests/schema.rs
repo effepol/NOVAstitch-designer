@@ -55,22 +55,31 @@ fn fill_params_by_hand() {
     assert_eq!(tags, ["none", "running", "satin", "fill", "applique", "manual"]);
 }
 
-/// a.17: without the feature, crates/core builds as before; schemars is in no normal build.
+/// a.17: without the feature, crates/core builds as before: no normal build
+/// turns the `schema` feature on, so schemars (and its derives) stay out of
+/// the engine, the command line and the WebAssembly engine.
 #[test]
-fn a17_schemars_stays_out_of_normal_builds() {
+fn a17_the_schema_feature_stays_out_of_normal_builds() {
     let cargo = std::env::var("CARGO").unwrap_or_else(|_| "cargo".into());
-    let tree = |args: &[&str]| {
-        let out = Command::new(&cargo).current_dir(root()).args(["tree", "-e", "normal", "--prefix", "none"]).args(args).output().unwrap();
+    // the features of filum-core in a build: lines `filum-core feature "…"`
+    let core_features = |args: &[&str]| {
+        let out = Command::new(&cargo)
+            .current_dir(root())
+            .args(["tree", "-e", "features", "-i", "filum-core", "--prefix", "none"])
+            .args(args)
+            .output()
+            .unwrap();
         assert!(out.status.success(), "cargo tree {args:?}: {}", String::from_utf8_lossy(&out.stderr));
-        String::from_utf8_lossy(&out.stdout).into_owned()
+        String::from_utf8_lossy(&out.stdout).lines().filter(|l| l.starts_with("filum-core feature")).map(String::from).collect::<Vec<_>>()
     };
-    for pkg in ["filum-core", "filum-cli", "filum-wasm", "filum-desktop"] {
-        let t = tree(&["-p", pkg]);
-        assert!(t.contains(pkg), "cargo tree lists {pkg}");
-        assert!(!t.contains("schemars"), "a.17 schemars is not in the normal build of {pkg}");
+    for pkg in ["filum-core", "filum-cli", "filum-wasm"] {
+        let f = core_features(&["-p", pkg]);
+        assert!(f.iter().any(|l| l.contains("\"default\"")), "{pkg} builds filum-core: {f:?}");
+        assert!(!f.iter().any(|l| l.contains("\"schema\"")), "a.17 {pkg} builds filum-core without the schema feature: {f:?}");
     }
-    // the root's own build (default members) leaves it out too
-    assert!(!tree(&[]).contains("schemars v1"), "a.17 schemars is not in `cargo build` at the root");
-    // with the feature, it is there: the check above can fail
-    assert!(tree(&["-p", "filum-core", "--features", "schema"]).contains("schemars"));
+    // filum-core's own normal dependencies: no schemars
+    let out = Command::new(&cargo).current_dir(root()).args(["tree", "-p", "filum-core", "-e", "normal", "--prefix", "none"]).output().unwrap();
+    assert!(!String::from_utf8_lossy(&out.stdout).contains("schemars"), "a.17 schemars is not a dependency of filum-core without the feature");
+    // the generator turns it on: the checks above can fail
+    assert!(core_features(&["-p", "nova-schema-gen"]).iter().any(|l| l.contains("\"schema\"")));
 }

@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:novastitch:schema:nsd",
+  "title": "NOVAstitch Designer project (.nsd)",
+  "description": "A NOVAstitch Designer project: the JSON of a Filum design (version 1) plus the nova block. The Filum part is generated from the Rust types (filum-core.schema.json); this file, written by hand, adds the fields only the interface knows (references, groupNames, groupParents, an object's group, text, routed) and nova. Unknown fields are allowed everywhere: readers keep them.",
+  "$comment": "Licence: CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/). Module a of NOVAstitch Designer; see schema/README.md.",
+  "type": "object",
+  "allOf": [{ "$ref": "urn:novastitch:schema:filum-core" }],
+  "properties": {
+    "nova": { "$ref": "#/$defs/NovaDocument" },
+    "references": { "type": "array", "items": { "$ref": "#/$defs/ReferenceImage" } },
+    "groupNames": { "description": "Names of object groups (an object's group → name).", "type": "object", "additionalProperties": { "type": "string" } },
+    "groupParents": { "description": "Nested groups: the group each group sits in.", "type": "object", "additionalProperties": { "type": "string" } },
+    "objects": { "type": "array", "items": { "$ref": "#/$defs/InterfaceObject" } }
+  },
+  "$defs": {
+    "Vec2": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+    "NovaDocument": {
+      "description": "Everything of NOVAstitch Designer's own. The engine never reads it: doc.hoop, doc.fabric and the stitch parameters stay the truth.",
+      "type": "object",
+      "required": ["schemaVersion"],
+      "properties": {
+        "schemaVersion": { "description": "Up by 1 only for an incompatible change. 0 = no nova block (a Filum file).", "type": "integer", "minimum": 0 },
+        "app": {
+          "description": "Who wrote the file, for diagnosis.",
+          "type": "object",
+          "required": ["name", "version"],
+          "properties": { "name": { "type": "string" }, "version": { "type": "string" } }
+        },
+        "hoopRef": {
+          "description": "The hoop picked from the user's list; its sizes are in doc.hoop.",
+          "oneOf": [
+            { "type": "null" },
+            { "type": "object", "required": ["id", "name"], "properties": { "id": { "type": "string", "minLength": 1 }, "name": { "type": "string" } } }
+          ]
+        },
+        "hoopKind": { "description": "Flat hoop (default) or a cap frame.", "enum": ["flat", "cap"] },
+        "fabricPreset": {
+          "description": "The fabric preset in force; doc.fabric stays what the engine uses.",
+          "oneOf": [
+            { "type": "null" },
+            { "type": "object", "required": ["id", "rev"], "properties": { "id": { "type": "string" }, "rev": { "type": "integer", "minimum": 0 } } }
+          ]
+        },
+        "edit": {
+          "description": "Last editing choices.",
+          "type": "object",
+          "properties": { "mirrorPivot": { "enum": ["selection", "hoop"] }, "duplicateOffset": { "$ref": "#/$defs/Vec2" } }
+        },
+        "patchGroups": { "type": "array", "items": { "$ref": "#/$defs/PatchGroup" } },
+        "mode": { "description": "The mode the project was saved in.", "enum": ["assisted", "studio"] },
+        "lesson": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/LessonState" }] },
+        "ext": { "description": "Extended fields of third parties, keys with a prefix (\"org.example.field\").", "type": "object" }
+      }
+    },
+    "PatchGroup": {
+      "description": "A grid of copies: a register, not a link. Every cell's objects are ordinary objects; ids no longer in the design are ignored.",
+      "type": "object",
+      "required": ["id", "sourceIds", "rows", "cols", "gap", "order", "colorGrouping", "cells"],
+      "properties": {
+        "id": { "type": "string" },
+        "sourceIds": { "type": "array", "items": { "type": "string" } },
+        "rows": { "type": "integer", "minimum": 1 },
+        "cols": { "type": "integer", "minimum": 1 },
+        "gap": { "description": "Between the edges of neighbouring copies, mm.", "$ref": "#/$defs/Vec2" },
+        "order": { "enum": ["rows", "serpentine"] },
+        "colorGrouping": { "enum": ["byColor", "byCopy"] },
+        "cells": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["row", "col", "objectIds"],
+            "properties": { "row": { "type": "integer", "minimum": 0 }, "col": { "type": "integer", "minimum": 0 }, "objectIds": { "type": "array", "items": { "type": "string" } } }
+          }
+        }
+      }
+    },
+    "LessonState": {
+      "type": "object",
+      "required": ["lessonId", "lessonRev", "lang", "stepId", "status", "completedSteps"],
+      "properties": {
+        "lessonId": { "type": "string" },
+        "lessonRev": { "type": "integer", "minimum": 0 },
+        "lang": { "enum": ["it", "en"] },
+        "stepId": { "type": "string" },
+        "status": { "enum": ["inProgress", "done"] },
+        "completedSteps": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "NovaObject": {
+      "description": "An object's nova block.",
+      "type": "object",
+      "properties": { "edited": { "description": "Parameters changed by hand in Studio (\"stitch.underlay\", \"ties\").", "type": "array", "items": { "type": "string" } } }
+    },
+    "InterfaceObject": {
+      "description": "The fields of an object only the interface knows (the rest: filum-core's Object).",
+      "type": "object",
+      "properties": {
+        "group": { "description": "Objects with the same group are selected and moved together.", "type": "string" },
+        "routed": { "description": "An auto-routed line that travels back over itself on purpose.", "type": "boolean" },
+        "text": { "$ref": "#/$defs/TextSpec" },
+        "nova": { "$ref": "#/$defs/NovaObject" }
+      }
+    },
+    "TextSpec": {
+      "description": "The parametric lettering an object belongs to (regenerated when edited).",
+      "type": "object",
+      "required": ["group", "content", "font", "size"],
+      "properties": {
+        "group": { "type": "string" },
+        "content": { "type": "string" },
+        "font": { "type": "string" },
+        "size": { "description": "Cap height, mm.", "type": "number" },
+        "letterSpacing": { "type": "number" },
+        "wordSpacing": { "type": "number" },
+        "lineSpacing": { "type": "number" },
+        "align": { "enum": ["left", "center", "right", "block", "blockLetters"] },
+        "arc": { "type": "number" },
+        "rotation": { "type": "number" },
+        "anchor": { "$ref": "#/$defs/Vec2" },
+        "style": { "enum": ["fill", "border", "fillBorder", "outline"] },
+        "borderWidth": { "type": "number" },
+        "fillAngle": { "type": "number" },
+        "thread": { "type": "string" },
+        "borderThread": { "type": "string" },
+        "palette": { "type": "array", "items": { "type": "string" } },
+        "role": { "enum": ["fill", "border", "outline", "glyph"] },
+        "colorIndex": { "type": "integer" },
+        "path": { "type": "array", "items": { "$ref": "#/$defs/Vec2" } },
+        "pathAlign": { "enum": ["start", "center", "end", "stretch"] },
+        "pathFlip": { "type": "boolean" },
+        "trims": { "enum": ["never", "letter", "word", "line"] },
+        "colorSort": { "enum": ["off", "all", "line", "word"] },
+        "crossScale": { "type": "boolean" }
+      }
+    },
+    "ReferenceImage": {
+      "description": "A picture to trace over: never stitched, never sent to the engine.",
+      "type": "object",
+      "required": ["id", "name", "src", "x", "y", "width", "height", "rotation", "opacity", "visible", "locked", "placement"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "src": { "description": "The picture as a data URL.", "type": "string" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "width": { "type": "number" },
+        "height": { "type": "number" },
+        "rotation": { "description": "Degrees, clockwise around the box centre.", "type": "number" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "visible": { "type": "boolean" },
+        "locked": { "type": "boolean" },
+        "placement": { "enum": ["behind", "over"] },
+        "grayscale": { "type": "boolean" },
+        "flip": { "type": "boolean" }
+      }
+    }
+  }
+}
