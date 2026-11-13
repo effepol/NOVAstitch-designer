@@ -9,6 +9,9 @@ import { pendingThreadList, THREAD_LIST_EXT } from "./threadList";
 import { freshCopies } from "./copies";
 import { checkDoc } from "./docCheck";
 import { emit } from "../nova/core/events";
+import { projectFormat, type ProjectRead } from "../nova/core/project";
+import { modulesReady } from "../nova/core/modules";
+import { withHoop } from "../nova/core/hoopChoice";
 
 // every embroidery format the engine reads (crates/formats), extension aliases included
 export const MACHINE_EXT = [
@@ -23,7 +26,7 @@ export const fit = (what: "hoop" | "design" | number = "hoop") =>
   window.dispatchEvent(new CustomEvent("filum:fit", { detail: what }));
 
 /** Exported for NOVAstitch (module 0): the one place a design replaces the open one. */
-export function loadDoc(doc: StitchDocument, path: string | null, warnings: string[] = []) {
+export function loadDoc(doc: StitchDocument, path: string | null, warnings: string[] = [], read?: Omit<ProjectRead, "doc" | "warnings">) {
   const s = useStore.getState();
   // a design from a file: the fields every part of the app reads are there
   const checked = checkDoc(doc, emptyDoc());
@@ -32,12 +35,12 @@ export function loadDoc(doc: StitchDocument, path: string | null, warnings: stri
   s.setDoc(checked.doc);
   s.set({ filePath: path, saved: true, past: [], future: [], selection: [], nodeSel: [], gradNodes: [], activeThread: null, anim: { ...s.anim, index: null, playing: false } });
   setTimeout(() => fit("hoop"), 0);
-  // NOVAstitch: schema 0 = a Filum file; migrations and read-only are module a's (they fill these in)
+  // NOVAstitch: what the project format read (module a); without it, schema 0 = a Filum file
   emit("doc.loaded", {
     path,
-    fromSchema: checked.doc.nova?.schemaVersion ?? 0,
-    migrated: false,
-    readOnly: false,
+    fromSchema: read?.fromSchema ?? checked.doc.nova?.schemaVersion ?? 0,
+    migrated: read?.migrated ?? false,
+    readOnly: read?.readOnly ?? false,
     warnings: [...warnings, ...(checked.dropped ? [`${checked.dropped} damaged object(s) left out`] : [])],
   });
 }
@@ -60,15 +63,17 @@ export function newDesign() {
   if (!preset) return doc;
   const m = machineById(preset.id);
   const f = m.frames.find((x) => x.id === localStorage.getItem("filum.frame"));
-  return {
-    ...doc,
-    machine: { ...preset.values, profile: preset.id },
-    ...(f ? { hoop: { name: `${m.brand} ${f.name}`.trim(), width: f.width, height: f.height, ...(f.shape ? { shape: f.shape } : {}) } } : {}),
-  };
+  const design = { ...doc, machine: { ...preset.values, profile: preset.id } };
+  // NOVAstitch: the machine's frame through withHoop (module a writes nova.hoopKind: a cap frame is "cap" from the first moment)
+  return f
+    ? withHoop(design, { source: "preset", id: `machine:${m.id}/${f.id}` }, (d) => ({ ...d, hoop: { name: `${m.brand} ${f.name}`.trim(), width: f.width, height: f.height, ...(f.shape ? { shape: f.shape } : {}) } }))
+    : design;
 }
 
 /** `launch`: a file Filum was opened with replaces the design (once it has loaded; the user was asked already). */
 async function handleBytes(name: string, path: string | null, bytes: Uint8Array, mode: "open" | "import" | "launch") {
+  // NOVAstitch: a file opened at launch may come before the modules have started (module a reads .nsd)
+  await modulesReady();
   const s = useStore.getState();
   const ext = name.split(".").pop()?.toLowerCase() ?? "";
   try {
@@ -85,7 +90,20 @@ async function handleBytes(name: string, path: string | null, bytes: Uint8Array,
     }
     let doc: StitchDocument;
     let warnings: string[] = [];
-    if (ext === "svg") {
+    // NOVAstitch: a project goes through the registered project format (module a)
+    const fmt = projectFormat();
+    let read: ProjectRead | null = null;
+    if (fmt?.extensions.includes(ext)) {
+      try {
+        read = fmt.read(name, bytes);
+      } catch (e) {
+        // its message names the file («File danneggiato: …»); the open design stays as it was
+        s.toast((e as Error).message, "error");
+        return;
+      }
+      doc = read.doc;
+      warnings = read.warnings;
+    } else if (ext === "svg") {
       const r = await engine.importSvg(dec.decode(bytes));
       doc = await withSvgTexts(r.document, r.texts ?? []);
       warnings = r.warnings;
@@ -95,9 +113,11 @@ async function handleBytes(name: string, path: string | null, bytes: Uint8Array,
     } else {
       doc = await engine.importEmbroidery(bytes, name);
     }
-    if (mode === "launch" || (mode === "open" && (ext === "filum" || ext === "json" || !s.doc.objects.length))) {
+    const project = read !== null || ext === "filum" || ext === "json";
+    if (mode === "launch" || (mode === "open" && (project || !s.doc.objects.length))) {
       if (mode !== "launch" && !confirmDiscard()) return;
-      loadDoc(doc, ext === "filum" ? path : null, warnings);
+      if (read) loadDoc(doc, path, warnings, read);
+      else loadDoc(doc, ext === "filum" ? path : null, warnings);
     } else {
       // merge into the current design, centred in the hoop
       const box = unionBoxes(doc.objects.map(objectBounds));
@@ -122,9 +142,16 @@ async function handleBytes(name: string, path: string | null, bytes: Uint8Array,
   }
 }
 
+/** NOVAstitch: open a file's bytes as File ▸ Open does (the project format's hook test uses it). */
+export const openBytes = (name: string, path: string | null, bytes: Uint8Array) => handleBytes(name, path, bytes, "open");
+
 export async function openDocument() {
+  // NOVAstitch: the project format's extensions (module a: .nsd) first
+  const fmt = projectFormat();
+  const projectExt = fmt ? fmt.extensions.filter((e) => e !== "json") : [];
   const f = await pickFile([
-    { name: "All supported", extensions: ["filum", "svg", ...MACHINE_EXT, ...IMAGE_EXT] },
+    { name: "All supported", extensions: [...new Set([...projectExt, "filum", "svg", ...MACHINE_EXT, ...IMAGE_EXT])] },
+    ...(fmt ? [{ name: fmt.filterName(), extensions: projectExt }] : []),
     { name: "Filum project", extensions: ["filum"] },
     { name: "Ink/Stitch SVG", extensions: ["svg"] },
     { name: "Embroidery files", extensions: MACHINE_EXT },
@@ -191,8 +218,23 @@ export async function openDroppedFile(file: File) {
 export async function saveDocument(saveAs = false): Promise<boolean> {
   const s = useStore.getState();
   const doc = s.doc;
-  const bytes = enc.encode(JSON.stringify(doc, null, 1));
   let path: string | null;
+  // NOVAstitch: the project format decides where and how (module a: .nsd, in two steps)
+  const fmt = projectFormat();
+  if (fmt) {
+    try {
+      path = await fmt.save(doc, { saveAs });
+    } catch (e) {
+      s.toast(`Could not save: ${(e as Error)?.message ?? e}`, "error");
+      return false;
+    }
+    if (!path) return false;
+    useStore.getState().set({ saved: useStore.getState().doc === doc, filePath: path });
+    s.toast("Saved", "success");
+    emit("doc.saved", { path });
+    return true;
+  }
+  const bytes = enc.encode(JSON.stringify(doc, null, 1));
   try {
     path = await saveFile(`${doc.name || "design"}.filum`, bytes, [{ name: "Filum project", extensions: ["filum"] }], saveAs ? null : s.filePath);
   } catch (e) {

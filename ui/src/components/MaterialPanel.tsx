@@ -8,6 +8,7 @@ import { defaultDesignOptions } from "../lib/geometry";
 import { FABRICS, fabricInfo, THREAD_WEIGHTS, threadWeightInfo } from "../lib/materials";
 import { PILE } from "../lib/underlay";
 import { useStore } from "../store";
+import { chooseHoop } from "../nova/core/hoopChoice";
 import type { HoopShape, ThreadWeight } from "../types";
 import { Row } from "./ui";
 
@@ -16,7 +17,8 @@ export function HoopShapeRow() {
   const hoop = useStore((s) => s.doc.hoop);
   const commit = useStore((s) => s.commit);
   const shape = hoop.shape ?? "rect";
-  const set = (v: HoopShape) => commit((d) => ({ ...d, hoop: { ...d.hoop, shape: v === "rect" ? undefined : v, name: "Custom" } }));
+  // NOVAstitch: through chooseHoop (module a: a.hoop.custom)
+  const set = (v: HoopShape) => chooseHoop({ source: "custom", hoop: { ...hoop, shape: v === "rect" ? undefined : v, name: "Custom" } }, () => commit((d) => ({ ...d, hoop: { ...d.hoop, shape: v === "rect" ? undefined : v, name: "Custom" } })));
   return (
     <Row label="Shape" title="Oval and round hoops: the stitchable area is the ellipse inside width × height">
       <div className="seg mt-shape">

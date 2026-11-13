@@ -4,6 +4,8 @@
 
 use std::sync::Mutex;
 
+mod nova_files;
+
 
 /// Files waiting to be opened by the editor: the ones Filum was started
 /// with ("Open with Filum" or a double-click on Windows and Linux), and on
@@ -12,8 +14,15 @@ struct OpenQueue(Mutex<Vec<String>>);
 
 /// Takes the files waiting to be opened (each one is returned once).
 #[tauri::command]
-fn startup_files(queue: tauri::State<OpenQueue>) -> Vec<String> {
-    std::mem::take(&mut *queue.0.lock().unwrap())
+fn startup_files(app: tauri::AppHandle, queue: tauri::State<OpenQueue>) -> Vec<String> {
+    let files = std::mem::take(&mut *queue.0.lock().unwrap());
+    // NOVAstitch: a project opened with the app is chosen by the user, as one
+    // picked in a dialog: it can be saved in place (nova_files)
+    use tauri_plugin_fs::FsExt;
+    for f in &files {
+        let _ = app.fs_scope().allow_file(f);
+    }
+    files
 }
 
 /// The files among command-line arguments (a file name that isn't valid
@@ -50,7 +59,14 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![startup_files])
+        .invoke_handler(tauri::generate_handler![
+            startup_files,
+            nova_files::nova_project_write,
+            nova_files::nova_project_read,
+            nova_files::nova_project_rename,
+            nova_files::nova_project_remove,
+            nova_files::nova_project_list
+        ])
         .build(tauri::generate_context!())
         .expect("error while running Filum");
     app.run(|_app, _event| {

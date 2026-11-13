@@ -12,6 +12,7 @@ import { defaultDesignOptions, objectBounds, objectBoundsCached, unionBoxes } fr
 import { cleanFileName, exportChecks, MACHINES, machineById, pickFrame, presetById, type CheckLevel, type OvalReach } from "../lib/machines";
 import { inHoop, ovalNorm } from "../lib/materials";
 import { useStore } from "../store";
+import { chooseHoop } from "../nova/core/hoopChoice";
 import { FLAG, type ExportOptions, type FormatInfo, type MachineColorInfo, type PlanData } from "../types";
 import { Dialog, fmtTime, Num } from "./ui";
 import { FrameButtons, MachineOptions } from "./MachineOptions";
@@ -263,8 +264,9 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
     if (m.formats.length && !m.formats.includes(fmt) && isMachine(fmt)) setFmt(m.formats[0]);
   };
   /** A frame of the machine as the design's hoop. */
-  const pickHoop = (f: { name: string; width: number; height: number; shape?: "rect" | "oval" }) =>
-    useStore.getState().commit((d) => ({ ...d, hoop: { name: `${machine.brand} ${f.name}`.trim(), width: f.width, height: f.height, ...(f.shape ? { shape: f.shape } : {}) } }));
+  // NOVAstitch: through chooseHoop (module a: a.hoop.select writes nova.hoopKind, cap frames included)
+  const pickHoop = (f: { id: string; name: string; width: number; height: number; shape?: "rect" | "oval" }) =>
+    chooseHoop({ source: "preset", id: `machine:${machine.id}/${f.id}` }, () => useStore.getState().commit((d) => ({ ...d, hoop: { name: `${machine.brand} ${f.name}`.trim(), width: f.width, height: f.height, ...(f.shape ? { shape: f.shape } : {}) } })));
   const doExport = () => {
     // the default format (Preferences ▸ Export) is a file format, not a picture
     if (!isPicture(fmt) && fmt !== "threadlist") safeSetItem("filum.format", fmt);

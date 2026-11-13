@@ -14,14 +14,46 @@ import { importFile, optimizeOrder } from "../lib/actions";
 import { normAngle } from "../lib/geometry";
 import { FABRICS } from "../lib/materials";
 import { HOOP_GROUPS, HOOPS, hoopIndex, hoopOf } from "../lib/hoops";
+import { chooseHoop, hoopGroups, useHoopGroups } from "../nova/core/hoopChoice";
+import { t } from "../nova/core/i18n";
+import type { Hoop as DocHoop } from "../types";
 import { useStore } from "../store";
 import type { Fabric, StitchType, Tool } from "../types";
 import { Num } from "./ui";
 
-/** Hoop presets grouped by brand (option values are indices into HOOPS). */
+/** NOVAstitch: the value a hoop picker shows: a module's hoop ("user:<id>", nova.hoopRef), a preset index, or -1 (custom). */
+export function hoopValue(hoop: DocHoop, ref: { id: string } | null | undefined): string {
+  if (ref && hoopGroups().some((g) => g.list().some((h) => h.id === ref.id))) return `user:${ref.id}`;
+  return String(hoopIndex(hoop));
+}
+
+/** NOVAstitch: a hoop picked in a picker, through chooseHoop (module a writes nova.hoopRef and nova.hoopKind). */
+export function pickHoopOption(value: string) {
+  const commit = useStore.getState().commit;
+  if (value.startsWith("user:")) {
+    const id = value.slice(5);
+    const h = hoopGroups().flatMap((g) => g.list()).find((x) => x.id === id);
+    if (h) chooseHoop({ source: "user", id }, () => commit((d) => ({ ...d, hoop: { name: h.name, width: h.width, height: h.height, ...(h.shape && h.shape !== "rect" ? { shape: h.shape } : {}) } })));
+    return;
+  }
+  const h = HOOPS[+value];
+  if (h) chooseHoop({ source: "preset", id: `hoops:${h.name}` }, () => commit((d) => ({ ...d, hoop: hoopOf(h) })));
+}
+
+/** Hoop presets grouped by brand (option values are indices into HOOPS), then the modules' groups (values "user:<id>"). */
 export function HoopOptions() {
+  useHoopGroups();
   return (
     <>
+      {hoopGroups().map((g) => (
+        <optgroup key={g.id} label={t(g.label)}>
+          {g.list().map((h) => (
+            <option key={h.id} value={`user:${h.id}`} title={`${h.width} × ${h.height} mm (width × height)`}>
+              {h.name}
+            </option>
+          ))}
+        </optgroup>
+      ))}
       {HOOP_GROUPS.map((g) => (
         <optgroup key={g} label={g}>
           {HOOPS.map((h, i) =>
@@ -42,9 +74,8 @@ export { FABRICS } from "../lib/materials";
 export function TitleBar() {
   const doc = useStore((s) => s.doc);
   const saved = useStore((s) => s.saved);
-  const commit = useStore((s) => s.commit);
   const setDialog = useStore((s) => s.setDialog);
-  const hoopIdx = hoopIndex(doc.hoop);
+  const hoopVal = hoopValue(doc.hoop, doc.nova?.hoopRef);
   return (
     <div className="titlebar">
       <input className="docname" value={doc.name} onChange={(e) => useStore.getState().liveUpdate((d) => ({ ...d, name: e.target.value }))} spellCheck={false} aria-label="Design name" />
@@ -74,13 +105,10 @@ export function TitleBar() {
           className="select"
           aria-label="Hoop"
           title={`Hoop: ${doc.hoop.name} — ${doc.hoop.width} × ${doc.hoop.height} mm`}
-          value={hoopIdx >= 0 ? hoopIdx : "custom"}
-          onChange={(e) => {
-            const h = HOOPS[+e.target.value];
-            if (h) commit((d) => ({ ...d, hoop: hoopOf(h) }));
-          }}
+          value={hoopVal !== "-1" ? hoopVal : "custom"}
+          onChange={(e) => pickHoopOption(e.target.value)}
         >
-          {hoopIdx < 0 && <option value="custom">{`${doc.hoop.width} × ${doc.hoop.height} mm`}</option>}
+          {hoopVal === "-1" && <option value="custom">{`${doc.hoop.width} × ${doc.hoop.height} mm`}</option>}
           <HoopOptions />
         </select>
       </label>

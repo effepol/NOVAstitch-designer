@@ -45,6 +45,23 @@
     "fileAssociations": [
       {
         "ext": [
+          "nsd"
+        ],
+        "name": "NOVAstitch Designer project",
+        "description": "NOVAstitch Designer embroidery project",
+        "role": "Editor",
+        "rank": "Owner",
+        "mimeType": "application/x-novastitch-project",
+        "exportedType": {
+          "identifier": "app.filum.editor.nsd",
+          "conformsTo": [
+            "public.json",
+            "public.data"
+          ]
+        }
+      },
+      {
+        "ext": [
           "filum"
         ],
         "name": "Filum project",
