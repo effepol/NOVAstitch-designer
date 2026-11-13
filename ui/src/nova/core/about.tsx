@@ -49,7 +49,7 @@ export function AboutDialog({ onClose }: { onClose: () => void }) {
   );
   const title = view === "license" ? t("core.about.license") : view === "credits" ? t("core.about.credits") : t("core.about.title");
   return (
-    <Dialog wide={back} title={title} onClose={onClose} footer={footer}>
+    <Dialog wide={back} title={title} onClose={onClose} footer={footer} nova="core">
       {view === "about" && (
         <div className="lic-app" data-nova-anchor="core.about">
           <img src="/icon.png" alt="" width={96} height={96} style={{ display: "block", margin: "0 auto" }} />

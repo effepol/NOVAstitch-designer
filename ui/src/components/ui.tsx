@@ -225,6 +225,7 @@ export function Dialog({
   wide,
   xwide,
   live,
+  nova,
 }: {
   title: string;
   children: ReactNode;
@@ -234,6 +235,8 @@ export function Dialog({
   xwide?: boolean;
   /** Edits preview on the canvas: no blur behind the dialog. */
   live?: boolean;
+  /** NOVAstitch (rule i.3): the module whose window this is; data-nova on the whole window, title included. */
+  nova?: string;
 }) {
   const mv = useMovable(`dialog:${title.split(" — ")[0]}`);
   useEffect(() => {
@@ -263,6 +266,7 @@ export function Dialog({
         className={`dialog ${wide ? "wide" : ""} ${xwide ? "xwide" : ""}`}
         role="dialog"
         aria-label={title}
+        data-nova={nova}
         data-movable
         style={mv.moved ? { transform: `translate(${mv.off[0]}px, ${mv.off[1]}px)` } : undefined}
       >
