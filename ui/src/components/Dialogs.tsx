@@ -10,6 +10,9 @@ import { ConvertDialog } from "./ConvertTools";
 import { useState } from "react";
 import { CommandPalette } from "./CommandPalette";
 import { useStore } from "../store";
+// NOVAstitch: the About window is module 0's (nova/core/about), with LICENSE and NOTICE
+import { AboutDialog } from "../nova/core/about";
+export { AboutDialog };
 import { Dialog } from "./ui";
 import { DigitizeDialog } from "./DigitizeDialog";
 import { ThreadListDialog } from "./ThreadListDialog";
@@ -175,21 +178,6 @@ export function ShortcutsDialog({ onClose }: { onClose: () => void }) {
         ))}
         {!groups.length && <p className="hint">No shortcut matches “{q}”.</p>}
       </div>
-    </Dialog>
-  );
-}
-
-export function AboutDialog({ onClose }: { onClose: () => void }) {
-  return (
-    <Dialog title="Filum" onClose={onClose}>
-      <p>A modern, Rust-powered machine-embroidery editor. The stitch engine is a Rust port of algorithms from Ink/Stitch, extended with new fills (radial, Hilbert, stipple), raster auto-digitizing, fabric-aware compensation and a stacking-aware stitch-order optimiser.</p>
-      <p className="hint">
-        GPL-3.0-or-later. Ink/Stitch © its authors (GPL-3.0). File encoders ported from Ink/Stitch's pystitch (MIT). Includes the Ink/Stitch embroidery-font
-        collection and the Nunito, Bebas Neue and Pacifico fonts (each under its own licence, mostly SIL OFL 1.1).
-      </p>
-      <button className="btn sm" onClick={() => useStore.getState().setDialog("licenses")}>
-        Open-source licences…
-      </button>
     </Dialog>
   );
 }
