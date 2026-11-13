@@ -22,5 +22,17 @@
   "f.patch.time": "about {min} min",
   "f.patch.center": "Centre in the hoop",
   "f.patch.outside": "The patch goes {x} mm beyond the hoop across and {y} mm down. Centre it?",
-  "f.patch.dismiss": "Leave it"
+  "f.patch.dismiss": "Leave it",
+  "f.library.title": "Base shapes",
+  "f.library.menu": "Insert shape from the library",
+  "f.library.shape": "Shape",
+  "f.library.width": "Width",
+  "f.library.height": "Height",
+  "f.library.cornerRadius": "Corner radius",
+  "f.library.border": "Satin border",
+  "f.library.borderHint": "With border 0 the shape is inserted without a border.",
+  "f.library.insert": "Insert in the hoop",
+  "f.library.licence": "Licence {licence} · {author}",
+  "f.library.borderName": "{name} · border",
+  "f.patch.gridTitle": "Grid of patches"
 }
