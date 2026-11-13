@@ -1,0 +1,4 @@
+{
+  "a.error.damaged": "Damaged file: {name}",
+  "a.warning.newer": "{name} was created by a newer version of NOVAstitch Designer: it is open read-only. Save asks for a new name."
+}
