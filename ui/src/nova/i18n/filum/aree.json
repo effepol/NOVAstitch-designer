@@ -121,6 +121,13 @@
         "lib/threads.ts",
         "lib/fonts.ts"
       ]
+    },
+    "esempio": {
+      "descrizione": "Disegno d'esempio del primo avvio (nomi del disegno, degli oggetti, dei fili)",
+      "fatta": true,
+      "file": [
+        "sample.ts"
+      ]
     }
   }
 }

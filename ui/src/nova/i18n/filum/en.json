@@ -1,1 +1,21 @@
-{}
+{
+  "filum.app.name": "Filum",
+  "filum.esempio.filo.char": "Charcoal",
+  "filum.esempio.filo.forest": "Forest",
+  "filum.esempio.filo.lake": "Lake",
+  "filum.esempio.filo.navy": "Navy",
+  "filum.esempio.filo.sky": "Sky",
+  "filum.esempio.filo.slate": "Slate Blue",
+  "filum.esempio.filo.snow": "Snow",
+  "filum.esempio.filo.sun": "Gold",
+  "filum.esempio.nome": "Mountain badge",
+  "filum.esempio.oggetto.bordo": "Badge ring",
+  "filum.esempio.oggetto.cielo": "Sky",
+  "filum.esempio.oggetto.cime": "Snow caps",
+  "filum.esempio.oggetto.cresta": "Far ridge",
+  "filum.esempio.oggetto.lago": "Lake",
+  "filum.esempio.oggetto.montagne": "Mountains",
+  "filum.esempio.oggetto.nuvola": "Cloud",
+  "filum.esempio.oggetto.sole": "Sun",
+  "filum.esempio.oggetto.uccelli": "Birds"
+}
