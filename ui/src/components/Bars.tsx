@@ -46,7 +46,7 @@ export function HoopOptions() {
   return (
     <>
       {hoopGroups().map((g) => (
-        <optgroup key={g.id} label={t(g.label)}>
+        <optgroup key={g.id} label={t(g.label)} data-nova={g.module}>
           {g.list().map((h) => (
             <option key={h.id} value={`user:${h.id}`} title={`${h.width} × ${h.height} mm (width × height)`}>
               {h.name}

@@ -224,11 +224,11 @@ function PanelEdge({ side, label, onOpen, offset }: { side: "left" | "right"; la
 
 /* ---------------- panels ---------------- */
 
-function PanelTabs<T extends string>({ tabs, value, onChange, actions }: { tabs: { id: T; label: ReactNode; title?: string }[]; value: T; onChange: (v: T) => void; actions?: ReactNode }) {
+function PanelTabs<T extends string>({ tabs, value, onChange, actions }: { tabs: { id: T; label: ReactNode; title?: string; nova?: string }[]; value: T; onChange: (v: T) => void; actions?: ReactNode }) {
   return (
     <div className="ptabs" role="tablist">
       {tabs.map((t) => (
-        <button key={t.id} role="tab" aria-selected={value === t.id} className={`ptab${value === t.id ? " on" : ""}`} title={t.title} onClick={() => onChange(t.id)}>
+        <button key={t.id} role="tab" data-nova={t.nova} aria-selected={value === t.id} className={`ptab${value === t.id ? " on" : ""}`} title={t.title} onClick={() => onChange(t.id)}>
           {t.label}
         </button>
       ))}
@@ -257,7 +257,7 @@ function OutlinePanel({ side, mainRef }: { side: "left" | "right"; mainRef: Main
           { id: "layers", label: <>Layers{count > 0 && <span className="ptab-n">{count}</span>}</> },
           { id: "issues", label: <>Issues{issues > 0 && <span className="count">{issues}</span>}</>, title: "Problems that would sew badly — markers show on the canvas while this tab is open" },
           // NOVAstitch: panels registered by the modules (nova/core/registry)
-          ...extra.map((p) => ({ id: p.id, label: <>{t(p.title)}</> })),
+          ...extra.map((p) => ({ id: p.id, label: <>{t(p.title)}</>, nova: p.module })),
         ]}
         actions={
           <>
@@ -268,7 +268,7 @@ function OutlinePanel({ side, mainRef }: { side: "left" | "right"; mainRef: Main
           </>
         }
       />
-      <div className="panel-body">{tab === "layers" ? <LayersPanel /> : own ? own.render() : <IssuesPanel />}</div>
+      <div className="panel-body" data-nova={own?.module}>{tab === "layers" ? <LayersPanel /> : own ? own.render() : <IssuesPanel />}</div>
       {side === "left" && <WidthSash prop="outlineW" edge="right" mainRef={mainRef} />}
     </section>
   );
