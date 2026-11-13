@@ -6,8 +6,9 @@
 import { Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { commandScore as score } from "../lib/commandSearch";
-import { buildMenus, flattenMenus, type MenuEntry } from "./menuModel";
+import { buildMenus, flattenMenus, menuName, type MenuEntry } from "./menuModel";
 import { safeSetItem } from "../lib/storage";
+import { inEnglish, t } from "../nova/i18n/filum";
 
 const RECENT_KEY = "filum.palette.recent";
 const recent = (): string[] => {
@@ -17,7 +18,13 @@ const recent = (): string[] => {
     return [];
   }
 };
-const keyOf = (path: string[], label: string) => [...path, label].join(" ▸ ");
+// recent commands are remembered by their English path, as in Filum, whatever the language
+const keyOf = (path: string[], label: string) => [...path, label].map((x) => inEnglish(x)[0]).join(" ▸ ");
+/** The menu path on screen: the first step is a menu name. */
+const shownPath = (path: string[]) => path.map((p, i) => (i ? p : menuName(p)));
+/** Typed words find a command by its name in the interface language or in English. */
+const scoreBoth = (q: string, label: string, path: string[]) =>
+  Math.max(score(q, label, shownPath(path).join(" ")), ...inEnglish(label).map((l) => score(q, l, path.map((p) => inEnglish(p)[0]).join(" "))));
 
 /** The label with the matched words marked. */
 function Marked({ text, query }: { text: string; query: string }) {
@@ -51,7 +58,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
   const results = useMemo(() => {
     const rec = recent();
     return all
-      .map((c) => ({ ...c, key: keyOf(c.path, c.item.label), score: score(q, c.item.label, c.path.join(" ")) }))
+      .map((c) => ({ ...c, key: keyOf(c.path, c.item.label), score: scoreBoth(q, c.item.label, c.path) }))
       .filter((c) => c.score > 0)
       .map((c) => ({ ...c, score: c.score + (rec.includes(c.key) ? (q ? 0.5 : 10 - rec.indexOf(c.key) * 0.5) : 0) + (c.item.disabled ? -2 : 0) }))
       .sort((a, b) => b.score - a.score)
@@ -72,14 +79,14 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="palette-back" onPointerDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="palette" role="dialog" aria-label="Command palette">
+      <div className="palette" role="dialog" aria-label={t("filum.menu.command_palette_2")}>
         <div className="palette-input">
           <Search size={16} />
           <input
             ref={input}
             value={q}
-            placeholder="Find a command…"
-            aria-label="Find a command"
+            placeholder={t("filum.menu.find_a_command")}
+            aria-label={t("filum.menu.find_a_command_2")}
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Escape") return onClose();
@@ -111,18 +118,18 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
                   <Marked text={c.item.label} query={q} />
                   {c.item.checked ? " ✓" : ""}
                 </span>
-                <span className="pl-path">{c.path.join(" ▸ ")}{c.item.hint ? ` · ${c.item.hint}` : ""}</span>
+                <span className="pl-path">{shownPath(c.path).join(" ▸ ")}{c.item.hint ? ` · ${c.item.hint}` : ""}</span>
                 {c.item.kbd && <span className="kbd">{c.item.kbd}</span>}
               </button>
             ))
           ) : (
-            <div className="palette-empty">No command matches “{q}”</div>
+            <div className="palette-empty">{t("filum.menu.no_command_matches", { q })}</div>
           )}
         </div>
         <div className="palette-foot">
-          <span>↑↓ choose</span>
-          <span>Enter run</span>
-          <span>Esc close</span>
+          <span>{t("filum.menu.choose")}</span>
+          <span>{t("filum.menu.enter_run")}</span>
+          <span>{t("filum.menu.esc_close")}</span>
         </div>
       </div>
     </div>

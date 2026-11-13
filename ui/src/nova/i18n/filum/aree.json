@@ -1,14 +1,26 @@
 {
-  "_nota": "Modulo i: le aree della traduzione di Filum. Ogni file di Filum con testi visibili sta in una sola area. 'fatta': true quando la PR dell'area è entrata in main: da quel momento il linter (check-texts.mjs) e il giro (giro.mjs) la controllano in italiano.",
+  "_nota": "Modulo i: le aree della traduzione di Filum. Ogni file di Filum con testi visibili sta in una sola area; 'schermate' sono i prefissi delle schermate del giro (giro.mjs) che l'area controlla (vince il prefisso più lungo). 'fatta': true quando la PR dell'area è entrata: da quel momento il linter (check-texts.mjs) e il giro la controllano in italiano.",
   "aree": {
+    "esempio": {
+      "descrizione": "Disegno d'esempio del primo avvio (nomi del disegno, degli oggetti, dei fili)",
+      "fatta": true,
+      "file": [
+        "sample.ts"
+      ],
+      "schermate": []
+    },
     "menu": {
       "descrizione": "Menu, ricerca comandi",
-      "fatta": false,
+      "fatta": true,
       "file": [
         "components/menuModel.ts",
         "components/MenuBar.tsx",
-        "components/CommandPalette.tsx",
-        "components/CommandsSection.tsx"
+        "components/CommandPalette.tsx"
+      ],
+      "schermate": [
+        "menu/",
+        "contesto/",
+        "finestra/palette"
       ]
     },
     "barre": {
@@ -26,6 +38,10 @@
         "canvas/Canvas.tsx",
         "canvas/handles.ts",
         "canvas/DesignView.tsx"
+      ],
+      "schermate": [
+        "avvio",
+        "strumento/"
       ]
     },
     "pannelli": {
@@ -55,34 +71,66 @@
         "components/ThreadPicker.tsx",
         "components/RegionEditor.tsx",
         "components/MachineOptions.tsx",
-        "components/ui.tsx"
+        "components/ui.tsx",
+        "components/CommandsSection.tsx"
+      ],
+      "schermate": [
+        "pannello/",
+        "finestra/fonts",
+        "finestra/repeat",
+        "finestra/outline"
+      ]
+    },
+    "digitalizza": {
+      "descrizione": "Finestre per digitalizzare e provare: digitalizzazione di un'immagine, calibrazione, punto croce, campioni, ricostruzione delle forme",
+      "fatta": false,
+      "file": [
+        "components/DigitizeDialog.tsx",
+        "components/CalibrateDialog.tsx",
+        "components/CrossStitchAssistant.tsx",
+        "components/TestSwatches.tsx",
+        "components/RebuildShapes.tsx"
+      ],
+      "schermate": [
+        "finestra/digitize",
+        "finestra/calibrate",
+        "finestra/crossstitch",
+        "finestra/swatches",
+        "finestra/rebuild"
       ]
     },
     "finestre": {
-      "descrizione": "Finestre di dialogo",
+      "descrizione": "Finestre di dialogo (impostazioni, fili, stampa, conversioni, effetti, percorsi, licenze…)",
       "fatta": false,
       "file": [
         "components/Dialogs.tsx",
-        "components/DigitizeDialog.tsx",
-        "components/ExportDialog.tsx",
         "components/ExportExtras.tsx",
         "components/PrintDialog.tsx",
-        "components/CalibrateDialog.tsx",
         "components/SettingsDialog.tsx",
         "components/KnockdownDialog.tsx",
         "components/RouteDialog.tsx",
         "components/ConvertTools.tsx",
         "components/ShapeEffects.tsx",
-        "components/RebuildShapes.tsx",
         "components/ThreadManager.tsx",
         "components/ThreadListDialog.tsx",
-        "components/TestSwatches.tsx",
-        "components/CrossStitchAssistant.tsx",
         "components/Licenses.tsx",
         "components/DownloadsPanel.tsx",
-        "components/MachineSettings.tsx",
         "components/StitchOut.tsx",
         "components/ErrorBoundary.tsx"
+      ],
+      "schermate": [
+        "finestra/"
+      ]
+    },
+    "esportazione": {
+      "descrizione": "Esportazione e impostazioni della macchina (file toccati anche dagli innesti del modulo a: si traducono dopo)",
+      "fatta": false,
+      "file": [
+        "components/ExportDialog.tsx",
+        "components/MachineSettings.tsx"
+      ],
+      "schermate": [
+        "finestra/export"
       ]
     },
     "messaggi": {
@@ -108,7 +156,8 @@
         "lib/gradient.ts",
         "lib/ramp.ts",
         "lib/prefs.ts"
-      ]
+      ],
+      "schermate": []
     },
     "dati": {
       "descrizione": "Dati: macchine, materiali, preset, cartelle colori",
@@ -120,14 +169,8 @@
         "lib/digitizePresets.ts",
         "lib/threads.ts",
         "lib/fonts.ts"
-      ]
-    },
-    "esempio": {
-      "descrizione": "Disegno d'esempio del primo avvio (nomi del disegno, degli oggetti, dei fili)",
-      "fatta": true,
-      "file": [
-        "sample.ts"
-      ]
+      ],
+      "schermate": []
     }
   }
 }

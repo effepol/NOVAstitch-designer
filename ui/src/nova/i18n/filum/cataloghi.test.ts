@@ -56,7 +56,9 @@ const badHoles = Object.keys(en).filter((k) => k in it && holes(it[k]) !== holes
 check(!badHoles.length, `i i segnaposto {…} sono gli stessi nelle due lingue (diversi: ${badHoles.slice(0, 20).join(", ") || "nessuno"})`);
 
 // --- i.1 (statico): l'italiano non è l'inglese --------------------------------
-const same = Object.keys(en).filter((k) => it[k] === en[k] && !allowed.has(en[k].trim()));
+// un testo fatto solo di segnaposto e segni ("{name}{unsaved} — {app}") non ha parole da tradurre
+const words = (s: string) => /\p{L}/u.test(s.replace(/\{\w+\}/g, ""));
+const same = Object.keys(en).filter((k) => it[k] === en[k] && words(en[k]) && !allowed.has(en[k].trim()));
 check(!same.length, `i.1 nessun testo italiano è rimasto in inglese (${same.slice(0, 20).map((k) => `${k}="${en[k]}"`).join(", ") || "nessuno"})`);
 
 // --- i.3 (statico): l'inglese è quello di Filum 0.2.1 --------------------------
@@ -66,7 +68,9 @@ check(APP in en && APP in origine, "i.3 il nome del programma sta nella chiave f
 const oldName = origine[APP]?.testo ?? "Filum";
 const changed = Object.keys(en).filter((k) => k !== APP && origine[k]?.testo !== en[k].replaceAll("{app}", oldName));
 check(!changed.length, `i.3 ogni testo inglese è identico a Filum 0.2.1, salvo filum.app.name (diversi o senza origine: ${changed.slice(0, 20).join(", ") || "nessuno"})`);
-const named = Object.keys(en).filter((k) => k !== APP && en[k].includes(oldName));
+// testi che nominano Filum di proposito (finestra Informazioni): non-tradurre.json, chiavi_con_filum
+const literal = new Set(Object.keys(read("non-tradurre.json").chiavi_con_filum ?? {}));
+const named = Object.keys(en).filter((k) => k !== APP && !literal.has(k) && en[k].includes(oldName));
 check(!named.length, `i il nome del programma nei testi è {app}, non scritto (${named.slice(0, 20).join(", ") || "nessuno"})`);
 const lost = Object.keys(origine).filter((k) => !(k in en));
 check(!lost.length, `i.3 ogni testo di Filum 0.2.1 estratto è nel catalogo (persi: ${lost.slice(0, 20).join(", ") || "nessuno"})`);

@@ -15,6 +15,13 @@
     "Filum": "nome del programma da cui deriva NOVAstitch Designer (finestra Informazioni, licenze)",
     "Ink/Stitch": "nome di un altro progetto libero",
     "NOVAstitch Designer": "nome del programma (filum.app.name), uguale in tutte le lingue",
-    "Poletti Centro Cucito, Clusone": "nome e luogo dell'azienda (finestra Informazioni del modulo 0)"
+    "Poletti Centro Cucito, Clusone": "nome e luogo dell'azienda (finestra Informazioni del modulo 0)",
+    "File": "«File» si dice così anche in italiano (menu File)",
+    "Knockdown…": "termine del ricamo usato anche in italiano; provvisorio, nel glossario da rivedere",
+    "Zig-zag": "nome del punto e dell'effetto, uguale in italiano",
+    "Zig-zag → satin": "le due parole si usano così in italiano («satin»: vedi il glossario)"
+  },
+  "chiavi_con_filum": {
+    "filum.menu.about_filum": "la voce apre la finestra Informazioni, che parla di Filum e non usa {app} (decisione dell'Architetto, 13/11)"
   }
 }

@@ -3,6 +3,30 @@
     "testo": "Filum",
     "file": "(nome del programma: index.html, MenuBar.tsx e altri)"
   },
+  "filum.dati.colori_punti.mono.label": {
+    "testo": "Monochrome",
+    "file": "lib/threads.ts"
+  },
+  "filum.dati.colori_punti.mono.title": {
+    "testo": "All stitches in one colour — judge coverage and density",
+    "file": "lib/threads.ts"
+  },
+  "filum.dati.colori_punti.sequence.label": {
+    "testo": "Colour sequence",
+    "file": "lib/threads.ts"
+  },
+  "filum.dati.colori_punti.sequence.title": {
+    "testo": "A distinct hue per colour block — check the sew order and colour changes",
+    "file": "lib/threads.ts"
+  },
+  "filum.dati.colori_punti.thread.label": {
+    "testo": "Thread colours",
+    "file": "lib/threads.ts"
+  },
+  "filum.dati.colori_punti.thread.title": {
+    "testo": "Stitches in their thread colours",
+    "file": "lib/threads.ts"
+  },
   "filum.esempio.filo.char": {
     "testo": "Charcoal",
     "file": "sample.ts"
@@ -74,6 +98,1154 @@
   "filum.esempio.oggetto.uccelli": {
     "testo": "Birds",
     "file": "sample.ts"
+  },
+  "filum.finestre.converti.breakApart.label": {
+    "testo": "Break apart",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.breakApart.menu": {
+    "testo": "Break apart fill…",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.breakApart.title": {
+    "testo": "Repair a fill (crossing outlines, stray loops) and split it into its separate shapes",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.connectLines.label": {
+    "testo": "Connect lines",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.connectLines.menu": {
+    "testo": "Connect lines…",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.connectLines.title": {
+    "testo": "Join line pieces into as few continuous lines as possible: ends that meet, small gaps bridged, straight on through crossings",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.dedupe.label": {
+    "testo": "Duplicates",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.dedupe.menu": {
+    "testo": "Remove duplicated points…",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.dedupe.title": {
+    "testo": "Remove points that repeat (or nearly repeat) an earlier point of the path",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.fillToSatin.label": {
+    "testo": "Fill → satin",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.fillToSatin.menu": {
+    "testo": "Fill to satin…",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.fillToSatin.title": {
+    "testo": "Satin columns from a fill shape and rung lines drawn across it — the outline becomes the rails",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.fillToStroke.label": {
+    "testo": "Centre line",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.fillToStroke.menu": {
+    "testo": "Fill to centre line…",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.fillToStroke.title": {
+    "testo": "The centre line (skeleton) of a fill shape, as running stitch or a satin of the shape's width",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.patternSatin.label": {
+    "testo": "Patterned satin",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.patternSatin.menu": {
+    "testo": "Patterned satin along a line…",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.patternSatin.title": {
+    "testo": "A satin along a line in a pattern: pearls, diamonds, squares, triangles, waves, arches",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.satinToRails.label": {
+    "testo": "Centre → rails",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.satinToRails.menu": {
+    "testo": "Satin centre line to rails…",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.satinToRails.title": {
+    "testo": "A centre-line satin (or a line) as two editable rails with rungs",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.satinToStroke.label": {
+    "testo": "Satin → run",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.satinToStroke.menu": {
+    "testo": "Satin to centre line…",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.satinToStroke.title": {
+    "testo": "A running stitch along the middle of a satin column",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.zigzagToSatin.label": {
+    "testo": "Zig-zag → satin",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.zigzagToSatin.menu": {
+    "testo": "Zig-zag line to satin…",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.converti.zigzagToSatin.title": {
+    "testo": "A line drawn back and forth across a column (square, sawtooth or zig-zag) becomes a satin",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.effetto.anchors.label": {
+    "testo": "Add anchors",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.anchors.title": {
+    "testo": "Split every segment (more points to edit or distort)",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.corners.label": {
+    "testo": "Round corners",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.corners.title": {
+    "testo": "Round, inverted (scalloped) or chamfered corners",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.pucker.label": {
+    "testo": "Pucker & bloat",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.pucker.title": {
+    "testo": "Pull anchors in and push curves out (bloat), or the reverse (pucker)",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.roughen.label": {
+    "testo": "Roughen",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.roughen.title": {
+    "testo": "Random jagged or wobbly edges",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.simplify.label": {
+    "testo": "Simplify",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.simplify.title": {
+    "testo": "Fit clean curves: fewer anchor points, straight runs as lines, corners kept (tidy up traced or imported paths)",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.smooth.label": {
+    "testo": "Smooth",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.smooth.title": {
+    "testo": "Turn corners into smooth curves",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.twist.label": {
+    "testo": "Twist",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.twist.title": {
+    "testo": "Rotate more at the centre than at the edges",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.warp.label": {
+    "testo": "Warp",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.warp.title": {
+    "testo": "Envelope warps: arc, arch, bulge, flag, wave, fish, rise, inflate, squeeze",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.zigzag.label": {
+    "testo": "Zig-zag",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.effetto.zigzag.title": {
+    "testo": "Ridges along the path — sharp or wavy",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.menu.a_net_that_flattens_pile": {
+    "testo": "A net that flattens pile fabrics — under the whole design or the selection",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.a_picture_to_trace_over": {
+    "testo": "A picture to trace over — never stitched",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.about_filum": {
+    "testo": "About Filum",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.actual_size": {
+    "testo": "Actual size",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.add_reference_picture": {
+    "testo": "Add reference picture…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.added_threads": {
+    "testo": "Added {n} threads",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.align": {
+    "testo": "Align",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.also_out_and_back_redwork": {
+    "testo": "Also out and back (redwork)",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.apply_txt_col_edr_inf": {
+    "testo": "Apply (TXT, COL, EDR, INF)…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.auto_route_running_stitch": {
+    "testo": "Auto-route running stitch…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.auto_route_satin_columns": {
+    "testo": "Auto-route satin columns…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.automatic_5_10_mm": {
+    "testo": "Automatic (5 / 10 mm)",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.average_points": {
+    "testo": "Average points",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.basting": {
+    "testo": "Basting",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.both_panels_on_the_right": {
+    "testo": "Both panels on the right, one above the other",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.bottom": {
+    "testo": "Bottom",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.bottom_in_hoop": {
+    "testo": "Bottom in hoop",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.box_around_the_design": {
+    "testo": "Box around the design",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.calibrate_fabric": {
+    "testo": "Calibrate fabric…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.centre_horizontally": {
+    "testo": "Centre horizontally",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.centre_in_hoop": {
+    "testo": "Centre in hoop",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.centre_vertically": {
+    "testo": "Centre vertically",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.choose": {
+    "testo": "↑↓ choose",
+    "file": "components/CommandPalette.tsx"
+  },
+  "filum.menu.clean_up_tiny_objects": {
+    "testo": "Clean up tiny objects",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.clone_linked_copy": {
+    "testo": "Clone (linked copy)",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.close_an_open_path_or": {
+    "testo": "Close an open path, or join open paths at their nearest ends",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.colour": {
+    "testo": "Colour",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.colour_blending": {
+    "testo": "Colour blending",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.combine_shapes": {
+    "testo": "Combine shapes",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.command_palette": {
+    "testo": "Command palette…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.command_palette_2": {
+    "testo": "Command palette",
+    "file": "components/CommandPalette.tsx"
+  },
+  "filum.menu.compound_path": {
+    "testo": "Compound path",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.convert": {
+    "testo": "Convert",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.copy": {
+    "testo": "Copy",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.corners_sharpened": {
+    "testo": "Corners sharpened",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.cross_stitch_from_a_picture": {
+    "testo": "Cross stitch from a picture…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.cross_stitch_shapes": {
+    "testo": "Cross stitch shapes…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.curvature": {
+    "testo": "Curvature",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.cut": {
+    "testo": "Cut",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.cutter": {
+    "testo": "Cutter",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.cutwork_segmentation": {
+    "testo": "Cutwork segmentation",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.dark": {
+    "testo": "Dark",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.delete": {
+    "testo": "Delete",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.density_gradient": {
+    "testo": "Density gradient",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.density_map": {
+    "testo": "Density map",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.design_settings": {
+    "testo": "Design settings",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.digitize_a_picture": {
+    "testo": "Digitize a picture…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.distribute_horizontally": {
+    "testo": "Distribute horizontally",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.distribute_vertically": {
+    "testo": "Distribute vertically",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.divide_into_regions": {
+    "testo": "Divide into regions",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.drag_across_the_shape_dense": {
+    "testo": "Drag across the shape: dense where you start, open where you end",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.drag_across_the_shape_this": {
+    "testo": "Drag across the shape: this colour fades out, the next fades in",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.draw_guide_lines_the_rows": {
+    "testo": "Draw guide lines the rows follow",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.duplicate": {
+    "testo": "Duplicate",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.edit_nodes": {
+    "testo": "Edit nodes",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.effects": {
+    "testo": "Effects",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.ellipse": {
+    "testo": "Ellipse",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.enter_run": {
+    "testo": "Enter run",
+    "file": "components/CommandPalette.tsx"
+  },
+  "filum.menu.esc_close": {
+    "testo": "Esc close",
+    "file": "components/CommandPalette.tsx"
+  },
+  "filum.menu.every_path_of_an_object": {
+    "testo": "Every path of an object becomes an object of its own",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.every_thread_is_in_use": {
+    "testo": "Every thread is in use",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.exclude": {
+    "testo": "Exclude",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.export_embroidery": {
+    "testo": "Export embroidery…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.export_gpl": {
+    "testo": "Export (.gpl)…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.export_ink_stitch_svg": {
+    "testo": "Export Ink/Stitch SVG",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.export_txt": {
+    "testo": "Export (TXT)…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.fewer_colour_changes_jumps_and": {
+    "testo": "Fewer colour changes, jumps and trims",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.find_a_command": {
+    "testo": "Find a command…",
+    "file": "components/CommandPalette.tsx"
+  },
+  "filum.menu.find_a_command_2": {
+    "testo": "Find a command",
+    "file": "components/CommandPalette.tsx"
+  },
+  "filum.menu.find_a_command_mod_k": {
+    "testo": "Find a command ({mod}K)",
+    "file": "components/MenuBar.tsx"
+  },
+  "filum.menu.find_any_command_by_name": {
+    "testo": "Find any command by name",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.finished_piece": {
+    "testo": "Finished piece",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.fit_design": {
+    "testo": "Fit design",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.fit_design_to_my_threads": {
+    "testo": "Fit design to My threads",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.fit_hoop": {
+    "testo": "Fit hoop",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.fitted_sharing_a_spool": {
+    "testo": " · {n} sharing a spool",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.fitted_threads": {
+    "testo": "Fitted {n} threads to your spools",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.fitted_without_a_close_spool": {
+    "testo": " · {n} without a close spool",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.following_the_design": {
+    "testo": "Following the design",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.fonts_and_thread_charts_filum": {
+    "testo": "Fonts and thread charts Filum can't include: accept their licence and download them",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.freehand": {
+    "testo": "Freehand",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.gradient": {
+    "testo": "Gradient",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.grid": {
+    "testo": "Grid",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.grid_spacing": {
+    "testo": "Grid spacing",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.gridstep_mm_cross_stitch_cells": {
+    "testo": "{gridStep} mm (cross stitch cells)",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.group": {
+    "testo": "Group",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.hidden_objects_are_not_sewn": {
+    "testo": "Hidden objects are not sewn",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.hide": {
+    "testo": "Hide",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.hide_panels": {
+    "testo": "Hide panels",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.import_artwork_or_embroidery": {
+    "testo": "Import artwork or embroidery…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.import_gpl": {
+    "testo": "Import (.gpl)…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.ink_stitch_documentation": {
+    "testo": "Ink/Stitch documentation",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.intersect": {
+    "testo": "Intersect",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.issues": {
+    "testo": "Issues",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.join": {
+    "testo": "Join",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.jump_stitches": {
+    "testo": "Jump stitches",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.jumps_to_running_stitch": {
+    "testo": "Jumps to running stitch…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.key_del": {
+    "testo": "Del",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.keyboard_shortcuts": {
+    "testo": "Keyboard shortcuts",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.knockdown": {
+    "testo": "Knockdown…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.layers_above_properties": {
+    "testo": "Layers above properties",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.layers_and_issues": {
+    "testo": "Layers and issues",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.layers_left_of_the_canvas": {
+    "testo": "Layers left of the canvas, properties right",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.layers_on_the_left": {
+    "testo": "Layers on the left",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.layers_panel": {
+    "testo": "Layers panel",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.leave_out_what_lies_under": {
+    "testo": "Leave out what lies under the objects on top",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.left": {
+    "testo": "Left",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.left_in_hoop": {
+    "testo": "Left in hoop",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.lettering": {
+    "testo": "Lettering",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.licences": {
+    "testo": "Licences…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.light": {
+    "testo": "Light",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.load_sample_design": {
+    "testo": "Load sample design",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.lock": {
+    "testo": "Lock",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.locked_objects_can_t_be": {
+    "testo": "Locked objects can't be selected on the canvas",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.make": {
+    "testo": "Make",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.make_all_corners_sharp": {
+    "testo": "Make all corners sharp",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.make_applique": {
+    "testo": "Make appliqué",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.mark_what_is_left_out": {
+    "testo": "Mark what is left out on the canvas (Design ▸ Hidden stitching)",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.match_all_to_chart": {
+    "testo": "Match all to {chart}",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.matched_threads_to_chart": {
+    "testo": "Matched {n} threads to {chart}",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.merge_or_delete_the_overlap": {
+    "testo": "Merge or delete the overlap regions by dragging across them",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.merge_similar_colours": {
+    "testo": "Merge similar colours (ΔE < {tolerance})",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.minus_front": {
+    "testo": "Minus front",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.mirror_horizontally": {
+    "testo": "Mirror horizontally",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.mirror_vertically": {
+    "testo": "Mirror vertically",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.more_room_for_the_canvas": {
+    "testo": "More room for the canvas",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.move_the_selected_points_onto": {
+    "testo": "Move the selected points onto their average point (node tool)",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.my_threads_is_empty_add": {
+    "testo": "My threads is empty — add your spools in Thread colours… → My threads",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.n90_clockwise": {
+    "testo": "90° clockwise",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.n90_counter_clockwise": {
+    "testo": "90° counter-clockwise",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.new_design": {
+    "testo": "New design",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.no_command_matches": {
+    "testo": "No command matches “{q}”",
+    "file": "components/CommandPalette.tsx"
+  },
+  "filum.menu.no_fitted_threads": {
+    "testo": "No fitted threads",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.nodes": {
+    "testo": "Nodes",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.none": {
+    "testo": "None",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.nothing_to_clean_up": {
+    "testo": "Nothing to clean up",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.only_the_active_colour": {
+    "testo": "Only the active colour",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.open": {
+    "testo": "Open…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.optimise_stitch_order": {
+    "testo": "Optimise stitch order",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.optional_downloads": {
+    "testo": "Optional downloads…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.outlines_offsets": {
+    "testo": "Outlines & offsets…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.palette": {
+    "testo": "Palette",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.pan": {
+    "testo": "Pan",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.panels": {
+    "testo": "Panels",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.paste": {
+    "testo": "Paste",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.paste_in_place": {
+    "testo": "Paste in place",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.paste_with_colour": {
+    "testo": "Paste with colour",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.pen": {
+    "testo": "Pen",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.pen_and_node_tool_points": {
+    "testo": "Pen and node tool: points snap to existing points",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.preferences": {
+    "testo": "Preferences…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.print_pdf": {
+    "testo": "Print / PDF…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.properties_panel": {
+    "testo": "Properties panel",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.realistic": {
+    "testo": "Realistic",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.rebuild_shapes_from_stitches": {
+    "testo": "Rebuild shapes from stitches…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.rectangle": {
+    "testo": "Rectangle",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.redo": {
+    "testo": "Redo",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.release": {
+    "testo": "Release",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.remove_hidden_stitching": {
+    "testo": "Remove hidden stitching",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.remove_unused_threads": {
+    "testo": "Remove unused threads",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.removed_tiny_objects.one": {
+    "testo": "Removed {n} tiny or empty object",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.removed_tiny_objects.other": {
+    "testo": "Removed {n} tiny or empty objects",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.removed_unused_threads.one": {
+    "testo": "Removed {n} unused thread",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.removed_unused_threads.other": {
+    "testo": "Removed {n} unused threads",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.repeat_wreath_kaleidoscope_mirror_merge": {
+    "testo": "Repeat: wreath, kaleidoscope, mirror-merge…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.reset_panel_layout": {
+    "testo": "Reset panel layout",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.reverse_path_direction": {
+    "testo": "Reverse path direction",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.reversed": {
+    "testo": "Reversed",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.revert_fitted_colours": {
+    "testo": "Revert fitted colours",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.right": {
+    "testo": "Right",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.right_in_hoop": {
+    "testo": "Right in hoop",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.rotate": {
+    "testo": "Rotate",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.route": {
+    "testo": "Route",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.ruler": {
+    "testo": "Ruler",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.satin_column": {
+    "testo": "Satin column",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.save": {
+    "testo": "Save",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.save_as": {
+    "testo": "Save as…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.save_mod_s": {
+    "testo": "Save ({mod}S)",
+    "file": "components/MenuBar.tsx"
+  },
+  "filum.menu.select": {
+    "testo": "Select",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.select_a_fill_and_a": {
+    "testo": "Select a fill and a line",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.select_all": {
+    "testo": "Select all",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.select_same": {
+    "testo": "Select same",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.sew_a_swatch_measure_it": {
+    "testo": "Sew a swatch, measure it: new objects on the fabric start from your pull compensation",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.sew_earlier": {
+    "testo": "Sew earlier",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.sew_first_to_back": {
+    "testo": "Sew first (to back)",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.sew_last_to_front": {
+    "testo": "Sew last (to front)",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.sew_later": {
+    "testo": "Sew later",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.shape_builder": {
+    "testo": "Shape builder",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.shortcut_hints": {
+    "testo": "Shortcut hints",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.show": {
+    "testo": "Show",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.show_all": {
+    "testo": "Show all",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.show_hidden_stitching": {
+    "testo": "Show hidden stitching",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.show_panels": {
+    "testo": "Show panels",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.smart_guides": {
+    "testo": "Smart guides",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.snap_to_other_objects_and": {
+    "testo": "Snap to other objects and the hoop while moving (Ctrl while dragging: off)",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.snap_to_points": {
+    "testo": "Snap to points",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.snapping": {
+    "testo": "Snapping",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.sort_threads_by_sew_order": {
+    "testo": "Sort threads by sew order",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.stitch_colours": {
+    "testo": "Stitch colours",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.stitch_direction": {
+    "testo": "Stitch direction",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.stitch_order": {
+    "testo": "Stitch order",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.stitch_properties": {
+    "testo": "Stitch properties",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.stitch_type": {
+    "testo": "Stitch type",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.stitches": {
+    "testo": "Stitches",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.svg_artwork_machine_files_dst": {
+    "testo": "SVG artwork, machine files (DST, PES, JEF …) or a picture to digitize",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.test_swatches": {
+    "testo": "Test swatches…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.the_issues_panel": {
+    "testo": "The Issues panel",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.the_jump_threads_you_snip": {
+    "testo": "The jump threads you snip by hand and the basting left out",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.the_paths_of_the_selected": {
+    "testo": "The paths of the selected shapes become one object (inner ones are holes)",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.the_selection_or_the_whole": {
+    "testo": "The selection, or the whole design",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.the_selection_s_and_the": {
+    "testo": "The selection's and the design's settings",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.theme": {
+    "testo": "Theme",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.thread_colours": {
+    "testo": "Thread colours…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.thread_list": {
+    "testo": "Thread list",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.threads_back_to_original.one": {
+    "testo": "{n} thread back to their original colours",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.threads_back_to_original.other": {
+    "testo": "{n} threads back to their original colours",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.threads_this_close_share_a": {
+    "testo": "Threads this close share a spool; the tolerance is set in Thread colours",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.top": {
+    "testo": "Top",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.top.Edit": {
+    "testo": "Edit",
+    "file": "components/MenuBar.tsx"
+  },
+  "filum.menu.top.File": {
+    "testo": "File",
+    "file": "components/MenuBar.tsx"
+  },
+  "filum.menu.top.Help": {
+    "testo": "Help",
+    "file": "components/MenuBar.tsx"
+  },
+  "filum.menu.top.Object": {
+    "testo": "Object",
+    "file": "components/MenuBar.tsx"
+  },
+  "filum.menu.top.Path": {
+    "testo": "Path",
+    "file": "components/MenuBar.tsx"
+  },
+  "filum.menu.top.Stitch": {
+    "testo": "Stitch",
+    "file": "components/MenuBar.tsx"
+  },
+  "filum.menu.top.Threads": {
+    "testo": "Threads",
+    "file": "components/MenuBar.tsx"
+  },
+  "filum.menu.top.Tools": {
+    "testo": "Tools",
+    "file": "components/MenuBar.tsx"
+  },
+  "filum.menu.top.View": {
+    "testo": "View",
+    "file": "components/MenuBar.tsx"
+  },
+  "filum.menu.top_in_hoop": {
+    "testo": "Top in hoop",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.troubleshoot": {
+    "testo": "Troubleshoot…",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.turn_a_picture_into_cross": {
+    "testo": "Turn a picture into cross stitch on a grid",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.turn_a_picture_into_fills": {
+    "testo": "Turn a picture into fills, satins and lines",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.underlay": {
+    "testo": "Underlay",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.undo": {
+    "testo": "Undo",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.ungroup": {
+    "testo": "Ungroup",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.unite": {
+    "testo": "Unite",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.unlink_clone": {
+    "testo": "Unlink clone",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.unlock_all": {
+    "testo": "Unlock all",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.untitled": {
+    "testo": "Untitled",
+    "file": "components/MenuBar.tsx"
+  },
+  "filum.menu.use_line_as_fill_guide": {
+    "testo": "Use line as fill guide",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.vector": {
+    "testo": "Vector",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.window_title": {
+    "testo": "{name}{unsaved} — Filum",
+    "file": "components/MenuBar.tsx"
+  },
+  "filum.menu.zoom_in": {
+    "testo": "Zoom in",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.zoom_out": {
+    "testo": "Zoom out",
+    "file": "components/menuModel.ts"
   },
   "filum.pannelli.close": {
     "testo": "Close",
