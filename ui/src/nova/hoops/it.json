@@ -1,3 +1,23 @@
 {
-  "a.hoop.customName": "Su misura"
+  "a.hoop.customName": "Su misura",
+  "a.hoops.title": "Telai",
+  "a.hoops.mine": "I miei telai",
+  "a.hoops.none": "Nessun telaio salvato. Aggiungine uno qui sotto.",
+  "a.hoops.use": "Usa",
+  "a.hoops.edit": "Modifica",
+  "a.hoops.delete": "Elimina",
+  "a.hoops.confirmDelete": "Eliminare il telaio «{name}» dall'elenco? I progetti salvati non cambiano.",
+  "a.hoops.name": "Nome",
+  "a.hoops.width": "Larghezza",
+  "a.hoops.height": "Altezza",
+  "a.hoops.shape": "Forma",
+  "a.hoops.shape.rect": "Rettangolare",
+  "a.hoops.shape.oval": "Ovale",
+  "a.hoops.kind": "Tipo",
+  "a.hoops.kind.flat": "Piano",
+  "a.hoops.kind.cap": "Per cappelli",
+  "a.hoops.add": "Aggiungi",
+  "a.hoops.update": "Salva le modifiche",
+  "a.hoops.cancel": "Annulla",
+  "a.hoops.error": "Telaio non salvato: {message}"
 }

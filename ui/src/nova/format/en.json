@@ -2,5 +2,7 @@
   "a.error.damaged": "Damaged file: {name}",
   "a.warning.newer": "{name} was created by a newer version of NOVAstitch Designer: it is open read-only. Save asks for a new name.",
   "a.save.filter": "NOVAstitch project",
-  "a.save.copyName": "{name} (copy)"
+  "a.save.copyName": "{name} (copy)",
+  "a.save.refusedFilum": "NOVAstitch Designer saves only .nsd files: the .filum stays as it was. Choose a .nsd name.",
+  "a.save.refusedReadOnly": "This file was created by a newer version: choose a new name."
 }

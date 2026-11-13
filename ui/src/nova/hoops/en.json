@@ -1,3 +1,23 @@
 {
-  "a.hoop.customName": "Custom"
+  "a.hoop.customName": "Custom",
+  "a.hoops.title": "Hoops",
+  "a.hoops.mine": "My hoops",
+  "a.hoops.none": "No saved hoops. Add one below.",
+  "a.hoops.use": "Use",
+  "a.hoops.edit": "Edit",
+  "a.hoops.delete": "Delete",
+  "a.hoops.confirmDelete": "Delete the hoop «{name}» from the list? Saved projects do not change.",
+  "a.hoops.name": "Name",
+  "a.hoops.width": "Width",
+  "a.hoops.height": "Height",
+  "a.hoops.shape": "Shape",
+  "a.hoops.shape.rect": "Rectangle",
+  "a.hoops.shape.oval": "Oval",
+  "a.hoops.kind": "Kind",
+  "a.hoops.kind.flat": "Flat",
+  "a.hoops.kind.cap": "Cap frame",
+  "a.hoops.add": "Add",
+  "a.hoops.update": "Save changes",
+  "a.hoops.cancel": "Cancel",
+  "a.hoops.error": "Hoop not saved: {message}"
 }
