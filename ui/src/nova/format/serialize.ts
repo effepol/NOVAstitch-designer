@@ -4,11 +4,16 @@
 // for byte. Unknown fields are written back as they were read.
 
 import type { StitchDocument } from "../../types";
-import { APP } from "./nova";
+import { APP, NOVA_SCHEMA, novaDefaults } from "./nova";
 
-/** The document as it is written: nova.app names the writer; patch groups with no object left are dropped. */
+/**
+ * The document as it is written: nova.app names the writer; a design without
+ * a complete nova block (a new one) gets the defaults; patch groups with no
+ * object left are dropped. A block from a newer version is left as it is.
+ */
 export function forSaving(doc: StitchDocument): StitchDocument {
-  const nova = doc.nova ?? ({ schemaVersion: 1 } as NonNullable<StitchDocument["nova"]>);
+  const own = doc.nova;
+  const nova = own && own.schemaVersion > NOVA_SCHEMA ? own : { ...novaDefaults(), ...own };
   const out = { ...nova, app: { name: APP.name, version: APP.version } };
   if (Array.isArray(nova.patchGroups)) {
     // a register, not a link (contract, section 2): a group whose objects are all gone is removed on saving

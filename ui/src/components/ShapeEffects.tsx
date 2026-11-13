@@ -12,6 +12,7 @@ import { useStore } from "../store";
 import type { DesignObject, StitchDocument, SubPath } from "../types";
 import { Dialog, Row, Slider, Toggle } from "./ui";
 import { safeSetItem } from "../lib/storage";
+import { withTexts } from "../nova/i18n/filum";
 
 const KEY = "filum.effects";
 let pending: EffectId | null = null;
@@ -22,17 +23,10 @@ export function openEffect(id: EffectId) {
   useStore.getState().setDialog("effects");
 }
 
-export const EFFECTS: { id: EffectId; label: string; title: string }[] = [
-  { id: "corners", label: "Round corners", title: "Round, inverted (scalloped) or chamfered corners" },
-  { id: "pucker", label: "Pucker & bloat", title: "Pull anchors in and push curves out (bloat), or the reverse (pucker)" },
-  { id: "zigzag", label: "Zig-zag", title: "Ridges along the path — sharp or wavy" },
-  { id: "roughen", label: "Roughen", title: "Random jagged or wobbly edges" },
-  { id: "twist", label: "Twist", title: "Rotate more at the centre than at the edges" },
-  { id: "warp", label: "Warp", title: "Envelope warps: arc, arch, bulge, flag, wave, fish, rise, inflate, squeeze" },
-  { id: "simplify", label: "Simplify", title: "Fit clean curves: fewer anchor points, straight runs as lines, corners kept (tidy up traced or imported paths)" },
-  { id: "smooth", label: "Smooth", title: "Turn corners into smooth curves" },
-  { id: "anchors", label: "Add anchors", title: "Split every segment (more points to edit or distort)" },
-];
+// NOVAstitch (modulo i): label e title vengono dal catalogo (filum.finestre.effetto.<id>.…)
+export const EFFECTS: { id: EffectId; label: string; title: string }[] = (["corners", "pucker", "zigzag", "roughen", "twist", "warp", "simplify", "smooth", "anchors"] as EffectId[]).map((id) =>
+  withTexts("filum.finestre.effetto", ["label", "title"], { id }),
+);
 
 function loadParams(): EffectParams {
   try {

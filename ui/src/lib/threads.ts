@@ -23,6 +23,7 @@ import { hexToRgb, rgbToHex, normHex, lab, deltaE, type Lab } from "./colorMath"
 import { remapThreads, threadsOf } from "./copies";
 import { safeSetItem } from "./storage";
 import { bySewOrder, chartIdFor, myThreadsGpl, ownedKey, paletteBrand, similarMerges, spoolsOfPalette, type ParsedPalette } from "./threadTools";
+import { withTexts } from "../nova/i18n/filum";
 export { colourEdit, ownedKey } from "./threadTools";
 
 export const hexDeltaE = (a: string, b: string) => deltaE(lab(a), lab(b));
@@ -825,11 +826,10 @@ export function threadUsage(doc: StitchDocument, plan: PlanData | null): Map<str
 
 export type StitchColors = "thread" | "sequence" | "mono";
 
-export const STITCH_COLORS: { id: StitchColors; label: string; title: string }[] = [
-  { id: "thread", label: "Thread colours", title: "Stitches in their thread colours" },
-  { id: "sequence", label: "Colour sequence", title: "A distinct hue per colour block — check the sew order and colour changes" },
-  { id: "mono", label: "Monochrome", title: "All stitches in one colour — judge coverage and density" },
-];
+// NOVAstitch (modulo i): label e title vengono dal catalogo (filum.dati.colori_punti.<id>.…)
+export const STITCH_COLORS: { id: StitchColors; label: string; title: string }[] = (["thread", "sequence", "mono"] as StitchColors[]).map((id) =>
+  withTexts("filum.dati.colori_punti", ["label", "title"], { id }),
+);
 
 const mix = (a: string, b: string, t: number) => {
   const A = hexToRgb(a);

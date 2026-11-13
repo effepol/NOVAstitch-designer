@@ -4,10 +4,12 @@ import { useShallow } from "zustand/react/shallow";
 import { saveDocument } from "../lib/actions";
 import { isTauri } from "../lib/platform";
 import { useStore } from "../store";
-import { buildMenus, menuOwner, mod, type MenuItem } from "./menuModel";
+import { buildMenus, menuName, menuOwner, mod, type MenuItem } from "./menuModel";
 import { useWindowFocused, useWindowTitle, WindowControls } from "./WindowControls";
+import { t, useLanguage } from "../nova/i18n/filum";
 
 export function MenuBar() {
+  useLanguage();
   const [open, setOpen] = useState<string | null>(null);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const ref = useRef<HTMLDivElement>(null);
@@ -18,7 +20,8 @@ export function MenuBar() {
   const s = useStore.getState();
   const docName = useStore((st) => st.doc.name);
   const saved = useStore((st) => st.saved);
-  const title = `${docName || "Untitled"}${saved ? "" : " •"} — NOVAstitch Designer`;
+  // the program's name comes from filum.app.name ({app})
+  const title = t("filum.menu.window_title", { name: docName || t("filum.menu.untitled"), unsaved: saved ? "" : " •" });
   useWindowTitle(title);
   const focused = useWindowFocused();
 
@@ -74,22 +77,22 @@ export function MenuBar() {
             }
           }}
         >
-          {name}
+          {menuName(name)}
         </button>
       ))}
       <div className="sep" />
-      <button className="icon-btn" title={`Save (${mod}S)`} onClick={() => saveDocument()}>
+      <button className="icon-btn" title={t("filum.menu.save_mod_s", { mod })} onClick={() => saveDocument()}>
         <Save size={15} />
       </button>
-      <button className="icon-btn" title="Undo" onClick={s.undo} disabled={!s.past.length}>
+      <button className="icon-btn" title={t("filum.menu.undo")} onClick={s.undo} disabled={!s.past.length}>
         <Undo2 size={15} />
       </button>
-      <button className="icon-btn" title="Redo" onClick={s.redo} disabled={!s.future.length}>
+      <button className="icon-btn" title={t("filum.menu.redo")} onClick={s.redo} disabled={!s.future.length}>
         <Redo2 size={15} />
       </button>
       {/* the free space moves the window (desktop); double-click maximizes */}
       <div className="title-drag" data-tauri-drag-region />
-      <button className="icon-btn" title={`Find a command (${mod}K)`} onClick={() => s.setDialog("palette")}>
+      <button className="icon-btn" title={t("filum.menu.find_a_command_mod_k", { mod })} onClick={() => s.setDialog("palette")}>
         <Search size={15} />
       </button>
       <WindowControls />
