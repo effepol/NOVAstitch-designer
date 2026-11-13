@@ -118,10 +118,18 @@ function collectTexts(root) {
   const roots = root === "body" ? [document.body] : [...document.querySelectorAll(root)].filter(seen);
   if (!roots.length) return null;
   for (const r of roots) {
-    const walker = document.createTreeWalker(r, NodeFilter.SHOW_TEXT);
-    while (walker.nextNode()) {
-      const el = walker.currentNode.parentElement;
-      if (el && !el.closest("script,style") && seen(el)) add(walker.currentNode.textContent, el);
+    // i pezzi di testo vicini nello stesso elemento («3», « objects») sono una sola scritta, come la legge chi guarda
+    for (const el of [r, ...r.querySelectorAll("*")]) {
+      if (el.closest("script,style") || !seen(el)) continue;
+      let run = "";
+      for (const n of el.childNodes) {
+        if (n.nodeType === Node.TEXT_NODE) run += n.textContent;
+        else if (n.nodeType === Node.ELEMENT_NODE) {
+          add(run, el);
+          run = "";
+        }
+      }
+      add(run, el);
     }
     const all = (sel) => [...(r.matches(sel) ? [r] : []), ...r.querySelectorAll(sel)];
     for (const el of all("[title],[placeholder],[aria-label],[alt]"))
@@ -271,8 +279,6 @@ async function tour(browser, url, locale, shots) {
   await record("avvio");
 
   // menu della barra, con un oggetto selezionato (voci attive); sottomenu ricorsivi
-  await store((s, id) => s.select([id]), fill);
-  await settle();
   const menuCount = await page.locator(".menu-btn").count();
   // i menu di Filum, numerati senza quelli che un modulo aggiunge (data-nova): questi a parte, come modulo/<modulo>/menu/N
   const menuMarks = [];
@@ -282,6 +288,9 @@ async function tour(browser, url, locale, shots) {
   for (let i = 0; i < menuCount; i++) {
     const mark = menuMarks[i];
     const menuId = mark ? `modulo/${mark}/menu/${(moduleMenu[mark] = (moduleMenu[mark] ?? -1) + 1)}` : `menu/${filumMenu++}`;
+    // Esc chiude il menu ma toglie anche la selezione: la si rimette ogni volta
+    await store((s, id) => s.select([id]), fill);
+    await settle();
     await page.locator(".menu-btn").nth(i).dispatchEvent("pointerdown");
     await page.locator(".menu").first().waitFor({ timeout: 5000 });
     await settle(200);
@@ -375,9 +384,14 @@ async function tour(browser, url, locale, shots) {
 const shotsOf = (screens) => Object.fromEntries(Object.entries(screens).filter(([k]) => k.includes("\u0000")).map(([k, v]) => [k.split("\u0000")[0], v]));
 const textsOf = (screens) => Object.fromEntries(Object.entries(screens).filter(([k]) => !k.includes("\u0000")));
 
-/** L'area di una schermata, per i.1 durante la traduzione. */
-const areaOf = (id) =>
-  id.startsWith("menu/") || id.startsWith("contesto/") ? "menu" : id.startsWith("strumento/") || id === "avvio" ? "barre" : id.startsWith("pannello/") ? "pannelli" : "finestre";
+/** L'area di una schermata, per i.1 durante la traduzione: il prefisso più lungo fra le «schermate» di aree.json. */
+const areaOf = (id) => {
+  let best = null;
+  let len = -1;
+  for (const [name, a] of Object.entries(json("aree.json").aree))
+    for (const p of a.schermate ?? []) if (id.startsWith(p) && p.length > len) [best, len] = [name, p.length];
+  return best;
+};
 
 function sheet(file, title, runs) {
   const rows = runs
@@ -461,7 +475,12 @@ try {
     for (const [id, texts] of Object.entries(textsOf(it.screens))) {
       if (id.startsWith("modulo/") || aParte(id) || !done(id) || !ref[id]) continue;
       const english = new Set(ref[id]);
-      const left = texts.filter((s) => english.has(s) && !allowed.has(s));
+      // uguali in ogni lingua: sigle e nomi di non-tradurre.json, anche con numeri o con i puntini di un menu («# mm», «Zig-zag…»)
+      const same = (s) => {
+        const bare = s.replace(/…$/, "").replace(/#/g, "").replace(/\s+/g, " ").trim();
+        return allowed.has(s) || allowed.has(bare) || !/\p{L}/u.test(bare) || SIGLA.test(s);
+      };
+      const left = texts.filter((s) => english.has(s) && !same(s) && !KEYS.test(s));
       if (left.length) itBad[id] = left;
     }
     const itCount = Object.values(itBad).flat().length;
@@ -485,6 +504,15 @@ try {
       const a = new Set(ref[id] ?? []);
       const b = new Set(now[id] ?? []);
       const diff = [...[...a].filter((s) => !b.has(s)).map((s) => `− ${s}`), ...[...b].filter((s) => !a.has(s)).map((s) => `+ ${s}`)];
+      // ricerca comandi: con la casella vuota mostra solo le prime 60 voci, e i comandi dei moduli vi occupano posti.
+      // Possono mancare voci di Filum spinte oltre il limite, al massimo 3 scritte (etichetta, percorso · suggerimento,
+      // suggerimento) per ogni comando di modulo mostrato; nessuna scritta in più.
+      if (id === "finestra/palette") {
+        const modules = new Set((en.marked[id] ?? []).map(([t]) => t)).size;
+        const extra = diff.filter((d) => d.startsWith("+ "));
+        const gone = diff.filter((d) => d.startsWith("− "));
+        if (!extra.length && gone.length <= 3 * modules) diff.length = 0;
+      }
       if (!(id in ref)) diff.unshift("(schermata nuova)");
       if (!(id in now)) diff.unshift("(schermata sparita)");
       if (diff.length) enBad[id] = diff;
