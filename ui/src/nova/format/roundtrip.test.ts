@@ -7,6 +7,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { readProject } from "./read";
 import { nsdBytes, nsdText } from "./serialize";
+import { tidyStringify } from "./numbers";
 import { APP, novaDefaults } from "./nova";
 import type { StitchDocument } from "../../types";
 
@@ -24,7 +25,7 @@ const firstDiff = (a: Uint8Array, b: Uint8Array) => {
   const first = nsdBytes(opened);
   const reread = readProject("Stemma.nsd", first);
   check(reread.fromSchema === 1 && !reread.migrated && !reread.readOnly && reread.warnings.length === 0, "a.3 the saved .nsd reads back as current, no migration, no warning");
-  check(JSON.stringify(reread.doc) === JSON.stringify({ ...opened, nova: { ...opened.nova, app: APP } }), "a.3 the document read back is identical (only nova.app, the writer, is added)");
+  check(JSON.stringify(reread.doc) === tidyStringify({ ...opened, nova: { ...opened.nova, app: APP } }), "a.3 the document read back is identical, numbers at 6 decimals (a.22); only nova.app, the writer, is added");
   const second = nsdBytes(reread.doc);
   check(equalBytes(first, second), `a.3 saved again: identical bytes (${first.length} / ${second.length}, first difference at ${firstDiff(first, second)})`);
   // and again, through a third generation
@@ -36,12 +37,12 @@ const firstDiff = (a: Uint8Array, b: Uint8Array) => {
   check(JSON.stringify(opened) === snapshot, "a.3 saving leaves the document in memory as it was");
 }
 
-// numbers keep their exact value (no rounding on the way)
+// numbers: at most 6 decimals (a.22, 13/11), then stable; text comes back exactly
 {
   const d = readProject("N.filum", filumBytes).doc;
   const odd = { ...d, hoop: { ...d.hoop, width: 0.1 + 0.2, height: 1e-7 }, name: "Ünïcödé ✂ «Stemma»  " } as StitchDocument;
   const back = readProject("N.nsd", nsdBytes(odd)).doc;
-  check(back.hoop.width === 0.1 + 0.2 && back.hoop.height === 1e-7 && back.name === odd.name, "a.3 numbers and text come back exactly");
+  check(back.hoop.width === 0.3 && back.hoop.height === 0 && back.name === odd.name, "a.3 numbers come back with at most 6 decimals (a.22), text exactly");
   check(equalBytes(nsdBytes(back), nsdBytes(readProject("N.nsd", nsdBytes(back)).doc)), "a.3 …and their bytes are stable");
 }
 

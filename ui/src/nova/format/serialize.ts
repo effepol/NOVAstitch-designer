@@ -5,6 +5,7 @@
 
 import type { StitchDocument } from "../../types";
 import { APP, NOVA_SCHEMA, novaDefaults } from "./nova";
+import { tidyStringify } from "./numbers";
 
 /**
  * The document as it is written: nova.app names the writer; a design without
@@ -26,7 +27,8 @@ export function forSaving(doc: StitchDocument): StitchDocument {
 
 /** The text of the .nsd. */
 export function nsdText(doc: StitchDocument): string {
-  return `${JSON.stringify(forSaving(doc), null, 2)}\n`;
+  // numbers with at most 6 decimals (a.22)
+  return `${tidyStringify(forSaving(doc), 2)}\n`;
 }
 
 /** The bytes of the .nsd (UTF-8, no byte order mark). */
