@@ -3,7 +3,7 @@
   "b.empty": "Nessun oggetto: la sequenza di cucitura appare qui.",
   "b.list": "Ordine di cucitura",
   "b.drag": "Trascina per cambiare l'ordine di cucitura",
-  "b.stitches": "{n} punti",
+  "b.stitches": "{n} punti in questa riga",
   "b.stitchesUnknown": "punti in calcolo",
   "b.lettering": "Scritta",
   "b.tieStart.on": "Fermatura d'inizio: accesa (clic per spegnerla)",

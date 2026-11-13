@@ -3,7 +3,7 @@
   "b.empty": "No objects: the sewing sequence shows here.",
   "b.list": "Sewing order",
   "b.drag": "Drag to change the sewing order",
-  "b.stitches": "{n} stitches",
+  "b.stitches": "{n} stitches in this row",
   "b.stitchesUnknown": "counting stitches",
   "b.lettering": "Lettering",
   "b.tieStart.on": "Lock stitch at the start: on (click to turn it off)",
