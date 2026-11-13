@@ -1,0 +1,20 @@
+{
+  "b.title": "Sequenza",
+  "b.empty": "Nessun oggetto: la sequenza di cucitura appare qui.",
+  "b.list": "Ordine di cucitura",
+  "b.drag": "Trascina per cambiare l'ordine di cucitura",
+  "b.stitches": "{n} punti in questa riga",
+  "b.stitchesUnknown": "punti in calcolo",
+  "b.lettering": "Scritta",
+  "b.tieStart.on": "Fermatura d'inizio: accesa (clic per spegnerla)",
+  "b.tieStart.off": "Fermatura d'inizio: spenta (clic per accenderla)",
+  "b.tieEnd.on": "Fermatura di fine: accesa (clic per spegnerla)",
+  "b.tieEnd.off": "Fermatura di fine: spenta (clic per accenderla)",
+  "b.tie.assisted": "In Assistito ogni oggetto ha la fermatura standard all'inizio e alla fine",
+  "b.trim.on": "Rasafilo dopo: sì (clic per toglierlo)",
+  "b.trim.off": "Rasafilo dopo: no (clic per metterlo)",
+  "b.stop.on": "Stop dopo: sì (clic per toglierlo)",
+  "b.stop.off": "Stop dopo: no (clic per metterlo)",
+  "b.start.auto": "Partenza scelta a mano: clic per tornare ad automatica",
+  "b.end.auto": "Arrivo scelto a mano: clic per tornare ad automatico"
+}
