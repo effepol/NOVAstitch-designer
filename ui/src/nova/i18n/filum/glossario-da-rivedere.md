@@ -8,5 +8,24 @@ Per cambiarne una basta scrivere la scelta nella colonna «Decisione»: la PR su
 |---|---|---|---|---|
 | badge (Mountain badge, Badge ring) | toppa (Toppa con montagne, Bordo della toppa) | stemma, distintivo, scudetto | filum.esempio.nome, filum.esempio.oggetto.bordo | |
 | Slate Blue (colore del filo) | Blu ardesia | Grigio ardesia | filum.esempio.filo.slate | |
+| satin, satin column | satin, colonna satin | punto raso, colonna a raso | filum.menu.satin_column, filum.finestre.converti.* | |
+| running stitch | punto filza | punto dritto, punto passato | filum.menu.auto_route_running_stitch, filum.finestre.converti.* | |
+| fill | riempimento | campitura | filum.menu.select_a_fill_and_a, filum.finestre.converti.* | |
+| underlay | sottopunto | imbottitura, base | filum.menu.underlay | |
+| jump, jump stitches | salto, punti di salto | punto di trasferimento | filum.menu.jump_stitches, filum.menu.jumps_to_running_stitch | |
+| trim | rasafilo | taglio del filo | filum.menu.fewer_colour_changes_jumps_and | |
+| appliqué | applicazione | appliqué | filum.menu.make_applique | |
+| knockdown | Knockdown (lasciato in inglese) | punto di appiattimento, base di schiacciamento | filum.menu.knockdown, filum.menu.a_net_that_flattens_pile | |
+| cutwork | intaglio | traforo | filum.menu.cutwork_segmentation | |
+| redwork | redwork (lasciato in inglese) | ricamo a contorno rosso | filum.menu.also_out_and_back_redwork | |
+| basting | imbastitura | — | filum.menu.basting | |
+| swatch, test swatches | campione, campioni di prova | provino | filum.menu.test_swatches, filum.menu.sew_a_swatch_measure_it | |
+| pull compensation | compensazione della trazione | compensazione | filum.menu.sew_a_swatch_measure_it | |
+| rails, rungs (satin) | binari, traversine | bordi, pioli | filum.finestre.converti.* | |
+| stitch order / sew order | ordine di cucitura | sequenza di ricamo | filum.menu.stitch_order, filum.menu.sort_threads_by_sew_order | |
+| spool | rocchetto | spola, cono | filum.menu.fitted_threads e vicine | |
+| thread chart | cartella colori | tabella colori, mazzetta | filum.menu.fonts_and_thread_charts_filum | |
+| pile fabrics | tessuti a pelo | spugna, velluto | filum.menu.a_net_that_flattens_pile | |
+| Lettering (strumento) | Scritte | Testo, Lettering | filum.menu.lettering | |
 
 Le righe si aggiungono a ogni PR di traduzione, area per area.

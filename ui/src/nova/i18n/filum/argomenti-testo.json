@@ -1,0 +1,6 @@
+{
+  "_nota": "Funzioni proprie di un file di Filum che ricevono testi visibili come argomenti posizionali: il linter (check-texts.mjs) controlla quegli argomenti. Gli indici partono da 0.",
+  "file": {
+    "components/menuModel.ts": { "tool": [1, 3], "mode": [1], "toggle": [0, 4], "gradient": [1], "pathCommand": [1] }
+  }
+}

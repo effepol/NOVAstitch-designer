@@ -13,6 +13,7 @@ import { patternSatin, SATIN_PATTERNS, type SatinPattern, type ZigzagPattern } f
 import { applies, applyPlan, DEFAULT_CONVERT, planConversion, UNDERLAYS, type ConvertId, type ConvertOptions, type ConvertPlan } from "../lib/convertActions";
 import { Dialog, Num, Row, Slider, Toggle } from "./ui";
 import { safeSetItem } from "../lib/storage";
+import { withTexts } from "../nova/i18n/filum";
 
 const KEY = "filum.convert";
 let pending: ConvertId | null = null;
@@ -26,71 +27,47 @@ export function openConvert(id: ConvertId) {
 
 type Icon = { d: string; fill?: boolean; thin?: boolean }[];
 
-export const CONVERSIONS: { id: ConvertId; label: string; menu: string; title: string; icon: Icon }[] = [
+// NOVAstitch (modulo i): label, menu e title vengono dal catalogo (filum.finestre.converti.<id>.…)
+export const CONVERSIONS: { id: ConvertId; label: string; menu: string; title: string; icon: Icon }[] = (
+  [
   {
     id: "fillToSatin",
-    label: "Fill → satin",
-    menu: "Fill to satin…",
-    title: "Satin columns from a fill shape and rung lines drawn across it — the outline becomes the rails",
     icon: [{ d: "M5 9 C9 3 23 3 27 9 L27 23 C23 29 9 29 5 23 Z", fill: true }, { d: "M2 12 L30 12 M2 20 L30 20", thin: true }],
   },
   {
     id: "fillToStroke",
-    label: "Centre line",
-    menu: "Fill to centre line…",
-    title: "The centre line (skeleton) of a fill shape, as running stitch or a satin of the shape's width",
     icon: [{ d: "M4 22 C6 8 12 6 16 6 C22 6 28 12 28 18 L22 20 C21 15 19 12 16 12 C13 12 10 16 10 24 Z", fill: true }, { d: "M7 23 C8 13 12 9 16 9 C21 9 24 14 25 19", thin: true }],
   },
   {
     id: "satinToStroke",
-    label: "Satin → run",
-    menu: "Satin to centre line…",
-    title: "A running stitch along the middle of a satin column",
     icon: [{ d: "M4 20 C10 8 22 8 28 20 L24 23 C20 14 12 14 8 23 Z", fill: true }, { d: "M6 21.5 C11 11 21 11 26 21.5", thin: true }],
   },
   {
     id: "satinToRails",
-    label: "Centre → rails",
-    menu: "Satin centre line to rails…",
-    title: "A centre-line satin (or a line) as two editable rails with rungs",
     icon: [{ d: "M4 20 C10 8 22 8 28 20 M8 23 C12 14 20 14 24 23 M7 15 L10 19 M16 9 L16 15 M25 15 L22 19", thin: true }],
   },
   {
     id: "zigzagToSatin",
-    label: "Zig-zag → satin",
-    menu: "Zig-zag line to satin…",
-    title: "A line drawn back and forth across a column (square, sawtooth or zig-zag) becomes a satin",
     icon: [{ d: "M4 22 L4 10 L10 10 L10 22 L16 22 L16 10 L22 10 L22 22 L28 22 L28 10", thin: true }],
   },
   {
     id: "patternSatin",
-    label: "Patterned satin",
-    menu: "Patterned satin along a line…",
-    title: "A satin along a line in a pattern: pearls, diamonds, squares, triangles, waves, arches",
     icon: [{ d: "M3 16 L8 11 L13 16 L8 21 Z M13 16 L18 11 L23 16 L18 21 Z M23 16 L28 11 L33 16 L28 21 Z", fill: true }],
   },
   {
     id: "breakApart",
-    label: "Break apart",
-    menu: "Break apart fill…",
-    title: "Repair a fill (crossing outlines, stray loops) and split it into its separate shapes",
     icon: [{ d: "M4 6 L14 6 L14 16 L4 16 Z M18 16 L28 16 L28 26 L18 26 Z", fill: true }, { d: "M14 6 L28 26", thin: true }],
   },
   {
     id: "dedupe",
-    label: "Duplicates",
-    menu: "Remove duplicated points…",
-    title: "Remove points that repeat (or nearly repeat) an earlier point of the path",
     icon: [{ d: "M4 24 L12 8 L20 20 L28 6", thin: true }, { d: "M10.5 6.5 h3 v3 h-3 Z M18.5 18.5 h3 v3 h-3 Z", fill: true }],
   },
   {
     id: "connectLines",
-    label: "Connect lines",
-    menu: "Connect lines…",
-    title: "Join line pieces into as few continuous lines as possible: ends that meet, small gaps bridged, straight on through crossings",
     icon: [{ d: "M4 22 L11 10", thin: true }, { d: "M13 9 L20 21", thin: true }, { d: "M22 21 L28 9", thin: true }, { d: "M4 26 L11 14 L20 25 L28 13" }],
   },
-];
+  ] as { id: ConvertId; icon: Icon }[]
+).map((c) => withTexts("filum.finestre.converti", ["label", "menu", "title"], c));
 
 function loadOptions(): ConvertOptions {
   try {

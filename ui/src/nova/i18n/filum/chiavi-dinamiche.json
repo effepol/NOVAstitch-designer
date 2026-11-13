@@ -1,6 +1,10 @@
 {
   "_nota": "Chiavi che il controllo dei cataloghi non vede scritte come t(\"…\") nei file di Filum: composte a programma, per esempio t(`filum.menu.top.${nome}`), oppure usate da index.ts. Ogni chiave del catalogo che comincia con uno di questi prefissi conta come usata.",
   "prefissi": {
-    "filum.app.name": "il nome del programma: index.ts lo mette in ogni {app}"
+    "filum.app.name": "il nome del programma: index.ts lo mette in ogni {app}",
+    "filum.menu.top.": "i nomi dei menu nella barra: menuName() in menuModel.ts compone filum.menu.top.<nome>",
+    "filum.finestre.converti.": "le conversioni (CONVERSIONS in ConvertTools.tsx): withTexts() legge <id>.label, .menu, .title",
+    "filum.finestre.effetto.": "gli effetti sui tracciati (EFFECTS in ShapeEffects.tsx): withTexts() legge <id>.label, .title",
+    "filum.dati.colori_punti.": "i modi di colorare i punti (STITCH_COLORS in lib/threads.ts): withTexts() legge <id>.label, .title"
   }
 }

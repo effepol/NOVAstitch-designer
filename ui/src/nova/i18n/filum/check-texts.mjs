@@ -7,6 +7,7 @@
 //   - attributi JSX visibili:             title="…" placeholder="…" aria-label="…" label="…"
 //   - proprietà visibili negli oggetti:   { label: "…", hint: "…", title: "…" }
 //   - argomenti dei messaggi:             toast("…"), alert("…"), confirm("…"), setError("…")
+//   - argomenti dichiarati in argomenti-testo.json, file per file:  tool("pen", "Pen", "P")
 // Anche i template `…${x}…` contano, per le loro parti fisse.
 //
 // Eccezioni:
@@ -32,10 +33,15 @@ const ts = require("typescript");
 const json = (f) => JSON.parse(readFileSync(path.join(here, f), "utf8"));
 
 /** Attributi e proprietà che finiscono a schermo. */
-const VISIBLE_NAME = /^(title|placeholder|alt|label|hint|tip|tooltip|caption|heading|subtitle|text|desc|description|help|note|message|empty|emptyText|confirmText|okText|cancelText|unit|suffix|prefix|aria-[a-z]+|[a-z]+(Label|Title|Hint|Text|Tip|Message))$/;
+const VISIBLE_NAME = /^(title|placeholder|alt|label|hint|tip|tooltip|caption|heading|subtitle|text|desc|description|help|note|message|empty|emptyText|confirmText|okText|cancelText|unit|suffix|prefix|aria-(label|description|roledescription|valuetext|placeholder)|[a-z]+(Label|Title|Hint|Text|Tip|Message))$/;
 /** Funzioni il cui primo argomento è un messaggio per l'utente. */
 const MESSAGE_FN = /^(toast|alert|confirm|prompt|setError|setStatus|setMessage|setNote|setWarning|notify|ask)$/;
 const LETTER = /\p{L}/u;
+
+/** Argomenti di funzioni proprie di un file che sono testi visibili: {file: {funzione: [indici]}}. */
+export function loadTextArgs() {
+  return json("argomenti-testo.json").file;
+}
 
 /** Le stringhe che restano uguali in tutte le lingue (sigle, unità, marche). */
 export function loadAllowed() {
@@ -48,7 +54,9 @@ const visibleText = (s, allowed) => {
 };
 
 /** I testi scritti a mano in un sorgente: [{line, text, why}]. */
-export function checkSource(fileName, source, allowed = loadAllowed()) {
+export function checkSource(fileName, source, allowed = loadAllowed(), textArgs = loadTextArgs()) {
+  const rel = path.relative(SRC, path.resolve(fileName)).split(path.sep).join("/");
+  const argsOf = textArgs[rel] ?? {};
   const sf = ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, fileName.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
   const lines = source.split("\n");
   const exempt = (node) => {
@@ -58,7 +66,7 @@ export function checkSource(fileName, source, allowed = loadAllowed()) {
   const hits = [];
   const report = (node, text, why) => {
     if (exempt(node)) return;
-    hits.push({ line: sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1, text, why });
+    hits.push({ line: sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1, text, why, node, sf });
   };
 
   // le stringhe che un'espressione può dare a schermo (letterali, template, ?:, ||, ??, &&)
@@ -91,6 +99,7 @@ export function checkSource(fileName, source, allowed = loadAllowed()) {
       const fn = ts.isIdentifier(callee) ? callee.text : ts.isPropertyAccessExpression(callee) ? callee.name.text : null;
       if (fn === "t" || fn === "tn") return;
       if (fn && MESSAGE_FN.test(fn) && node.arguments[0]) strings(node.arguments[0], `messaggio ${fn}()`);
+      if (fn && Object.hasOwn(argsOf, fn)) for (const i of argsOf[fn]) strings(node.arguments[i], `argomento ${i + 1} di ${fn}()`);
     }
     if (ts.isJsxText(node)) {
       const v = visibleText(node.text, allowed);
