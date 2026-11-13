@@ -2,6 +2,8 @@ import { defaultDesignOptions, defaultFill, defaultRunning, defaultSatin, ellips
 import { emptyDoc, useStore } from "./store";
 import type { DesignObject, StitchDocument, StitchParams, SubPath, Thread, Vec2 } from "./types";
 import { fit } from "./lib/actions";
+// NOVAstitch (modulo i): i nomi del disegno d'esempio nella lingua dell'interfaccia
+import { t } from "./nova/i18n/filum";
 
 const C: Vec2 = [50, 50];
 const R = 38;
@@ -31,14 +33,14 @@ const poly = (pts: Vec2[], closed = true): SubPath => ({ closed, nodes: pts.map(
 
 export function sampleDocument(): StitchDocument {
   const threads: Thread[] = [
-    { id: "sky", name: "Sky", color: "#9fd3ea", brand: "", code: "" },
-    { id: "sun", name: "Gold", color: "#f2b632", brand: "", code: "" },
-    { id: "slate", name: "Slate Blue", color: "#5d7fb5", brand: "", code: "" },
-    { id: "forest", name: "Forest", color: "#2f6b4f", brand: "", code: "" },
-    { id: "snow", name: "Snow", color: "#fafaf7", brand: "", code: "" },
-    { id: "lake", name: "Lake", color: "#2f7fc4", brand: "", code: "" },
-    { id: "char", name: "Charcoal", color: "#353b45", brand: "", code: "" },
-    { id: "navy", name: "Navy", color: "#1f2a56", brand: "", code: "" },
+    { id: "sky", name: t("filum.esempio.filo.sky"), color: "#9fd3ea", brand: "", code: "" },
+    { id: "sun", name: t("filum.esempio.filo.sun"), color: "#f2b632", brand: "", code: "" },
+    { id: "slate", name: t("filum.esempio.filo.slate"), color: "#5d7fb5", brand: "", code: "" },
+    { id: "forest", name: t("filum.esempio.filo.forest"), color: "#2f6b4f", brand: "", code: "" },
+    { id: "snow", name: t("filum.esempio.filo.snow"), color: "#fafaf7", brand: "", code: "" },
+    { id: "lake", name: t("filum.esempio.filo.lake"), color: "#2f7fc4", brand: "", code: "" },
+    { id: "char", name: t("filum.esempio.filo.char"), color: "#353b45", brand: "", code: "" },
+    { id: "navy", name: t("filum.esempio.filo.navy"), color: "#1f2a56", brand: "", code: "" },
   ];
   const o = (name: string, thread: string, paths: SubPath[], stitch: StitchParams): DesignObject => ({
     id: uid(),
@@ -77,10 +79,10 @@ export function sampleDocument(): StitchDocument {
     [43.9, 48.3],
   ]);
   const objects: DesignObject[] = [
-    o("Sky", "sky", [ellipsePath(50, 50, R + 0.6, R + 0.6)], fill({ angle: 0, underlayInset: 0.5 })),
-    o("Sun", "sun", [ellipsePath(64, 36, 10, 10)], fill({ method: "radial", rowSpacing: 0.3, maxStitchLength: 4 })),
+    o(t("filum.esempio.oggetto.cielo"), "sky", [ellipsePath(50, 50, R + 0.6, R + 0.6)], fill({ angle: 0, underlayInset: 0.5 })),
+    o(t("filum.esempio.oggetto.sole"), "sun", [ellipsePath(64, 36, 10, 10)], fill({ method: "radial", rowSpacing: 0.3, maxStitchLength: 4 })),
     o(
-      "Far ridge",
+      t("filum.esempio.oggetto.cresta"),
       "slate",
       [
         ridge(
@@ -98,12 +100,12 @@ export function sampleDocument(): StitchDocument {
       ],
       fill({ angle: 35 }),
     ),
-    o("Mountains", "forest", [ridge(66, nearPeaks, 66)], fill({ angle: -40 })),
-    o("Snow caps", "snow", [snowA, snowB], fill({ angle: 60, underlay: false, rowSpacing: 0.3 })),
+    o(t("filum.esempio.oggetto.montagne"), "forest", [ridge(66, nearPeaks, 66)], fill({ angle: -40 })),
+    o(t("filum.esempio.oggetto.cime"), "snow", [snowA, snowB], fill({ angle: 60, underlay: false, rowSpacing: 0.3 })),
     // the cloud goes on in the same white straight after the snow caps (one colour change
     // fewer), then the lake
     o(
-      "Cloud",
+      t("filum.esempio.oggetto.nuvola"),
       "snow",
       [
         smoothPath(
@@ -122,9 +124,9 @@ export function sampleDocument(): StitchDocument {
       ],
       { type: "running", ...defaultRunning(), beanRepeats: 2, length: 1.8 },
     ),
-    o("Lake", "lake", [ellipsePath(50, 79.5, 21, 4.6)], fill({ method: "spiral", rowSpacing: 0.4, maxStitchLength: 2.5 })),
+    o(t("filum.esempio.oggetto.lago"), "lake", [ellipsePath(50, 79.5, 21, 4.6)], fill({ method: "spiral", rowSpacing: 0.4, maxStitchLength: 2.5 })),
     o(
-      "Birds",
+      t("filum.esempio.oggetto.uccelli"),
       "char",
       [
         smoothPath(
@@ -150,7 +152,7 @@ export function sampleDocument(): StitchDocument {
       ],
       { type: "running", ...defaultRunning(), length: 1.2 },
     ),
-    o("Badge ring", "navy", [ellipsePath(50, 50, R + 0.2, R + 0.2), ellipsePath(50, 50, R + 4.4, R + 4.4)], {
+    o(t("filum.esempio.oggetto.bordo"), "navy", [ellipsePath(50, 50, R + 0.2, R + 0.2), ellipsePath(50, 50, R + 4.4, R + 4.4)], {
       type: "satin",
       ...defaultSatin(),
       contourUnderlay: true,
@@ -161,7 +163,7 @@ export function sampleDocument(): StitchDocument {
   // sewn as a production badge: what lies under the objects on top is left out (the sky
   // under the ridges, the ridge under the mountains, the mountains under the lake), with
   // the default 0.6 mm overlap, so the fills don't stack into a stiff, heavy patch
-  return { ...emptyDoc(), name: "Mountain badge", threads, objects, options: { ...defaultDesignOptions(), removeOverlaps: true } };
+  return { ...emptyDoc(), name: t("filum.esempio.nome"), threads, objects, options: { ...defaultDesignOptions(), removeOverlaps: true } };
 }
 
 export function loadSample() {

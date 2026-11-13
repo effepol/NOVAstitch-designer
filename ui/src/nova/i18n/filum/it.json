@@ -1,1 +1,21 @@
-{}
+{
+  "filum.app.name": "NOVAstitch Designer",
+  "filum.esempio.filo.char": "Antracite",
+  "filum.esempio.filo.forest": "Verde bosco",
+  "filum.esempio.filo.lake": "Lago",
+  "filum.esempio.filo.navy": "Blu navy",
+  "filum.esempio.filo.sky": "Cielo",
+  "filum.esempio.filo.slate": "Blu ardesia",
+  "filum.esempio.filo.snow": "Neve",
+  "filum.esempio.filo.sun": "Oro",
+  "filum.esempio.nome": "Toppa con montagne",
+  "filum.esempio.oggetto.bordo": "Bordo della toppa",
+  "filum.esempio.oggetto.cielo": "Cielo",
+  "filum.esempio.oggetto.cime": "Cime innevate",
+  "filum.esempio.oggetto.cresta": "Cresta lontana",
+  "filum.esempio.oggetto.lago": "Lago",
+  "filum.esempio.oggetto.montagne": "Montagne",
+  "filum.esempio.oggetto.nuvola": "Nuvola",
+  "filum.esempio.oggetto.sole": "Sole",
+  "filum.esempio.oggetto.uccelli": "Uccelli"
+}
