@@ -1,6 +1,7 @@
 # NOVAstitch Designer: the same checks as `npm test`, on every pull request and on main.
 # Rust engine tests, the engine built to WebAssembly (the UI type-checks against it),
-# TypeScript, the UI logic tests (Filum's and the nova modules'), wording and design checks.
+# TypeScript, the UI logic tests (Filum's and the nova modules'), wording, design and text checks,
+# then the interface tour in Chromium (module i).
 name: Test
 
 on:
@@ -51,5 +52,26 @@ jobs:
       - name: Engine to WebAssembly
         run: npm run wasm
 
-      - name: npm test (cargo test, tsc, test:match, wording, design)
+      # the interface tour (giro) has its own step below, with the browser it needs
+      - name: npm test (cargo test, tsc, test:match, wording, design, texts)
         run: npm test
+        env:
+          NOVA_SALTA_GIRO: "1"
+
+      # Module i: Playwright opens every menu, panel and dialog in Chromium,
+      # Italian and English (contract tests i.1, i.3, i.4), with a photo of each
+      - name: Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Interface tour (giro)
+        run: node ui/src/nova/i18n/filum/giro.mjs
+        env:
+          NOVA_GIRO_DIR: ${{ runner.temp }}/giro
+
+      - name: Interface tour photos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: giro-filum
+          path: ${{ runner.temp }}/giro
+          if-no-files-found: ignore
