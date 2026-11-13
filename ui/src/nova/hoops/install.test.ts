@@ -8,6 +8,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { useStore } from "../../store";
 import { chooseHoop, hoopGroups } from "../core/hoopChoice";
+import { newDesign } from "../../lib/actions";
 import { panels } from "../core/registry";
 import type { PrefsStore } from "../core/prefs";
 import { installHoopsApp } from "./install";
@@ -47,6 +48,27 @@ const filum = () => {
   let ran = false;
   chooseHoop({ source: "preset", id: "hoops:nothing" }, () => (ran = true));
   check(ran, "an unknown preset is left to Filum");
+
+  // a.18: machine settings of a Brother PR, «use as the design hoop» on the Cap frame 13 × 6 cm
+  chooseHoop({ source: "preset", id: "hoops:130 × 180 mm" }, filum);
+  chooseHoop({ source: "preset", id: "machine:brother-pr10/pr-cap" }, filum);
+  check(state().doc.nova?.hoopKind === "cap" && state().doc.hoop.width === 130 && state().doc.hoop.height === 60, "a.18 machine settings, Brother PR Cap frame 13 × 6 cm: hoopKind cap");
+  // a.19: the same frame from the export dialog (same id: machine:<machine>/<frame>)
+  chooseHoop({ source: "preset", id: "hoops:130 × 180 mm" }, filum);
+  chooseHoop({ source: "preset", id: "machine:brother-pr6/pr-cap" }, filum);
+  check(state().doc.nova?.hoopKind === "cap", "a.19 export dialog, the same cap frame: hoopKind cap");
+  // a.20: with a cap hoop, the shape changed in the material panel: «Custom», flat, hoopRef null
+  chooseHoop({ source: "custom", hoop: { ...state().doc.hoop, shape: "oval", name: "Custom" } }, filum);
+  check(state().doc.hoop.name === "Custom" && state().doc.hoop.shape === "oval" && state().doc.nova?.hoopKind === "flat" && state().doc.nova?.hoopRef === null, `a.20 shape changed: «Custom», flat, hoopRef null (${JSON.stringify(state().doc.hoop)}, ${state().doc.nova?.hoopKind})`);
+  // a.21: a new design with a Brother PR and the cap frame is a cap design from the first moment
+  localStorage.setItem("filum.machine", "brother-pr6");
+  localStorage.setItem("filum.frame", "pr-cap");
+  const nd = newDesign();
+  check(nd.nova?.hoopKind === "cap" && nd.nova?.hoopRef === null && nd.hoop.width === 130 && nd.hoop.height === 60, `a.21 new design, Brother PR + cap frame: hoopKind cap from the first moment (${nd.nova?.hoopKind})`);
+  localStorage.setItem("filum.frame", "pr-m");
+  check(newDesign().nova?.hoopKind === "flat", "a new design on a flat frame: hoopKind flat");
+  localStorage.removeItem("filum.machine");
+  localStorage.removeItem("filum.frame");
 
   // the user's hoops in the pickers, and picked from there
   const id = await hoops.add({ name: "Mio 15×25", width: 150, height: 250, shape: "rect", kind: "flat" });
