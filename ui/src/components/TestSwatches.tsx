@@ -7,6 +7,7 @@ import { objectBoundsCached, transformObject, translateMat, uid } from "../lib/g
 import { useStore } from "../store";
 import type { DesignObject } from "../types";
 import { Dialog, Num, Row } from "./ui";
+import { t, useLanguage } from "../nova/i18n/filum";
 
 /**
  * Numeric stitch settings worth stepping, by stitch type. `scale`: shown
@@ -15,25 +16,26 @@ import { Dialog, Num, Row } from "./ui";
 type Param = { key: string; label: string; step: number; unit: string; scale?: number };
 const PARAMS: Record<string, Param[]> = {
   running: [
-    { key: "length", label: "Stitch length", step: 0.5, unit: "mm" },
-    { key: "beanRepeats", label: "Bean repeats", step: 2, unit: "" },
+    { key: "length", get label() { return t("filum.digitalizza.stitch_length"); }, step: 0.5, unit: "mm" },
+    { key: "beanRepeats", get label() { return t("filum.digitalizza.bean_repeats"); }, step: 2, unit: "" },
   ],
   satin: [
-    { key: "spacing", label: "Spacing (density)", step: 0.05, unit: "mm" },
-    { key: "pullComp", label: "Pull compensation", step: 0.1, unit: "mm" },
-    { key: "width", label: "Width", step: 0.5, unit: "mm" },
-    { key: "shortStitchInset", label: "Short stitch", step: 10, unit: "%", scale: 100 },
+    { key: "spacing", get label() { return t("filum.digitalizza.spacing_density"); }, step: 0.05, unit: "mm" },
+    { key: "pullComp", get label() { return t("filum.digitalizza.pull_compensation"); }, step: 0.1, unit: "mm" },
+    { key: "width", get label() { return t("filum.digitalizza.width"); }, step: 0.5, unit: "mm" },
+    { key: "shortStitchInset", get label() { return t("filum.digitalizza.short_stitch"); }, step: 10, unit: "%", scale: 100 },
   ],
   fill: [
-    { key: "rowSpacing", label: "Row spacing (density)", step: 0.05, unit: "mm" },
-    { key: "pullComp", label: "Pull compensation", step: 0.1, unit: "mm" },
-    { key: "angle", label: "Angle", step: 15, unit: "°" },
-    { key: "maxStitchLength", label: "Stitch length", step: 0.5, unit: "mm" },
-    { key: "underlaySpacing", label: "Underlay spacing", step: 0.25, unit: "mm" },
+    { key: "rowSpacing", get label() { return t("filum.digitalizza.row_spacing_density"); }, step: 0.05, unit: "mm" },
+    { key: "pullComp", get label() { return t("filum.digitalizza.pull_compensation"); }, step: 0.1, unit: "mm" },
+    { key: "angle", get label() { return t("filum.digitalizza.angle"); }, step: 15, unit: "°" },
+    { key: "maxStitchLength", get label() { return t("filum.digitalizza.stitch_length"); }, step: 0.5, unit: "mm" },
+    { key: "underlaySpacing", get label() { return t("filum.digitalizza.underlay_spacing"); }, step: 0.25, unit: "mm" },
   ],
 };
 
 export function TestSwatchesDialog({ onClose }: { onClose: () => void }) {
+  useLanguage();
   const doc = useStore((s) => s.doc);
   const selection = useStore((s) => s.selection);
   const o = doc.objects.find((x) => selection.includes(x.id));
@@ -67,30 +69,29 @@ export function TestSwatchesDialog({ onClose }: { onClose: () => void }) {
     // the swatches take the original's place in the sewing order
     s.commit((d) => ({ ...d, objects: d.objects.flatMap((x) => (x.id === o.id ? copies : [x])) }));
     s.select(copies.map((c) => c.id));
-    s.toast(`${copies.length} swatches: ${p.label.toLowerCase()} ${values[0]}–${values[values.length - 1]}${p.unit}`);
+    s.toast(t("filum.digitalizza.length_swatches_v2_v3_v4", { length: copies.length, v2: p.label.toLowerCase(), v3: values[0], v4: values[values.length - 1], unit: p.unit }));
     onClose();
   };
   return (
     <Dialog
-      title="Test swatches"
+      title={t("filum.digitalizza.test_swatches")}
       onClose={onClose}
       footer={
         <>
           <button className="btn" onClick={onClose}>
-            Cancel
+            {t("filum.digitalizza.cancel")}
           </button>
           <button className="btn primary" disabled={!o || !p} onClick={make}>
-            Make {cols * rows} swatches
-          </button>
+            {t("filum.digitalizza.make_n_swatches", { n: cols * rows })}</button>
         </>
       }
     >
       {!o || !p ? (
-        <p className="hint">Select a running stitch, satin or fill to make swatches of.</p>
+        <p className="hint">{t("filum.digitalizza.select_a_running_stitch_satin")}</p>
       ) : (
         <>
-          <p className="hint">Copies of “{o.name}” in a grid, one setting stepped from copy to copy and named after its value — sew them once and keep the best.</p>
-          <Row label="Setting">
+          <p className="hint">{t("filum.digitalizza.copies_of_name_in_a", { name: o.name })}</p>
+          <Row label={t("filum.digitalizza.setting")}>
             <select className="select" style={{ width: "100%" }} value={p.key} onChange={(e) => (setKey(e.target.value), setStart(null), setInc(null))}>
               {params.map((x) => (
                 <option key={x.key} value={x.key}>
@@ -99,13 +100,13 @@ export function TestSwatchesDialog({ onClose }: { onClose: () => void }) {
               ))}
             </select>
           </Row>
-          <Row label="From · step">
+          <Row label={t("filum.digitalizza.from_step")}>
             <span className="dz-inline">
               <Num value={from} step={p.step} unit={p.unit} onChange={setStart} />
               <Num value={step} step={p.step / 2} unit={p.unit} onChange={setInc} />
             </span>
           </Row>
-          <Row label="Grid">
+          <Row label={t("filum.digitalizza.grid")}>
             <span className="dz-inline">
               <Num value={cols} step={1} min={1} max={10} digits={0} onChange={(v) => setCols(Math.round(v))} />
               <span className="stat">×</span>
@@ -114,7 +115,7 @@ export function TestSwatchesDialog({ onClose }: { onClose: () => void }) {
             </span>
           </Row>
           <p className="hint">
-            Values: {values.slice(0, 8).join(", ")}
+            {t("filum.digitalizza.values")}{values.slice(0, 8).join(", ")}
             {values.length > 8 ? " …" : ""}
             {p.unit && ` ${p.unit}`}
           </p>

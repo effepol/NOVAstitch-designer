@@ -11,6 +11,7 @@ import type { DesignObject, StitchParams, SubPath } from "../types";
 import { Dialog, Num, Row, Toggle } from "./ui";
 import "../output.css";
 import { safeSetItem } from "../lib/storage";
+import { t, tn, useLanguage } from "../nova/i18n/filum";
 
 /** Ink/Stitch's outline options (mm, threshold mm²). */
 interface OutlineParams {
@@ -21,13 +22,14 @@ interface OutlineParams {
 }
 
 const PRESETS: { id: string; label: string; hint: string; p: OutlineParams }[] = [
-  { id: "fill", label: "Filled areas", hint: "Merges the rows of fills and satins (rows up to 0.6 mm apart) into solid shapes", p: { buffer: 0.3, inset: 0.3, smoothness: 0.3, threshold: 10 } },
-  { id: "open", label: "Open fills", hint: "Light fills and wide rows (up to 1.2 mm apart)", p: { buffer: 0.6, inset: 0.6, smoothness: 0.4, threshold: 10 } },
-  { id: "loops", label: "Closed lines", hint: "Ink/Stitch's defaults: only closed loops of stitches make shapes (outlines, running stitch)", p: { buffer: 0.001, inset: 0, smoothness: 0.3, threshold: 10 } },
+  { id: "fill", get label() { return t("filum.digitalizza.filled_areas"); }, get hint() { return t("filum.digitalizza.merges_the_rows_of_fills"); }, p: { buffer: 0.3, inset: 0.3, smoothness: 0.3, threshold: 10 } },
+  { id: "open", get label() { return t("filum.digitalizza.open_fills"); }, get hint() { return t("filum.digitalizza.light_fills_and_wide_rows"); }, p: { buffer: 0.6, inset: 0.6, smoothness: 0.4, threshold: 10 } },
+  { id: "loops", get label() { return t("filum.digitalizza.closed_lines"); }, get hint() { return t("filum.digitalizza.ink_stitch_s_defaults_only"); }, p: { buffer: 0.001, inset: 0, smoothness: 0.3, threshold: 10 } },
 ];
 const KEY = "filum.rebuild";
 
 export function RebuildShapesDialog({ onClose }: { onClose: () => void }) {
+  useLanguage();
   const doc = useStore((s) => s.doc);
   const selection = useStore((s) => s.selection);
   const objects = doc.objects.filter((o) => selection.includes(o.id) && o.stitch.type !== "none");
@@ -160,7 +162,7 @@ export function RebuildShapesDialog({ onClose }: { onClose: () => void }) {
       return { ...d, objects: out };
     });
     s.select(made);
-    s.toast(`Rebuilt ${shapes} shape${shapes === 1 ? "" : "s"} from ${made.length} object${made.length === 1 ? "" : "s"}`, "success");
+    s.toast(t("filum.digitalizza.rebuilt_from", { shapes: tn("filum.digitalizza.n_shapes", shapes), objects: tn("filum.digitalizza.n_objects", made.length) }), "success");
     onClose();
   };
 
@@ -168,17 +170,17 @@ export function RebuildShapesDialog({ onClose }: { onClose: () => void }) {
     <Dialog
       wide
       live
-      title="Rebuild shapes from stitches"
+      title={t("filum.digitalizza.rebuild_shapes_from_stitches")}
       onClose={onClose}
       footer={
         <>
-          <span className="stat">{busy ? "Working…" : result ? `${shapes} shape${shapes === 1 ? "" : "s"}${empty ? ` · ${empty} object${empty === 1 ? "" : "s"} gave none — try a larger buffer` : ""}` : ""}</span>
+          <span className="stat">{busy ? t("filum.digitalizza.working") : result ? `${tn("filum.digitalizza.n_shapes", shapes)}${empty ? tn("filum.digitalizza.objects_gave_none", empty) : ""}` : ""}</span>
           <div className="spacer" />
           <button className="btn" onClick={onClose}>
-            Cancel
+            {t("filum.digitalizza.cancel")}
           </button>
           <button className="btn primary" disabled={!shapes} onClick={apply}>
-            {keep ? "Add shapes" : "Replace with shapes"}
+            {keep ? t("filum.digitalizza.add_shapes") : t("filum.digitalizza.replace_with_shapes")}
           </button>
         </>
       }
@@ -186,9 +188,9 @@ export function RebuildShapesDialog({ onClose }: { onClose: () => void }) {
       <div className="rb">
         <div>
           <p className="hint" style={{ marginTop: 0 }}>
-            Turns stitches back into shapes (Ink/Stitch Outline) — for designs from a machine file, so they can be re-stitched, resized or given new fills.
+            {t("filum.digitalizza.turns_stitches_back_into_shapes")}
           </p>
-          {!objects.length && <p className="hint">Select the objects to rebuild (e.g. the colours of an imported DST).</p>}
+          {!objects.length && <p className="hint">{t("filum.digitalizza.select_the_objects_to_rebuild")}</p>}
           <div className="chips" style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 8 }}>
             {PRESETS.map((x) => (
               <button
@@ -201,29 +203,29 @@ export function RebuildShapesDialog({ onClose }: { onClose: () => void }) {
               </button>
             ))}
           </div>
-          <Row label="Buffer" title="Thicken the stitch lines by this much (Ink/Stitch buffer): half the row spacing or more merges the rows of a fill into one shape">
+          <Row label={t("filum.digitalizza.buffer")} title={t("filum.digitalizza.thicken_the_stitch_lines_by")}>
             <Num value={p.buffer} unit="mm" step={0.05} min={0.001} max={2} digits={3} onChange={(v) => set({ buffer: v })} />
           </Row>
-          <Row label="Inset" title="Shrink the shapes back (Ink/Stitch inset) — usually as much as the buffer, so the shapes keep their size">
+          <Row label={t("filum.digitalizza.inset")} title={t("filum.digitalizza.shrink_the_shapes_back_ink")}>
             <Num value={p.inset} unit="mm" step={0.05} min={0} max={5} digits={3} onChange={(v) => set({ inset: v })} />
           </Row>
-          <Row label="Smoothness" title="How far the smooth outline may leave the stitches (Ink/Stitch smoothness): more gives simpler, rounder paths">
+          <Row label={t("filum.digitalizza.smoothness")} title={t("filum.digitalizza.how_far_the_smooth_outline")}>
             <Num value={p.smoothness} unit="mm" step={0.05} min={0.01} max={5} onChange={(v) => set({ smoothness: v })} />
           </Row>
-          <Row label="Threshold" title="Leave out shapes and holes smaller than this area (Ink/Stitch threshold)">
-            <Num value={p.threshold} unit="mm²" step={1} min={0} max={100} onChange={(v) => set({ threshold: v })} />
+          <Row label={t("filum.digitalizza.threshold")} title={t("filum.digitalizza.leave_out_shapes_and_holes")}>
+            <Num value={p.threshold} unit={t("filum.digitalizza.mm2")} step={1} min={0} max={100} onChange={(v) => set({ threshold: v })} />
           </Row>
-          <Row label="Stitch as" title="What the new shapes are stitched as">
+          <Row label={t("filum.digitalizza.stitch_as")} title={t("filum.digitalizza.what_the_new_shapes_are")}>
             <div className="seg">
-              <button className={as === "fill" ? "on" : ""} onClick={() => setAs("fill")} title="Fill stitch (a fill keeps its settings)">
-                Fill
+              <button className={as === "fill" ? "on" : ""} onClick={() => setAs("fill")} title={t("filum.digitalizza.fill_stitch_a_fill_keeps")}>
+                {t("filum.digitalizza.fill")}
               </button>
-              <button className={as === "running" ? "on" : ""} onClick={() => setAs("running")} title="A running stitch along the outlines">
-                Outline
+              <button className={as === "running" ? "on" : ""} onClick={() => setAs("running")} title={t("filum.digitalizza.a_running_stitch_along_the")}>
+                {t("filum.digitalizza.outline")}
               </button>
             </div>
           </Row>
-          <Row label="Keep original" title="Add the shapes and keep the stitched objects (Ink/Stitch keep original)">
+          <Row label={t("filum.digitalizza.keep_original")} title={t("filum.digitalizza.add_the_shapes_and_keep")}>
             <Toggle on={keep} onChange={setKeep} />
           </Row>
         </div>

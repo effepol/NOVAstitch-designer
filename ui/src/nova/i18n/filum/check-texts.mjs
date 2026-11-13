@@ -7,7 +7,7 @@
 //   - attributi JSX visibili:             title="…" placeholder="…" aria-label="…" label="…"
 //   - proprietà visibili negli oggetti:   { label: "…", hint: "…", title: "…" }
 //   - argomenti dei messaggi:             toast("…"), alert("…"), confirm("…"), setError("…")
-//   - argomenti dichiarati in argomenti-testo.json, file per file:  tool("pen", "Pen", "P")
+//   - argomenti e proprietà dichiarati in argomenti-testo.json, file per file:  tool("pen", "Pen", "P")
 // Anche i template `…${x}…` contano, per le loro parti fisse.
 //
 // Eccezioni:
@@ -37,6 +37,10 @@ const VISIBLE_NAME = /^(title|placeholder|alt|label|hint|tip|tooltip|caption|hea
 /** Funzioni il cui primo argomento è un messaggio per l'utente. */
 const MESSAGE_FN = /^(toast|alert|confirm|prompt|setError|setStatus|setMessage|setNote|setWarning|notify|ask)$/;
 const LETTER = /\p{L}/u;
+/** Una stringa che ha l'aria di una frase o di un'etichetta: «Regions», «Sew the swatch» (non «fillToSatin», «btn sm»). */
+const LOOKS_LIKE_TEXT = (s) => /^\p{Lu}\p{Ll}/u.test(s.trim()) || /\p{L}{2,}\s+\p{L}{2,}\s+\p{L}{2,}/u.test(s);
+/** Attributi JSX tecnici, mai testo. */
+const TECHNICAL_ATTR = /^(className|class|id|key|type|href|src|role|name|value|defaultValue|htmlFor|style|target|rel|accept|inputMode|autoComplete|lang|dir|method|d|fill|stroke|viewBox|transform|xmlns|data-[\w-]+|aria-(?!label|description|roledescription|valuetext|placeholder)[\w-]+)$/;
 
 /** Argomenti di funzioni proprie di un file che sono testi visibili: {file: {funzione: [indici]}}. */
 export function loadTextArgs() {
@@ -48,15 +52,20 @@ export function loadAllowed() {
   return new Set(Object.keys(json("non-tradurre.json").testi));
 }
 
+/** Scorciatoie da tastiera («Ctrl+⇧S», «Ctrl+D / Alt+D», «Esc»): tasti, non testo da tradurre («Del» invece sì: in italiano è «Canc»). */
+const KEY = /^(?:(?:Ctrl|Alt|Shift|⇧|⌘|⌥)\+?)*(?:[A-Z0-9,.\\/[\]=+-]|F\d+|Esc|Enter|Tab|Space|Home|End|Ctrl|Alt|Shift)$/;
+const isKeys = (v) => v.split(/\s*\/\s*/).every((k) => KEY.test(k));
 const visibleText = (s, allowed) => {
   const v = s.replace(/\s+/g, " ").trim();
-  return v && LETTER.test(v) && !allowed.has(v) ? v : null;
+  // le sigle tutte maiuscole (PES, COL, U01) sono uguali in ogni lingua
+  return v && LETTER.test(v) && !allowed.has(v) && !isKeys(v) && !/^[A-Z][A-Z0-9]+$/.test(v) ? v : null;
 };
 
 /** I testi scritti a mano in un sorgente: [{line, text, why}]. */
 export function checkSource(fileName, source, allowed = loadAllowed(), textArgs = loadTextArgs()) {
   const rel = path.relative(SRC, path.resolve(fileName)).split(path.sep).join("/");
-  const argsOf = textArgs[rel] ?? {};
+  const argsOf = textArgs[rel]?.funzioni ?? {};
+  const propsOf = new Set(textArgs[rel]?.["proprietà"] ?? []);
   const sf = ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, fileName.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
   const lines = source.split("\n");
   const exempt = (node) => {
@@ -97,7 +106,13 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
     if (ts.isCallExpression(node)) {
       const callee = node.expression;
       const fn = ts.isIdentifier(callee) ? callee.text : ts.isPropertyAccessExpression(callee) ? callee.name.text : null;
-      if (fn === "t" || fn === "tn") return;
+      if (fn === "t" || fn === "tn") {
+        // fuori da ogni funzione t() gira una volta sola, al caricamento, prima che la lingua sia scelta
+        let up = node.parent;
+        while (up && !ts.isFunctionLike(up)) up = up.parent;
+        if (!up && ts.isIdentifier(callee)) report(node, node.getText(sf).slice(0, 80), "t() fuori da una funzione (resterebbe nella lingua del caricamento: usare un getter o withTexts)");
+        return;
+      }
       if (fn && MESSAGE_FN.test(fn) && node.arguments[0]) strings(node.arguments[0], `messaggio ${fn}()`);
       if (fn && Object.hasOwn(argsOf, fn)) for (const i of argsOf[fn]) strings(node.arguments[i], `argomento ${i + 1} di ${fn}()`);
     }
@@ -108,13 +123,23 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
       strings(node.expression, "stringa fra i tag JSX");
     } else if (ts.isJsxAttribute(node)) {
       const name = nameOf(node.name);
+      if (name && !VISIBLE_NAME.test(name) && !TECHNICAL_ATTR.test(name) && node.initializer && ts.isStringLiteral(node.initializer) && LOOKS_LIKE_TEXT(node.initializer.text))
+        strings(node.initializer, `attributo ${name}`);
       if (name && VISIBLE_NAME.test(name) && node.initializer) {
         if (ts.isStringLiteral(node.initializer)) strings(node.initializer, `attributo ${name}`);
         else if (ts.isJsxExpression(node.initializer)) strings(node.initializer.expression, `attributo ${name}`);
       }
+    } else if (ts.isArrayLiteralExpression(node)) {
+      // elenchi di etichette: ["axis", "Per shape", "…"], ["Sew the swatch", "Measure it"]
+      for (const el of node.elements)
+        if ((ts.isStringLiteral(el) || ts.isNoSubstitutionTemplateLiteral(el)) && LOOKS_LIKE_TEXT(el.text)) strings(el, "testo in un elenco");
     } else if (ts.isPropertyAssignment(node)) {
       const name = nameOf(node.name);
-      if (name && VISIBLE_NAME.test(name)) strings(node.initializer, `proprietà ${name}`);
+      if (name && (VISIBLE_NAME.test(name) || propsOf.has(name))) strings(node.initializer, `proprietà ${name}`);
+      // name: "Disc, rows across" — un nome mostrato (oggetti, fili, pezzi); non "sky" o "filum.convert"
+      else if (name === "name" && (ts.isStringLiteral(node.initializer) || ts.isNoSubstitutionTemplateLiteral(node.initializer)) && LOOKS_LIKE_TEXT(node.initializer.text))
+        strings(node.initializer, "proprietà name");
+      else if (name === "name" && ts.isTemplateExpression(node.initializer) && LOOKS_LIKE_TEXT(node.initializer.head.text)) strings(node.initializer, "proprietà name");
     }
     ts.forEachChild(node, visit);
   };

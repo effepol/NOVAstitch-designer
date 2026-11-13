@@ -18,6 +18,7 @@
 import { defaultFill, defaultSatin, ellipsePath, uid } from "./geometry";
 import type { DesignObject, Fabric, FillParams, MachineSettings, SatinParams, StitchDocument, SubPath, ThreadWeight, Vec2 } from "../types";
 import { safeSetItem } from "./storage";
+import { t } from "../nova/i18n/filum";
 
 export type PieceId = "a" | "b" | "c" | "d";
 export type Direction = "along" | "across";
@@ -39,10 +40,10 @@ export const BAR_W = 4;
 export const BAR_L = 30;
 
 export const PIECES: Piece[] = [
-  { id: "a", letter: "A", name: "Disc, rows across", kind: "fill", along: DISC, across: DISC, stitches: "horizontal" },
-  { id: "b", letter: "B", name: "Disc, rows up and down", kind: "fill", along: DISC, across: DISC, stitches: "vertical" },
-  { id: "c", letter: "C", name: "Bar lying", kind: "satin", along: BAR_W, across: BAR_L, stitches: "vertical" },
-  { id: "d", letter: "D", name: "Bar standing", kind: "satin", along: BAR_W, across: BAR_L, stitches: "horizontal" },
+  { id: "a", letter: "A", get name() { return t("filum.dati.disc_rows_across"); }, kind: "fill", along: DISC, across: DISC, stitches: "horizontal" },
+  { id: "b", letter: "B", get name() { return t("filum.dati.disc_rows_up_and_down"); }, kind: "fill", along: DISC, across: DISC, stitches: "vertical" },
+  { id: "c", letter: "C", get name() { return t("filum.dati.bar_lying"); }, kind: "satin", along: BAR_W, across: BAR_L, stitches: "vertical" },
+  { id: "d", letter: "D", get name() { return t("filum.dati.bar_standing"); }, kind: "satin", along: BAR_W, across: BAR_L, stitches: "horizontal" },
 ];
 
 /** Where the pieces sit in the 100 × 100 mm swatch (mm): a box per piece. */
@@ -109,7 +110,7 @@ const LETTERS: Record<PieceId, Vec2[][]> = {
   ],
 };
 
-const SWATCH_THREAD = { id: "swatch", name: "Swatch", color: "#2b3442", brand: "", code: "" };
+const SWATCH_THREAD = { id: "swatch", get name() { return t("filum.dati.swatch"); }, color: "#2b3442", brand: "", code: "" };
 
 const obj = (name: string, paths: SubPath[], stitch: DesignObject["stitch"]): DesignObject => ({
   id: uid(),
@@ -141,7 +142,7 @@ export function swatchDocument(fabric: Fabric, machine: MachineSettings, threadW
   }
   return {
     version: 1,
-    name: `Calibration swatch (${fabric})`,
+    name: t("filum.dati.calibration_swatch_fabric", { fabric }),
     threads: [SWATCH_THREAD],
     objects,
     hoop: { name: "100 × 100 mm", width: 100, height: 100 },

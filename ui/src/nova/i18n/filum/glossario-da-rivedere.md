@@ -27,5 +27,16 @@ Per cambiarne una basta scrivere la scelta nella colonna «Decisione»: la PR su
 | thread chart | cartella colori | tabella colori, mazzetta | filum.menu.fonts_and_thread_charts_filum | |
 | pile fabrics | tessuti a pelo | spugna, velluto | filum.menu.a_net_that_flattens_pile | |
 | Lettering (strumento) | Scritte | Testo, Lettering | filum.menu.lettering | |
+| tatami | Tatami (lasciato in inglese) | riempimento a stuoia | filum.digitalizza.tatami | |
+| topping | Topping (lasciato in inglese) | pellicola idrosolubile, copertura | filum.digitalizza.topping | |
+| backing | stabilizzatore | rinforzo, telina | filum.digitalizza.backing | |
+| hooping | intelaiatura | messa in telaio | filum.digitalizza.hooping | |
+| stipple | punteggiato | stippling | filum.digitalizza.stipple | |
+| meander | meandro | — | filum.digitalizza.meander | |
+| bean stitch (Bean repeats) | punto triplo (ripetizioni del punto triplo) | punto bean | filum.digitalizza.bean_repeats | |
+| hairline | linea sottilissima, filo sottile | — | filum.digitalizza.hairlines, filum.digitalizza.lines_narrower_than_the_hairline | |
+| buffer / inset (Rebuild shapes) | spessore / rientro | buffer / inset | filum.digitalizza.buffer, filum.digitalizza.inset | |
+| letter counters | occhielli delle lettere | contrograffi | filum.digitalizza.the_background_colour_left_out e vicine | |
+| left out (hidden stitching) | tralasciato | omesso, escluso | filum.digitalizza.left_out e vicine | |
 
 Le righe si aggiungono a ogni PR di traduzione, area per area.

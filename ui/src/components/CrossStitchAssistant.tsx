@@ -11,16 +11,18 @@ import { flatten, objectBounds, unionBoxes } from "../lib/geometry";
 import { useStore } from "../store";
 import type { CrossKind, DesignObject, FillParams } from "../types";
 import { Dialog, Num, Row, Slider, Toggle } from "./ui";
+import { t, tn, useLanguage } from "../nova/i18n/filum";
 
-export const CROSS_KINDS: [CrossKind, string, string][] = [
-  ["cross", "×", "Both diagonals"],
-  ["half", "/", "Half cross"],
-  ["upright", "+", "Upright cross"],
-  ["double", "✳", "Double cross"],
-  ["smyrna", "⁜", "Smyrna cross"],
+export const CROSS_KINDS = (): [CrossKind, string, string][] => [
+  ["cross", "×", t("filum.digitalizza.both_diagonals")],
+  ["half", "/", t("filum.digitalizza.half_cross")],
+  ["upright", "+", t("filum.digitalizza.upright_cross")],
+  ["double", "✳", t("filum.digitalizza.double_cross")],
+  ["smyrna", "⁜", t("filum.digitalizza.smyrna_cross")],
 ];
 
 export function CrossStitchDialog({ onClose }: { onClose: () => void }) {
+  useLanguage();
   const doc = useStore((s) => s.doc);
   const selection = useStore((s) => s.selection);
   const fills = doc.objects.filter((o) => selection.includes(o.id) && o.stitch.type === "fill" && o.paths.some((p) => p.closed));
@@ -58,65 +60,65 @@ export function CrossStitchDialog({ onClose }: { onClose: () => void }) {
       }));
     }
     if (grid) s.set({ showGrid: true, gridStep: sx });
-    s.toast(`${fills.length} shape${fills.length === 1 ? "" : "s"} set as cross stitch${pixel ? ", snapped to the grid" : ""}`);
+    s.toast(`${tn("filum.digitalizza.shapes_set_as_cross_stitch", fills.length)}${pixel ? t("filum.digitalizza.snapped_to_the_grid") : ""}`);
     onClose();
   };
 
   return (
     <Dialog
-      title="Cross stitch shapes"
+      title={t("filum.digitalizza.cross_stitch_shapes")}
       onClose={onClose}
       footer={
         <>
           <button
             className="btn ghost"
-            title="Pictures become cross stitch in the digitizer"
+            title={t("filum.digitalizza.pictures_become_cross_stitch_in")}
             onClick={() => {
               onClose();
               openDigitizer("cross");
             }}
           >
-            <ImageUp size={14} /> From a picture…
+            <ImageUp size={14} />{t("filum.digitalizza.from_a_picture")}
           </button>
           <div className="spacer" />
           <button className="btn" onClick={onClose}>
-            Cancel
+            {t("filum.digitalizza.cancel")}
           </button>
           <button className="btn primary" disabled={!fills.length} onClick={apply}>
-            Make cross stitch
+            {t("filum.digitalizza.make_cross_stitch")}
           </button>
         </>
       }
     >
-      {!fills.length && <p className="hint">Select fill shapes to stitch as crosses — or make cross stitch from a picture in the digitizer.</p>}
-      <Row label="Cell" title="Size of one cross (Ink/Stitch pattern size)">
+      {!fills.length && <p className="hint">{t("filum.digitalizza.select_fill_shapes_to_stitch")}</p>}
+      <Row label={t("filum.digitalizza.cell")} title={t("filum.digitalizza.size_of_one_cross_ink")}>
         <span className="dz-inline">
           <Num value={sx} step={0.1} min={0.8} max={12} unit="mm" onChange={setSx} />
           {!square && <Num value={sy} step={0.1} min={0.8} max={12} unit="mm" onChange={setSy} />}
-          <Toggle on={square} onChange={setSquare} title="Square cells" />
+          <Toggle on={square} onChange={setSquare} title={t("filum.digitalizza.square_cells")} />
         </span>
       </Row>
-      <Row label="Stitches">
+      <Row label={t("filum.digitalizza.stitches")}>
         <div className="seg">
-          {CROSS_KINDS.map(([k, l, t]) => (
+          {CROSS_KINDS().map(([k, l, t]) => (
             <button key={k} title={t} className={kind === k ? "on" : ""} onClick={() => setKind(k)}>
               {l}
             </button>
           ))}
         </div>
       </Row>
-      <Row label="Coverage" title="How much of a cell must be inside a shape to get a cross">
+      <Row label={t("filum.digitalizza.coverage")} title={t("filum.digitalizza.how_much_of_a_cell_2")}>
         <Slider min={10} max={100} step={5} digits={0} unit="%" value={Math.round(coverage * 100)} onChange={(v) => setCoverage(v / 100)} />
       </Row>
-      <Row label="Snap to grid" title="Replace the outlines by the grid cells they cover — what will be sewn, editable as shapes (Ink/Stitch pixelize)">
+      <Row label={t("filum.digitalizza.snap_to_grid")} title={t("filum.digitalizza.replace_the_outlines_by_the")}>
         <Toggle on={pixel} onChange={setPixel} />
       </Row>
       {pixel && (
-        <Row label="No overlaps" title="A cell covered by several shapes goes to the one in front">
+        <Row label={t("filum.digitalizza.no_overlaps")} title={t("filum.digitalizza.a_cell_covered_by_several")}>
           <Toggle on={noOverlap} onChange={setNoOverlap} />
         </Row>
       )}
-      <Row label="Grid on the cells" title="Show the canvas grid at the cell size">
+      <Row label={t("filum.digitalizza.grid_on_the_cells")} title={t("filum.digitalizza.show_the_canvas_grid_at")}>
         <Toggle on={grid} onChange={setGrid} />
       </Row>
     </Dialog>
