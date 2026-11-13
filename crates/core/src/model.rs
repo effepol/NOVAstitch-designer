@@ -8,6 +8,7 @@ use crate::geom::{pt, Point, Rect};
 
 /// A cubic-bezier node: anchor plus optional absolute in/out handles.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 pub struct Node {
     pub p: [f64; 2],
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -26,6 +27,7 @@ impl Node {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 pub struct SubPath {
     pub nodes: Vec<Node>,
     #[serde(default)]
@@ -98,6 +100,7 @@ impl SubPath {
 // ---------------------------------------------------------------------------
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct RunningParams {
     /// Stitch length (mm).
@@ -139,6 +142,7 @@ pub struct RunningParams {
 
 /// Zig-zag line: the line sewn as a simple zig-zag of its stroke width.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct ZigzagParams {
     /// Width of the zig-zag (mm).
@@ -159,6 +163,7 @@ impl Default for ZigzagParams {
 
 /// Manual stitch: every node is a needle penetration.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct ManualParams {
     /// Split stitches longer than this (mm, 0 = keep them).
@@ -171,6 +176,7 @@ pub struct ManualParams {
 
 /// Stem stitch (hand embroidery's stem / outline stitch).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct StemParams {
     /// Width of the rope (mm): how far the stitches slant across the line.
@@ -185,6 +191,7 @@ impl Default for StemParams {
 
 /// Patterns of a motif run.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum MotifKind {
     #[default]
@@ -198,6 +205,7 @@ pub enum MotifKind {
 
 /// Motif run: a pattern repeated along the line.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct MotifParams {
     pub kind: MotifKind,
@@ -235,6 +243,7 @@ impl Default for RunningParams {
 /// spiral of shrinking copies of the outline (circular ripples), open lines
 /// are stitched back and forth as parallel copies (linear ripples).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct RippleParams {
     /// Number of ripple lines.
@@ -296,6 +305,7 @@ pub struct RippleParams {
 
 /// Which axes ripple copies are scaled on (Ink/Stitch `scale_axis`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum RippleScaleAxis {
     #[default]
@@ -307,6 +317,7 @@ pub enum RippleScaleAxis {
 
 /// Where copies sit along a satin guide (Ink/Stitch `satin_guide_pattern_position`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum RippleGuidePosition {
     #[default]
@@ -364,6 +375,7 @@ impl Default for RippleParams {
 
 /// Which satin rail to reverse (Ink/Stitch `reverse_rails`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum RailReverse {
     /// Reverse the second rail when it runs against the first.
@@ -376,6 +388,7 @@ pub enum RailReverse {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum SatinMethod {
     #[default]
@@ -386,6 +399,7 @@ pub enum SatinMethod {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct SatinParams {
     pub method: SatinMethod,
@@ -512,6 +526,7 @@ impl Default for SatinParams {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum FillMethod {
     /// Ink/Stitch "tatami fill" (auto fill): parallel staggered rows.
@@ -547,6 +562,7 @@ pub enum FillMethod {
 
 /// A tartan (Ink/Stitch `inkstitch:tartan` settings and tartan fill parameters).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct TartanParams {
     /// Ink/Stitch's palette code: `(colour)width` stripes, `/` a symmetric
@@ -595,6 +611,7 @@ impl Default for TartanParams {
 /// Penetration patterns carved into a tatami fill (program split /
 /// carving): the needle points line up into a pattern that catches the light.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum CarvePattern {
     #[default]
@@ -608,6 +625,7 @@ pub enum CarvePattern {
 
 /// Stitches of a cross-stitch cell.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum CrossKind {
     /// Both diagonals (×).
@@ -627,6 +645,7 @@ pub enum CrossKind {
 /// A direction field on a grid (design mm): row directions in radians
 /// (y down, defined modulo π), row-major `cols × rows` cells of `cell` mm.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct FlowField {
     pub origin: [f64; 2],
@@ -652,6 +671,7 @@ impl FlowField {
 
 /// How a guided fill's rows follow its guide line (Ink/Stitch `guided_fill_strategy`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum GuidedStrategy {
     /// Every row a copy of the guide, shifted across (rows bunch where it bends).
@@ -665,6 +685,7 @@ pub enum GuidedStrategy {
 
 /// The order a tatami sews its rows in.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum TatamiRoute {
     /// Every part from its top row down to its bottom row, the parts from
@@ -679,6 +700,7 @@ pub enum TatamiRoute {
 
 /// Lattice the meander fill walks on.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum MeanderPattern {
     /// Square grid: classic meander with right-angle turns.
@@ -693,6 +715,7 @@ pub enum MeanderPattern {
 // `remote = "Self"`: the derived (de)serializers become inherent functions;
 // the trait impls below wrap them (older documents' contour direction).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default, remote = "Self")]
 pub struct FillParams {
     pub method: FillMethod,
@@ -850,6 +873,7 @@ pub struct FillParams {
 
 /// How the density changes along a ramp: 0 = densest, 1 = sparsest.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum RampProfile {
     #[default]
@@ -883,6 +907,7 @@ impl RampProfile {
 /// A density gradient along a vector (design mm): row spacing `dense` at
 /// `from`, `sparse` at `to` (shaped by the profile), constant beyond.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct DensityRamp {
     pub from: [f64; 2],
@@ -926,6 +951,7 @@ impl DensityRamp {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum GradientKind {
     #[default]
@@ -944,6 +970,7 @@ pub enum GradientKind {
 
 /// A node of a gradient mesh.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct MeshNode {
     pub p: [f64; 2],
@@ -953,6 +980,7 @@ pub struct MeshNode {
 
 /// `rows` × `cols` nodes, row by row; four neighbouring nodes span a patch.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct GradientMesh {
     pub rows: u32,
@@ -962,6 +990,7 @@ pub struct GradientMesh {
 
 /// A colour point of a freeform gradient.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct FreePoint {
     pub p: [f64; 2],
@@ -979,6 +1008,7 @@ impl Default for FreePoint {
 
 /// How a colour changes into the next between two stops.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum TransitionCurve {
     #[default]
@@ -994,6 +1024,7 @@ pub enum TransitionCurve {
 
 /// How a gradient's colours share the shape.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum GradientMix {
     /// The colours share one set of full-density rows: every stretch of a
@@ -1014,6 +1045,7 @@ pub enum GradientMix {
 
 /// How the colours are mixed where they overlap in the transition (dithered gradients).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum DitherMethod {
     /// Error diffusion (Floyd–Steinberg): the most even mix.
@@ -1030,6 +1062,7 @@ pub enum DitherMethod {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct GradientStop {
     /// Position 0..1 along the gradient.
@@ -1048,6 +1081,7 @@ impl Default for GradientStop {
 /// with the same shape and stitch grid); the layers share every row of the
 /// grid between them, so the total density stays even.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct GradientParams {
     pub kind: GradientKind,
@@ -1191,6 +1225,7 @@ impl Default for FillParams {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum TackdownKind {
     None,
@@ -1201,6 +1236,7 @@ pub enum TackdownKind {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum CoverKind {
     None,
@@ -1212,6 +1248,7 @@ pub enum CoverKind {
 /// Automatic appliqué: placement line → stop (lay the fabric)
 /// → tack-down → stop (trim the fabric) → cover stitch along the edge.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct AppliqueParams {
     pub placement: bool,
@@ -1256,6 +1293,7 @@ impl Default for AppliqueParams {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(tag = "type", rename_all = "camelCase")]
 pub enum StitchParams {
     /// Shape is shown but not stitched (e.g. appliqué artwork reference).
@@ -1275,6 +1313,7 @@ impl Default for StitchParams {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct Object {
     pub id: String,
@@ -1339,6 +1378,7 @@ pub struct Object {
 
 /// An object's own lock stitches; `None` fields: the machine's.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct LockOverride {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -1360,6 +1400,7 @@ pub struct LockOverride {
 /// A satin's settings for its second rail where Ink/Stitch gives two values
 /// ("0.2 0.5": first rail, second rail); `None`: the same as the first.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct SecondRail {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -1385,6 +1426,7 @@ pub struct SecondRail {
 /// `interval`-th crossing, after skipping `offset`), shapes leave out the
 /// needle points inside them (row ends and satin edges stay).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct StitchPattern {
     pub paths: Vec<SubPath>,
@@ -1403,6 +1445,7 @@ pub struct StitchPattern {
 
 /// A clone's link to its original (see [`Object::clone`]).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct CloneLink {
     /// The original's id.
@@ -1441,6 +1484,7 @@ impl Object {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct Thread {
     pub id: String,
@@ -1482,6 +1526,7 @@ pub fn hex_color(c: [u8; 3]) -> String {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum Fabric {
     #[default]
@@ -1502,6 +1547,7 @@ pub enum Fabric {
 
 /// Fabric-aware defaults: how a fabric modifies compensation, density and underlay.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct FabricProfile {
     /// Extra pull compensation (mm) added to satins and fills: none from the
@@ -1580,6 +1626,7 @@ pub fn thread_density_scale(weight: u32) -> f64 {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum HoopShape {
     #[default]
@@ -1589,6 +1636,7 @@ pub enum HoopShape {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct Hoop {
     pub name: String,
@@ -1610,6 +1658,7 @@ impl Default for Hoop {
 
 /// Where an object is locked (Ink/Stitch `ties`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum Ties {
     #[default]
@@ -1621,6 +1670,7 @@ pub enum Ties {
 
 /// Lock stitch shapes (Ink/Stitch `lib/stitch_plan/lock_stitch.py`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum LockStyle {
     /// Half a stitch back and forth along the path (Ink/Stitch's default).
@@ -1638,6 +1688,7 @@ pub enum LockStyle {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct MachineSettings {
     /// Jumps longer than this become trims (mm).
@@ -1676,6 +1727,7 @@ pub struct MachineSettings {
 
 /// What a machine's thread cutter cuts.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum Cutter {
     /// Every trim command.
@@ -1709,6 +1761,7 @@ impl Default for MachineSettings {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum Basting {
     #[default]
@@ -1721,6 +1774,7 @@ pub enum Basting {
 
 /// Whether an object hides the stitching under it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub enum CoverMode {
     /// By the design's rules (width, row spacing, texture, appliqué).
@@ -1734,6 +1788,7 @@ pub enum CoverMode {
 
 /// An object's own setting for hidden stitching.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct HiddenRule {
     /// Does it hide what's under it?
@@ -1745,6 +1800,7 @@ pub struct HiddenRule {
 /// Design-wide stitch processing applied when the plan is built
 /// (non-destructive: the objects themselves are not changed).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct DesignOptions {
     /// Remove fill stitching hidden under objects stacked on top (remove overlaps).
@@ -1835,6 +1891,7 @@ impl Default for DesignOptions {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct Document {
     #[serde(default = "doc_version")]
@@ -1864,6 +1921,7 @@ pub struct Document {
 
 /// A thread's original colour (its "need") before fitting.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct ThreadSource {
     pub name: String,
