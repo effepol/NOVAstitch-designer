@@ -1,4 +1,6 @@
 {
   "a.error.damaged": "File danneggiato: {name}",
-  "a.warning.newer": "{name} è stato creato da una versione più recente di NOVAstitch Designer: è aperto in sola lettura. «Salva» chiede un nome nuovo."
+  "a.warning.newer": "{name} è stato creato da una versione più recente di NOVAstitch Designer: è aperto in sola lettura. «Salva» chiede un nome nuovo.",
+  "a.save.filter": "Progetto NOVAstitch",
+  "a.save.copyName": "{name} (copia)"
 }
