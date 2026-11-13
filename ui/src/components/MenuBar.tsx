@@ -4,7 +4,7 @@ import { useShallow } from "zustand/react/shallow";
 import { saveDocument } from "../lib/actions";
 import { isTauri } from "../lib/platform";
 import { useStore } from "../store";
-import { buildMenus, mod, type MenuItem } from "./menuModel";
+import { buildMenus, menuOwner, mod, type MenuItem } from "./menuModel";
 import { useWindowFocused, useWindowTitle, WindowControls } from "./WindowControls";
 
 export function MenuBar() {
@@ -59,6 +59,7 @@ export function MenuBar() {
       {names.map((name) => (
         <button
           key={name}
+          data-nova={menuOwner(name)}
           className={`menu-btn ${open === name ? "open" : ""}`}
           onPointerDown={(e) => {
             const r = e.currentTarget.getBoundingClientRect();
@@ -155,6 +156,7 @@ export function Menu({ items, x, y, alt, onClose, onBack }: { items: MenuItem[];
           <button
             key={i}
             role="menuitem"
+            data-nova={it.nova}
             className={`menu-item ${it.sub ? "has-sub" : ""} ${openSub?.i === i ? "sub-open" : ""}`}
             disabled={it.disabled}
             title={it.hint}

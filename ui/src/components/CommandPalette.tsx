@@ -98,6 +98,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
               <button
                 key={c.key}
                 role="option"
+                data-nova={c.item.nova}
                 aria-selected={i === at}
                 className={`palette-item ${i === at ? "on" : ""}`}
                 disabled={c.item.disabled}
