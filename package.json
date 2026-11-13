@@ -1,5 +1,5 @@
 {
-  "name": "filum",
+  "name": "novastitch-designer",
   "private": true,
   "description": "NOVAstitch Designer workspace scripts (Rust engine + React UI + Tauri desktop shell)",
   "scripts": {

@@ -104,7 +104,7 @@ export function BottomBar() {
       ))}
       {/* NOVAstitch: buttons registered by the modules (nova/core/registry) */}
       {toolbarButtons().map((b) => (
-        <button key={b.id} className="btn sm ghost" title={b.title ? t(b.title) : undefined} onClick={b.run} style={b.active?.() ? { color: "var(--accent-text)", fontWeight: "var(--fw-semibold)" } : undefined}>
+        <button key={b.id} data-nova={b.module} className="btn sm ghost" title={b.title ? t(b.title) : undefined} onClick={b.run} style={b.active?.() ? { color: "var(--accent-text)", fontWeight: "var(--fw-semibold)" } : undefined}>
           {t(b.label)}
         </button>
       ))}

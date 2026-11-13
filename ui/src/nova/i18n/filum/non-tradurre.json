@@ -12,7 +12,9 @@
     "Y": "asse",
     "W": "larghezza (sigla mostrata accanto al numero)",
     "H": "altezza (sigla mostrata accanto al numero)",
-    "Filum": "nome del programma da cui deriva NOVAstitch",
-    "Ink/Stitch": "nome di un altro progetto libero"
+    "Filum": "nome del programma da cui deriva NOVAstitch Designer (finestra Informazioni, licenze)",
+    "Ink/Stitch": "nome di un altro progetto libero",
+    "NOVAstitch Designer": "nome del programma (filum.app.name), uguale in tutte le lingue",
+    "Poletti Centro Cucito, Clusone": "nome e luogo dell'azienda (finestra Informazioni del modulo 0)"
   }
 }

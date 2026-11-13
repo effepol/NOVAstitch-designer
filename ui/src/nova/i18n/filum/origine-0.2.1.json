@@ -1,1 +1,98 @@
-{}
+{
+  "filum.app.name": {
+    "testo": "Filum",
+    "file": "(nome del programma: index.html, MenuBar.tsx e altri)"
+  },
+  "filum.esempio.filo.char": {
+    "testo": "Charcoal",
+    "file": "sample.ts"
+  },
+  "filum.esempio.filo.forest": {
+    "testo": "Forest",
+    "file": "sample.ts"
+  },
+  "filum.esempio.filo.lake": {
+    "testo": "Lake",
+    "file": "sample.ts"
+  },
+  "filum.esempio.filo.navy": {
+    "testo": "Navy",
+    "file": "sample.ts"
+  },
+  "filum.esempio.filo.sky": {
+    "testo": "Sky",
+    "file": "sample.ts"
+  },
+  "filum.esempio.filo.slate": {
+    "testo": "Slate Blue",
+    "file": "sample.ts"
+  },
+  "filum.esempio.filo.snow": {
+    "testo": "Snow",
+    "file": "sample.ts"
+  },
+  "filum.esempio.filo.sun": {
+    "testo": "Gold",
+    "file": "sample.ts"
+  },
+  "filum.esempio.nome": {
+    "testo": "Mountain badge",
+    "file": "sample.ts"
+  },
+  "filum.esempio.oggetto.bordo": {
+    "testo": "Badge ring",
+    "file": "sample.ts"
+  },
+  "filum.esempio.oggetto.cielo": {
+    "testo": "Sky",
+    "file": "sample.ts"
+  },
+  "filum.esempio.oggetto.cime": {
+    "testo": "Snow caps",
+    "file": "sample.ts"
+  },
+  "filum.esempio.oggetto.cresta": {
+    "testo": "Far ridge",
+    "file": "sample.ts"
+  },
+  "filum.esempio.oggetto.lago": {
+    "testo": "Lake",
+    "file": "sample.ts"
+  },
+  "filum.esempio.oggetto.montagne": {
+    "testo": "Mountains",
+    "file": "sample.ts"
+  },
+  "filum.esempio.oggetto.nuvola": {
+    "testo": "Cloud",
+    "file": "sample.ts"
+  },
+  "filum.esempio.oggetto.sole": {
+    "testo": "Sun",
+    "file": "sample.ts"
+  },
+  "filum.esempio.oggetto.uccelli": {
+    "testo": "Birds",
+    "file": "sample.ts"
+  },
+  "filum.pannelli.close": {
+    "testo": "Close",
+    "file": "components/ui.tsx"
+  },
+  "filum.pannelli.close_esc": {
+    "testo": "Close (Esc)",
+    "file": "components/ui.tsx"
+  },
+  "filum.pannelli.ctrl_click_open_only_this": {
+    "testo": "Ctrl+click: open only this one",
+    "file": "components/ui.tsx"
+  },
+  "filum.pannelli.drag_to_move_double_click": {
+    "testo": "Drag to move · double-click: back to the centre",
+    "file": "components/ui.tsx"
+  },
+  "filum.pannelli.drag_to_move_double_click_2": {
+    "testo": "Drag to move · double-click: back to its place",
+    "file": "components/ui.tsx"
+  }
+}

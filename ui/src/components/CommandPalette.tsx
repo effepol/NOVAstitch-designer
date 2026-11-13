@@ -106,7 +106,8 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
                 onClick={() => run(c)}
               >
                 <span className="pl-icon">{c.item.icon && <c.item.icon size={15} />}</span>
-                <span className="pl-label">
+                {/* NOVAstitch (rule i.3): only a module's own label is marked, not Filum's menu path */}
+                <span className="pl-label" data-nova={c.item.nova}>
                   <Marked text={c.item.label} query={q} />
                   {c.item.checked ? " ✓" : ""}
                 </span>

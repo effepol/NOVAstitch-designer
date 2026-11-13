@@ -65,16 +65,22 @@ import { averageSelectedNodes } from "../lib/nodeActions";
 import { menuItems } from "../nova/core/registry";
 import { t } from "../nova/core/i18n";
 
+/** NOVAstitch (rule i.3): the module that added a menu, for menus Filum does not have. */
+const addedMenus = new Map<string, string>();
+export const menuOwner = (name: string): string | undefined => addedMenus.get(name);
+
 /** Filum's menus with the registered items: each menu's own after a separator, new menus before Help. */
 function withRegisteredItems(menus: Record<string, MenuItem[]>): Record<string, MenuItem[]> {
   const items = menuItems();
+  addedMenus.clear();
   if (!items.length) return menus;
   const out: Record<string, MenuItem[]> = {};
   const added = (name: string): MenuItem[] =>
     items
       .filter((i) => i.menu === name)
-      .map((i) => ({ label: t(i.label), kbd: i.kbd, hint: i.hint ? t(i.hint) : undefined, run: i.run, checked: i.checked?.(), disabled: i.disabled?.() }));
+      .map((i) => ({ label: t(i.label), kbd: i.kbd, hint: i.hint ? t(i.hint) : undefined, run: i.run, checked: i.checked?.(), disabled: i.disabled?.(), nova: i.module }));
   const fresh = [...new Set(items.map((i) => i.menu))].filter((m) => !(m in menus));
+  for (const m of fresh) addedMenus.set(m, items.find((i) => i.menu === m)!.module);
   for (const [name, list] of Object.entries(menus)) {
     if (name === "Help") for (const m of fresh) out[m] = added(m);
     const more = added(name);
@@ -97,6 +103,8 @@ export type MenuItem =
       icon?: LucideIcon;
       /** A submenu. */
       sub?: MenuItem[];
+      /** NOVAstitch (rule i.3): the module that registered it (data-nova on the item). */
+      nova?: string;
     }
   | "-";
 

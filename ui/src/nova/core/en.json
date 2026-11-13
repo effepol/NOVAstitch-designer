@@ -3,5 +3,15 @@
   "core.language.en": "English",
   "core.language.title": "Language",
   "core.menu.language.it": "Language: Italian",
-  "core.menu.language.en": "Language: English"
+  "core.menu.language.en": "Language: English",
+  "core.about.title": "About",
+  "core.about.line": "NOVAstitch Designer, version {version}.",
+  "core.about.what": "Free vector embroidery digitizing software.",
+  "core.about.base": "Based on Filum (benkl), modified version, 2026, GPL-3.0",
+  "core.about.who": "Poletti Centro Cucito, Clusone",
+  "core.about.license": "License",
+  "core.about.credits": "Credits",
+  "core.about.fontLicenses": "Font and component licences…",
+  "core.about.back": "Back",
+  "core.about.close": "Close"
 }

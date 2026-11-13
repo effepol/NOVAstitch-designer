@@ -6,16 +6,28 @@
 // raccoglie le scritte visibili (testo, title, placeholder, aria-label, alt,
 // voci delle tendine) e fa una foto.
 //
-//   i.4  sistema in italiano, primo avvio (nessuna scelta salvata) → lingua italiana
+//   i.4  sistema in italiano, primo avvio (nessuna scelta salvata) → lingua italiana,
+//        e il disegno generato al primo avvio ha i nomi in italiano
 //   i.1  in italiano nessuna scritta inglese, nelle aree già tradotte (aree.json)
 //   i.3  in inglese ogni schermata ha le stesse scritte di Filum 0.2.1
-//        (riferimento-en-0.2.1.json, raccolto con --riferimento prima del modulo i)
+//        (riferimento-en-0.2.1.json, raccolto con --riferimento prima del modulo i);
+//        è escluso solo il nome del programma (filum.app.name)
+//
+// Regola i.3 dell'Architetto (13/11): ciò che i moduli aggiungono all'interfaccia di Filum
+// porta data-nova="<modulo>" (lo mette il modulo 0). Gli elementi marcati, con tutto ciò che
+// contengono (anche le voci di un optgroup marcato), restano fuori dal confronto i.3; le schede
+// e i menu marcati non contano nella numerazione (#schedaN, menu/N) e si visitano a parte, come
+// schermate modulo/<modulo>/…, solo per i.1 e i.4. Se un elemento marcato contiene una scritta
+// del riferimento di Filum, i.3 fallisce, salvo che la stessa scritta sia nel catalogo del modulo che
+// l'ha marcato («Close», «About»). Le schermate sostituite per decisione (A_PARTE, oggi la finestra
+// Informazioni) sono tolte a mano dal riferimento e si visitano a parte, solo per i.1 e i.4.
 //
 // Le cifre sono sostituite da # prima del confronto: contano le parole, non i numeri.
 // Le foto e un foglio riassuntivo (foglio.html) vanno in NOVA_GIRO_DIR, o in
 // <tmp>/nova-giro-filum.
 //
-// Uso (dalla radice del repository; prima: npm run wasm):
+// Uso (dalla radice del repository; prima: npm run wasm e, la prima volta,
+// npx playwright install chromium):
 //   node ui/src/nova/i18n/filum/giro.mjs                  i.1, i.3, i.4
 //   node ui/src/nova/i18n/filum/giro.mjs --tutte-le-aree  i.1 su tutte le aree (fallisce finché non sono tradotte)
 //   node ui/src/nova/i18n/filum/giro.mjs --riferimento [--ui <cartella ui di Filum 0.2.1>]
@@ -23,7 +35,7 @@
 
 import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -58,19 +70,49 @@ function loadPlaywright() {
   }
 }
 
+/**
+ * Schermate di Filum che una decisione dell'Architetto ha sostituito (contratto, regola i.3, 13/11):
+ * tolte a mano dal riferimento, si visitano a parte, solo per i.1 e i.4 (con le loro schede).
+ */
+const A_PARTE = ["finestra/about"];
+const aParte = (id) => A_PARTE.some((s) => id === s || id.startsWith(`${s}#`));
+
+/** I cataloghi inglesi dei moduli (non quello di Filum), voce per voce: [modulo, scritta]. Il modulo è la prima parte della chiave. */
+function moduleCatalogs() {
+  const nova = path.resolve(here, "../..");
+  const walk = (dir) =>
+    readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(dir, e.name)) : e.name === "en.json" ? [path.join(dir, e.name)] : []));
+  return walk(nova)
+    .filter((f) => f !== path.join(here, "en.json"))
+    .flatMap((f) => Object.entries(JSON.parse(readFileSync(f, "utf8"))).map(([k, v]) => [k.split(".")[0], v]));
+}
+/** Una voce di catalogo come confronto: cifre → #, un segnaposto {nome} vale qualunque testo. */
+const pattern = (text) => new RegExp("^" + norm(text).split(/\{\w+\}/).map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join(".+") + "$");
+
 /** Dove stanno le finestre: le finestre di Filum, la ricerca comandi, gli sfondi a schermo intero. */
 const DIALOG = ".dialog, [role=dialog], .backdrop";
 const json = (f) => JSON.parse(readFileSync(path.join(here, f), "utf8"));
+/** Scritte uguali in ogni lingua: tasti delle scorciatoie (Ctrl+⇧S, B) e sigle tutte maiuscole (PES, U#). */
+const KEYS = /^(?:(?:Ctrl|Alt|Shift|⇧|⌘|⌥)\+?)*(?:[A-Z#,.\\/[\]=+-]|F#|Esc|Enter|Tab|Space|Home|End)$/;
+const SIGLA = /^[A-Z][A-Z0-9#]+$/;
 const norm = (s) => s.replace(/\d+(?:[.,  ]\d+)*/g, "#");
 
 // --- nella pagina ------------------------------------------------------------
 
-/** Le scritte visibili dentro `root` (selettore CSS; senza corrispondenze, tutta la pagina). */
+/**
+ * Le scritte visibili dentro `root` (selettore CSS): {testi, marcati}. «marcati» sono quelle
+ * dentro un elemento con data-nova (interfaccia dei moduli), «testi» tutte le altre.
+ * null se `root` non c'è.
+ */
 function collectTexts(root) {
   const out = new Set();
-  const add = (s) => {
+  const marked = new Map();
+  const add = (s, el) => {
     const v = (s ?? "").replace(/\s+/g, " ").trim();
-    if (v && /\p{L}/u.test(v)) out.add(v);
+    if (!v || !/\p{L}/u.test(v)) return;
+    const owner = el?.closest("[data-nova]")?.getAttribute("data-nova");
+    if (owner) marked.set(v, owner);
+    else out.add(v);
   };
   const seen = (el) => el.checkVisibility({ visibilityProperty: true });
   const roots = root === "body" ? [document.body] : [...document.querySelectorAll(root)].filter(seen);
@@ -79,16 +121,18 @@ function collectTexts(root) {
     const walker = document.createTreeWalker(r, NodeFilter.SHOW_TEXT);
     while (walker.nextNode()) {
       const el = walker.currentNode.parentElement;
-      if (el && !el.closest("script,style") && seen(el)) add(walker.currentNode.textContent);
+      if (el && !el.closest("script,style") && seen(el)) add(walker.currentNode.textContent, el);
     }
     const all = (sel) => [...(r.matches(sel) ? [r] : []), ...r.querySelectorAll(sel)];
     for (const el of all("[title],[placeholder],[aria-label],[alt]"))
-      if (seen(el)) for (const a of ["title", "placeholder", "aria-label", "alt"]) add(el.getAttribute(a));
-    for (const o of all("select option")) if (seen(o.closest("select"))) add(o.textContent);
-    for (const i of all("input[type=button],input[type=submit]")) if (seen(i)) add(i.value);
+      if (seen(el)) for (const a of ["title", "placeholder", "aria-label", "alt"]) add(el.getAttribute(a), el);
+    for (const o of all("select option")) if (seen(o.closest("select"))) add(o.textContent, o);
+    // l'etichetta di un gruppo di voci: Filum 0.2.1 non la contava, qui conta solo quella dei moduli
+    for (const g of all("select optgroup[data-nova]")) if (seen(g.closest("select"))) add(g.getAttribute("label"), g);
+    for (const i of all("input[type=button],input[type=submit]")) if (seen(i)) add(i.value, i);
   }
-  if (root === "body") add(document.title);
-  return [...out];
+  if (root === "body") add(document.title, null);
+  return { testi: [...out], marcati: [...marked] };
 }
 
 // --- il giro -----------------------------------------------------------------
@@ -120,7 +164,14 @@ async function tour(browser, url, locale, shots) {
   await page.waitForTimeout(3000);
 
   const lang = await page.evaluate(() => document.documentElement.lang);
+  // i.4: i nomi del disegno generato al primo avvio (disegno, oggetti, fili), nello stesso ordine in ogni lingua
+  const sample = await page.evaluate(async () => {
+    const d = (await import("/src/store.ts")).useStore.getState().doc;
+    return [d.name, ...d.objects.map((o) => o.name), ...d.threads.map((t) => t.name)];
+  });
   const screens = {};
+  /** Scritte degli elementi marcati (data-nova), schermata per schermata. */
+  const marked = {};
   const missing = [];
   let n = 0;
 
@@ -167,10 +218,13 @@ async function tour(browser, url, locale, shots) {
       const again = await page.evaluate(collectTexts, root);
       const same = JSON.stringify(again) === JSON.stringify(texts);
       texts = again;
-      if (same && !(texts ?? []).some((t) => /^(Working|Counting|Lavor|Calcol|Conteg)[^]*…$/.test(t))) break;
+      const all = texts ? [...texts.testi, ...texts.marcati.map(([t]) => t)] : [];
+      if (same && !all.some((t) => /^(Working|Counting|Lavor|Calcol|Conteg)[^]*…$/.test(t))) break;
     }
     if (!texts) missing.push(id);
-    screens[id] = [...new Set((texts ?? []).map(norm))].sort();
+    screens[id] = [...new Set((texts?.testi ?? []).map(norm))].sort();
+    // [scritta, modulo che ha marcato l'elemento]
+    marked[id] = (texts?.marcati ?? []).map(([t, m]) => [norm(t), m]).sort();
     if (shots) await page.screenshot({ path: path.join(shots, `${String(++n).padStart(3, "0")}.png`) }).catch(() => {});
     if (shots) screens[id + "\u0000shot"] = n;
   };
@@ -179,11 +233,33 @@ async function tour(browser, url, locale, shots) {
     await record(id, root);
     const tabs = page.locator(`:is(${root}) [role=tab]:visible`);
     const k = await tabs.count();
+    const marks = [];
+    for (let i = 0; i < k; i++) marks.push(await tabs.nth(i).getAttribute("data-nova"));
+    // le schede di Filum, numerate senza quelle marcate: i nomi restano quelli del riferimento
+    let n = 0;
     for (let i = 0; i < k; i++) {
+      if (marks[i]) continue;
+      const idx = n++;
       if ((await tabs.nth(i).getAttribute("aria-selected")) === "true") continue;
       await tabs.nth(i).click({ timeout: 2000 }).catch(() => {});
       await settle();
-      await record(`${id}#scheda${i}`, root);
+      await record(`${id}#scheda${idx}`, root);
+    }
+    // le schede marcate, a parte (solo i.1 e i.4); poi si rimette la scheda di Filum che era aperta nel loro gruppo
+    let m = 0;
+    for (let i = 0; i < k; i++) {
+      if (!marks[i]) continue;
+      const tab = tabs.nth(i);
+      const back = await tab.evaluate((el) => {
+        const list = [...(el.closest("[role=tablist]")?.querySelectorAll("[role=tab]") ?? [])];
+        return { at: list.indexOf(el), was: list.findIndex((t) => t.getAttribute("aria-selected") === "true") };
+      });
+      await tab.click({ timeout: 2000 }).catch(() => {});
+      await settle();
+      await record(`modulo/${marks[i]}/${id}#scheda${m++}`, root);
+      if (back.was >= 0 && back.was !== back.at)
+        await tab.evaluate((el, was) => el.closest("[role=tablist]")?.querySelectorAll("[role=tab]")[was]?.click(), back.was);
+      await settle();
     }
   };
 
@@ -198,7 +274,14 @@ async function tour(browser, url, locale, shots) {
   await store((s, id) => s.select([id]), fill);
   await settle();
   const menuCount = await page.locator(".menu-btn").count();
+  // i menu di Filum, numerati senza quelli che un modulo aggiunge (data-nova): questi a parte, come modulo/<modulo>/menu/N
+  const menuMarks = [];
+  for (let i = 0; i < menuCount; i++) menuMarks.push(await page.locator(".menu-btn").nth(i).getAttribute("data-nova"));
+  let filumMenu = 0;
+  const moduleMenu = {};
   for (let i = 0; i < menuCount; i++) {
+    const mark = menuMarks[i];
+    const menuId = mark ? `modulo/${mark}/menu/${(moduleMenu[mark] = (moduleMenu[mark] ?? -1) + 1)}` : `menu/${filumMenu++}`;
     await page.locator(".menu-btn").nth(i).dispatchEvent("pointerdown");
     await page.locator(".menu").first().waitFor({ timeout: 5000 });
     await settle(200);
@@ -207,16 +290,20 @@ async function tour(browser, url, locale, shots) {
       const level = page.locator(".menu").nth(depth);
       const items = level.locator(":scope > .menu-item");
       const k = await items.count();
-      for (let j = 0; j < k; j++) {
-        const it = items.nth(j);
+      // le voci di Filum, numerate senza quelle dei moduli; un sottomenu di un modulo va a parte
+      let j = 0;
+      for (let x = 0; x < k; x++) {
+        const it = items.nth(x);
+        const mark = await it.getAttribute("data-nova");
+        const at = mark ? null : j++;
         if (!(await it.evaluate((el) => el.classList.contains("has-sub") && !el.disabled))) continue;
         await it.hover();
         await page.locator(".menu").nth(depth + 1).waitFor({ timeout: 5000 });
         await settle(200);
-        await walkMenu(`${id}/${j}`, depth + 1);
+        await walkMenu(mark ? `modulo/${mark}/${id}/${x}` : `${id}/${at}`, depth + 1);
       }
     };
-    await walkMenu(`menu/${i}`, 0);
+    await walkMenu(menuId, 0);
     await page.keyboard.press("Escape");
     await settle(150);
   }
@@ -280,7 +367,7 @@ async function tour(browser, url, locale, shots) {
   await reset();
 
   await context.close();
-  return { lang, screens, errors, missing };
+  return { lang, screens, marked, errors, missing, sample };
 }
 
 // --- confronti ---------------------------------------------------------------
@@ -310,10 +397,23 @@ function sheet(file, title, runs) {
 // --- main --------------------------------------------------------------------
 
 const { chromium } = loadPlaywright();
+const launch = () =>
+  chromium.launch().catch((e) => {
+    if (/Executable doesn't exist|playwright install/i.test(String(e?.message)))
+      throw new Error("giro: Chromium non è installato per Playwright. La prima volta, dalla radice del repository: npx playwright install chromium");
+    throw e;
+  });
 rmSync(OUT, { recursive: true, force: true });
 const server = await startServer();
 const url = server.resolvedUrls.local[0];
-const browser = await chromium.launch();
+let browser;
+try {
+  browser = await launch();
+} catch (e) {
+  await server.close();
+  console.error(e.message);
+  process.exit(1);
+}
 let failed = 0;
 const fail = (msg) => {
   failed++;
@@ -332,7 +432,7 @@ try {
       /* fuori da git */
     }
     // compatto: le scritte una volta sola, le schermate come indici
-    const screens = textsOf(run.screens);
+    const screens = Object.fromEntries(Object.entries(textsOf(run.screens)).filter(([id]) => !id.startsWith("modulo/")));
     const testi = [...new Set(Object.values(screens).flat())].sort();
     const index = new Map(testi.map((t, i) => [t, i]));
     const body = Object.entries(screens).map(([id, l]) => `  ${JSON.stringify(id)}: [${l.map((t) => index.get(t)).join(",")}]`);
@@ -356,9 +456,10 @@ try {
     const it = await tour(browser, url, "it-IT", itDir);
     if (it.lang !== "it") fail(`i.4 sistema in italiano, primo avvio: la lingua è "${it.lang}", non "it"`);
     else console.log("ok   i.4 sistema in italiano, primo avvio → lingua italiana");
+    const sampleDone = allAreas || aree.esempio?.fatta;
     const itBad = {};
     for (const [id, texts] of Object.entries(textsOf(it.screens))) {
-      if (!done(id) || !ref[id]) continue;
+      if (id.startsWith("modulo/") || aParte(id) || !done(id) || !ref[id]) continue;
       const english = new Set(ref[id]);
       const left = texts.filter((s) => english.has(s) && !allowed.has(s));
       if (left.length) itBad[id] = left;
@@ -374,7 +475,12 @@ try {
     mkdirSync(enDir, { recursive: true });
     const en = await tour(browser, url, "en-US", enDir);
     const enBad = {};
-    const now = textsOf(en.screens);
+    // i.3 esclude solo il nome del programma (filum.app.name): in entrambi i lati diventa ‹app›
+    const appNow = json("en.json")["filum.app.name"] ?? "Filum";
+    const app = (l) => l.map((s) => s.replaceAll(appNow, "‹app›").replaceAll("Filum", "‹app›"));
+    for (const id of Object.keys(ref)) ref[id] = app(ref[id]);
+    // le schermate modulo/… non sono di Filum: fuori da i.3 (contano per i.1 e i.4, qui sotto)
+    const now = Object.fromEntries(Object.entries(textsOf(en.screens)).filter(([id]) => !id.startsWith("modulo/") && !aParte(id)).map(([id, l]) => [id, app(l)]));
     for (const id of new Set([...Object.keys(ref), ...Object.keys(now)])) {
       const a = new Set(ref[id] ?? []);
       const b = new Set(now[id] ?? []);
@@ -388,10 +494,48 @@ try {
     else console.log(`ok   i.3 in inglese ogni schermata è identica a Filum 0.2.1 (${Object.keys(ref).length} schermate)`);
     runs.push({ lang: "en", screens: shotsOf(en.screens), bad: enBad });
 
+    // i.3, regola del 13/11: un elemento marcato (data-nova) non può contenere una scritta di Filum
+    // (non scatta per una scritta che è anche nel catalogo del modulo che ha marcato l'elemento: «Close», «About»)
+    const catalogs = moduleCatalogs();
+    const ownedBy = (text, mod) => catalogs.some(([m, v]) => m === mod && pattern(v).test(text));
+    const hidden = {};
+    for (const id of Object.keys(ref)) {
+      const filum = new Set(ref[id]);
+      const inside = (en.marked[id] ?? []).filter(([s, mod]) => filum.has(app([s])[0]) && !ownedBy(s, mod)).map(([s, mod]) => `${s} (${mod})`);
+      if (inside.length) hidden[id] = inside;
+    }
+    if (Object.keys(hidden).length)
+      fail(`i.3 elementi marcati (data-nova) con scritte di Filum 0.2.1:\n` + Object.entries(hidden).map(([id, l]) => `       ${id}: ${l.slice(0, 12).join(" · ")}`).join("\n"));
+    else console.log("ok   i.3 nessun elemento marcato (data-nova) contiene scritte di Filum 0.2.1");
+
+    // i.1 e i.4 per l'interfaccia dei moduli (elementi marcati, anche nelle schermate modulo/…):
+    // in italiano non resta una scritta uguale a quella inglese della stessa schermata
+    const sameEverywhere = (s) => allowed.has(s) || KEYS.test(s) || SIGLA.test(s) || !/\p{L}/u.test(s.replace(/#/g, ""));
+    const modBad = {};
+    // le scritte dei moduli sempre; quelle di Filum di una schermata a parte quando la sua area è tradotta
+    const textsAt = (run, id) => [...(aParte(id) && done(id) ? run.screens[id] ?? [] : []), ...(run.marked[id] ?? []).map(([t]) => t)];
+    for (const id of Object.keys(it.marked)) {
+      const english = new Set(textsAt(en, id));
+      const left = textsAt(it, id).filter((s) => english.has(s) && !sameEverywhere(s));
+      if (left.length) modBad[id] = left;
+    }
+    const modScreens = Object.keys(textsOf(it.screens)).filter((id) => id.startsWith("modulo/") || aParte(id));
+    if (Object.keys(modBad).length)
+      fail(`i.1/i.4 interfaccia dei moduli e schermate a parte: scritte inglesi rimaste in italiano:\n` + Object.entries(modBad).map(([id, l]) => `       ${id}: ${l.slice(0, 12).join(" · ")}`).join("\n"));
+    else console.log(`ok   i.1/i.4 l'interfaccia dei moduli e le schermate a parte sono in italiano (${modScreens.length}: ${modScreens.join(", ") || "nessuna"})`);
+    for (const id of Object.keys(modBad)) itBad[id] = [...(itBad[id] ?? []), ...modBad[id]];
+
+    // i.4: il disegno generato al primo avvio ha i nomi in italiano
+    if (sampleDone) {
+      const same = it.sample.filter((name, i) => !name?.trim() || (name === en.sample[i] && !allowed.has(norm(name))));
+      if (it.sample.length !== en.sample.length || same.length) fail(`i.4 nel disegno del primo avvio restano nomi non tradotti: ${same.join(" · ") || "(numero di nomi diverso)"}`);
+      else console.log(`ok   i.4 il disegno del primo avvio ha i nomi in italiano (${it.sample.slice(0, 4).join(", ")}, …)`);
+    }
+
     for (const r of [it, en]) for (const e of [...new Set(r.errors)]) console.log(`     errore nella pagina (${r.lang}): ${e}`);
     for (const r of [it, en]) if (r.missing.length) fail(`giro (${r.lang}): schermate non trovate: ${r.missing.join(", ")}`);
     sheet(path.join(OUT, "foglio.html"), "Giro di Filum — italiano e inglese", runs);
-    writeFileSync(path.join(OUT, "risultato.json"), JSON.stringify({ it: { lang: it.lang, schermate: textsOf(it.screens), inglese: itBad }, en: { schermate: now, differenze: enBad } }, null, 1));
+    writeFileSync(path.join(OUT, "risultato.json"), JSON.stringify({ it: { lang: it.lang, schermate: textsOf(it.screens), marcati: it.marked, inglese: itBad }, en: { schermate: now, marcati: en.marked, differenze: enBad, marcatiConFilum: hidden } }, null, 1));
     console.log(`giro: foto e foglio riassuntivo in ${path.join(OUT, "foglio.html")}`);
   }
 } finally {

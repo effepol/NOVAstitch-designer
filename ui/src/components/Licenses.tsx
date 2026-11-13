@@ -99,10 +99,11 @@ function Row({ item, texts, loadText }: { item: Item; texts: Record<string, stri
   );
 }
 
-export function LicensesDialog({ onClose }: { onClose: () => void }) {
+/** `initialTab`: NOVAstitch's About ▸ Credits opens it on the embroidery fonts. */
+export function LicensesDialog({ onClose, initialTab = "app" }: { onClose: () => void; initialTab?: Tab }) {
   const [data, setData] = useState<ThirdParty | null>(null);
   const [fonts, setFonts] = useState<EmbroideryIndex | null>(null);
-  const [tab, setTab] = useState<Tab>("app");
+  const [tab, setTab] = useState<Tab>(initialTab);
   const [query, setQuery] = useState("");
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
