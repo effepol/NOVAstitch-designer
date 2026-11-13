@@ -10,6 +10,8 @@ import { freshCopies } from "./copies";
 import { checkDoc } from "./docCheck";
 import { emit } from "../nova/core/events";
 import { projectFormat, type ProjectRead } from "../nova/core/project";
+import { modulesReady } from "../nova/core/modules";
+import { withHoop } from "../nova/core/hoopChoice";
 
 // every embroidery format the engine reads (crates/formats), extension aliases included
 export const MACHINE_EXT = [
@@ -61,15 +63,17 @@ export function newDesign() {
   if (!preset) return doc;
   const m = machineById(preset.id);
   const f = m.frames.find((x) => x.id === localStorage.getItem("filum.frame"));
-  return {
-    ...doc,
-    machine: { ...preset.values, profile: preset.id },
-    ...(f ? { hoop: { name: `${m.brand} ${f.name}`.trim(), width: f.width, height: f.height, ...(f.shape ? { shape: f.shape } : {}) } } : {}),
-  };
+  const design = { ...doc, machine: { ...preset.values, profile: preset.id } };
+  // NOVAstitch: the machine's frame through withHoop (module a writes nova.hoopKind: a cap frame is "cap" from the first moment)
+  return f
+    ? withHoop(design, { source: "preset", id: `machine:${m.id}/${f.id}` }, (d) => ({ ...d, hoop: { name: `${m.brand} ${f.name}`.trim(), width: f.width, height: f.height, ...(f.shape ? { shape: f.shape } : {}) } }))
+    : design;
 }
 
 /** `launch`: a file Filum was opened with replaces the design (once it has loaded; the user was asked already). */
 async function handleBytes(name: string, path: string | null, bytes: Uint8Array, mode: "open" | "import" | "launch") {
+  // NOVAstitch: a file opened at launch may come before the modules have started (module a reads .nsd)
+  await modulesReady();
   const s = useStore.getState();
   const ext = name.split(".").pop()?.toLowerCase() ?? "";
   try {

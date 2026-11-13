@@ -1,0 +1,4 @@
+{
+  "_nota": "Chiavi composte a programma, per esempio t(`filum.menu.top.${nome}`): il controllo dei cataloghi non le vede nel codice, quindi le dichiariamo qui come prefisso. Ogni chiave del catalogo che comincia con uno di questi prefissi conta come usata.",
+  "prefissi": {}
+}

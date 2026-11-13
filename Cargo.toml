@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/core", "crates/formats", "crates/wasm", "crates/cli", "src-tauri"]
+members = ["crates/core", "crates/formats", "crates/wasm", "crates/cli", "crates/schema-gen", "src-tauri"]
 default-members = ["crates/core", "crates/cli"]
 
 [workspace.package]

@@ -1,0 +1,12 @@
+[package]
+name = "nova-schema-gen"
+description = "NOVAstitch Designer (module a): generates the Filum part of the public .nsd schema (schema/filum-core.schema.json) from the Rust types"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+filum-core = { workspace = true, features = ["schema"] }
+schemars = "1.2"
+serde_json.workspace = true

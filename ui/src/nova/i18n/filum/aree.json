@@ -1,0 +1,126 @@
+{
+  "_nota": "Modulo i: le aree della traduzione di Filum. Ogni file di Filum con testi visibili sta in una sola area. 'fatta': true quando la PR dell'area è entrata in main: da quel momento il linter (check-texts.mjs) e il giro (giro.mjs) la controllano in italiano.",
+  "aree": {
+    "menu": {
+      "descrizione": "Menu, ricerca comandi",
+      "fatta": false,
+      "file": [
+        "components/menuModel.ts",
+        "components/MenuBar.tsx",
+        "components/CommandPalette.tsx",
+        "components/CommandsSection.tsx"
+      ]
+    },
+    "barre": {
+      "descrizione": "Barre, strumenti, tela, barra in basso",
+      "fatta": false,
+      "file": [
+        "App.tsx",
+        "main.tsx",
+        "components/Bars.tsx",
+        "components/BottomBar.tsx",
+        "components/ToolOptions.tsx",
+        "components/StatusHints.tsx",
+        "components/ReferenceBar.tsx",
+        "components/WindowControls.tsx",
+        "canvas/Canvas.tsx",
+        "canvas/handles.ts",
+        "canvas/DesignView.tsx"
+      ]
+    },
+    "pannelli": {
+      "descrizione": "Pannelli del Dock e controlli",
+      "fatta": false,
+      "file": [
+        "components/Dock.tsx",
+        "components/Panels.tsx",
+        "components/StitchPanel.tsx",
+        "components/GradientPanel.tsx",
+        "components/DensityPanel.tsx",
+        "components/MaterialPanel.tsx",
+        "components/CutworkPanel.tsx",
+        "components/TartanPanel.tsx",
+        "components/MatchPanel.tsx",
+        "components/TransformPanel.tsx",
+        "components/ElementInfo.tsx",
+        "components/ArrangeTools.tsx",
+        "components/LetteringTools.tsx",
+        "components/Lettering.tsx",
+        "components/SatinGuides.tsx",
+        "components/MulticolorSatin.tsx",
+        "components/HiddenStitching.tsx",
+        "components/FabricLook.tsx",
+        "components/LockPicker.tsx",
+        "components/MeanderPicker.tsx",
+        "components/ThreadPicker.tsx",
+        "components/RegionEditor.tsx",
+        "components/MachineOptions.tsx",
+        "components/ui.tsx"
+      ]
+    },
+    "finestre": {
+      "descrizione": "Finestre di dialogo",
+      "fatta": false,
+      "file": [
+        "components/Dialogs.tsx",
+        "components/DigitizeDialog.tsx",
+        "components/ExportDialog.tsx",
+        "components/ExportExtras.tsx",
+        "components/PrintDialog.tsx",
+        "components/CalibrateDialog.tsx",
+        "components/SettingsDialog.tsx",
+        "components/KnockdownDialog.tsx",
+        "components/RouteDialog.tsx",
+        "components/ConvertTools.tsx",
+        "components/ShapeEffects.tsx",
+        "components/RebuildShapes.tsx",
+        "components/ThreadManager.tsx",
+        "components/ThreadListDialog.tsx",
+        "components/TestSwatches.tsx",
+        "components/CrossStitchAssistant.tsx",
+        "components/Licenses.tsx",
+        "components/DownloadsPanel.tsx",
+        "components/MachineSettings.tsx",
+        "components/StitchOut.tsx",
+        "components/ErrorBoundary.tsx"
+      ]
+    },
+    "messaggi": {
+      "descrizione": "Messaggi, avvisi, errori (anche quelli del motore)",
+      "fatta": false,
+      "file": [
+        "store.ts",
+        "lib/actions.ts",
+        "lib/arrange.ts",
+        "lib/issues.ts",
+        "lib/autoRoute.ts",
+        "lib/shapeOps.ts",
+        "lib/shapeCheck.ts",
+        "lib/convert.ts",
+        "lib/textOps.ts",
+        "lib/exportFiles.ts",
+        "lib/density.ts",
+        "lib/nodeActions.ts",
+        "lib/shapeBuilder.ts",
+        "lib/references.ts",
+        "lib/layerTools.ts",
+        "lib/knockdown.ts",
+        "lib/gradient.ts",
+        "lib/ramp.ts",
+        "lib/prefs.ts"
+      ]
+    },
+    "dati": {
+      "descrizione": "Dati: macchine, materiali, preset, cartelle colori",
+      "fatta": false,
+      "file": [
+        "lib/machines.ts",
+        "lib/materials.ts",
+        "lib/threadMatch.ts",
+        "lib/digitizePresets.ts",
+        "lib/threads.ts",
+        "lib/fonts.ts"
+      ]
+    }
+  }
+}
