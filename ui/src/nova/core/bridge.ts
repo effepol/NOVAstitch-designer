@@ -1,9 +1,11 @@
 // Filum's own state changes, sent on the bus: doc.changed, selection.changed,
-// view.changed, plan.ready. Installed once at start (main.tsx).
+// view.changed, plan.ready. Installed once at start (main.tsx), and it starts
+// the modules (nova/<module>/install.ts, see modules.ts).
 
 import { useStore } from "../../store";
 import { emit } from "./events";
 import { runningCommand } from "./commands";
+import { startModules } from "./modules";
 
 /** Filum's 1× zoom: 96 CSS px per inch (BottomBar). Module c may calibrate it. */
 export const FILUM_PX_PER_MM = 96 / 25.4;
@@ -19,6 +21,8 @@ export function installBridge(): () => void {
       emit("view.changed", { mode: s.viewMode, scale: s.view.scale, ox: s.view.ox, oy: s.view.oy, zoomFactor: s.view.scale / FILUM_PX_PER_MM });
     if (s.plan && s.plan !== prev.plan) emit("plan.ready", { stats: s.plan.stats });
   });
+  // the modules hang on Filum through the hooks: start them once
+  void startModules();
   installed = () => {
     unsub();
     installed = null;
