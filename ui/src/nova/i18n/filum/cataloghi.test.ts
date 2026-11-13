@@ -43,7 +43,8 @@ check(!missing.length, `i ogni chiave usata ha un testo italiano e uno inglese (
 const onlyIt = Object.keys(it).filter((k) => !(k in en));
 const onlyEn = Object.keys(en).filter((k) => !(k in it));
 check(!onlyIt.length && !onlyEn.length, `i it.json ed en.json hanno le stesse chiavi (solo it: ${onlyIt.join(", ") || "nessuna"}; solo en: ${onlyEn.join(", ") || "nessuna"})`);
-const badName = Object.keys(en).filter((k) => !/^filum\.[a-z]+\.[A-Za-z0-9_.-]+$/.test(k) || !(k.split(".")[1] in aree));
+// filum.app.name: il nome del programma, chiave unica fissata dall'Architetto (non è un'area)
+const badName = Object.keys(en).filter((k) => k !== "filum.app.name" && (!/^filum\.[a-z]+\.[A-Za-z0-9_.-]+$/.test(k) || !(k.split(".")[1] in aree)));
 check(!badName.length, `i ogni chiave è "filum.<area>.<chiave>" con un'area di aree.json (fuori regola: ${badName.slice(0, 20).join(", ") || "nessuna"})`);
 const blank = Object.keys(en).filter((k) => empty(en[k]) || empty(it[k]));
 check(!blank.length, `i nessun testo vuoto (${blank.slice(0, 20).join(", ") || "nessuno"})`);
@@ -59,8 +60,14 @@ const same = Object.keys(en).filter((k) => it[k] === en[k] && !allowed.has(en[k]
 check(!same.length, `i.1 nessun testo italiano è rimasto in inglese (${same.slice(0, 20).map((k) => `${k}="${en[k]}"`).join(", ") || "nessuno"})`);
 
 // --- i.3 (statico): l'inglese è quello di Filum 0.2.1 --------------------------
-const changed = Object.keys(en).filter((k) => origine[k]?.testo !== en[k]);
-check(!changed.length, `i.3 ogni testo inglese è identico a Filum 0.2.1 (diversi o senza origine: ${changed.slice(0, 20).join(", ") || "nessuno"})`);
+// Il nome del programma (filum.app.name) è l'unica chiave esclusa; negli altri testi {app} vale il nome di Filum 0.2.1.
+const APP = "filum.app.name";
+check(APP in en && APP in origine, "i.3 il nome del programma sta nella chiave filum.app.name");
+const oldName = origine[APP]?.testo ?? "Filum";
+const changed = Object.keys(en).filter((k) => k !== APP && origine[k]?.testo !== en[k].replaceAll("{app}", oldName));
+check(!changed.length, `i.3 ogni testo inglese è identico a Filum 0.2.1, salvo filum.app.name (diversi o senza origine: ${changed.slice(0, 20).join(", ") || "nessuno"})`);
+const named = Object.keys(en).filter((k) => k !== APP && en[k].includes(oldName));
+check(!named.length, `i il nome del programma nei testi è {app}, non scritto (${named.slice(0, 20).join(", ") || "nessuno"})`);
 const lost = Object.keys(origine).filter((k) => !(k in en));
 check(!lost.length, `i.3 ogni testo di Filum 0.2.1 estratto è nel catalogo (persi: ${lost.slice(0, 20).join(", ") || "nessuno"})`);
 

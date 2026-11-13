@@ -6,16 +6,19 @@
 // raccoglie le scritte visibili (testo, title, placeholder, aria-label, alt,
 // voci delle tendine) e fa una foto.
 //
-//   i.4  sistema in italiano, primo avvio (nessuna scelta salvata) → lingua italiana
+//   i.4  sistema in italiano, primo avvio (nessuna scelta salvata) → lingua italiana,
+//        e il disegno generato al primo avvio ha i nomi in italiano
 //   i.1  in italiano nessuna scritta inglese, nelle aree già tradotte (aree.json)
 //   i.3  in inglese ogni schermata ha le stesse scritte di Filum 0.2.1
-//        (riferimento-en-0.2.1.json, raccolto con --riferimento prima del modulo i)
+//        (riferimento-en-0.2.1.json, raccolto con --riferimento prima del modulo i);
+//        è escluso solo il nome del programma (filum.app.name)
 //
 // Le cifre sono sostituite da # prima del confronto: contano le parole, non i numeri.
 // Le foto e un foglio riassuntivo (foglio.html) vanno in NOVA_GIRO_DIR, o in
 // <tmp>/nova-giro-filum.
 //
-// Uso (dalla radice del repository; prima: npm run wasm):
+// Uso (dalla radice del repository; prima: npm run wasm e, la prima volta,
+// npx playwright install chromium):
 //   node ui/src/nova/i18n/filum/giro.mjs                  i.1, i.3, i.4
 //   node ui/src/nova/i18n/filum/giro.mjs --tutte-le-aree  i.1 su tutte le aree (fallisce finché non sono tradotte)
 //   node ui/src/nova/i18n/filum/giro.mjs --riferimento [--ui <cartella ui di Filum 0.2.1>]
@@ -120,6 +123,11 @@ async function tour(browser, url, locale, shots) {
   await page.waitForTimeout(3000);
 
   const lang = await page.evaluate(() => document.documentElement.lang);
+  // i.4: i nomi del disegno generato al primo avvio (disegno, oggetti, fili), nello stesso ordine in ogni lingua
+  const sample = await page.evaluate(async () => {
+    const d = (await import("/src/store.ts")).useStore.getState().doc;
+    return [d.name, ...d.objects.map((o) => o.name), ...d.threads.map((t) => t.name)];
+  });
   const screens = {};
   const missing = [];
   let n = 0;
@@ -280,7 +288,7 @@ async function tour(browser, url, locale, shots) {
   await reset();
 
   await context.close();
-  return { lang, screens, errors, missing };
+  return { lang, screens, errors, missing, sample };
 }
 
 // --- confronti ---------------------------------------------------------------
@@ -310,10 +318,23 @@ function sheet(file, title, runs) {
 // --- main --------------------------------------------------------------------
 
 const { chromium } = loadPlaywright();
+const launch = () =>
+  chromium.launch().catch((e) => {
+    if (/Executable doesn't exist|playwright install/i.test(String(e?.message)))
+      throw new Error("giro: Chromium non è installato per Playwright. La prima volta, dalla radice del repository: npx playwright install chromium");
+    throw e;
+  });
 rmSync(OUT, { recursive: true, force: true });
 const server = await startServer();
 const url = server.resolvedUrls.local[0];
-const browser = await chromium.launch();
+let browser;
+try {
+  browser = await launch();
+} catch (e) {
+  await server.close();
+  console.error(e.message);
+  process.exit(1);
+}
 let failed = 0;
 const fail = (msg) => {
   failed++;
@@ -356,6 +377,7 @@ try {
     const it = await tour(browser, url, "it-IT", itDir);
     if (it.lang !== "it") fail(`i.4 sistema in italiano, primo avvio: la lingua è "${it.lang}", non "it"`);
     else console.log("ok   i.4 sistema in italiano, primo avvio → lingua italiana");
+    const sampleDone = allAreas || aree.esempio?.fatta;
     const itBad = {};
     for (const [id, texts] of Object.entries(textsOf(it.screens))) {
       if (!done(id) || !ref[id]) continue;
@@ -374,7 +396,11 @@ try {
     mkdirSync(enDir, { recursive: true });
     const en = await tour(browser, url, "en-US", enDir);
     const enBad = {};
-    const now = textsOf(en.screens);
+    // i.3 esclude solo il nome del programma (filum.app.name): in entrambi i lati diventa ‹app›
+    const appNow = json("en.json")["filum.app.name"] ?? "Filum";
+    const app = (l) => l.map((s) => s.replaceAll(appNow, "‹app›").replaceAll("Filum", "‹app›"));
+    for (const id of Object.keys(ref)) ref[id] = app(ref[id]);
+    const now = Object.fromEntries(Object.entries(textsOf(en.screens)).map(([id, l]) => [id, app(l)]));
     for (const id of new Set([...Object.keys(ref), ...Object.keys(now)])) {
       const a = new Set(ref[id] ?? []);
       const b = new Set(now[id] ?? []);
@@ -387,6 +413,13 @@ try {
     if (enCount) fail(`i.3 ${enCount} schermate in inglese diverse da Filum 0.2.1:\n` + Object.entries(enBad).map(([id, l]) => `       ${id}: ${l.slice(0, 12).join(" · ")}${l.length > 12 ? " …" : ""}`).join("\n"));
     else console.log(`ok   i.3 in inglese ogni schermata è identica a Filum 0.2.1 (${Object.keys(ref).length} schermate)`);
     runs.push({ lang: "en", screens: shotsOf(en.screens), bad: enBad });
+
+    // i.4: il disegno generato al primo avvio ha i nomi in italiano
+    if (sampleDone) {
+      const same = it.sample.filter((name, i) => !name?.trim() || (name === en.sample[i] && !allowed.has(norm(name))));
+      if (it.sample.length !== en.sample.length || same.length) fail(`i.4 nel disegno del primo avvio restano nomi non tradotti: ${same.join(" · ") || "(numero di nomi diverso)"}`);
+      else console.log(`ok   i.4 il disegno del primo avvio ha i nomi in italiano (${it.sample.slice(0, 4).join(", ")}, …)`);
+    }
 
     for (const r of [it, en]) for (const e of [...new Set(r.errors)]) console.log(`     errore nella pagina (${r.lang}): ${e}`);
     for (const r of [it, en]) if (r.missing.length) fail(`giro (${r.lang}): schermate non trovate: ${r.missing.join(", ")}`);
