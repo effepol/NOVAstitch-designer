@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "name": "Stemma",
+  "hoop": { "name": "Tajima 15 cm", "width": 150, "height": 150, "shape": "oval" },
+  "fabric": "pique",
+  "threads": [],
+  "objects": [{ "id": "o1", "thread": "t1", "paths": [], "stitch": { "type": "fill" }, "nova": { "edited": ["stitch.underlay"] } }],
+  "nova": {
+    "schemaVersion": 1,
+    "app": { "name": "NOVAstitch Designer", "version": "0.1.0" },
+    "hoopRef": { "id": "uh-3", "name": "Tajima 15 cm" },
+    "fabricPreset": { "id": "pique", "rev": 2 },
+    "edit": { "mirrorPivot": "selection", "duplicateOffset": [0, 0] },
+    "patchGroups": [],
+    "mode": "studio",
+    "lesson": null,
+    "ext": {}
+  }
+}

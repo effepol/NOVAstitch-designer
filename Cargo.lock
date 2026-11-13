@@ -2239,6 +2239,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "650eef8c711430f1a879fdd01d4745a7deea475becfb90269c06775983bbf086"
 
 [[package]]
+name = "nova-schema-gen"
+version = "0.2.1"
+dependencies = [
+ "filum-core",
+ "schemars 1.2.3",
+ "serde_json",
+]
+
+[[package]]
 name = "num-conv"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
