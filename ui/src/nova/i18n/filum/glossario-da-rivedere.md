@@ -6,5 +6,7 @@ Per cambiarne una basta scrivere la scelta nella colonna «Decisione»: la PR su
 
 | Inglese (Filum) | Proposta italiana | Alternative | Chiavi | Decisione |
 |---|---|---|---|---|
+| badge (Mountain badge, Badge ring) | toppa (Toppa con montagne, Bordo della toppa) | stemma, distintivo, scudetto | filum.esempio.nome, filum.esempio.oggetto.bordo | |
+| Slate Blue (colore del filo) | Blu ardesia | Grigio ardesia | filum.esempio.filo.slate | |
 
 Le righe si aggiungono a ogni PR di traduzione, area per area.

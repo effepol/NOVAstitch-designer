@@ -1,4 +1,6 @@
 {
-  "_nota": "Chiavi composte a programma, per esempio t(`filum.menu.top.${nome}`): il controllo dei cataloghi non le vede nel codice, quindi le dichiariamo qui come prefisso. Ogni chiave del catalogo che comincia con uno di questi prefissi conta come usata.",
-  "prefissi": {}
+  "_nota": "Chiavi che il controllo dei cataloghi non vede scritte come t(\"…\") nei file di Filum: composte a programma, per esempio t(`filum.menu.top.${nome}`), oppure usate da index.ts. Ogni chiave del catalogo che comincia con uno di questi prefissi conta come usata.",
+  "prefissi": {
+    "filum.app.name": "il nome del programma: index.ts lo mette in ogni {app}"
+  }
 }
