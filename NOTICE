@@ -1,0 +1,101 @@
+NOVAstitch Designer
+Copyright (c) 2026 Poletti Centro Cucito
+
+Questo programma è una versione modificata di Filum
+(https://github.com/benkl/filum),
+distribuito con licenza GNU GPL versione 3. Le modifiche sono state
+fatte dal 2026 da Poletti Centro Cucito. Il testo della licenza è nel
+file LICENSE. Le parti di Filum restano distribuite alle stesse
+condizioni.
+
+Altri componenti e font inclusi mantengono le proprie licenze: vedi
+l'elenco in ui/public/licenses/third-party.json e le licenze dei font
+nella cartella dei font.
+
+---
+
+NOVAstitch Designer
+Copyright (c) 2026 Poletti Centro Cucito
+
+This program is a modified version of Filum
+(https://github.com/benkl/filum),
+distributed under the GNU GPL version 3. Modifications were made from
+2026 by Poletti Centro Cucito. The licence text is in the LICENSE
+file. The Filum parts remain distributed under the same terms.
+
+Other bundled components and fonts keep their own licences: see the
+list in ui/public/licenses/third-party.json and the font licences in
+the fonts folder.
+
+---
+
+Copyright e licenze conservati / Copyrights and licences kept
+(già presenti in Filum 0.2.1 e nel repository / already in Filum 0.2.1
+and in the repository)
+
+Filum
+  Copyright (c) Benjamin Kleinert (benkl). GPL-3.0-or-later.
+  https://github.com/benkl/filum (base del fork / fork base: commit
+  f88e717, versione / version 0.2.1)
+
+Ink/Stitch: algoritmi di punto e formato SVG portati, cartelle colori
+dei fili (ui/public/palettes), tile dei riempimenti meander, simboli /
+ported stitch algorithms and SVG dialect, thread charts, meander tiles,
+symbols
+  Copyright (c) Ink/Stitch authors. GPL-3.0-or-later.
+  https://github.com/inkstitch/inkstitch
+
+pystitch: codifica e decodifica dei formati macchina (crates/formats; ogni
+file portato conserva la sua intestazione) / embroidery file encoders and
+decoders (each ported file keeps its attribution header)
+  Copyright (c) 2018 Tatarize and contributors. MIT.
+  https://github.com/inkstitch/pystitch
+
+Modelli inclusi nel digitalizzatore / Models bundled with the digitizer
+  MobileSAM: Chaoning Zhang et al. (MobileSAM); Meta AI (Segment
+    Anything); ONNX export by Acly. MIT AND Apache-2.0.
+  DexiNed: Xavier Soria Poma; OpenCV model zoo. MIT.
+  Informative Drawings: Caroline Chan, Frédo Durand, Phillip Isola; ONNX
+    export by Joseph Rocca. MIT.
+  Tesseract OCR e dati inglesi / and English data: Tesseract
+    contributors; tesseract.js contributors. Apache-2.0.
+
+Ricerca su cui si basa il digitalizzatore (solo algoritmi, nessun codice)
+/ Research the digitizer builds on (algorithms only, no code)
+  Hoshyari et al. (SIGGRAPH 2018); Kopf & Lischinski (SIGGRAPH 2011);
+  Kang, Lee & Chui (NPAR 2007, TVCG 2009); Du et al. (SIGGRAPH 2023);
+  Liu et al. (CGF 2023); Jobard & Lefer (1997); Noris et al. (TOG 2013);
+  Favreau et al. (SIGGRAPH 2016); Steger (TPAMI 1998); VTracer (MIT).
+
+Font dell'interfaccia / Interface fonts (ui/public/fonts, SIL Open Font
+License 1.1, testo accanto a ogni font / text next to each font)
+  Nunito: Copyright 2014 The Nunito Project Authors.
+  Bebas Neue: Copyright © 2010 by Dharma Type.
+  Pacifico: Copyright 2018 The Pacifico Project Authors.
+
+Font da ricamo / Embroidery fonts (ui/public/embroidery-fonts, 135 font
+dalla collezione / from the collection inkstitch/embroidery-fonts). Ogni
+cartella contiene il file LICENSE del suo autore, che vale per quel font /
+Each folder holds its author's LICENSE file, which applies to that font:
+  SIL OFL: 102 · CC BY-SA: 25 · pubblico dominio o CC0 / public domain or
+  CC0: 3 · CC BY: 1 · GPL: 1 (precious) · CC BY-ND: 1 (infinipicto) ·
+  "Free for Personal and Commercial use": 1 (nick_ainley, Seniors Studio;
+  ricalcato da / traced by Karen Cravens, Silver Seams).
+
+Colori dei fili / Thread colours
+  Madeira Cotona 50 / 30 / 80: colori ricavati dalle cartelle colori
+  pubblicate da / colours sampled from the colour cards published by
+  Madeira Garnfabrik and Madeira USA.
+
+Non inclusi, scaricabili a parte dall'utente / Not included, optional
+downloads (Preferences → Downloads)
+  8 font da ricamo non commerciali / non-commercial embroidery fonts
+  (CC BY-NC-SA 4.0).
+  Embroidery Nerds thread charts (Matthew Enderle, The Embroidery Nerds,
+  LLC): nessuna licenza dichiarata / no licence stated.
+
+Dipendenze / Dependencies
+  42 pacchetti npm e 446 crate Rust, ciascuno con autore, licenza e testo
+  della licenza / 42 npm packages and 446 Rust crates, each with its
+  author, licence and licence text: ui/public/licenses/third-party.json
+  (nell'app / in the app: Help → Licences).

@@ -3,5 +3,15 @@
   "core.language.en": "Inglese",
   "core.language.title": "Lingua",
   "core.menu.language.it": "Lingua: italiano",
-  "core.menu.language.en": "Lingua: inglese"
+  "core.menu.language.en": "Lingua: inglese",
+  "core.about.title": "Informazioni",
+  "core.about.line": "NOVAstitch Designer, versione {version}.",
+  "core.about.what": "Programma gratuito di digitalizzazione vettoriale per il ricamo.",
+  "core.about.base": "Basato su Filum (benkl), GPL-3.0.",
+  "core.about.who": "Poletti Centro Cucito, Clusone",
+  "core.about.license": "Licenza",
+  "core.about.credits": "Crediti",
+  "core.about.fontLicenses": "Licenze dei font e dei componenti…",
+  "core.about.back": "Indietro",
+  "core.about.close": "Chiudi"
 }
