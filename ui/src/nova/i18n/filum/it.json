@@ -17,5 +17,10 @@
   "filum.esempio.oggetto.montagne": "Montagne",
   "filum.esempio.oggetto.nuvola": "Nuvola",
   "filum.esempio.oggetto.sole": "Sole",
-  "filum.esempio.oggetto.uccelli": "Uccelli"
+  "filum.esempio.oggetto.uccelli": "Uccelli",
+  "filum.pannelli.close": "Chiudi",
+  "filum.pannelli.close_esc": "Chiudi (Esc)",
+  "filum.pannelli.ctrl_click_open_only_this": "Ctrl+clic: apri solo questa",
+  "filum.pannelli.drag_to_move_double_click": "Trascina per spostare · doppio clic: torna al centro",
+  "filum.pannelli.drag_to_move_double_click_2": "Trascina per spostare · doppio clic: torna al suo posto"
 }

@@ -33,7 +33,16 @@ check(/className="panel-body"[^>]*data-nova=\{own\?\.module\}/.test(panels), "Pa
 check(/data-nova=\{b\.module\}/.test(read("components/BottomBar.tsx")), "BottomBar.tsx: a registered button is marked");
 const bar = read("components/MenuBar.tsx");
 check(/data-nova=\{it\.nova\}/.test(bar) && /data-nova=\{menuOwner\(name\)\}/.test(bar), "MenuBar.tsx: registered items and added menus are marked");
-check(/data-nova=\{c\.item\.nova\}/.test(read("components/CommandPalette.tsx")), "CommandPalette.tsx: registered commands are marked");
+// command palette (13/11): only the label of a module's command is marked; Filum's menu path (e.g. "Edit") is not
+const palette = read("components/CommandPalette.tsx");
+check(/<span className="pl-label" data-nova=\{c\.item\.nova\}>/.test(palette), "CommandPalette.tsx: a registered command's label is marked");
+check(!/<button[^>]*data-nova=/.test(palette) && !/className="pl-path"[^>]*data-nova/.test(palette), "CommandPalette.tsx: the whole entry and its menu path are not marked");
 check(/<optgroup[^>]*data-nova=\{g\.module\}/.test(read("components/Bars.tsx")), "Bars.tsx: the hoop groups of the modules are marked");
+
+// About (13/11): module 0's window, title, texts and credits, is marked "core"; Filum's licences window is not
+check(/data-nova=\{nova\}/.test(read("components/ui.tsx")) && /nova\?: string/.test(read("components/ui.tsx")), "ui.tsx: a Dialog can carry a module's mark on the whole window, title included");
+const about = read("nova/core/about.tsx");
+check(/<Dialog[^>]*nova="core"/.test(about), "about.tsx: the About window (title, texts, licence, credits) is marked core");
+check(!/<LicensesDialog[^>]*nova=/.test(about), "about.tsx: Filum's licences window opened from Credits stays unmarked");
 
 done("module marking (i.3)");
