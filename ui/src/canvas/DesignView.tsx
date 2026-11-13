@@ -5,6 +5,7 @@
 // pointer, dragging pans, double-click fits.
 
 import { Maximize2 } from "lucide-react";
+import { t } from "../nova/i18n/filum";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { objectBounds, unionBoxes, type Box } from "../lib/geometry";
 import { threadWidth } from "../lib/materials";
@@ -238,10 +239,10 @@ export function DesignView({ doc, plan, mode, fabricColor, showUnderlay = true, 
         }}
         onPointerUp={() => (drag.current = null)}
         onDoubleClick={fit}
-        title="Scroll to zoom · drag to pan · double-click to fit"
+        title={t("filum.barre.scroll_to_zoom_drag_to")}
       />
       {userView.current && (
-        <button className="icon-btn design-view-fit" onClick={fit} title="Fit the design (double-click)">
+        <button className="icon-btn design-view-fit" onClick={fit} title={t("filum.barre.fit_the_design_double_click")}>
           <Maximize2 size={14} />
         </button>
       )}

@@ -40,6 +40,7 @@ import { RegionEditor, regionAt } from "./RegionEditor";
 import { chartLabel, loadChart } from "../lib/threads";
 import { Dialog, fmtTime, Num, Row, Slider, Toggle } from "./ui";
 import { safeSetItem } from "../lib/storage";
+import { t, tn, useLanguage } from "../nova/i18n/filum";
 
 type Rgb = [number, number, number];
 
@@ -49,10 +50,10 @@ const DEFAULTS = DIGITIZE_DEFAULTS;
 /** What a colour becomes: decided from the picture, or chosen. */
 type Role = "auto" | "fill" | "line" | "omit";
 const ROLES: { id: Role; icon: ReactNode; label: string; hint: string }[] = [
-  { id: "auto", icon: <Sparkles size={12} />, label: "Auto", hint: "Decided from the picture: thin, long shapes and ink become lines, the rest fills" },
-  { id: "fill", icon: <StitchFill size={12} />, label: "Fill", hint: "Always a fill — never lines, also not as ink" },
-  { id: "line", icon: <PenLine size={12} />, label: "Line", hint: "Always lines along the centre (outlines, details), whatever their width" },
-  { id: "omit", icon: <EyeOff size={12} />, label: "Omit", hint: "Leave this colour out" },
+  { id: "auto", icon: <Sparkles size={12} />, get label() { return t("filum.digitalizza.auto"); }, get hint() { return t("filum.digitalizza.decided_from_the_picture_thin"); } },
+  { id: "fill", icon: <StitchFill size={12} />, get label() { return t("filum.digitalizza.fill"); }, get hint() { return t("filum.digitalizza.always_a_fill_never_lines"); } },
+  { id: "line", icon: <PenLine size={12} />, get label() { return t("filum.digitalizza.line"); }, get hint() { return t("filum.digitalizza.always_lines_along_the_centre"); } },
+  { id: "omit", icon: <EyeOff size={12} />, get label() { return t("filum.digitalizza.omit"); }, get hint() { return t("filum.digitalizza.leave_this_colour_out"); } },
 ];
 
 const PRESET_ICONS: Record<PresetId, ReactNode> = {
@@ -64,54 +65,54 @@ const PRESET_ICONS: Record<PresetId, ReactNode> = {
 };
 
 const FILL_METHODS: { id: FillMethod; icon: LucideIcon; label: string; hint: string }[] = [
-  { id: "tatami", icon: StitchFill, label: "Tatami", hint: "Parallel staggered rows — the classic, even fill" },
-  { id: "flow", icon: Waves, label: "Flow", hint: "Rows bend with the picture — streamlines along its edges and shading" },
-  { id: "curved", icon: Rainbow, label: "Curved", hint: "Rows follow the outline of each shape" },
-  { id: "contour", icon: StitchContour, label: "Contour", hint: "Rings that follow the outline of each shape" },
-  { id: "spiral", icon: StitchSpiral, label: "Spiral", hint: "One continuous spiral from the outline inwards" },
-  { id: "radial", icon: StitchRadial, label: "Sunburst", hint: "Rays from the centre of each shape" },
-  { id: "circular", icon: Disc3, label: "Circular", hint: "A spiral around the centre (Ink/Stitch circular fill)" },
-  { id: "meander", icon: StitchMeander, label: "Meander", hint: "A quilted random walk — light, few stitches" },
-  { id: "hilbert", icon: Grid2x2, label: "Hilbert", hint: "A space-filling curve texture" },
-  { id: "stipple", icon: Sparkle, label: "Stipple", hint: "Scattered points joined into one sketchy line" },
+  { id: "tatami", icon: StitchFill, get label() { return t("filum.digitalizza.tatami"); }, get hint() { return t("filum.digitalizza.parallel_staggered_rows_the_classic"); } },
+  { id: "flow", icon: Waves, get label() { return t("filum.digitalizza.flow"); }, get hint() { return t("filum.digitalizza.rows_bend_with_the_picture"); } },
+  { id: "curved", icon: Rainbow, get label() { return t("filum.digitalizza.curved"); }, get hint() { return t("filum.digitalizza.rows_follow_the_outline_of"); } },
+  { id: "contour", icon: StitchContour, get label() { return t("filum.digitalizza.contour"); }, get hint() { return t("filum.digitalizza.rings_that_follow_the_outline"); } },
+  { id: "spiral", icon: StitchSpiral, get label() { return t("filum.digitalizza.spiral"); }, get hint() { return t("filum.digitalizza.one_continuous_spiral_from_the"); } },
+  { id: "radial", icon: StitchRadial, get label() { return t("filum.digitalizza.sunburst"); }, get hint() { return t("filum.digitalizza.rays_from_the_centre_of"); } },
+  { id: "circular", icon: Disc3, get label() { return t("filum.digitalizza.circular"); }, get hint() { return t("filum.digitalizza.a_spiral_around_the_centre"); } },
+  { id: "meander", icon: StitchMeander, get label() { return t("filum.digitalizza.meander"); }, get hint() { return t("filum.digitalizza.a_quilted_random_walk_light"); } },
+  { id: "hilbert", icon: Grid2x2, get label() { return t("filum.digitalizza.hilbert"); }, get hint() { return t("filum.digitalizza.a_space_filling_curve_texture"); } },
+  { id: "stipple", icon: Sparkle, get label() { return t("filum.digitalizza.stipple"); }, get hint() { return t("filum.digitalizza.scattered_points_joined_into_one"); } },
 ];
 
 /** Row direction: per region, from the picture, or one fixed angle. Flow fills lean to it. */
 type Direction = "axis" | "image" | "fixed";
-const DIRECTIONS: [Direction, string, string][] = [
-  ["axis", "Per shape", "Rows run along the long axis of each shape"],
-  ["image", "Picture", "Rows follow the dominant direction of the picture in each shape"],
-  ["fixed", "Fixed", "One angle for every shape"],
+const DIRECTIONS = (): [Direction, string, string][] => [
+  ["axis", t("filum.digitalizza.per_shape"), t("filum.digitalizza.rows_run_along_the_long")],
+  ["image", t("filum.digitalizza.picture"), t("filum.digitalizza.rows_follow_the_dominant_direction")],
+  ["fixed", t("filum.digitalizza.fixed"), t("filum.digitalizza.one_angle_for_every_shape")],
 ];
 /** Lines added on top of the fills: colour edges or a line drawing of the picture. */
 type ExtraLines = "none" | "colour" | "coherent" | "edges" | "drawing";
-const EXTRA: [ExtraLines, ReactNode, string, string][] = [
-  ["none", <Ban key="n" size={15} />, "None", "Only the lines found in the picture itself (Lines in the picture)."],
-  ["colour", <Contrast key="c" size={15} />, "Colour edges", "A line along every edge between contrasting colours."],
-  ["coherent", <Waves key="w" size={15} />, "Coherent", "A drawing that follows the picture's flow (flow-based difference of Gaussians)."],
-  ["edges", <ScanLine key="e" size={15} />, "AI edges", "Learned edges (DexiNed, on-device): both sides of strong edges — shown on the Original tab."],
-  ["drawing", <Brush key="d" size={15} />, "AI drawing", "A learned line drawing (Informative Drawings, on-device): single clean lines for photos and illustrations — shown on the Original tab."],
+const EXTRA = (): [ExtraLines, ReactNode, string, string][] => [
+  ["none", <Ban key="n" size={15} />, t("filum.digitalizza.none"), t("filum.digitalizza.only_the_lines_found_in")],
+  ["colour", <Contrast key="c" size={15} />, t("filum.digitalizza.colour_edges"), t("filum.digitalizza.a_line_along_every_edge")],
+  ["coherent", <Waves key="w" size={15} />, t("filum.digitalizza.coherent"), t("filum.digitalizza.a_drawing_that_follows_the")],
+  ["edges", <ScanLine key="e" size={15} />, t("filum.digitalizza.ai_edges"), t("filum.digitalizza.learned_edges_dexined_on_device")],
+  ["drawing", <Brush key="d" size={15} />, t("filum.digitalizza.ai_drawing"), t("filum.digitalizza.a_learned_line_drawing_informative")],
 ];
 
 /** Fills whose rows have a direction (meander: the pattern's rotation). */
 const DIRECTED: FillMethod[] = ["tatami", "flow", "curved", "meander"];
 
-const MASK_MODES: [SegMask["mode"], string, string][] = [
-  ["keep", "Keep", "Stitch only the selected objects"],
-  ["remove", "Remove", "Never stitch this — leaves a gap"],
-  ["erase", "Erase", "Remove it and fill the area from its surroundings"],
-  ["separate", "Separate", "Its own objects, even where colours continue outside"],
+const MASK_MODES = (): [SegMask["mode"], string, string][] => [
+  ["keep", t("filum.digitalizza.keep"), t("filum.digitalizza.stitch_only_the_selected_objects")],
+  ["remove", t("filum.digitalizza.remove"), t("filum.digitalizza.never_stitch_this_leaves_a")],
+  ["erase", t("filum.digitalizza.erase"), t("filum.digitalizza.remove_it_and_fill_the")],
+  ["separate", t("filum.digitalizza.separate"), t("filum.digitalizza.its_own_objects_even_where")],
 ];
 
 type Pane = "style" | "colours" | "shapes" | "lines" | "stitches" | "cross" | "ai";
 const PANES: { id: Pane; label: string; hint: string; icon: ReactNode }[] = [
-  { id: "style", label: "Style", hint: "Output, preset, the look and the size", icon: <Sparkles size={15} /> },
-  { id: "colours", label: "Colours", hint: "Palette, thread chart and background", icon: <Palette size={15} /> },
-  { id: "shapes", label: "Shapes", hint: "Tracing and cleanup", icon: <Shapes size={15} /> },
-  { id: "lines", label: "Lines", hint: "Satin strokes, line art and outlines", icon: <StitchSatin size={15} /> },
-  { id: "stitches", label: "Stitches", hint: "Fill method, density and direction", icon: <StitchFill size={15} /> },
-  { id: "cross", label: "Crosses", hint: "Cell size, kind of cross and coverage", icon: <StitchCross size={15} /> },
-  { id: "ai", label: "AI", hint: "Select objects and find text (on-device)", icon: <ScanEye size={15} /> },
+  { id: "style", get label() { return t("filum.digitalizza.style"); }, get hint() { return t("filum.digitalizza.output_preset_the_look_and"); }, icon: <Sparkles size={15} /> },
+  { id: "colours", get label() { return t("filum.digitalizza.colours"); }, get hint() { return t("filum.digitalizza.palette_thread_chart_and_background"); }, icon: <Palette size={15} /> },
+  { id: "shapes", get label() { return t("filum.digitalizza.shapes"); }, get hint() { return t("filum.digitalizza.tracing_and_cleanup"); }, icon: <Shapes size={15} /> },
+  { id: "lines", get label() { return t("filum.digitalizza.lines"); }, get hint() { return t("filum.digitalizza.satin_strokes_line_art_and"); }, icon: <StitchSatin size={15} /> },
+  { id: "stitches", get label() { return t("filum.digitalizza.stitches"); }, get hint() { return t("filum.digitalizza.fill_method_density_and_direction"); }, icon: <StitchFill size={15} /> },
+  { id: "cross", get label() { return t("filum.digitalizza.crosses"); }, get hint() { return t("filum.digitalizza.cell_size_kind_of_cross"); }, icon: <StitchCross size={15} /> },
+  { id: "ai", get label() { return t("filum.digitalizza.ai"); }, get hint() { return t("filum.digitalizza.select_objects_and_find_text"); }, icon: <ScanEye size={15} /> },
 ];
 
 /** The tab of every remembered option (the compiler checks that none is missing). */
@@ -293,6 +294,7 @@ function PreviewCanvas({ draw, w, h }: { draw: (ctx: CanvasRenderingContext2D, d
 }
 
 export function DigitizeDialog({ onClose }: { onClose: () => void }) {
+  useLanguage();
   const doc = useStore((s) => s.doc);
   const fabricColor = useStore((s) => s.fabricColor);
   const [img, setImg] = useState<Img | null>(() => {
@@ -430,7 +432,7 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
         setEdgeMap(e);
         setEdgeKind(wantMap);
       })
-      .catch((e: Error) => live && setError((wantMap === "drawing" ? "Line drawing model: " : "Edge model: ") + e.message))
+      .catch((e: Error) => live && setError((wantMap === "drawing" ? t("filum.digitalizza.line_drawing_model") : t("filum.digitalizza.edge_model")) + e.message))
       .finally(() => live && setBusy(null));
     return () => {
       live = false;
@@ -471,7 +473,7 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
       if (picRef.current !== forImg) return;
       setSam(enc);
     } catch (e) {
-      setError("Segmentation model: " + (e as Error).message);
+      setError(t("filum.digitalizza.segmentation_model") + (e as Error).message);
       setSamMode(false);
     } finally {
       setBusy(null);
@@ -486,7 +488,7 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
       const mask = await (await ml()).samMask(sam, pts);
       if (picRef.current === forImg) setCurMask(mask);
     } catch (e) {
-      setError("Segmentation model: " + (e as Error).message);
+      setError(t("filum.digitalizza.segmentation_model") + (e as Error).message);
     }
   };
   const useMask = (mode: SegMask["mode"]) => {
@@ -504,9 +506,9 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
       if (picRef.current !== forImg) return;
       setTextLines(lines);
       setTextPick(lines.map(() => false));
-      if (!lines.length) useStore.getState().toast("No text found");
+      if (!lines.length) useStore.getState().toast(t("filum.digitalizza.no_text_found"));
     } catch (e) {
-      setError("Text recognition: " + (e as Error).message);
+      setError(t("filum.digitalizza.text_recognition") + (e as Error).message);
     } finally {
       setBusy(null);
     }
@@ -636,7 +638,7 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
     setTab("stitches");
   }, []);
   const pick = async () => {
-    const f = await openFile([{ name: "Images", extensions: ["png", "jpg", "jpeg", "webp", "bmp", "gif"] }]);
+    const f = await openFile([{ name: t("filum.digitalizza.images"), extensions: ["png", "jpg", "jpeg", "webp", "bmp", "gif"] }]);
     if (f) loadBytes(f.name, f.bytes);
   };
   const pasteFromClipboard = async () => {
@@ -649,9 +651,9 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
           return loadBytes("pasted image", new Uint8Array(await blob.arrayBuffer()));
         }
       }
-      useStore.getState().toast("No image on the clipboard");
+      useStore.getState().toast(t("filum.digitalizza.no_image_on_the_clipboard"));
     } catch {
-      useStore.getState().toast("Clipboard access was denied — press Ctrl+V instead");
+      useStore.getState().toast(t("filum.digitalizza.clipboard_access_was_denied_press"));
     }
   };
   useEffect(() => {
@@ -674,7 +676,7 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
     let cancel = false;
     loadChart(chart)
       .then((es) => !cancel && setChartEntries(es.map((e) => ({ name: e.name, code: e.code, rgb: hexToRgb(e.color) }))))
-      .catch(() => useStore.getState().toast("Could not load thread chart", "error"));
+      .catch(() => useStore.getState().toast(t("filum.digitalizza.could_not_load_thread_chart"), "error"));
     return () => {
       cancel = true;
     };
@@ -761,7 +763,7 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
   const chooseExtra = (v: ExtraLines) =>
     v === "colour" ? set({ edgeOutlines: settings.edgeOutlines !== "none" ? settings.edgeOutlines : "running", lineArt: "none" }) : set({ edgeOutlines: "none", lineArt: v });
   const outlineColourRow = (
-    <Row label="Colour" title="Thread of the colour edges and the border">
+    <Row label={t("filum.digitalizza.colour")} title={t("filum.digitalizza.thread_of_the_colour_edges")}>
       <span className="dz-inline">
         <input type="color" className="color-big" value={rgbToHex(settings.outlineColor)} onChange={(e) => set({ outlineColor: hexToRgb(e.target.value) })} />
         <span className="stat mono">{rgbToHex(settings.outlineColor).toUpperCase()}</span>
@@ -854,8 +856,8 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
     s.select(objs.map((o) => o.id));
     if (output === "cross") {
       if (cross.grid) s.set({ showGrid: true, gridStep: cross.cell });
-      s.toast(`${(crossed?.crosses ?? 0).toLocaleString()} crosses in ${threads.length} colours`, "success");
-    } else s.toast(`Digitized ${objs.length} objects in ${threads.length} colours`, "success");
+      s.toast(t("filum.digitalizza.v1_crosses_in_length_colours", { v1: (crossed?.crosses ?? 0).toLocaleString(), length: threads.length }), "success");
+    } else s.toast(t("filum.digitalizza.digitized_length_objects_in_length_", { length: objs.length, length_: threads.length }), "success");
     // recognised text becomes real lettering, placed and sized like the original
     if (bmp && textLines && textPick.some(Boolean)) {
       const mmPerPx = widthMm / bmp.width;
@@ -886,7 +888,7 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
         }
         if (made.length) {
           useStore.getState().addObjects(made);
-          useStore.getState().toast(`Added ${picked.length} lettering object${picked.length === 1 ? "" : "s"}`, "success");
+          useStore.getState().toast(tn("filum.digitalizza.added_lettering_objects", picked.length), "success");
         }
       })();
     }
@@ -900,26 +902,26 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
     <Dialog
       live
       xwide
-      title="Auto-digitize image"
+      title={t("filum.digitalizza.auto_digitize_image")}
       onClose={onClose}
       footer={
         <>
           <button className="btn" onClick={pick}>
-            <ImageUp size={14} /> Choose image…
+            <ImageUp size={14} />{t("filum.digitalizza.choose_image")}
           </button>
-          <button className="btn ghost" onClick={pasteFromClipboard} title="Paste an image (Ctrl+V works too)">
-            <Clipboard size={14} /> Paste
+          <button className="btn ghost" onClick={pasteFromClipboard} title={t("filum.digitalizza.paste_an_image_ctrl_v")}>
+            <Clipboard size={14} />{t("filum.digitalizza.paste")}
           </button>
           <div className="spacer" />
-          <select className="select" value={placement} onChange={(e) => setPlacement(e.target.value as "add" | "replace")} aria-label="Placement">
-            <option value="add">Add to design (centred)</option>
-            <option value="replace">Replace current design</option>
+          <select className="select" value={placement} onChange={(e) => setPlacement(e.target.value as "add" | "replace")} aria-label={t("filum.digitalizza.placement")}>
+            <option value="add">{t("filum.digitalizza.add_to_design_centred")}</option>
+            <option value="replace">{t("filum.digitalizza.replace_current_design")}</option>
           </select>
           <button className="btn" onClick={onClose}>
-            Cancel
+            {t("filum.digitalizza.cancel")}
           </button>
           <button className="btn primary" disabled={!result?.objects.length || !!busy} onClick={add}>
-            {placement === "replace" ? "Replace design" : "Add to design"}
+            {placement === "replace" ? t("filum.digitalizza.replace_design") : t("filum.digitalizza.add_to_design")}
           </button>
         </>
       }
@@ -943,13 +945,13 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
             {pane === "style" && (
               <>
                 <Group
-                  title="Output"
+                  title={t("filum.digitalizza.output")}
                   hint={
                     output === "cross"
-                      ? "The picture's colours on a grid of crosses — every colour setting (palette, thread chart, background, left-out areas, AI masks) applies."
+                      ? t("filum.digitalizza.the_picture_s_colours_on")
                       : settings.photoZigzag
-                        ? "One colour, rows of zigzags: wider and denser where the picture is darker, nothing where it is light."
-                        : "Traced shapes: fills, satin columns and lines."
+                        ? t("filum.digitalizza.one_colour_rows_of_zigzags")
+                        : t("filum.digitalizza.traced_shapes_fills_satin_columns")
                   }
                 >
                   <Seg
@@ -965,14 +967,14 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                       }
                     }}
                     options={[
-                      ["shapes", "Shapes"],
-                      ["zigzag", "Zig-zag photo"],
-                      ["cross", "Cross stitch"],
+                      ["shapes", t("filum.digitalizza.shapes")],
+                      ["zigzag", t("filum.digitalizza.zig_zag_photo")],
+                      ["cross", t("filum.digitalizza.cross_stitch")],
                     ]}
                   />
                 </Group>
                 {output === "shapes" && !settings.photoZigzag && (
-                  <Group title="Preset" hint={DIGITIZE_PRESETS.find((p) => p.id === preset)?.hint ?? "Custom settings — pick a preset to start from"}>
+                  <Group title={t("filum.digitalizza.preset")} hint={DIGITIZE_PRESETS.find((p) => p.id === preset)?.hint ?? t("filum.digitalizza.custom_settings_pick_a_preset")}>
                     <div className="dz-presets">
                       {DIGITIZE_PRESETS.map((p) => (
                         <button
@@ -991,90 +993,90 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                   </Group>
                 )}
                 {output === "shapes" && !settings.photoZigzag && (
-                  <Group title="Look" hint="Each control moves several settings of the tabs together; it shows Custom once those are changed by hand.">
-                    <Row label="Outlines" title="Lines of the picture: none, as wide as drawn, or one even satin width (clean logo outlines, sewn as one network; below 1 mm a triple running stitch)">
+                  <Group title={t("filum.digitalizza.look")} hint={t("filum.digitalizza.each_control_moves_several_settings")}>
+                    <Row label={t("filum.digitalizza.outlines")} title={t("filum.digitalizza.lines_of_the_picture_none")}>
                       <Seg<Outlines>
                         full
                         value={outlinesOf(settings)}
                         onChange={(v) => set(outlinesPatch(v, settings.outlineLineMm || OUTLINE_DEFAULT_MM))}
                         options={[
-                          ["off", "None"],
-                          ["drawn", "As drawn"],
-                          ["even", "Even"],
+                          ["off", t("filum.digitalizza.none")],
+                          ["drawn", t("filum.digitalizza.as_drawn_2")],
+                          ["even", t("filum.digitalizza.even")],
                         ]}
                       />
                     </Row>
                     {outlinesOf(settings) === "even" && (
-                      <Row label="Outline width" title="Every dark line becomes a satin of this width (below 1 mm: a triple running stitch)">
+                      <Row label={t("filum.digitalizza.outline_width")} title={t("filum.digitalizza.every_dark_line_becomes_a")}>
                         <Slider min={0.5} max={4} step={0.1} unit="mm" value={settings.outlineLineMm} onChange={(v) => set({ outlineLineMm: v })} />
                       </Row>
                     )}
-                    <Row label="Detail" title="Bold: fewer, simpler shapes. Fine: small shapes and close tracing (more stitches, more trims)">
+                    <Row label={t("filum.digitalizza.detail")} title={t("filum.digitalizza.bold_fewer_simpler_shapes_fine")}>
                       <Seg<Detail | "custom">
                         full
                         value={detailOf(settings) ?? "custom"}
                         onChange={(v) => v !== "custom" && set(DETAIL[v])}
                         options={[
-                          ["bold", "Bold"],
-                          ["normal", "Normal"],
-                          ["fine", "Fine"],
-                          ...(detailOf(settings) ? [] : [["custom", "Custom"] as ["custom", string]]),
+                          ["bold", t("filum.digitalizza.bold")],
+                          ["normal", t("filum.digitalizza.normal")],
+                          ["fine", t("filum.digitalizza.fine")],
+                          ...(detailOf(settings) ? [] : [["custom", t("filum.digitalizza.custom")] as ["custom", string]]),
                         ]}
                       />
                     </Row>
-                    <Row label="Background" title="The background colour: left out around the design and in plain holes (letter counters), left out only around it (every enclosed area stitched: a logo's white faces), or stitched everywhere">
+                    <Row label={t("filum.digitalizza.background")} title={t("filum.digitalizza.the_background_colour_left_out")}>
                       <Seg<Backdrop>
                         full
                         value={backdropOf(settings)}
                         onChange={(v) => set(backdropPatch(v))}
                         options={[
-                          ["fabric", "Left out"],
-                          ["enclosed", "Enclosed"],
-                          ["all", "Stitched"],
+                          ["fabric", t("filum.digitalizza.left_out_2")],
+                          ["enclosed", t("filum.digitalizza.enclosed")],
+                          ["all", t("filum.digitalizza.stitched")],
                         ]}
                       />
                     </Row>
-                    <Row label="Border" title="An outline around the whole design (patches, stickers)">
+                    <Row label={t("filum.digitalizza.border")} title={t("filum.digitalizza.an_outline_around_the_whole")}>
                       <Seg
                         full
                         value={settings.outline}
                         onChange={(v) => set({ outline: v })}
                         options={[
-                          ["none", "None"],
-                          ["running", "Running"],
-                          ["satin", "Satin"],
+                          ["none", t("filum.digitalizza.none")],
+                          ["running", t("filum.digitalizza.running")],
+                          ["satin", t("filum.digitalizza.satin")],
                         ]}
                       />
                     </Row>
                     {settings.outline === "satin" && (
-                      <Row label="Border width">
+                      <Row label={t("filum.digitalizza.border_width")}>
                         <Slider min={0.8} max={6} step={0.1} unit="mm" value={settings.outlineWidthMm} onChange={(v) => set({ outlineWidthMm: v })} />
                       </Row>
                     )}
                   </Group>
                 )}
                 {output === "shapes" && settings.photoZigzag && (
-                  <Group title="Zig-zag photo">
-                    <Row label="Row spacing" title="Distance between the rows — wider: lighter, more graphic">
+                  <Group title={t("filum.digitalizza.zig_zag_photo")}>
+                    <Row label={t("filum.digitalizza.row_spacing")} title={t("filum.digitalizza.distance_between_the_rows_wider")}>
                       <Slider min={0.5} max={3} step={0.1} unit="mm" value={settings.photoSpacing} onChange={(v) => set({ photoSpacing: v })} />
                     </Row>
-                    <Row label="Angle" title="Direction of the rows">
+                    <Row label={t("filum.digitalizza.angle")} title={t("filum.digitalizza.direction_of_the_rows")}>
                       <Slider min={-90} max={90} step={5} digits={0} unit="°" value={settings.photoAngle} onChange={(v) => set({ photoAngle: v })} />
                     </Row>
-                    <Row label="Contrast" title="Higher: darker darks, lighter lights">
+                    <Row label={t("filum.digitalizza.contrast")} title={t("filum.digitalizza.higher_darker_darks_lighter_lights")}>
                       <Slider min={0.5} max={3} step={0.1} value={settings.photoContrast} onChange={(v) => set({ photoContrast: v })} />
                     </Row>
-                    <Row label="Leave light" title="Parts lighter than this stay empty (the fabric shows)">
+                    <Row label={t("filum.digitalizza.leave_light")} title={t("filum.digitalizza.parts_lighter_than_this_stay")}>
                       <Slider min={0} max={60} step={1} digits={0} unit="%" value={Math.round(settings.photoMin * 100)} onChange={(v) => set({ photoMin: v / 100 })} />
                     </Row>
                   </Group>
                 )}
                 <Group
-                  title="Size"
+                  title={t("filum.digitalizza.size")}
                   extra={
                     preview && (
-                      <span className={`badge ${tooBig ? "warn" : ""}`} title={tooBig ? `Larger than the ${doc.hoop.name} hoop` : `Fits the ${doc.hoop.name} hoop`}>
-                        {tooBig ? "larger than hoop" : "fits hoop"}
+                      <span className={`badge ${tooBig ? "warn" : ""}`} title={tooBig ? t("filum.digitalizza.larger_than_the_name_hoop", { name: doc.hoop.name }) : t("filum.digitalizza.fits_the_name_hoop", { name: doc.hoop.name })}>
+                        {tooBig ? t("filum.digitalizza.larger_than_hoop") : t("filum.digitalizza.fits_hoop")}
                       </span>
                     )
                   }
@@ -1088,8 +1090,8 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                       <span>H</span>
                       <Num value={heightMm} unit="mm" step={5} min={10} max={1000} digits={1} onChange={(v) => setWidthMm(v / Math.max(aspect, 1e-6))} />
                     </label>
-                    <button className="btn sm" onClick={fitHoop} disabled={!preview} title={`Scale to 90 % of the ${doc.hoop.name} hoop`}>
-                      <Maximize2 size={12} /> Fit hoop
+                    <button className="btn sm" onClick={fitHoop} disabled={!preview} title={t("filum.digitalizza.scale_to_90_of_the", { name: doc.hoop.name })}>
+                      <Maximize2 size={12} />{t("filum.digitalizza.fit_hoop")}
                     </button>
                   </div>
                 </Group>
@@ -1098,34 +1100,34 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
 
             {pane === "colours" && (
               <>
-                <Group title="Palette">
-                  <Row label="Colours">
+                <Group title={t("filum.digitalizza.palette")}>
+                  <Row label={t("filum.digitalizza.colours")}>
                     {fixedColors.length ? (
-                      <span className="badge" title="The palette is locked: regions stay where they are">
-                        <Lock size={11} /> Locked · {fixedColors.length}
+                      <span className="badge" title={t("filum.digitalizza.the_palette_is_locked_regions")}>
+                        <Lock size={11} />{t("filum.digitalizza.locked")}{fixedColors.length}
                       </span>
                     ) : (
                       <Slider min={2} max={16} step={1} digits={0} value={settings.colors} onChange={(v) => set({ colors: v })} />
                     )}
                   </Row>
-                  <Row label="Merge similar" title="Merge colours closer than this (CIEDE2000; 0 = off)">
-                    <Slider min={0} max={12} step={0.5} digits={1} unit="ΔE" value={settings.mergeDeltaE} onChange={(v) => set({ mergeDeltaE: v })} />
+                  <Row label={t("filum.digitalizza.merge_similar")} title={t("filum.digitalizza.merge_colours_closer_than_this")}>
+                    <Slider min={0} max={12} step={0.5} digits={1} unit={t("filum.digitalizza.e")} value={settings.mergeDeltaE} onChange={(v) => set({ mergeDeltaE: v })} />
                   </Row>
-                  <Row label="Thread chart" title="Snap colours to real threads">
-                    <ChartSelect value={chart} onChange={setChart} none="Exact colours" />
+                  <Row label={t("filum.digitalizza.thread_chart")} title={t("filum.digitalizza.snap_colours_to_real_threads")}>
+                    <ChartSelect value={chart} onChange={setChart} none={t("filum.digitalizza.exact_colours")} />
                   </Row>
                 </Group>
                 <Group
-                  title="Background & left-out areas"
+                  title={t("filum.digitalizza.background_left_out_areas")}
                   hint={
                     settings.backgroundScope === "outside"
-                      ? "The border colour is left out where it reaches the edge of the picture, and in plain holes (letter counters, the inside of rings and outlines). Small enclosed areas (highlights) and ones with shapes on them (a badge face) are stitched."
+                      ? t("filum.digitalizza.the_border_colour_is_left")
                       : settings.backgroundScope === "border"
-                        ? "The border colour is left out only where it reaches the edge of the picture: every area enclosed by the design is stitched (a logo's white faces inside its outlines)."
-                        : "The border colour is left out everywhere, also inside shapes (letter counters, holes)."
+                        ? t("filum.digitalizza.the_border_colour_is_left_2")
+                        : t("filum.digitalizza.the_border_colour_is_left_3")
                   }
                 >
-                  <Row label="Background" title="Leave out the colour that dominates the image border">
+                  <Row label={t("filum.digitalizza.background")} title={t("filum.digitalizza.leave_out_the_colour_that")}>
                     <Toggle on={settings.removeBackground} onChange={(v) => set({ removeBackground: v })} />
                   </Row>
                   {/* the three choices need the panel's full width */}
@@ -1135,36 +1137,36 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                     value={settings.backgroundScope}
                     onChange={(v) => set({ backgroundScope: v })}
                     options={[
-                      ["border", "At the edge"],
-                      ["outside", "Outside & holes"],
-                      ["everywhere", "Everywhere"],
+                      ["border", t("filum.digitalizza.at_the_edge")],
+                      ["outside", t("filum.digitalizza.outside_holes")],
+                      ["everywhere", t("filum.digitalizza.everywhere")],
                     ]}
                   />
                   <div className="dz-removed">
                     <span>
-                      <b>{(removedShare * 100).toFixed(removedShare < 0.1 ? 1 : 0)}%</b> of the picture left out
-                      {regionEdits.length > 0 && <span className="stat"> · {regionEdits.length} area{regionEdits.length === 1 ? "" : "s"} edited</span>}
+                      <b>{(removedShare * 100).toFixed(removedShare < 0.1 ? 1 : 0)}%</b>{t("filum.digitalizza.of_the_picture_left_out")}
+                      {regionEdits.length > 0 && <span className="stat">{tn("filum.digitalizza.areas_edited", regionEdits.length)}</span>}
                     </span>
                     <div className="dz-inline">
-                      <button className={`btn sm ${tab === "colours" ? "primary" : ""}`} disabled={!preview} onClick={() => setTab("colours")} title="Show what is left out — click areas to stitch them or leave them out">
-                        <Eye size={12} /> Review
+                      <button className={`btn sm ${tab === "colours" ? "primary" : ""}`} disabled={!preview} onClick={() => setTab("colours")} title={t("filum.digitalizza.show_what_is_left_out")}>
+                        <Eye size={12} />{t("filum.digitalizza.review")}
                       </button>
                       {regionEdits.length > 0 && (
-                        <button className="btn sm ghost" onClick={() => setRegionEdits([])} title="Forget the areas you clicked">
-                          Clear
+                        <button className="btn sm ghost" onClick={() => setRegionEdits([])} title={t("filum.digitalizza.forget_the_areas_you_clicked")}>
+                          {t("filum.digitalizza.clear")}
                         </button>
                       )}
                     </div>
                   </div>
                 </Group>
                 <Group
-                  title={`Colours${colors.length ? ` · ${colors.filter((c) => !c.background).length} stitched` : ""}`}
+                  title={`${t("filum.digitalizza.colours")}${colors.length ? t("filum.digitalizza.colours_stitched", { n: colors.filter((c) => !c.background).length }) : ""}`}
                   extra={
                     <span className="dz-head-actions">
-                      <button className="icon-btn" title={fixedColors.length ? "Unlock palette (re-quantise)" : "Lock this palette"} onClick={fixedColors.length ? () => (setFixedColors([]), setOverrides({})) : lockPalette} disabled={!colors.length}>
+                      <button className="icon-btn" title={fixedColors.length ? t("filum.digitalizza.unlock_palette_re_quantise") : t("filum.digitalizza.lock_this_palette")} onClick={fixedColors.length ? () => (setFixedColors([]), setOverrides({})) : lockPalette} disabled={!colors.length}>
                         {fixedColors.length ? <Lock size={13} /> : <Unlock size={13} />}
                       </button>
-                      <button className="icon-btn" title="Reset colour edits" onClick={resetColours}>
+                      <button className="icon-btn" title={t("filum.digitalizza.reset_colour_edits")} onClick={resetColours}>
                         <RotateCcw size={13} />
                       </button>
                     </span>
@@ -1172,15 +1174,15 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                 >
                   <div className="dz-pick">
                     <span className="dz-pick-label">
-                      <Pipette size={12} /> Pick on picture
+                      <Pipette size={12} />{t("filum.digitalizza.pick_on_picture")}
                     </span>
-                    <div className="seg" role="group" aria-label="Pick a colour on the picture as">
+                    <div className="seg" role="group" aria-label={t("filum.digitalizza.pick_a_colour_on_the")}>
                       {ROLES.filter((r) => r.id !== "auto").map((r) => (
                         <button
                           key={r.id}
                           className={pickRole === r.id ? "on" : ""}
                           disabled={!img}
-                          title={`Click colours in the picture (or in Review) to make them: ${r.label.toLowerCase()} — click again to stop`}
+                          title={t("filum.digitalizza.click_colours_in_the_picture", { v1: r.label.toLowerCase() })}
                           onClick={() => {
                             const next = pickRole === r.id ? null : (r.id as Exclude<Role, "auto">);
                             setPickRole(next);
@@ -1195,22 +1197,22 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                   <div className="dz-colours">
                     {colors.map((c, i) => (
                       <div key={i} className={`dz-colour ${c.background ? "off" : ""}`}>
-                        <input type="color" value={overrides[c.hex] ?? c.hex} onChange={(e) => editColour(i, e.target.value)} title="Choose the thread colour for this region" />
+                        <input type="color" value={overrides[c.hex] ?? c.hex} onChange={(e) => editColour(i, e.target.value)} title={t("filum.digitalizza.choose_the_thread_colour_for")} />
                         <span className="dz-cname" title={c.code ? `${c.name} ${c.code}` : c.name}>
                           {overrides[c.hex] ? overrides[c.hex].toUpperCase() : c.name}
                           {c.code && <span className="stat"> {c.code}</span>}
-                          {c.background && c.coverage - (c.removed ?? 0) > 0.0005 && <span className="stat"> · partly stitched</span>}
-                          {roleOf(c) === "auto" && (c.lines ?? 0) > 0.5 * Math.max(1e-9, c.coverage - (c.removed ?? 0)) && <span className="dz-auto"> lines</span>}
+                          {c.background && c.coverage - (c.removed ?? 0) > 0.0005 && <span className="stat">{t("filum.digitalizza.partly_stitched")}</span>}
+                          {roleOf(c) === "auto" && (c.lines ?? 0) > 0.5 * Math.max(1e-9, c.coverage - (c.removed ?? 0)) && <span className="dz-auto">{t("filum.digitalizza.lines_2")}</span>}
                         </span>
                         <span
                           className="dz-cover"
-                          title={`${((c.coverage - (c.removed ?? 0)) * 100).toFixed(1)} % of the picture stitched${c.removed ? `, ${(c.removed * 100).toFixed(1)} % left out` : ""}`}
+                          title={`${t("filum.digitalizza.picture_stitched", { pct: ((c.coverage - (c.removed ?? 0)) * 100).toFixed(1) })}${c.removed ? t("filum.digitalizza.picture_left_out", { pct: (c.removed * 100).toFixed(1) }) : ""}`}
                         >
                           <i style={{ width: `${Math.min(100, c.coverage * 100)}%` }} className="all" />
                           <i style={{ width: `${Math.min(100, Math.max(0, c.coverage - (c.removed ?? 0)) * 100)}%` }} />
                           <b>{(c.coverage * 100).toFixed(c.coverage < 0.1 ? 1 : 0)}%</b>
                         </span>
-                        <div className="dz-role" role="group" aria-label={`${c.name}: sew as`}>
+                        <div className="dz-role" role="group" aria-label={t("filum.digitalizza.name_sew_as", { name: c.name })}>
                           {ROLES.map((r) => (
                             <button key={r.id} className={roleOf(c) === r.id ? "on" : ""} title={`${r.label} — ${r.hint}`} onClick={() => setRole(c, r.id)}>
                               {r.icon}
@@ -1222,15 +1224,15 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                             className={hasEdge(c) ? "on" : ""}
                             disabled={c.background}
                             aria-pressed={hasEdge(c)}
-                            aria-label={`${c.name}: satin edge`}
-                            title="Satin edge — a satin in this colour's thread where its shapes meet the background (as wide as the border's satin)"
+                            aria-label={t("filum.digitalizza.name_satin_edge", { name: c.name })}
+                            title={t("filum.digitalizza.satin_edge_a_satin_in")}
                             onClick={() => toggleEdge(c)}
                           >
                             <StitchSatin size={12} />
                           </button>
                         </div>
                         {fixedColors.length > 2 ? (
-                          <button className="mini" onClick={() => removeColour(i)} title="Merge into the nearest remaining colour">
+                          <button className="mini" onClick={() => removeColour(i)} title={t("filum.digitalizza.merge_into_the_nearest_remaining")}>
                             ×
                           </button>
                         ) : (
@@ -1238,33 +1240,33 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                         )}
                       </div>
                     ))}
-                    {!colors.length && <div className="hint">Colours appear here after loading an image.</div>}
+                    {!colors.length && <div className="hint">{t("filum.digitalizza.colours_appear_here_after_loading")}</div>}
                   </div>
                 </Group>
                 {output === "shapes" && (result?.threads.length ?? 0) > 1 && (
                   <Group
-                    title="Sew order"
-                    hint="First sewn first: a later colour lies on top. Each colour's fills, lines and edges are sewn together."
+                    title={t("filum.digitalizza.sew_order")}
+                    hint={t("filum.digitalizza.first_sewn_first_a_later")}
                     extra={
                       colorOrder.length ? (
-                        <button className="btn sm ghost" onClick={() => setColorOrder([])} title="Back to the digitizer's order (largest colour first)">
-                          <RotateCcw size={12} /> Auto
+                        <button className="btn sm ghost" onClick={() => setColorOrder([])} title={t("filum.digitalizza.back_to_the_digitizer_s")}>
+                          <RotateCcw size={12} />{t("filum.digitalizza.auto_2")}
                         </button>
                       ) : undefined
                     }
                   >
-                    <ol className="dz-order" aria-label="Sew order">
-                      {(recoloured ?? result)!.threads.map((t, i, all) => (
-                        <li key={t.id}>
+                    <ol className="dz-order" aria-label={t("filum.digitalizza.sew_order")}>
+                      {(recoloured ?? result)!.threads.map((th, i, all) => (
+                        <li key={th.id}>
                           <span className="dz-order-n">{i + 1}</span>
-                          <i className="dz-order-sw" style={{ background: t.color }} />
-                          <span className="dz-cname" title={t.name}>
-                            {t.name}
+                          <i className="dz-order-sw" style={{ background: th.color }} />
+                          <span className="dz-cname" title={th.name}>
+                            {th.name}
                           </span>
-                          <button className="mini" disabled={i === 0} onClick={() => moveThread(i, -1)} aria-label={`Sew ${t.name} earlier`} title="Sew earlier (underneath)">
+                          <button className="mini" disabled={i === 0} onClick={() => moveThread(i, -1)} aria-label={t("filum.digitalizza.sew_name_earlier", { name: th.name })} title={t("filum.digitalizza.sew_earlier_underneath")}>
                             ↑
                           </button>
-                          <button className="mini" disabled={i === all.length - 1} onClick={() => moveThread(i, 1)} aria-label={`Sew ${t.name} later`} title="Sew later (on top)">
+                          <button className="mini" disabled={i === all.length - 1} onClick={() => moveThread(i, 1)} aria-label={t("filum.digitalizza.sew_name_later", { name: th.name })} title={t("filum.digitalizza.sew_later_on_top")}>
                             ↓
                           </button>
                         </li>
@@ -1277,53 +1279,53 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
 
             {pane === "shapes" && (
               <>
-                <Group title="Picture">
-                  <Row label="Resolution" title="Working resolution — more is slower but keeps finer shapes">
-                    <Slider min={200} max={1600} step={20} digits={0} unit="px" value={settings.maxPixels} onChange={(v) => set({ maxPixels: v })} />
+                <Group title={t("filum.digitalizza.picture")}>
+                  <Row label={t("filum.digitalizza.resolution")} title={t("filum.digitalizza.working_resolution_more_is_slower")}>
+                    <Slider min={200} max={1600} step={20} digits={0} unit={t("filum.digitalizza.px")} value={settings.maxPixels} onChange={(v) => set({ maxPixels: v })} />
                   </Row>
-                  <Row label="Denoise" title="Edge-preserving smoothing before colours are reduced (photos, JPEG noise)">
+                  <Row label={t("filum.digitalizza.denoise")} title={t("filum.digitalizza.edge_preserving_smoothing_before_colours")}>
                     <Slider min={0} max={4} step={1} digits={0} value={settings.denoise} onChange={(v) => set({ denoise: v })} />
                   </Row>
-                  <Row label="Pixel art" title="Depixelize sprites and icons into smooth shapes (Kopf & Lischinski)">
-                    <Seg value={settings.pixelArt} onChange={(v) => set({ pixelArt: v })} options={[["auto", "Auto"], ["on", "On"], ["off", "Off"]]} />
+                  <Row label={t("filum.digitalizza.pixel_art")} title={t("filum.digitalizza.depixelize_sprites_and_icons_into")}>
+                    <Seg value={settings.pixelArt} onChange={(v) => set({ pixelArt: v })} options={[["auto", t("filum.digitalizza.auto")], ["on", t("filum.digitalizza.on")], ["off", t("filum.digitalizza.off")]]} />
                   </Row>
                 </Group>
-                <Group title="Tracing">
-                  <Row label="Seamless" title="Neighbouring shapes share one traced boundary (no gaps, no overlaps); corners stay sharp, pixel steps become smooth curves">
+                <Group title={t("filum.digitalizza.tracing")}>
+                  <Row label={t("filum.digitalizza.seamless")} title={t("filum.digitalizza.neighbouring_shapes_share_one_traced")}>
                     <Toggle on={settings.seamless} onChange={(v) => set({ seamless: v })} />
                   </Row>
                   {settings.seamless && (
-                    <Row label="Corners over" title="Boundary turns sharper than this stay corners">
+                    <Row label={t("filum.digitalizza.corners_over")} title={t("filum.digitalizza.boundary_turns_sharper_than_this")}>
                       <Slider min={20} max={120} step={5} digits={0} unit="°" value={settings.cornerAngle} onChange={(v) => set({ cornerAngle: v })} />
                     </Row>
                   )}
-                  <Row label="Gradients" title="Smooth colour ramps become dithered gradient fills instead of bands">
+                  <Row label={t("filum.digitalizza.gradients")} title={t("filum.digitalizza.smooth_colour_ramps_become_dithered")}>
                     <Toggle on={settings.gradients} onChange={(v) => set({ gradients: v })} />
                   </Row>
                   {settings.gradients && (
-                    <Row label="Gradient rows" title="Straight rows, or streamlines that follow the picture (the colours share them and interleave) — uses the flow settings under Stitches">
+                    <Row label={t("filum.digitalizza.gradient_rows")} title={t("filum.digitalizza.straight_rows_or_streamlines_that")}>
                       <Seg
                         value={settings.gradientFlow ? "flow" : "straight"}
                         onChange={(v) => set({ gradientFlow: v === "flow" })}
                         options={[
-                          ["straight", "Straight"],
-                          ["flow", "Flow"],
+                          ["straight", t("filum.digitalizza.straight")],
+                          ["flow", t("filum.digitalizza.flow")],
                         ]}
                       />
                     </Row>
                   )}
                 </Group>
-                <Group title="Cleanup">
-                  <Row label="Smoothing" title="Majority-filter passes that remove noise">
+                <Group title={t("filum.digitalizza.cleanup")}>
+                  <Row label={t("filum.digitalizza.smoothing")} title={t("filum.digitalizza.majority_filter_passes_that_remove")}>
                     <Slider min={0} max={6} step={1} digits={0} value={settings.smoothing} onChange={(v) => set({ smoothing: v })} />
                   </Row>
-                  <Row label="Min. region" title="Smaller specks merge into their neighbour">
-                    <Slider min={0} max={10} step={0.25} unit="mm²" value={settings.minRegionMm2} onChange={(v) => set({ minRegionMm2: v })} />
+                  <Row label={t("filum.digitalizza.min_region")} title={t("filum.digitalizza.smaller_specks_merge_into_their")}>
+                    <Slider min={0} max={10} step={0.25} unit={t("filum.digitalizza.mm2")} value={settings.minRegionMm2} onChange={(v) => set({ minRegionMm2: v })} />
                   </Row>
-                  <Row label="Simplify" title="Contour simplification tolerance">
+                  <Row label={t("filum.digitalizza.simplify")} title={t("filum.digitalizza.contour_simplification_tolerance")}>
                     <Slider min={0.02} max={0.5} step={0.01} unit="mm" value={settings.simplifyMm} onChange={(v) => set({ simplifyMm: v })} />
                   </Row>
-                  <Row label="Overlap" title="Grow fills so neighbouring colours don't gap after pull">
+                  <Row label={t("filum.digitalizza.overlap")} title={t("filum.digitalizza.grow_fills_so_neighbouring_colours")}>
                     <Slider min={0} max={0.8} step={0.05} unit="mm" value={settings.overlapMm} onChange={(v) => set({ overlapMm: v })} />
                   </Row>
                 </Group>
@@ -1333,84 +1335,84 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
             {pane === "lines" && (
               <>
                 <Group
-                  title="Lines in the picture"
-                  hint="Outlines, ink strokes and narrow shapes become stitched lines along their centre — through junctions, small gaps bridged — and the fills continue under them, so nothing gapes."
+                  title={t("filum.digitalizza.lines_in_the_picture")}
+                  hint={t("filum.digitalizza.outlines_ink_strokes_and_narrow")}
                   extra={<Toggle on={settings.lineNetworks} onChange={(v) => set({ lineNetworks: v })} />}
                 >
                   {settings.lineNetworks && (
                     <>
-                      <Row label="Ink lines" title="Dark lines found on the picture itself, even where the colour reduction merged them into a neighbour (0 = off)">
+                      <Row label={t("filum.digitalizza.ink_lines")} title={t("filum.digitalizza.dark_lines_found_on_the")}>
                         <Slider min={0} max={100} step={5} digits={0} unit="%" value={settings.inkSensitivity} onChange={(v) => set({ inkSensitivity: v })} />
                       </Row>
-                      <Row label="Max. width" title="Lines up to this width become stitched lines; wider shapes stay fills">
+                      <Row label={t("filum.digitalizza.max_width")} title={t("filum.digitalizza.lines_up_to_this_width")}>
                         <Slider min={0.5} max={8} step={0.1} digits={1} unit="mm" value={settings.lineMaxWidthMm} onChange={(v) => set({ lineMaxWidthMm: v })} />
                       </Row>
-                      <Row label="Bridge gaps" title="Join line ends that point at each other (or at another line) across a gap up to this size">
+                      <Row label={t("filum.digitalizza.bridge_gaps")} title={t("filum.digitalizza.join_line_ends_that_point")}>
                         <Slider min={0} max={4} step={0.1} digits={1} unit="mm" value={settings.lineGapMm} onChange={(v) => set({ lineGapMm: v })} />
                       </Row>
-                      <Row label="Min. length" title="Shorter lines and side branches (corners, specks) are left out">
+                      <Row label={t("filum.digitalizza.min_length")} title={t("filum.digitalizza.shorter_lines_and_side_branches")}>
                         <Slider min={0.5} max={10} step={0.5} digits={1} unit="mm" value={settings.lineMinMm} onChange={(v) => set({ lineMinMm: v })} />
                       </Row>
-                      <Row label="Through junctions" title="A line continues through a junction when it bends less than this — fewer, longer lines (0: every junction ends the lines)">
+                      <Row label={t("filum.digitalizza.through_junctions")} title={t("filum.digitalizza.a_line_continues_through_a")}>
                         <Slider min={0} max={60} step={5} digits={0} unit="°" value={settings.lineContinuity} onChange={(v) => set({ lineContinuity: v })} />
                       </Row>
-                      <Row label="Outline width" title="Dark lines (outlines, ink) as satin of one even width — 0: as wide as drawn">
+                      <Row label={t("filum.digitalizza.outline_width")} title={t("filum.digitalizza.dark_lines_outlines_ink_as")}>
                         <span className="dz-inline">
                           <Toggle on={settings.outlineLineMm > 0} onChange={(v) => set({ outlineLineMm: v ? OUTLINE_DEFAULT_MM : 0 })} />
                           {settings.outlineLineMm > 0 && <Num value={settings.outlineLineMm} unit="mm" step={0.1} min={0.5} max={4} digits={1} onChange={(v) => set({ outlineLineMm: v })} />}
                         </span>
                       </Row>
                       {settings.outlineLineMm <= 0 && (
-                        <Row label="Follow width" title="Satin lines get wider and narrower like the drawn line">
+                        <Row label={t("filum.digitalizza.follow_width")} title={t("filum.digitalizza.satin_lines_get_wider_and")}>
                           <Toggle on={settings.lineTaper} onChange={(v) => set({ lineTaper: v })} />
                         </Row>
                       )}
-                      <Row label="One network" title="Lines that meet are sewn in one go: each walks out under a running path its column covers on the way back — no trims between them">
+                      <Row label={t("filum.digitalizza.one_network")} title={t("filum.digitalizza.lines_that_meet_are_sewn")}>
                         <Toggle on={settings.routeLines} onChange={(v) => set({ routeLines: v })} />
                       </Row>
-                      <Row label="Sub-pixel" title="Line centres follow the drawn line (its darkness profile), not the pixel grid — thin, smoothed lines stay straight and smooth">
+                      <Row label={t("filum.digitalizza.sub_pixel")} title={t("filum.digitalizza.line_centres_follow_the_drawn")}>
                         <Toggle on={settings.lineSubpixel} onChange={(v) => set({ lineSubpixel: v })} />
                       </Row>
-                      <Row label="Thin lines" title="Lines narrower than the hairline width">
+                      <Row label={t("filum.digitalizza.thin_lines")} title={t("filum.digitalizza.lines_narrower_than_the_hairline")}>
                         <Seg
                           value={settings.thinTriple ? "triple" : "running"}
                           onChange={(v) => set({ thinTriple: v === "triple" })}
                           options={[
-                            ["running", "Running"],
-                            ["triple", "Triple"],
+                            ["running", t("filum.digitalizza.running")],
+                            ["triple", t("filum.digitalizza.triple")],
                           ]}
                         />
                       </Row>
                     </>
                   )}
                 </Group>
-                <Group title="Stitch types" hint="Lines narrower than the hairline width are running stitch, wider ones satin.">
-                  <Row label="Satin strokes" title="Narrow, elongated regions become satin columns along their medial axis">
+                <Group title={t("filum.digitalizza.stitch_types")} hint={t("filum.digitalizza.lines_narrower_than_the_hairline_2")}>
+                  <Row label={t("filum.digitalizza.satin_strokes")} title={t("filum.digitalizza.narrow_elongated_regions_become_satin")}>
                     <span className="dz-inline">
                       <Toggle on={settings.allowSatin} onChange={(v) => set({ allowSatin: v })} />
                       {settings.allowSatin && (
                         <>
-                          <span className="stat">up to</span>
+                          <span className="stat">{t("filum.digitalizza.up_to")}</span>
                           <Num value={settings.satinMaxWidthMm} unit="mm" step={0.5} min={1} max={12} onChange={(v) => set({ satinMaxWidthMm: v })} />
                         </>
                       )}
                     </span>
                   </Row>
-                  <Row label="Hairlines" title="Very thin lines become running stitch">
+                  <Row label={t("filum.digitalizza.hairlines")} title={t("filum.digitalizza.very_thin_lines_become_running")}>
                     <span className="dz-inline">
                       <Toggle on={settings.allowRunning} onChange={(v) => set({ allowRunning: v })} />
                       {settings.allowRunning && (
                         <>
-                          <span className="stat">up to</span>
+                          <span className="stat">{t("filum.digitalizza.up_to")}</span>
                           <Num value={settings.runningMaxWidthMm} unit="mm" step={0.1} min={0.2} max={3} onChange={(v) => set({ runningMaxWidthMm: v })} />
                         </>
                       )}
                     </span>
                   </Row>
                 </Group>
-                <Group title="Extra lines" hint={EXTRA.find((x) => x[0] === extra)?.[3]}>
-                  <div className="dz-sources" role="radiogroup" aria-label="Extra lines">
-                    {EXTRA.map(([id, icon, label, hint]) => (
+                <Group title={t("filum.digitalizza.extra_lines")} hint={EXTRA().find((x) => x[0] === extra)?.[3]}>
+                  <div className="dz-sources" role="radiogroup" aria-label={t("filum.digitalizza.extra_lines")}>
+                    {EXTRA().map(([id, icon, label, hint]) => (
                       <button key={id} role="radio" aria-checked={extra === id} className={extra === id ? "on" : ""} title={hint} onClick={() => chooseExtra(id)}>
                         {icon}
                         <span>{label}</span>
@@ -1419,22 +1421,22 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                   </div>
                   {extra === "colour" && (
                     <>
-                      {!settings.seamless && <p className="dz-hint warn">Colour edges need seamless tracing — turn it on under Shapes.</p>}
-                      <Row label="Contrast" title="Only edges between colours at least this different (CIEDE2000) — higher: fewer lines">
-                        <Slider min={5} max={80} step={1} digits={0} unit="ΔE" value={settings.edgeContrast} onChange={(v) => set({ edgeContrast: v })} />
+                      {!settings.seamless && <p className="dz-hint warn">{t("filum.digitalizza.colour_edges_need_seamless_tracing")}</p>}
+                      <Row label={t("filum.digitalizza.contrast")} title={t("filum.digitalizza.only_edges_between_colours_at")}>
+                        <Slider min={5} max={80} step={1} digits={0} unit={t("filum.digitalizza.e")} value={settings.edgeContrast} onChange={(v) => set({ edgeContrast: v })} />
                       </Row>
-                      <Row label="Stitch">
+                      <Row label={t("filum.digitalizza.stitch")}>
                         <Seg
                           value={settings.edgeOutlines === "satin" ? "satin" : "running"}
                           onChange={(v) => set({ edgeOutlines: v })}
                           options={[
-                            ["running", "Running"],
-                            ["satin", "Satin"],
+                            ["running", t("filum.digitalizza.running")],
+                            ["satin", t("filum.digitalizza.satin")],
                           ]}
                         />
                       </Row>
                       {settings.edgeOutlines === "satin" && (
-                        <Row label="Width" title="Satin width (the border uses it too)">
+                        <Row label={t("filum.digitalizza.width")} title={t("filum.digitalizza.satin_width_the_border_uses")}>
                           <Slider min={0.8} max={6} step={0.1} unit="mm" value={settings.outlineWidthMm} onChange={(v) => set({ outlineWidthMm: v })} />
                         </Row>
                       )}
@@ -1442,43 +1444,43 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                     </>
                   )}
                   {extra !== "none" && extra !== "colour" && (
-                    <Row label="Amount" title="More lines, and fainter ones, with higher values">
+                    <Row label={t("filum.digitalizza.amount")} title={t("filum.digitalizza.more_lines_and_fainter_ones")}>
                       <Slider min={0} max={1} step={0.05} value={settings.lineStrength} onChange={(v) => set({ lineStrength: v })} />
                     </Row>
                   )}
-                  {extra !== "none" && <p className="dz-hint">One line per place: the lines in the picture come first, then the border, then these.</p>}
+                  {extra !== "none" && <p className="dz-hint">{t("filum.digitalizza.one_line_per_place_the")}</p>}
                 </Group>
               </>
             )}
 
             {pane === "cross" && (
               <>
-                <Group title="Cells" hint="One cross per cell; the cells line up with the canvas grid, so crosses of different colours meet exactly.">
-                  <Row label="Cell" title="Size of one cross (Ink/Stitch pattern size)">
+                <Group title={t("filum.digitalizza.cells")} hint={t("filum.digitalizza.one_cross_per_cell_the")}>
+                  <Row label={t("filum.digitalizza.cell")} title={t("filum.digitalizza.size_of_one_cross_ink")}>
                     <span className="dz-inline">
                       <Num value={cross.cell} step={0.1} min={0.8} max={12} unit="mm" onChange={(v) => setCross({ cell: v })} />
                       {!cross.square && <Num value={cross.cellY} step={0.1} min={0.8} max={12} unit="mm" onChange={(v) => setCross({ cellY: v })} />}
-                      <Toggle on={cross.square} onChange={(v) => setCross({ square: v, cellY: cross.cell })} title="Square cells" />
+                      <Toggle on={cross.square} onChange={(v) => setCross({ square: v, cellY: cross.cell })} title={t("filum.digitalizza.square_cells")} />
                     </span>
                   </Row>
-                  <Row label="Coverage" title="How much of a cell must be stitched to get a cross">
+                  <Row label={t("filum.digitalizza.coverage")} title={t("filum.digitalizza.how_much_of_a_cell")}>
                     <Slider min={10} max={100} step={5} digits={0} unit="%" value={Math.round(cross.coverage * 100)} onChange={(v) => setCross({ coverage: v / 100 })} />
                   </Row>
                   {crossed && (
                     <p className="dz-hint">
-                      {crossed.cols} × {crossed.rows} cells · <b>{crossed.crosses.toLocaleString()}</b> crosses in {crossed.threads.length} colour{crossed.threads.length === 1 ? "" : "s"}
+                      {crossed.cols} × {crossed.rows}{t("filum.digitalizza.cells_2")}<b>{crossed.crosses.toLocaleString()}</b>{tn("filum.digitalizza.crosses_in_colours", crossed.threads.length)}
                     </p>
                   )}
                 </Group>
-                <Group title="Stitches" hint={CROSS_KINDS.find((k) => k[0] === cross.kind)?.[2]}>
+                <Group title={t("filum.digitalizza.stitches")} hint={CROSS_KINDS().find((k) => k[0] === cross.kind)?.[2]}>
                   <div className="seg seg-full">
-                    {CROSS_KINDS.map(([k, l, t]) => (
+                    {CROSS_KINDS().map(([k, l, t]) => (
                       <button key={k} title={t} className={cross.kind === k ? "on" : ""} onClick={() => setCross({ kind: k })}>
                         {l}
                       </button>
                     ))}
                   </div>
-                  <Row label="Grid on the cells" title="After adding, show the canvas grid at the cell size">
+                  <Row label={t("filum.digitalizza.grid_on_the_cells")} title={t("filum.digitalizza.after_adding_show_the_canvas")}>
                     <Toggle on={cross.grid} onChange={(v) => setCross({ grid: v })} />
                   </Row>
                 </Group>
@@ -1487,7 +1489,7 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
 
             {pane === "stitches" && (
               <>
-                <Group title="Fill" hint={FILL_METHODS.find((m) => m.id === settings.fillMethod)?.hint}>
+                <Group title={t("filum.digitalizza.fill")} hint={FILL_METHODS.find((m) => m.id === settings.fillMethod)?.hint}>
                   <div className="dz-methods">
                     {FILL_METHODS.map((m) => (
                       <button
@@ -1504,39 +1506,39 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                       </button>
                     ))}
                   </div>
-                  <Row label="Density" title="Row spacing — smaller is denser">
+                  <Row label={t("filum.digitalizza.density")} title={t("filum.digitalizza.row_spacing_smaller_is_denser")}>
                     <Slider min={0.15} max={settings.fillMethod === "hilbert" || settings.fillMethod === "stipple" || settings.fillMethod === "meander" ? 3 : 1} step={0.01} unit="mm" value={settings.rowSpacing} onChange={(v) => set({ rowSpacing: v })} />
                   </Row>
-                  <Row label="Underlay" title="A light foundation layer under each fill">
+                  <Row label={t("filum.digitalizza.underlay")} title={t("filum.digitalizza.a_light_foundation_layer_under")}>
                     <Toggle on={settings.underlay} onChange={(v) => set({ underlay: v })} />
                   </Row>
                 </Group>
                 {settings.fillMethod === "flow" && (
-                  <Group title="Flow" hint="Lower strength straightens the rows towards the base direction.">
-                    <Row label="Strength" title="How much rows follow the picture (100 %) instead of the base direction (0 %)">
+                  <Group title={t("filum.digitalizza.flow")} hint={t("filum.digitalizza.lower_strength_straightens_the_rows")}>
+                    <Row label={t("filum.digitalizza.strength")} title={t("filum.digitalizza.how_much_rows_follow_the")}>
                       <Slider min={0} max={100} step={5} digits={0} unit="%" value={Math.round(settings.flowStrength * 100)} onChange={(v) => set({ flowStrength: v / 100 })} />
                     </Row>
-                    <Row label="Detail" title="Field cells across each shape — more follow smaller features, fewer give long sweeping rows">
+                    <Row label={t("filum.digitalizza.detail")} title={t("filum.digitalizza.field_cells_across_each_shape")}>
                       <Slider min={8} max={100} step={2} digits={0} value={settings.flowDetail} onChange={(v) => set({ flowDetail: v })} />
                     </Row>
-                    <Row label="Smoothing" title="Smoothing passes of the picture's edge flow — more give calmer curves">
+                    <Row label={t("filum.digitalizza.smoothing")} title={t("filum.digitalizza.smoothing_passes_of_the_picture")}>
                       <Slider min={1} max={8} step={1} digits={0} value={settings.flowSmoothing} onChange={(v) => set({ flowSmoothing: v })} />
                     </Row>
                   </Group>
                 )}
                 {DIRECTED.includes(settings.fillMethod) && (
                   <Group
-                    title={settings.fillMethod === "flow" ? "Base direction" : "Direction"}
-                    hint={settings.fillMethod === "flow" ? "Where the picture has no clear flow, and at lower strength, rows lean this way." : DIRECTIONS.find((d) => d[0] === direction)?.[2]}
+                    title={settings.fillMethod === "flow" ? t("filum.digitalizza.base_direction") : t("filum.digitalizza.direction")}
+                    hint={settings.fillMethod === "flow" ? t("filum.digitalizza.where_the_picture_has_no") : DIRECTIONS().find((d) => d[0] === direction)?.[2]}
                   >
                     <Seg
                       full
                       value={direction}
                       onChange={(v) => (v === "fixed" ? set({ fillAngle: settings.fillAngle ?? 45 }) : set({ fillAngle: null, fillDirection: v }))}
-                      options={DIRECTIONS.map(([id, label]) => [id, label])}
+                      options={DIRECTIONS().map(([id, label]) => [id, label])}
                     />
                     {direction === "fixed" && (
-                      <Row label="Angle">
+                      <Row label={t("filum.digitalizza.angle")}>
                         <Slider min={-90} max={90} step={5} digits={0} unit="°" value={settings.fillAngle ?? 45} onChange={(v) => set({ fillAngle: v })} />
                       </Row>
                     )}
@@ -1548,23 +1550,23 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
             {pane === "ai" && (
               <>
                 <p className="dz-hint">
-                  <span className="badge">on-device</span> The models are bundled with Filum and run on this computer.
+                  <span className="badge">{t("filum.digitalizza.on_device")}</span>{t("filum.digitalizza.the_models_are_bundled_with")}
                 </p>
-                <Group title="Objects" hint="MobileSAM: click an object in the picture, then decide what happens to it.">
+                <Group title={t("filum.digitalizza.objects")} hint={t("filum.digitalizza.mobilesam_click_an_object_in")}>
                   <button className={`btn sm ${samMode ? "primary" : ""}`} style={{ width: "100%" }} disabled={!bmp} onClick={() => (samMode ? setSamMode(false) : startSam())}>
-                    <MousePointerClick size={13} /> {samMode ? "Done selecting" : "Select objects"}
+                    <MousePointerClick size={13} /> {samMode ? t("filum.digitalizza.done_selecting") : t("filum.digitalizza.select_objects")}
                   </button>
                   {samMode && (
                     <>
-                      <p className="dz-hint">Click to add · Alt- or right-click to exclude a part.</p>
+                      <p className="dz-hint">{t("filum.digitalizza.click_to_add_alt_or")}</p>
                       <div className="dz-mask-actions">
-                        {MASK_MODES.map(([mode, label, hint]) => (
+                        {MASK_MODES().map(([mode, label, hint]) => (
                           <button key={mode} className={`btn sm ${mode}`} disabled={!curMask} onClick={() => useMask(mode)} title={hint}>
                             {label}
                           </button>
                         ))}
                         <button className="btn sm ghost" disabled={!samPts.length} onClick={() => (setSamPts([]), setCurMask(null))}>
-                          Clear
+                          {t("filum.digitalizza.clear")}
                         </button>
                       </div>
                     </>
@@ -1572,9 +1574,9 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                   {masks.length > 0 && (
                     <div className="dz-masks">
                       {masks.map((m, i) => (
-                        <span key={i} className={`chip ${m.mode}`} title={MASK_MODES.find((x) => x[0] === m.mode)?.[2]}>
-                          {MASK_MODES.find((x) => x[0] === m.mode)?.[1]} {i + 1}
-                          <button className="mini" onClick={() => setMasks(masks.filter((_, k) => k !== i))} title="Delete">
+                        <span key={i} className={`chip ${m.mode}`} title={MASK_MODES().find((x) => x[0] === m.mode)?.[2]}>
+                          {MASK_MODES().find((x) => x[0] === m.mode)?.[1]} {i + 1}
+                          <button className="mini" onClick={() => setMasks(masks.filter((_, k) => k !== i))} title={t("filum.digitalizza.delete")}>
                             <Trash2 size={11} />
                           </button>
                         </span>
@@ -1582,14 +1584,14 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                     </div>
                   )}
                 </Group>
-                <Group title="Text" hint="Tesseract: ticked lines are erased from the picture and added as real lettering.">
+                <Group title={t("filum.digitalizza.text")} hint={t("filum.digitalizza.tesseract_ticked_lines_are_erased")}>
                   <button className="btn sm" style={{ width: "100%" }} disabled={!img || !!busy} onClick={runOcr}>
-                    <ScanText size={13} /> {textLines ? "Find text again" : "Find text"}
+                    <ScanText size={13} /> {textLines ? t("filum.digitalizza.find_text_again") : t("filum.digitalizza.find_text")}
                   </button>
                   {textLines && textLines.length > 0 && (
                     <div className="dz-text">
                       {textLines.map((l, i) => (
-                        <label key={i} className="dz-textline" title={`${Math.round(l.confidence)}% confident`}>
+                        <label key={i} className="dz-textline" title={t("filum.digitalizza.v1_confident", { v1: Math.round(l.confidence) })}>
                           <input type="checkbox" checked={!!textPick[i]} onChange={(e) => setTextPick(textPick.map((v, k) => (k === i ? e.target.checked : v)))} />
                           <span>{l.text}</span>
                           <i className="stat">{Math.round(l.confidence)}%</i>
@@ -1597,19 +1599,19 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
                       ))}
                     </div>
                   )}
-                  {textLines && !textLines.length && <p className="dz-hint">No text found.</p>}
+                  {textLines && !textLines.length && <p className="dz-hint">{t("filum.digitalizza.no_text_found_2")}</p>}
                 </Group>
               </>
             )}
           </div>
 
           <div className="dz-side-foot">
-            <button className="btn sm ghost" disabled={!paneChanges(pane)} onClick={() => resetPane(pane)} title="Back to the defaults of this tab">
-              <RotateCcw size={12} /> Reset {PANES.find((p) => p.id === pane)?.label.toLowerCase()}
+            <button className="btn sm ghost" disabled={!paneChanges(pane)} onClick={() => resetPane(pane)} title={t("filum.digitalizza.back_to_the_defaults_of")}>
+              <RotateCcw size={12} />{t("filum.digitalizza.reset")}{PANES.find((p) => p.id === pane)?.label.toLowerCase()}
             </button>
             <div className="spacer" />
-            <button className="btn sm ghost" onClick={() => setSettings(presetSettings("logo"))} title="All settings back to the defaults">
-              Reset all
+            <button className="btn sm ghost" onClick={() => setSettings(presetSettings("logo"))} title={t("filum.digitalizza.all_settings_back_to_the")}>
+              {t("filum.digitalizza.reset_all")}
             </button>
           </div>
         </div>
@@ -1619,10 +1621,10 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
             <div className="seg">
               {(
                 [
-                  ["original", "Original"],
-                  ["colours", "Regions"],
-                  ["vector", "Shapes"],
-                  ["stitches", "Stitches"],
+                  ["original", t("filum.digitalizza.original")],
+                  ["colours", t("filum.digitalizza.regions")],
+                  ["vector", t("filum.digitalizza.shapes")],
+                  ["stitches", t("filum.digitalizza.stitches")],
                 ] as [Tab, string][]
               ).map(([id, label]) => (
                 <button key={id} className={tab === id ? "on" : ""} onClick={() => setTab(id)}>
@@ -1633,10 +1635,10 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
             {tab === "stitches" && (
               <div className="seg">
                 <button className={stitchLook === "realistic" ? "on" : ""} onClick={() => setStitchLook("realistic")}>
-                  Realistic
+                  {t("filum.digitalizza.realistic")}
                 </button>
                 <button className={stitchLook === "stitch" ? "on" : ""} onClick={() => setStitchLook("stitch")}>
-                  Stitch
+                  {t("filum.digitalizza.stitch")}
                 </button>
               </div>
             )}
@@ -1650,17 +1652,17 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
           <div ref={boxRef} className={`dz-box ${tab === "colours" ? "checker" : ""}`}>
             {pickRole && img && (tab === "original" || tab === "colours") && (
               <div className="dz-pickbar">
-                <Pipette size={13} /> Click colours to make them <b>{ROLES.find((r) => r.id === pickRole)?.label.toLowerCase()}</b>
+                <Pipette size={13} />{t("filum.digitalizza.click_colours_to_make_them")}<b>{ROLES.find((r) => r.id === pickRole)?.label.toLowerCase()}</b>
                 <button className="btn sm" onClick={() => setPickRole(null)}>
-                  Done
+                  {t("filum.digitalizza.done")}
                 </button>
               </div>
             )}
             {!img ? (
               <button className="dz-empty" onClick={pick}>
                 <ImageUp size={28} />
-                <b>Drop, paste or choose an image</b>
-                <span>PNG, JPG, WebP, BMP or GIF — logos and flat artwork work best</span>
+                <b>{t("filum.digitalizza.drop_paste_or_choose_an")}</b>
+                <span>{t("filum.digitalizza.png_jpg_webp_bmp_or")}</span>
               </button>
             ) : error ? (
               <span className="hint" style={{ color: "var(--accent)" }}>
@@ -1698,7 +1700,7 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
               plan && previewDoc ? (
                 <DesignView doc={previewDoc} plan={plan} mode={stitchLook} fabricColor={fabricColor} />
               ) : (
-                !busy && <span className="hint">Nothing to stitch — every colour is left out.</span>
+                !busy && <span className="hint">{t("filum.digitalizza.nothing_to_stitch_every_colour")}</span>
               )
             ) : (
               previewDoc && <DesignView doc={previewDoc} plan={plan} mode="vector" fabricColor={fabricColor} gridStep={output === "cross" ? cross.cell : undefined} />
@@ -1707,50 +1709,50 @@ export function DigitizeDialog({ onClose }: { onClose: () => void }) {
           {tab === "colours" && preview && (
             <div className="dz-legend">
               <span>
-                <i className="hatch" /> left out
+                <i className="hatch" />{t("filum.digitalizza.left_out")}
               </span>
               <span>
-                <i className="keep" /> you stitched
+                <i className="keep" />{t("filum.digitalizza.you_stitched")}
               </span>
               <span>
-                <i className="drop" /> you left out
+                <i className="drop" />{t("filum.digitalizza.you_left_out")}
               </span>
-              <span className="stat">Click an area to flip it · Alt-click: the whole colour</span>
+              <span className="stat">{t("filum.digitalizza.click_an_area_to_flip")}</span>
             </div>
           )}
           <div className="dz-stats">
             {preview && removedShare > 0.002 && tab !== "colours" && (
-              <button className="dz-notice" onClick={() => setTab("colours")} title="Show what is left out and edit it">
-                <b>{(removedShare * 100).toFixed(0)}%</b> left out · review
+              <button className="dz-notice" onClick={() => setTab("colours")} title={t("filum.digitalizza.show_what_is_left_out_2")}>
+                <b>{(removedShare * 100).toFixed(0)}%</b>{t("filum.digitalizza.left_out_review")}
               </button>
             )}
             {result && (
               <>
                 <span>
-                  <b>{result.objects.length}</b> objects
+                  <b>{result.objects.length}</b>{t("filum.digitalizza.objects_2")}
                 </span>
                 <span className="stat">
                   {output === "cross" && crossed
-                    ? `${crossed.crosses.toLocaleString()} crosses · ${crossed.cols} × ${crossed.rows} cells`
-                    : `${counts.fill} fills · ${counts.satin} satins · ${counts.running} running`}
+                    ? t("filum.digitalizza.v1_crosses_cols_rows_cells", { v1: crossed.crosses.toLocaleString(), cols: crossed.cols, rows: crossed.rows })
+                    : t("filum.digitalizza.fill_fills_satin_satins_running", { fill: counts.fill, satin: counts.satin, running: counts.running })}
                 </span>
                 <span>
-                  <b>{result.threads.length}</b> threads
+                  <b>{result.threads.length}</b>{t("filum.digitalizza.threads")}
                 </span>
               </>
             )}
             {stats && (
               <>
                 <span>
-                  <b>{stats.stitches.toLocaleString()}</b> stitches
+                  <b>{stats.stitches.toLocaleString()}</b>{t("filum.digitalizza.stitches_2")}
                 </span>
                 <span>
-                  <b>{fmtTime(stats.seconds)}</b> min
+                  <b>{fmtTime(stats.seconds)}</b>{t("filum.digitalizza.min")}
                 </span>
               </>
             )}
             {preview && (
-              <span className={tooBig ? "warn" : ""} title={tooBig ? `Larger than the ${doc.hoop.name} hoop` : undefined}>
+              <span className={tooBig ? "warn" : ""} title={tooBig ? t("filum.digitalizza.larger_than_the_name_hoop", { name: doc.hoop.name }) : undefined}>
                 <b>
                   {widthMm.toFixed(0)} × {heightMm.toFixed(0)}
                 </b>{" "}

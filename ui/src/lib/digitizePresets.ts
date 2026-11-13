@@ -7,6 +7,7 @@
 // "custom" when they no longer match one of its steps.
 
 import type { DigitizeOptions } from "../types";
+import { t } from "../nova/i18n/filum";
 
 /** Options remembered between sessions (image-specific colour edits are not). */
 export type DigitizeSettings = Required<
@@ -84,8 +85,8 @@ export const OUTLINE_DEFAULT_MM = 1.2;
 export const DIGITIZE_PRESETS: DigitizePreset[] = [
   {
     id: "logo",
-    label: "Logo",
-    hint: "Flat colours, outlines as even satin on top, every enclosed area stitched, the outlines sewn as one network",
+    get label() { return t("filum.dati.logo"); },
+    get hint() { return t("filum.dati.flat_colours_outlines_as_even"); },
     opts: {
       colors: 6,
       denoise: 1,
@@ -110,14 +111,14 @@ export const DIGITIZE_PRESETS: DigitizePreset[] = [
   },
   {
     id: "illustration",
-    label: "Illustration",
-    hint: "More colours and finer detail; lines keep the width they are drawn with",
+    get label() { return t("filum.dati.illustration"); },
+    get hint() { return t("filum.dati.more_colours_and_finer_detail"); },
     opts: { colors: 10, denoise: 1, smoothing: 1, minRegionMm2: 0.8, removeBackground: true, backgroundScope: "outside", simplifyMm: 0.1, maxPixels: 900, satinMaxWidthMm: 5, lineNetworks: true, outlineLineMm: 0, fillMethod: "tatami", rowSpacing: 0.4, underlay: true, pixelArt: "off" },
   },
   {
     id: "drawing",
-    label: "Line art",
-    hint: "Drawings and sketches: few colours, the lines as satin or running stitch along their centre",
+    get label() { return t("filum.dati.line_art"); },
+    get hint() { return t("filum.dati.drawings_and_sketches_few_colours"); },
     opts: {
       colors: 3,
       denoise: 1,
@@ -137,8 +138,8 @@ export const DIGITIZE_PRESETS: DigitizePreset[] = [
   },
   {
     id: "photo",
-    label: "Photo",
-    hint: "Smoothed colours, gradient fills, rows that follow the picture",
+    get label() { return t("filum.dati.photo"); },
+    get hint() { return t("filum.dati.smoothed_colours_gradient_fills_rows"); },
     opts: {
       colors: 10,
       smoothing: 1,
@@ -162,7 +163,7 @@ export const DIGITIZE_PRESETS: DigitizePreset[] = [
   {
     id: "pixel",
     label: "Pixel art",
-    hint: "Sprites and icons: smooth, depixelized shapes",
+    get hint() { return t("filum.dati.sprites_and_icons_smooth_depixelized"); },
     opts: { colors: 16, removeBackground: true, backgroundScope: "outside", smoothing: 0, denoise: 0, mergeDeltaE: 0, minRegionMm2: 0, pixelArt: "on", allowSatin: false, allowRunning: false, fillMethod: "tatami" },
   },
 ];

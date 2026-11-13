@@ -28,12 +28,14 @@ import { saveFile } from "../lib/platform";
 import { useStore } from "../store";
 import type { Fabric, FormatInfo, PlanData } from "../types";
 import { Dialog } from "./ui";
+import { t, tn, useLanguage } from "../nova/i18n/filum";
 
 type Step = 0 | 1 | 2;
-const STEPS = ["Sew the swatch", "Measure it", "Save"];
+const STEPS = () => [t("filum.digitalizza.sew_the_swatch"), t("filum.digitalizza.measure_it"), t("filum.digitalizza.save")];
 const mm = (v: number, sign = false) => `${sign && v > 0 ? "+" : ""}${v.toFixed(2).replace(/\.?0+$/, "") || "0"} mm`;
 
 export function CalibrateDialog({ onClose }: { onClose: () => void }) {
+  useLanguage();
   const doc = useStore((s) => s.doc);
   const fabricColor = useStore((s) => s.fabricColor);
   const [fabric, setFabric] = useState<Fabric>(doc.fabric);
@@ -74,9 +76,9 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
     try {
       const bytes = await engine.export(swatch, fmt);
       const path = await saveFile(`calibration-${fabric}.${fmt}`, bytes, [{ name: fmt.toUpperCase(), extensions: [fmt] }]);
-      if (path !== null) useStore.getState().toast(`Saved the ${fabricInfo(fabric).label.toLowerCase()} swatch`, "success");
+      if (path !== null) useStore.getState().toast(t("filum.digitalizza.saved_the_v1_swatch", { v1: fabricInfo(fabric).label.toLowerCase() }), "success");
     } catch (e) {
-      useStore.getState().toast(`The swatch couldn't be saved: ${(e as Error).message}`, "error");
+      useStore.getState().toast(t("filum.digitalizza.the_swatch_couldn_t_be", { message: (e as Error).message }), "error");
     }
   };
 
@@ -107,43 +109,43 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
         ),
       }));
     }
-    s.toast(`${info.label} calibrated${applyHere && affected ? ` · ${affected} object${affected === 1 ? "" : "s"} updated` : ""}`, "success");
+    s.toast(`${t("filum.digitalizza.label_calibrated", { label: info.label })}${applyHere && affected ? tn("filum.digitalizza.objects_updated", affected) : ""}`, "success");
     onClose();
   };
   const reset = () => {
     saveCalibration({ fabric, clear: true });
     setRaw({});
     bump((n) => n + 1);
-    useStore.getState().toast(`${info.label} is back to the standard numbers`);
+    useStore.getState().toast(t("filum.digitalizza.label_is_back_to_the", { label: info.label }));
   };
 
   // a measurement far off (a typo like 250 for 25) would save extreme settings
   const canSave = !!(result.satin || result.fill) && !result.odd.length;
   return (
     <Dialog
-      title="Calibrate a fabric"
+      title={t("filum.digitalizza.calibrate_a_fabric")}
       wide
       onClose={onClose}
       footer={
         <>
           {saved && (
-            <button className="btn ghost" onClick={reset} title={`Forget the ${info.label.toLowerCase()} calibration: new objects start from the standard numbers again`}>
-              <RotateCcw size={13} /> Standard numbers
+            <button className="btn ghost" onClick={reset} title={t("filum.digitalizza.forget_the_v1_calibration_new", { v1: info.label.toLowerCase() })}>
+              <RotateCcw size={13} />{t("filum.digitalizza.standard_numbers")}
             </button>
           )}
           <div className="spacer" />
           {step > 0 && (
             <button className="btn" onClick={() => setStep((step - 1) as Step)}>
-              <ArrowLeft size={13} /> Back
+              <ArrowLeft size={13} />{t("filum.digitalizza.back")}
             </button>
           )}
           {step < 2 ? (
             <button className="btn primary" onClick={() => setStep((step + 1) as Step)}>
-              {step === 0 ? "I've sewn it" : "See the result"} <ArrowRight size={13} />
+              {step === 0 ? t("filum.digitalizza.i_ve_sewn_it") : t("filum.digitalizza.see_the_result")} <ArrowRight size={13} />
             </button>
           ) : (
             <button className="btn primary" disabled={!canSave} onClick={save}>
-              <Check size={13} /> Save for {info.label}
+              <Check size={13} />{t("filum.digitalizza.save_for")}{info.label}
             </button>
           )}
         </>
@@ -151,8 +153,7 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
     >
       <div className="cal-top">
         <p className="cal-intro">
-          How much stitches pull depends on the fabric, the backing, the hooping and the machine together. Sew one swatch, measure it, and new objects on this fabric start
-          from your numbers.
+          {t("filum.digitalizza.how_much_stitches_pull_depends")}
         </p>
         <label className="cal-fabric">
           <FabricIcon size={13} />
@@ -164,12 +165,12 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
               </option>
             ))}
           </select>
-          <span className={`cal-state ${saved ? "on" : ""}`}>{saved ? `Calibrated ${new Date(saved.date).toLocaleDateString()}` : "Standard numbers"}</span>
+          <span className={`cal-state ${saved ? "on" : ""}`}>{saved ? t("filum.digitalizza.calibrated_v1", { v1: new Date(saved.date).toLocaleDateString() }) : t("filum.digitalizza.standard_numbers_2")}</span>
         </label>
       </div>
 
       <ol className="cal-steps" role="tablist">
-        {STEPS.map((t, i) => (
+        {STEPS().map((t, i) => (
           <li key={t}>
             <button role="tab" aria-selected={step === i} className={`${step === i ? "on" : ""} ${i < step ? "done" : ""}`} onClick={() => setStep(i as Step)}>
               <span className="cal-dot">{i < step ? <Check size={11} /> : i + 1}</span>
@@ -183,26 +184,26 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
         <div className="cal-grid">
           <div className="cal-preview">
             <DesignView doc={swatch} plan={plan} mode="realistic" fabricColor={fabricColor} pad={14} />
-            <span className="cal-size">100 × 100 mm</span>
+            <span className="cal-size">{t("filum.digitalizza.n100_100_mm")}</span>
           </div>
           <div className="cal-side">
-            <p className="cal-lead">Four pieces with {info.label.toLowerCase()}'s settings and no pull compensation of their own, so the fabric shows what it does.</p>
+            <p className="cal-lead">{t("filum.digitalizza.four_pieces_with_label_s", { label: info.label.toLowerCase() })}</p>
             <ul className="cal-check">
               <li>
-                <b>Backing</b> the one you always use · suggested: {info.backing.toLowerCase()}
+                <b>{t("filum.digitalizza.backing")}</b>{t("filum.digitalizza.the_one_you_always_use")}{info.backing.toLowerCase()}
               </li>
               <li>
-                <b>Topping</b> {info.topping.toLowerCase()}
+                <b>{t("filum.digitalizza.topping")}</b> {info.topping.toLowerCase()}
               </li>
               <li>
-                <b>Needle</b> {info.needle}
+                <b>{t("filum.digitalizza.needle")}</b> {info.needle}
               </li>
               <li>
-                <b>Hooping</b> as you hoop real designs, the letters upright
+                <b>{t("filum.digitalizza.hooping")}</b>{t("filum.digitalizza.as_you_hoop_real_designs")}
               </li>
             </ul>
             <div className="cal-download">
-              <select className="select" value={fmt} onChange={(e) => setFmt(e.target.value)} title="File format for your machine">
+              <select className="select" value={fmt} onChange={(e) => setFmt(e.target.value)} title={t("filum.digitalizza.file_format_for_your_machine")}>
                 {(formats.length ? formats : [{ extension: fmt, name: fmt.toUpperCase() } as FormatInfo]).map((f) => (
                   <option key={f.extension} value={f.extension} title={f.name}>
                     {f.extension.toUpperCase()}
@@ -211,10 +212,10 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
                 ))}
               </select>
               <button className="btn primary" onClick={download}>
-                <Download size={13} /> Download swatch
+                <Download size={13} />{t("filum.digitalizza.download_swatch")}
               </button>
             </div>
-            <p className="hint">It uses this design's thread weight and machine settings. Take it out of the hoop and let it rest a minute before you measure.</p>
+            <p className="hint">{t("filum.digitalizza.it_uses_this_design_s")}</p>
           </div>
         </div>
       )}
@@ -224,14 +225,14 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
           <SwatchDiagram focus={focus} measured={measured} />
           <div className="cal-side">
             <p className="cal-lead">
-              <Ruler size={13} /> With a ruler or calipers, to a tenth of a millimetre. Measure the stitched area only, outside edge to outside edge.
+              <Ruler size={13} />{t("filum.digitalizza.with_a_ruler_or_calipers")}
             </p>
             <table className="cal-table">
               <thead>
                 <tr>
                   <th />
-                  <th title="The way the thread lies">Along the stitches</th>
-                  <th title="At right angles to the thread">Across them</th>
+                  <th title={t("filum.digitalizza.the_way_the_thread_lies")}>{t("filum.digitalizza.along_the_stitches")}</th>
+                  <th title={t("filum.digitalizza.at_right_angles_to_the")}>{t("filum.digitalizza.across_them")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -256,7 +257,7 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
                               inputMode="decimal"
                               placeholder={drawn.toFixed(1)}
                               value={raw[k] ?? ""}
-                              aria-label={`${p.letter}, ${d} the stitches (drawn ${drawn} mm)`}
+                              aria-label={d === "along" ? t("filum.digitalizza.letter_along_drawn", { letter: p.letter, drawn }) : t("filum.digitalizza.letter_across_drawn", { letter: p.letter, drawn })}
                               onFocus={() => setFocus({ id: p.id, dir: d })}
                               onBlur={() => setFocus(null)}
                               onChange={(e) => setRaw((r) => ({ ...r, [k]: e.target.value }))}
@@ -264,7 +265,7 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
                             <span className="cal-unit">mm</span>
                           </label>
                           <span className={`cal-diff ${diff == null ? "" : diff < -0.04 ? "in" : diff > 0.04 ? "out" : "same"}`}>
-                            {diff == null ? `drawn ${drawn}` : Math.abs(diff) < 0.05 ? "as drawn" : mm(+diff.toFixed(2), true)}
+                            {diff == null ? t("filum.digitalizza.drawn_drawn", { drawn }) : Math.abs(diff) < 0.05 ? t("filum.digitalizza.as_drawn") : mm(+diff.toFixed(2), true)}
                           </span>
                         </td>
                       );
@@ -274,7 +275,7 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
               </tbody>
             </table>
             <p className="hint">
-              A disc's stitches run along its rows; a bar's stitches cross it, so its width is measured along them. One disc and one bar are enough; both make it more reliable.
+              {t("filum.digitalizza.a_disc_s_stitches_run")}
             </p>
           </div>
         </div>
@@ -284,26 +285,26 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
         <div className="cal-result">
           {!(result.satin || result.fill) && (
             <p className="cal-empty">
-              <Ruler size={14} /> Enter at least one disc or one bar, both along and across ({filled} of 8 so far).
+              <Ruler size={14} />{t("filum.digitalizza.enter_at_least_one_disc")}{filled}{t("filum.digitalizza.of_8_so_far")}
             </p>
           )}
           <div className="cal-cards">
             <ResultCard
               icon={<StitchSatin size={15} />}
-              title="Satin columns"
+              title={t("filum.digitalizza.satin_columns")}
               empty={!result.satin}
-              wasLabel={saved?.satin ? "before" : "standard"}
+              wasLabel={saved?.satin ? t("filum.digitalizza.before") : t("filum.digitalizza.standard")}
               rows={
                 result.satin
                   ? [
                       {
-                        label: "Pull compensation",
+                        label: t("filum.digitalizza.pull_compensation"),
                         value: mm(result.satin.pullComp),
                         was: saved?.satin?.pullComp ?? 0.2,
                         why: `Sewn ${mm(BAR_W - result.satin.shrink)} wide for ${BAR_W} drawn: the column is widened by that much in total.`,
                       },
                       {
-                        label: "Ends pulled in",
+                        label: t("filum.digitalizza.ends_pulled_in"),
                         value: mm(result.satin.pushComp),
                         was: saved?.satin?.pushComp ?? 0,
                         why: `Sewn ${mm(BAR_L + result.satin.grow)} long for ${BAR_L} drawn: each end starts that much further in.`,
@@ -314,20 +315,20 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
             />
             <ResultCard
               icon={<StitchFill size={15} />}
-              title="Fills"
+              title={t("filum.digitalizza.fills")}
               empty={!result.fill}
-              wasLabel={saved?.fill ? "before" : "standard"}
+              wasLabel={saved?.fill ? t("filum.digitalizza.before") : t("filum.digitalizza.standard")}
               rows={
                 result.fill
                   ? [
                       {
-                        label: "Pull compensation",
+                        label: t("filum.digitalizza.pull_compensation"),
                         value: `${mm(result.fill.pullComp)} each side`,
                         was: saved?.fill?.pullComp ?? 0,
                         why: `Sewn ${mm(DISC - result.fill.shrink)} along the rows for ${DISC} drawn: every row reaches that much further.`,
                       },
                       {
-                        label: "Shape",
+                        label: t("filum.digitalizza.shape"),
                         value: result.fill.expand ? `${mm(Math.abs(result.fill.expand))} ${result.fill.expand < 0 ? "smaller" : "larger"} each side` : "as drawn",
                         was: saved?.fill?.expand ?? 0,
                         why: `Sewn ${mm(DISC + result.fill.grow)} across the rows for ${DISC} drawn: the shape is ${result.fill.expand < 0 ? "stitched smaller" : result.fill.expand > 0 ? "stitched larger" : "stitched as drawn"} to make up for it.`,
@@ -345,12 +346,12 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
           {canSave && (
             <div className="cal-apply">
               <p>
-                Saved for <b>{info.label}</b> on this device. New satins and fills on {info.label.toLowerCase()} start from these numbers; you can still change them per object.
+                {t("filum.digitalizza.saved_for")}<b>{info.label}</b>{t("filum.digitalizza.on_this_device_new_satins")}{info.label.toLowerCase()}{t("filum.digitalizza.start_from_these_numbers_you")}
               </p>
               {affected > 0 && (
                 <label className="cal-toggle">
                   <input type="checkbox" checked={applyHere} onChange={(e) => setApplyHere(e.target.checked)} />
-                  Also update the {affected} {affected === 1 ? "object" : "objects"} in this design (undo with Ctrl+Z)
+                  {t("filum.digitalizza.also_update_the")}{affected} {affected === 1 ? t("filum.digitalizza.object") : t("filum.digitalizza.objects_3")}{t("filum.digitalizza.in_this_design_undo_with")}
                 </label>
               )}
             </div>
@@ -368,7 +369,7 @@ function ResultCard({ icon, title, rows, empty, wasLabel }: { icon: React.ReactN
         {icon} {title}
       </h4>
       {empty ? (
-        <p className="hint">Not measured: these keep their current numbers.</p>
+        <p className="hint">{t("filum.digitalizza.not_measured_these_keep_their")}</p>
       ) : (
         <dl>
           {rows.map((r) => (
@@ -394,7 +395,7 @@ function SwatchDiagram({ focus, measured }: { focus: { id: PieceId; dir: Directi
   const S = 100;
   return (
     <div className="cal-diagram">
-      <svg viewBox={`-4 -4 ${S + 8} ${S + 8}`} role="img" aria-label="The swatch: discs A and B, bars C and D">
+      <svg viewBox={`-4 -4 ${S + 8} ${S + 8}`} role="img" aria-label={t("filum.digitalizza.the_swatch_discs_a_and")}>
         <defs>
           <pattern id="cal-h" width="2" height="2" patternUnits="userSpaceOnUse">
             <path d="M0 1H2" />
@@ -449,7 +450,7 @@ function SwatchDiagram({ focus, measured }: { focus: { id: PieceId; dir: Directi
           );
         })}
       </svg>
-      <p className="cal-legend">Lines show which way the stitches run.</p>
+      <p className="cal-legend">{t("filum.digitalizza.lines_show_which_way_the")}</p>
     </div>
   );
 }

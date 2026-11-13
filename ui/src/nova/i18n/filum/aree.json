@@ -83,7 +83,7 @@
     },
     "digitalizza": {
       "descrizione": "Finestre per digitalizzare e provare: digitalizzazione di un'immagine, calibrazione, punto croce, campioni, ricostruzione delle forme",
-      "fatta": false,
+      "fatta": true,
       "file": [
         "components/DigitizeDialog.tsx",
         "components/CalibrateDialog.tsx",
@@ -168,7 +168,8 @@
         "lib/threadMatch.ts",
         "lib/digitizePresets.ts",
         "lib/threads.ts",
-        "lib/fonts.ts"
+        "lib/fonts.ts",
+        "lib/calibration.ts"
       ],
       "schermate": []
     }

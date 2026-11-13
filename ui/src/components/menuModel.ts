@@ -138,7 +138,7 @@ const clipboardWrite = (text: string | null) => {
 };
 
 async function addReferencePicture() {
-  const f = await openFile([{ name: "Pictures", extensions: ["png", "jpg", "jpeg", "webp", "bmp", "gif"] }]);
+  const f = await openFile([{ name: t("filum.menu.pictures"), extensions: ["png", "jpg", "jpeg", "webp", "bmp", "gif"] }]);
   if (f) await addReference(f.name, f.bytes);
 }
 

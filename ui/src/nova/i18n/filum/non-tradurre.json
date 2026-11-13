@@ -19,7 +19,23 @@
     "File": "«File» si dice così anche in italiano (menu File)",
     "Knockdown…": "termine del ricamo usato anche in italiano; provvisorio, nel glossario da rivedere",
     "Zig-zag": "nome del punto e dell'effetto, uguale in italiano",
-    "Zig-zag → satin": "le due parole si usano così in italiano («satin»: vedi il glossario)"
+    "Zig-zag → satin": "le due parole si usano così in italiano («satin»: vedi il glossario)",
+    "ΔE": "simbolo della differenza di colore (CIEDE2000)",
+    "Hilbert": "nome proprio (curva di Hilbert)",
+    "min": "unità di misura (minuti)",
+    "mm²": "unità di misura",
+    "100 × 100 mm": "misura",
+    "Pixel art": "genere grafico, si dice così anche in italiano",
+    "px": "unità di misura (pixel)",
+    "standard": "si dice così anche in italiano",
+    "Sub-pixel": "termine tecnico, si dice così anche in italiano",
+    "Tatami": "tipo di riempimento del ricamo, si dice così anche in italiano (glossario)",
+    "Topping": "materiale del ricamo, si dice così anche in italiano (glossario)",
+    "Denim": "nome del tessuto, uguale in italiano",
+    "Logo": "si dice così anche in italiano",
+    "Piqué / Polo": "nomi del tessuto, uguali in italiano",
+    "Fine": "aggettivo (dettaglio fine), uguale in italiano",
+    "Satin": "tipo di punto, si dice così anche in italiano (glossario)"
   },
   "chiavi_con_filum": {
     "filum.menu.about_filum": "la voce apre la finestra Informazioni, che parla di Filum e non usa {app} (decisione dell'Architetto, 13/11)"
