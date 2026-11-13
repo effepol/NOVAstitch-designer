@@ -36,12 +36,12 @@ const firstDiff = (a: Uint8Array, b: Uint8Array) => {
   check(JSON.stringify(opened) === snapshot, "a.3 saving leaves the document in memory as it was");
 }
 
-// numbers keep their exact value (no rounding on the way)
+// numbers: at most 6 decimals (a.22, 13/11), then stable; text comes back exactly
 {
   const d = readProject("N.filum", filumBytes).doc;
   const odd = { ...d, hoop: { ...d.hoop, width: 0.1 + 0.2, height: 1e-7 }, name: "Ünïcödé ✂ «Stemma»  " } as StitchDocument;
   const back = readProject("N.nsd", nsdBytes(odd)).doc;
-  check(back.hoop.width === 0.1 + 0.2 && back.hoop.height === 1e-7 && back.name === odd.name, "a.3 numbers and text come back exactly");
+  check(back.hoop.width === 0.3 && back.hoop.height === 0 && back.name === odd.name, "a.3 numbers come back with at most 6 decimals (a.22), text exactly");
   check(equalBytes(nsdBytes(back), nsdBytes(readProject("N.nsd", nsdBytes(back)).doc)), "a.3 …and their bytes are stable");
 }
 
