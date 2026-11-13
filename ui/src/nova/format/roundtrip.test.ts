@@ -7,6 +7,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { readProject } from "./read";
 import { nsdBytes, nsdText } from "./serialize";
+import { tidyStringify } from "./numbers";
 import { APP, novaDefaults } from "./nova";
 import type { StitchDocument } from "../../types";
 
@@ -24,7 +25,7 @@ const firstDiff = (a: Uint8Array, b: Uint8Array) => {
   const first = nsdBytes(opened);
   const reread = readProject("Stemma.nsd", first);
   check(reread.fromSchema === 1 && !reread.migrated && !reread.readOnly && reread.warnings.length === 0, "a.3 the saved .nsd reads back as current, no migration, no warning");
-  check(JSON.stringify(reread.doc) === JSON.stringify({ ...opened, nova: { ...opened.nova, app: APP } }), "a.3 the document read back is identical (only nova.app, the writer, is added)");
+  check(JSON.stringify(reread.doc) === tidyStringify({ ...opened, nova: { ...opened.nova, app: APP } }), "a.3 the document read back is identical, numbers at 6 decimals (a.22); only nova.app, the writer, is added");
   const second = nsdBytes(reread.doc);
   check(equalBytes(first, second), `a.3 saved again: identical bytes (${first.length} / ${second.length}, first difference at ${firstDiff(first, second)})`);
   // and again, through a third generation
