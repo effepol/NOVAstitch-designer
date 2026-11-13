@@ -1,0 +1,18 @@
+{
+  "_nota": "Testi uguali in italiano e in inglese: sigle, unità di misura, nomi di formati e di marche. Ogni voce ha il suo motivo. Il linter (check-texts.mjs) e i controlli dei cataloghi li accettano anche identici.",
+  "testi": {
+    "mm": "unità di misura",
+    "DST": "formato macchina",
+    "PES": "formato macchina",
+    "JEF": "formato macchina",
+    "SVG": "formato di file",
+    "PDF": "formato di file",
+    "PNG": "formato di file",
+    "X": "asse",
+    "Y": "asse",
+    "W": "larghezza (sigla mostrata accanto al numero)",
+    "H": "altezza (sigla mostrata accanto al numero)",
+    "Filum": "nome del programma da cui deriva NOVAstitch",
+    "Ink/Stitch": "nome di un altro progetto libero"
+  }
+}

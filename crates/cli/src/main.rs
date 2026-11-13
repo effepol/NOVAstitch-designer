@@ -3,7 +3,7 @@
 //!
 //! ```text
 //! filum convert design.svg design.pes        # Ink/Stitch SVG → PES
-//! filum convert logo.dst logo.filum      # machine file → editable project
+//! filum convert logo.dst logo.svg        # machine file → Ink/Stitch SVG (projects: .filum and .nsd are written only by the editor)
 //! filum info design.svg                       # stitch count, colours, time, thread
 //! filum digitize photo.png out.dst --colors 6 --width 90
 //! filum optimize in.svg out.svg               # fewer colour changes & jumps
@@ -42,6 +42,18 @@ fn save(doc: &Document, engine: &mut Engine, path: &str) -> Result<(), String> {
     std::fs::write(path, bytes).map_err(|e| format!("{path}: {e}"))
 }
 
+/// NOVAstitch (module a, test a.12): projects are written only by the editor.
+/// A .filum or .nsd written through the Rust engine would lose every field the
+/// engine does not know (nova, groups, letterings, reference pictures).
+fn refuse_project(path: &str) -> Result<(), String> {
+    match ext(path).as_str() {
+        "filum" | "nsd" => Err(format!(
+            "{path}: the command line does not write projects (.filum, .nsd); open and save them in NOVAstitch Designer, which keeps every field"
+        )),
+        _ => Ok(()),
+    }
+}
+
 fn flag(args: &[String], name: &str) -> Option<String> {
     args.iter().position(|a| a == name).and_then(|i| args.get(i + 1)).cloned()
 }
@@ -73,6 +85,10 @@ fn info(doc: &Document, engine: &mut Engine) -> Result<(), String> {
 
 fn run(args: Vec<String>) -> Result<(), String> {
     let mut engine = Engine::new();
+    // before anything is read: a refused command writes no file
+    if let (Some("convert" | "optimize" | "digitize"), Some(out)) = (args.first().map(String::as_str), args.get(2)) {
+        refuse_project(out)?;
+    }
     match args.first().map(String::as_str) {
         Some("convert") if args.len() >= 3 => {
             let doc = load(&args[1])?;
