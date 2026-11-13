@@ -1,0 +1,14 @@
+{
+  "e.issue.dense.title": "Punti troppo fitti per filo e tessuto",
+  "e.issue.dense.detail": "Distanza {spacing} mm: con il filo n. {weight} su questo tessuto il preset chiede almeno {limit} mm.",
+  "e.issue.dense.fix": "Porta a {limit} mm",
+  "e.issue.facing.title": "Riempimenti che cuciono uno verso l'altro",
+  "e.issue.facing.detail": "Su tessuto elastico questo riempimento e «{other}» spingono il tessuto verso il bordo comune: fai andare le righe nella stessa direzione.",
+  "e.issue.zigzagOnly.title": "Satin con solo underlay a zigzag",
+  "e.issue.zigzagOnly.detail": "Senza underlay di contorno il bordo del satin non è sostenuto.",
+  "e.issue.zigzagOnly.fix": "Aggiungi l'underlay di contorno",
+  "e.issue.contourOrder.title": "Contorno lontano dalla sua forma",
+  "e.issue.contourOrder.detail": "Su maglia il contorno di «{shape}» va cucito subito dopo «{shape}», prima della sezione successiva.",
+  "e.issue.narrowRows.title": "Righe troppo vicine nella zona stretta",
+  "e.issue.narrowRows.detail": "Le righe del riempimento curvo scendono a {d} mm (impostata {spacing} mm) intorno a x {x}, y {y} mm."
+}

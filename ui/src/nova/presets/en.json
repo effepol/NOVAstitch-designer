@@ -1,0 +1,14 @@
+{
+  "e.issue.dense.title": "Stitches too dense for thread and fabric",
+  "e.issue.dense.detail": "Spacing {spacing} mm: with No. {weight} thread on this fabric the preset asks for at least {limit} mm.",
+  "e.issue.dense.fix": "Set {limit} mm",
+  "e.issue.facing.title": "Fills sewing towards each other",
+  "e.issue.facing.detail": "On stretchy fabric this fill and “{other}” push the fabric towards their shared edge: let the rows run the same way.",
+  "e.issue.zigzagOnly.title": "Satin with zig-zag underlay only",
+  "e.issue.zigzagOnly.detail": "Without contour underlay the satin's edge has nothing under it.",
+  "e.issue.zigzagOnly.fix": "Add contour underlay",
+  "e.issue.contourOrder.title": "Contour away from its shape",
+  "e.issue.contourOrder.detail": "On knit the contour of “{shape}” is sewn right after “{shape}”, before the next section.",
+  "e.issue.narrowRows.title": "Rows too close in the narrow part",
+  "e.issue.narrowRows.detail": "The curved fill's rows come down to {d} mm (set {spacing} mm) around x {x}, y {y} mm."
+}
