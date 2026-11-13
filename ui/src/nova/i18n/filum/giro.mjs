@@ -18,7 +18,9 @@
 // contengono (anche le voci di un optgroup marcato), restano fuori dal confronto i.3; le schede
 // e i menu marcati non contano nella numerazione (#schedaN, menu/N) e si visitano a parte, come
 // schermate modulo/<modulo>/…, solo per i.1 e i.4. Se un elemento marcato contiene una scritta
-// del riferimento di Filum, i.3 fallisce.
+// del riferimento di Filum, i.3 fallisce, salvo che la stessa scritta sia nel catalogo del modulo che
+// l'ha marcato («Close», «About»). Le schermate sostituite per decisione (A_PARTE, oggi la finestra
+// Informazioni) sono tolte a mano dal riferimento e si visitano a parte, solo per i.1 e i.4.
 //
 // Le cifre sono sostituite da # prima del confronto: contano le parole, non i numeri.
 // Le foto e un foglio riassuntivo (foglio.html) vanno in NOVA_GIRO_DIR, o in
@@ -33,7 +35,7 @@
 
 import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -68,6 +70,25 @@ function loadPlaywright() {
   }
 }
 
+/**
+ * Schermate di Filum che una decisione dell'Architetto ha sostituito (contratto, regola i.3, 13/11):
+ * tolte a mano dal riferimento, si visitano a parte, solo per i.1 e i.4 (con le loro schede).
+ */
+const A_PARTE = ["finestra/about"];
+const aParte = (id) => A_PARTE.some((s) => id === s || id.startsWith(`${s}#`));
+
+/** I cataloghi inglesi dei moduli (non quello di Filum), voce per voce: [modulo, scritta]. Il modulo è la prima parte della chiave. */
+function moduleCatalogs() {
+  const nova = path.resolve(here, "../..");
+  const walk = (dir) =>
+    readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(dir, e.name)) : e.name === "en.json" ? [path.join(dir, e.name)] : []));
+  return walk(nova)
+    .filter((f) => f !== path.join(here, "en.json"))
+    .flatMap((f) => Object.entries(JSON.parse(readFileSync(f, "utf8"))).map(([k, v]) => [k.split(".")[0], v]));
+}
+/** Una voce di catalogo come confronto: cifre → #, un segnaposto {nome} vale qualunque testo. */
+const pattern = (text) => new RegExp("^" + norm(text).split(/\{\w+\}/).map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join(".+") + "$");
+
 /** Dove stanno le finestre: le finestre di Filum, la ricerca comandi, gli sfondi a schermo intero. */
 const DIALOG = ".dialog, [role=dialog], .backdrop";
 const json = (f) => JSON.parse(readFileSync(path.join(here, f), "utf8"));
@@ -85,10 +106,13 @@ const norm = (s) => s.replace(/\d+(?:[.,  ]\d+)*/g, "#");
  */
 function collectTexts(root) {
   const out = new Set();
-  const marked = new Set();
+  const marked = new Map();
   const add = (s, el) => {
     const v = (s ?? "").replace(/\s+/g, " ").trim();
-    if (v && /\p{L}/u.test(v)) (el?.closest("[data-nova]") ? marked : out).add(v);
+    if (!v || !/\p{L}/u.test(v)) return;
+    const owner = el?.closest("[data-nova]")?.getAttribute("data-nova");
+    if (owner) marked.set(v, owner);
+    else out.add(v);
   };
   const seen = (el) => el.checkVisibility({ visibilityProperty: true });
   const roots = root === "body" ? [document.body] : [...document.querySelectorAll(root)].filter(seen);
@@ -194,12 +218,13 @@ async function tour(browser, url, locale, shots) {
       const again = await page.evaluate(collectTexts, root);
       const same = JSON.stringify(again) === JSON.stringify(texts);
       texts = again;
-      const all = texts ? [...texts.testi, ...texts.marcati] : [];
+      const all = texts ? [...texts.testi, ...texts.marcati.map(([t]) => t)] : [];
       if (same && !all.some((t) => /^(Working|Counting|Lavor|Calcol|Conteg)[^]*…$/.test(t))) break;
     }
     if (!texts) missing.push(id);
     screens[id] = [...new Set((texts?.testi ?? []).map(norm))].sort();
-    marked[id] = [...new Set((texts?.marcati ?? []).map(norm))].sort();
+    // [scritta, modulo che ha marcato l'elemento]
+    marked[id] = (texts?.marcati ?? []).map(([t, m]) => [norm(t), m]).sort();
     if (shots) await page.screenshot({ path: path.join(shots, `${String(++n).padStart(3, "0")}.png`) }).catch(() => {});
     if (shots) screens[id + "\u0000shot"] = n;
   };
@@ -434,7 +459,7 @@ try {
     const sampleDone = allAreas || aree.esempio?.fatta;
     const itBad = {};
     for (const [id, texts] of Object.entries(textsOf(it.screens))) {
-      if (id.startsWith("modulo/") || !done(id) || !ref[id]) continue;
+      if (id.startsWith("modulo/") || aParte(id) || !done(id) || !ref[id]) continue;
       const english = new Set(ref[id]);
       const left = texts.filter((s) => english.has(s) && !allowed.has(s));
       if (left.length) itBad[id] = left;
@@ -455,7 +480,7 @@ try {
     const app = (l) => l.map((s) => s.replaceAll(appNow, "‹app›").replaceAll("Filum", "‹app›"));
     for (const id of Object.keys(ref)) ref[id] = app(ref[id]);
     // le schermate modulo/… non sono di Filum: fuori da i.3 (contano per i.1 e i.4, qui sotto)
-    const now = Object.fromEntries(Object.entries(textsOf(en.screens)).filter(([id]) => !id.startsWith("modulo/")).map(([id, l]) => [id, app(l)]));
+    const now = Object.fromEntries(Object.entries(textsOf(en.screens)).filter(([id]) => !id.startsWith("modulo/") && !aParte(id)).map(([id, l]) => [id, app(l)]));
     for (const id of new Set([...Object.keys(ref), ...Object.keys(now)])) {
       const a = new Set(ref[id] ?? []);
       const b = new Set(now[id] ?? []);
@@ -470,10 +495,13 @@ try {
     runs.push({ lang: "en", screens: shotsOf(en.screens), bad: enBad });
 
     // i.3, regola del 13/11: un elemento marcato (data-nova) non può contenere una scritta di Filum
+    // (non scatta per una scritta che è anche nel catalogo del modulo che ha marcato l'elemento: «Close», «About»)
+    const catalogs = moduleCatalogs();
+    const ownedBy = (text, mod) => catalogs.some(([m, v]) => m === mod && pattern(v).test(text));
     const hidden = {};
     for (const id of Object.keys(ref)) {
       const filum = new Set(ref[id]);
-      const inside = app(en.marked[id] ?? []).filter((s) => filum.has(s));
+      const inside = (en.marked[id] ?? []).filter(([s, mod]) => filum.has(app([s])[0]) && !ownedBy(s, mod)).map(([s, mod]) => `${s} (${mod})`);
       if (inside.length) hidden[id] = inside;
     }
     if (Object.keys(hidden).length)
@@ -484,15 +512,17 @@ try {
     // in italiano non resta una scritta uguale a quella inglese della stessa schermata
     const sameEverywhere = (s) => allowed.has(s) || KEYS.test(s) || SIGLA.test(s) || !/\p{L}/u.test(s.replace(/#/g, ""));
     const modBad = {};
-    for (const [id, l] of Object.entries(it.marked)) {
-      const english = new Set(en.marked[id] ?? []);
-      const left = l.filter((s) => english.has(s) && !sameEverywhere(s));
+    // le scritte dei moduli sempre; quelle di Filum di una schermata a parte quando la sua area è tradotta
+    const textsAt = (run, id) => [...(aParte(id) && done(id) ? run.screens[id] ?? [] : []), ...(run.marked[id] ?? []).map(([t]) => t)];
+    for (const id of Object.keys(it.marked)) {
+      const english = new Set(textsAt(en, id));
+      const left = textsAt(it, id).filter((s) => english.has(s) && !sameEverywhere(s));
       if (left.length) modBad[id] = left;
     }
-    const modScreens = Object.keys(textsOf(it.screens)).filter((id) => id.startsWith("modulo/"));
+    const modScreens = Object.keys(textsOf(it.screens)).filter((id) => id.startsWith("modulo/") || aParte(id));
     if (Object.keys(modBad).length)
-      fail(`i.1/i.4 interfaccia dei moduli: scritte inglesi rimaste in italiano:\n` + Object.entries(modBad).map(([id, l]) => `       ${id}: ${l.slice(0, 12).join(" · ")}`).join("\n"));
-    else console.log(`ok   i.1/i.4 l'interfaccia dei moduli è in italiano (${modScreens.length} schermate modulo/…: ${modScreens.join(", ") || "nessuna"})`);
+      fail(`i.1/i.4 interfaccia dei moduli e schermate a parte: scritte inglesi rimaste in italiano:\n` + Object.entries(modBad).map(([id, l]) => `       ${id}: ${l.slice(0, 12).join(" · ")}`).join("\n"));
+    else console.log(`ok   i.1/i.4 l'interfaccia dei moduli e le schermate a parte sono in italiano (${modScreens.length}: ${modScreens.join(", ") || "nessuna"})`);
     for (const id of Object.keys(modBad)) itBad[id] = [...(itBad[id] ?? []), ...modBad[id]];
 
     // i.4: il disegno generato al primo avvio ha i nomi in italiano
