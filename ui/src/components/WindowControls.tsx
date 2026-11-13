@@ -5,6 +5,7 @@
 
 import { useEffect, useState } from "react";
 import { isTauri } from "../lib/platform";
+import { t } from "../nova/i18n/filum";
 
 type Win = Awaited<ReturnType<typeof getWindow>>;
 const getWindow = async () => (await import("@tauri-apps/api/window")).getCurrentWindow();
@@ -52,12 +53,12 @@ export function WindowControls() {
   if (!isTauri) return null;
   return (
     <div className="win-controls">
-      <button type="button" className="win-btn" title="Minimize" aria-label="Minimize" onClick={() => win?.minimize()}>
+      <button type="button" className="win-btn" title={t("filum.barre.minimize")} aria-label={t("filum.barre.minimize")} onClick={() => win?.minimize()}>
         <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
           <path d="M0 5.5h10" stroke="currentColor" strokeWidth="1" />
         </svg>
       </button>
-      <button type="button" className="win-btn" title={maximized ? "Restore down" : "Maximize"} aria-label={maximized ? "Restore down" : "Maximize"} onClick={() => win?.toggleMaximize()}>
+      <button type="button" className="win-btn" title={maximized ? t("filum.barre.restore_down") : t("filum.barre.maximize")} aria-label={maximized ? t("filum.barre.restore_down") : t("filum.barre.maximize")} onClick={() => win?.toggleMaximize()}>
         {maximized ? (
           <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
             <path d="M2.5 2.5V.5h7v7h-2M.5 2.5h7v7h-7z" fill="none" stroke="currentColor" strokeWidth="1" />
@@ -68,7 +69,7 @@ export function WindowControls() {
           </svg>
         )}
       </button>
-      <button type="button" className="win-btn close" title="Close" aria-label="Close" onClick={() => win?.close()}>
+      <button type="button" className="win-btn close" title={t("filum.barre.close")} aria-label={t("filum.barre.close")} onClick={() => win?.close()}>
         <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
           <path d="M.5.5l9 9M9.5.5l-9 9" stroke="currentColor" strokeWidth="1.1" />
         </svg>

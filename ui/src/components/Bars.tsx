@@ -15,11 +15,11 @@ import { normAngle } from "../lib/geometry";
 import { FABRICS } from "../lib/materials";
 import { HOOP_GROUPS, HOOPS, hoopIndex, hoopOf } from "../lib/hoops";
 import { chooseHoop, hoopGroups, useHoopGroups } from "../nova/core/hoopChoice";
-import { t } from "../nova/core/i18n";
 import type { Hoop as DocHoop } from "../types";
 import { useStore } from "../store";
 import type { Fabric, StitchType, Tool } from "../types";
 import { Num } from "./ui";
+import { t } from "../nova/i18n/filum";
 
 /** NOVAstitch: the value a hoop picker shows: a module's hoop ("user:<id>", nova.hoopRef), a preset index, or -1 (custom). */
 export function hoopValue(hoop: DocHoop, ref: { id: string } | null | undefined): string {
@@ -48,7 +48,7 @@ export function HoopOptions() {
       {hoopGroups().map((g) => (
         <optgroup key={g.id} label={t(g.label)} data-nova={g.module}>
           {g.list().map((h) => (
-            <option key={h.id} value={`user:${h.id}`} title={`${h.width} × ${h.height} mm (width × height)`}>
+            <option key={h.id} value={`user:${h.id}`} title={t("filum.barre.width_height_mm_width_height", { width: h.width, height: h.height })}>
               {h.name}
             </option>
           ))}
@@ -58,7 +58,7 @@ export function HoopOptions() {
         <optgroup key={g} label={g}>
           {HOOPS.map((h, i) =>
             h.brand === g ? (
-              <option key={h.name} value={i} title={`${h.width} × ${h.height} mm (width × height)`}>
+              <option key={h.name} value={i} title={t("filum.barre.width_height_mm_width_height", { width: h.width, height: h.height })}>
                 {h.name}
               </option>
             ) : null,
@@ -78,17 +78,17 @@ export function TitleBar() {
   const hoopVal = hoopValue(doc.hoop, doc.nova?.hoopRef);
   return (
     <div className="titlebar">
-      <input className="docname" value={doc.name} onChange={(e) => useStore.getState().liveUpdate((d) => ({ ...d, name: e.target.value }))} spellCheck={false} aria-label="Design name" />
+      <input className="docname" value={doc.name} onChange={(e) => useStore.getState().liveUpdate((d) => ({ ...d, name: e.target.value }))} spellCheck={false} aria-label={t("filum.barre.design_name")} />
       <span className={`saved ${saved ? "" : "dirty"}`}>
         {saved ? <CircleCheck size={13} /> : <Circle size={11} />}
-        {saved ? "Saved" : "Edited"}
+        {saved ? t("filum.barre.saved") : t("filum.barre.edited")}
       </span>
-      <label className="sel-icon" title="Fabric — adjusts density and underlay (calibrate it for pull compensation)">
+      <label className="sel-icon" title={t("filum.barre.fabric_adjusts_density_and_underlay")}>
         <FabricIcon size={14} />
         <select
           className="select"
-          aria-label="Fabric preset"
-          title="Fabric — adjusts density and underlay (calibrate it for pull compensation)"
+          aria-label={t("filum.barre.fabric_preset")}
+          title={t("filum.barre.fabric_adjusts_density_and_underlay")}
           value={doc.fabric}
           onChange={(e) => useStore.getState().setFabric(e.target.value as Fabric)}
         >
@@ -99,34 +99,34 @@ export function TitleBar() {
           ))}
         </select>
       </label>
-      <label className="sel-icon" title={`Hoop: ${doc.hoop.name} — ${doc.hoop.width} × ${doc.hoop.height} mm`}>
+      <label className="sel-icon" title={t("filum.barre.hoop_name_width_height_mm", { name: doc.hoop.name, width: doc.hoop.width, height: doc.hoop.height })}>
         <Hoop size={14} />
         <select
           className="select"
-          aria-label="Hoop"
-          title={`Hoop: ${doc.hoop.name} — ${doc.hoop.width} × ${doc.hoop.height} mm`}
+          aria-label={t("filum.barre.hoop")}
+          title={t("filum.barre.hoop_name_width_height_mm", { name: doc.hoop.name, width: doc.hoop.width, height: doc.hoop.height })}
           value={hoopVal !== "-1" ? hoopVal : "custom"}
           onChange={(e) => pickHoopOption(e.target.value)}
         >
-          {hoopVal === "-1" && <option value="custom">{`${doc.hoop.width} × ${doc.hoop.height} mm`}</option>}
+          {hoopVal === "-1" && <option value="custom">{t("filum.barre.width_height_mm", { width: doc.hoop.width, height: doc.hoop.height })}</option>}
           <HoopOptions />
         </select>
       </label>
       <div className="spacer" />
-      <button className="btn ghost" onClick={optimizeOrder} title="Reorder to minimise colour changes and jumps (keeps stacking)">
-        <SewOrder size={14} /> Optimise
+      <button className="btn ghost" onClick={optimizeOrder} title={t("filum.barre.reorder_to_minimise_colour_changes")}>
+        <SewOrder size={14} />{t("filum.barre.optimise")}
       </button>
       <button className="btn primary" onClick={() => setDialog("export")}>
-        Export
+        {t("filum.barre.export")}
       </button>
     </div>
   );
 }
 
 const TYPES: { id: StitchType; icon: React.ReactNode; title: string }[] = [
-  { id: "running", icon: <StitchRunning size={14} />, title: "Running stitch" },
-  { id: "satin", icon: <StitchSatin size={14} />, title: "Satin column" },
-  { id: "fill", icon: <StitchFill size={14} />, title: "Fill" },
+  { id: "running", icon: <StitchRunning size={14} />, get title() { return t("filum.barre.running_stitch"); } },
+  { id: "satin", icon: <StitchSatin size={14} />, get title() { return t("filum.barre.satin_column"); } },
+  { id: "fill", icon: <StitchFill size={14} />, get title() { return t("filum.barre.fill"); } },
 ];
 
 export function ContextBar() {
@@ -146,13 +146,13 @@ export function ContextBar() {
   if (tool === "rect") return <ShapeToolBar />;
   if (textGroup) return <TextBar group={textGroup} />;
   const sel = doc.objects.filter((o) => selection.includes(o.id));
-  if (!sel.length) return <div className="contextbar">Select an object to edit its stitch settings</div>;
+  if (!sel.length) return <div className="contextbar">{t("filum.barre.select_an_object_to_edit")}</div>;
   if (sel.length > 1)
     return (
       <div className="contextbar">
         <span className="obj-name">
           <Layers3 size={14} />
-          <span>{sel.length} objects selected</span>
+          <span>{t("filum.barre.sel_objects_selected", { sel: sel.length })}</span>
         </span>
         <div className="vsep" />
         <ArrangeButtons count={sel.length} />
@@ -161,12 +161,12 @@ export function ContextBar() {
           <>
             <button
               className="btn sm"
-              title="Lay the lettering along the selected line (Ink/Stitch lettering along path)"
+              title={t("filum.barre.lay_the_lettering_along_the")}
               onClick={() => {
                 void textOnPath().then((err) => err && useStore.getState().toast(err, "error"));
               }}
             >
-              Text on path
+              {t("filum.barre.text_on_path")}
             </button>
             <div className="vsep" />
           </>
@@ -176,40 +176,40 @@ export function ContextBar() {
           <>
             <button
               className="btn sm"
-              title="Auto-route: join the lines into as few continuous paths as possible, travelling along lines already sewn (Ink/Stitch auto-route running stitch)"
+              title={t("filum.barre.auto_route_join_the_lines")}
               onClick={() => {
                 const err = autoRouteSelection();
                 if (err) useStore.getState().toast(err, "error");
               }}
             >
-              <Route size={13} /> Auto-route
+              <Route size={13} />{t("filum.barre.auto_route")}
             </button>
             <button
               className="btn sm ghost"
-              title="Redwork: every line sewn exactly twice, out and back — one path without jumps that ends where it began (Ink/Stitch redwork)"
+              title={t("filum.barre.redwork_every_line_sewn_exactly")}
               onClick={() => {
                 const err = autoRouteSelection(true);
                 if (err) useStore.getState().toast(err, "error");
               }}
             >
-              Redwork
+              {t("filum.barre.redwork")}
             </button>
             <div className="vsep" />
           </>
         )}
         <ConvertMenuButton objects={sel} />
-        <div className="seg" role="group" aria-label="Stitch type">
-          {TYPES.map((t) => (
+        <div className="seg" role="group" aria-label={t("filum.barre.stitch_type")}>
+          {TYPES.map((ty) => (
             <button
-              key={t.id}
-              title={`Make all ${t.title.toLowerCase()}`}
-              className={sel.every((o) => o.stitch.type === t.id) ? "on" : ""}
+              key={ty.id}
+              title={t("filum.barre.make_all_v1", { v1: ty.title.toLowerCase() })}
+              className={sel.every((o) => o.stitch.type === ty.id) ? "on" : ""}
               onClick={() => {
                 useStore.getState().checkpoint();
-                for (const o of sel) useStore.getState().updateStitch(o.id, { type: t.id }, true);
+                for (const o of sel) useStore.getState().updateStitch(o.id, { type: ty.id }, true);
               }}
             >
-              {t.icon}
+              {ty.icon}
             </button>
           ))}
         </div>
@@ -224,7 +224,7 @@ export function ContextBar() {
         <span className="swatch" style={{ background: thread?.color }} />
         <span>{o.name}</span>
       </span>
-      <div className="seg" role="group" aria-label="Stitch type">
+      <div className="seg" role="group" aria-label={t("filum.barre.stitch_type")}>
         {TYPES.map((t) => (
           <button key={t.id} title={t.title} className={st.type === t.id ? "on" : ""} onClick={() => updateStitch(o.id, { type: t.id })}>
             {t.icon}
@@ -233,23 +233,23 @@ export function ContextBar() {
       </div>
       {st.type === "fill" && (
         <>
-          <label className="ctx-field" title="Fill angle">
+          <label className="ctx-field" title={t("filum.barre.fill_angle")}>
             <StitchAngle size={13} />
-            <span className="sr-only">Fill angle</span>
+            <span className="sr-only">{t("filum.barre.fill_angle")}</span>
             <Num value={st.angle} onChange={(v) => updateStitch(o.id, { angle: normAngle(v) })} unit="°" step={5} digits={1} />
           </label>
-          <label className="ctx-field" title="Row spacing">
+          <label className="ctx-field" title={t("filum.barre.row_spacing")}>
             <RowSpacing size={13} />
-            <span className="sr-only">Row spacing</span>
+            <span className="sr-only">{t("filum.barre.row_spacing")}</span>
             <Num value={st.rowSpacing} onChange={(v) => updateStitch(o.id, { rowSpacing: v })} unit="mm" step={0.05} min={0.1} />
           </label>
           <div className="vsep" />
-          <div className="seg" title={st.underlayAuto ? "Underlay: automatic (by the shape and the fabric)" : "Underlay"}>
+          <div className="seg" title={st.underlayAuto ? t("filum.barre.underlay_automatic_by_the_shape") : t("filum.barre.underlay")}>
             <button
               className={st.underlay || st.underlayAuto ? "on" : ""}
               onClick={() => updateStitch(o.id, st.underlay || st.underlayAuto ? { underlay: false, underlayAuto: false } : { underlay: true })}
             >
-              <Underlay size={13} /> Underlay
+              <Underlay size={13} />{t("filum.barre.underlay_2")}
             </button>
           </div>
         </>
@@ -257,25 +257,25 @@ export function ContextBar() {
       {st.type === "satin" && (
         <>
           {o.paths.length === 1 && (
-            <label className="ctx-field" title="Column width">
+            <label className="ctx-field" title={t("filum.barre.column_width")}>
               <MoveHorizontal size={13} />
-              <span className="sr-only">Column width</span>
+              <span className="sr-only">{t("filum.barre.column_width")}</span>
               <Num value={st.width} onChange={(v) => updateStitch(o.id, { width: v })} unit="mm" step={0.2} min={0.5} max={12} />
             </label>
           )}
-          <label className="ctx-field" title="Zig-zag spacing">
+          <label className="ctx-field" title={t("filum.barre.zig_zag_spacing")}>
             <RowSpacing size={13} />
-            <span className="sr-only">Zig-zag spacing</span>
+            <span className="sr-only">{t("filum.barre.zig_zag_spacing")}</span>
             <Num value={st.spacing} onChange={(v) => updateStitch(o.id, { spacing: v })} unit="mm" step={0.05} min={0.1} />
           </label>
-          <label className="ctx-field" title="Pull compensation">
+          <label className="ctx-field" title={t("filum.barre.pull_compensation")}>
             <PullCompensation size={13} />
-            <span className="sr-only">Pull compensation</span>
+            <span className="sr-only">{t("filum.barre.pull_compensation")}</span>
             <Num value={st.pullComp} onChange={(v) => updateStitch(o.id, { pullComp: v })} unit="mm" step={0.05} />
           </label>
           <button
             className={`icon-btn ${st.reverse ? "on" : ""}`}
-            title={st.reverse ? "Direction reversed (click to restore)" : "Reverse direction"}
+            title={st.reverse ? t("filum.barre.direction_reversed_click_to_restore") : t("filum.barre.reverse_direction")}
             aria-pressed={!!st.reverse}
             onClick={() => updateStitch(o.id, { reverse: !st.reverse })}
           >
@@ -285,20 +285,20 @@ export function ContextBar() {
       )}
       {st.type === "running" && (
         <>
-          <label className="ctx-field" title="Stitch length">
+          <label className="ctx-field" title={t("filum.barre.stitch_length")}>
             <StitchLength size={13} />
-            <span className="sr-only">Stitch length</span>
+            <span className="sr-only">{t("filum.barre.stitch_length")}</span>
             <Num value={st.length} onChange={(v) => updateStitch(o.id, { length: v })} unit="mm" step={0.1} min={0.5} max={6} />
           </label>
-          <div className="seg" title="Passes along the line">
-            <button className={st.beanRepeats < 2 ? "on" : ""} title="Single running stitch" onClick={() => updateStitch(o.id, { beanRepeats: 0 })}>
-              Run
+          <div className="seg" title={t("filum.barre.passes_along_the_line")}>
+            <button className={st.beanRepeats < 2 ? "on" : ""} title={t("filum.barre.single_running_stitch")} onClick={() => updateStitch(o.id, { beanRepeats: 0 })}>
+              {t("filum.barre.run")}
             </button>
-            <button className={st.beanRepeats >= 2 && st.beanRepeats < 4 ? "on" : ""} title="Triple (bean) stitch" onClick={() => updateStitch(o.id, { beanRepeats: 2 })}>
-              Triple
+            <button className={st.beanRepeats >= 2 && st.beanRepeats < 4 ? "on" : ""} title={t("filum.barre.triple_bean_stitch")} onClick={() => updateStitch(o.id, { beanRepeats: 2 })}>
+              {t("filum.barre.triple")}
             </button>
-            <button className={st.beanRepeats >= 4 ? "on" : ""} title="Five passes — very bold line" onClick={() => updateStitch(o.id, { beanRepeats: 4 })}>
-              Heavy
+            <button className={st.beanRepeats >= 4 ? "on" : ""} title={t("filum.barre.five_passes_very_bold_line")} onClick={() => updateStitch(o.id, { beanRepeats: 4 })}>
+              {t("filum.barre.heavy")}
             </button>
           </div>
         </>
@@ -321,23 +321,23 @@ function statFor(id: string) {
 }
 
 const RAIL: ({ tool: Tool; title: string } | "-")[] = [
-  { tool: "select", title: "Select (V)" },
-  { tool: "pan", title: "Pan (H / Space)" },
-  { tool: "ruler", title: "Ruler (M)" },
-  { tool: "node", title: "Edit nodes (A)" },
-  { tool: "cut", title: "Cutter (C) — click a line to split it, drag across a fill to cut it" },
+  { tool: "select", get title() { return t("filum.barre.select_v"); } },
+  { tool: "pan", get title() { return t("filum.barre.pan_h_space"); } },
+  { tool: "ruler", get title() { return t("filum.barre.ruler_m"); } },
+  { tool: "node", get title() { return t("filum.barre.edit_nodes_a"); } },
+  { tool: "cut", get title() { return t("filum.barre.cutter_c_click_a_line"); } },
   "-",
-  { tool: "pen", title: "Pen (P) — click for corners, drag for curves; click first point to close" },
-  { tool: "curve", title: "Curvature (U) — click points, the path curves smoothly through them; double-click a point for a corner" },
-  { tool: "freehand", title: "Freehand (F)" },
-  { tool: "satin", title: "Satin column (S) — click / drag for curves, scroll or [ ] for width, Enter to finish" },
-  { tool: "guides", title: "Stitch direction (D): drag across a satin to guide its stitch angle, drag an end to turn it, Alt-click to delete" },
-  { tool: "rect", title: "Rectangle (R)" },
-  { tool: "ellipse", title: "Ellipse (E)" },
+  { tool: "pen", get title() { return t("filum.barre.pen_p_click_for_corners"); } },
+  { tool: "curve", get title() { return t("filum.barre.curvature_u_click_points_the"); } },
+  { tool: "freehand", get title() { return t("filum.barre.freehand_f"); } },
+  { tool: "satin", get title() { return t("filum.barre.satin_column_s_click_drag"); } },
+  { tool: "guides", get title() { return t("filum.barre.stitch_direction_d_drag_across"); } },
+  { tool: "rect", get title() { return t("filum.barre.rectangle_r"); } },
+  { tool: "ellipse", get title() { return t("filum.barre.ellipse_e"); } },
   "-",
-  { tool: "text", title: "Lettering (T): click to place, type, then drag the handles" },
-  { tool: "gradient", title: "Gradient (G): colour gradients, density gradients and colour blends — drag across a shape" },
-  { tool: "builder", title: "Shape builder (B): drag across overlapping regions to merge them, Alt to delete" },
+  { tool: "text", get title() { return t("filum.barre.lettering_t_click_to_place"); } },
+  { tool: "gradient", get title() { return t("filum.barre.gradient_g_colour_gradients_density"); } },
+  { tool: "builder", get title() { return t("filum.barre.shape_builder_b_drag_across"); } },
 ];
 
 function RailButton({ tool, title, on, onClick }: { tool: Tool; title: string; on: boolean; onClick: () => void }) {
@@ -354,16 +354,16 @@ export function ToolRail() {
   const setTool = useStore((s) => s.setTool);
   const setDialog = useStore((s) => s.setDialog);
   return (
-    <nav className="toolrail" aria-label="Tools">
+    <nav className="toolrail" aria-label={t("filum.barre.tools")}>
       {RAIL.map((t, i) => (t === "-" ? <div className="grp-sep" key={i} /> : <RailButton key={t.tool} tool={t.tool} title={t.title} on={tool === t.tool} onClick={() => setTool(t.tool)} />))}
       <div className="grp-sep" />
-      <button className="icon-btn" title="Import artwork or embroidery file" onClick={importFile}>
+      <button className="icon-btn" title={t("filum.barre.import_artwork_or_embroidery_file")} onClick={importFile}>
         <Import size={17} />
       </button>
-      <button className="icon-btn" title="Digitize a picture" onClick={() => setDialog("digitize")}>
+      <button className="icon-btn" title={t("filum.barre.digitize_a_picture")} onClick={() => setDialog("digitize")}>
         <Digitize size={17} />
       </button>
-      <button className="icon-btn" title="Thread colours" onClick={() => setDialog("threads")}>
+      <button className="icon-btn" title={t("filum.barre.thread_colours")} onClick={() => setDialog("threads")}>
         <Spool size={17} />
       </button>
     </nav>
@@ -376,15 +376,15 @@ function AutoSatinBar() {
     <>
       <button
         className="btn sm"
-        title="Auto-route satins: one sewing order through the selected satin columns — cut where the route turns, running underpaths hidden beneath them instead of jumps (Ink/Stitch auto-route satin columns). Running lines in the selection show where to travel."
+        title={t("filum.barre.auto_route_satins_one_sewing")}
         onClick={() => {
           const err = autoRouteSatins();
           if (err) useStore.getState().toast(err, "error");
         }}
       >
-        <Route size={13} /> Auto-route satins
+        <Route size={13} />{t("filum.barre.auto_route_satins")}
       </button>
-      <button className="icon-btn" title="Options: trim, keep order, keep originals" onClick={() => openRoute("satin")}>
+      <button className="icon-btn" title={t("filum.barre.options_trim_keep_order_keep")} onClick={() => openRoute("satin")}>
         <SlidersHorizontal size={14} />
       </button>
       <div className="vsep" />
