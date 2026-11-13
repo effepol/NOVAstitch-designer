@@ -1,0 +1,293 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/effepol/novastitch-designer/ui/src/nova/presets/fabric-preset.schema.json",
+  "title": "NOVAstitch Designer — fabric preset",
+  "description": "A fabric preset (module e): presets/fabric/<id>.json. Its values go into the objects; the info sheet is text, not a rule. Numbers have at most 6 decimals. Licence: CC0-1.0.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "rev",
+    "name",
+    "base",
+    "elastic",
+    "overlap",
+    "limits",
+    "info",
+    "stabilizer",
+    "topping",
+    "needlePoint"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Same as the file name without .json."
+    },
+    "rev": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Up by 1 at every change of the values."
+    },
+    "name": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "it",
+        "en"
+      ],
+      "properties": {
+        "it": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "en": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      }
+    },
+    "base": {
+      "enum": [
+        "cotton",
+        "polyester",
+        "denim",
+        "knit",
+        "sheer",
+        "felt",
+        "towel",
+        "cap",
+        "fleece",
+        "pique",
+        "leather",
+        "canvas",
+        "silk"
+      ],
+      "description": "The Filum fabric the engine uses (doc.fabric)."
+    },
+    "elastic": {
+      "type": "boolean",
+      "description": "Stretchy fabric (knits)."
+    },
+    "overlap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "flat",
+        "cap"
+      ],
+      "properties": {
+        "flat": {
+          "type": "number",
+          "minimum": 0
+        },
+        "cap": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "description": "Overlap between neighbouring fills, mm (FillParams.expand), on a flat hoop and on a cap frame."
+    },
+    "satin": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "spacing": {
+          "type": "number"
+        },
+        "pullComp": {
+          "type": "number"
+        },
+        "pullCompPct": {
+          "type": "number"
+        },
+        "pushComp": {
+          "type": "number"
+        },
+        "maxStitchLength": {
+          "type": "number"
+        },
+        "shortStitchInset": {
+          "type": "number"
+        },
+        "shortStitchDistance": {
+          "type": "number"
+        },
+        "centerWalk": {
+          "type": "boolean"
+        },
+        "contourUnderlay": {
+          "type": "boolean"
+        },
+        "contourInset": {
+          "type": "number"
+        },
+        "zigzagUnderlay": {
+          "type": "boolean"
+        },
+        "zigzagUnderlaySpacing": {
+          "type": "number"
+        },
+        "zigzagUnderlayInset": {
+          "type": "number"
+        },
+        "underlayAuto": {
+          "type": "boolean"
+        },
+        "underlayStitchLength": {
+          "type": "number"
+        }
+      },
+      "description": "Satin parameters (SatinParams)."
+    },
+    "fill": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "rowSpacing": {
+          "type": "number"
+        },
+        "maxStitchLength": {
+          "type": "number"
+        },
+        "staggers": {
+          "type": "number"
+        },
+        "pullComp": {
+          "type": "number"
+        },
+        "pullCompPct": {
+          "type": "number"
+        },
+        "underlay": {
+          "type": "boolean"
+        },
+        "underlayAngle": {
+          "type": "number"
+        },
+        "underlaySpacing": {
+          "type": "number"
+        },
+        "underlayInset": {
+          "type": "number"
+        },
+        "underlayStitchLength": {
+          "type": "number"
+        },
+        "underlayAuto": {
+          "type": "boolean"
+        },
+        "underlayEdge": {
+          "type": "boolean"
+        },
+        "underlayCross": {
+          "type": "boolean"
+        },
+        "travelLength": {
+          "type": "number"
+        }
+      },
+      "description": "Tatami parameters (FillParams); the overlap goes in `overlap`."
+    },
+    "running": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "length": {
+          "type": "number"
+        },
+        "tolerance": {
+          "type": "number"
+        },
+        "repeats": {
+          "type": "number"
+        },
+        "beanRepeats": {
+          "type": "number"
+        }
+      },
+      "description": "Running stitch parameters (RunningParams)."
+    },
+    "satinContourFrom": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Contour underlay on satin columns from this width up, mm."
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minSpacing"
+      ],
+      "properties": {
+        "minSpacing": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Smallest distance between stitches for No. 40 thread, mm (scaled with the thread's width for the others)."
+        }
+      }
+    },
+    "info": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "it",
+        "en"
+      ],
+      "properties": {
+        "it": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "en": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "description": "Info sheet: stabiliser, hoop, thread, needle, topping (Punch, chapters 9–11)."
+    },
+    "stabilizer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "weight"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "tear-away",
+            "cut-away",
+            "wash-away",
+            "adhesive"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "g/m²"
+        }
+      }
+    },
+    "topping": {
+      "enum": [
+        "none",
+        "water-soluble-film"
+      ]
+    },
+    "needlePoint": {
+      "enum": [
+        "normal",
+        "ballpoint"
+      ]
+    }
+  }
+}
