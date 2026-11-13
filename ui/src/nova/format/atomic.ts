@@ -61,14 +61,17 @@ export async function writeAtomic(fs: FileOps, path: string, bytes: Uint8Array):
   }
 }
 
-/** The desktop app's file system (Tauri). */
+/**
+ * The desktop app's file system: the commands of module 0 (src-tauri/src/nova_files.rs),
+ * which accept only a .nsd the user chose and its temporary files in the same folder.
+ */
 export function tauriFileOps(): FileOps {
-  const fs = () => import("@tauri-apps/plugin-fs");
+  const invoke = async <T>(cmd: string, args: Record<string, unknown>) => (await import("@tauri-apps/api/core")).invoke<T>(cmd, args);
   return {
-    write: async (p, b) => (await fs()).writeFile(p, b),
-    read: async (p) => (await fs()).readFile(p),
-    rename: async (from, to) => (await fs()).rename(from, to),
-    remove: async (p) => (await fs()).remove(p),
-    list: async (dir) => (await (await fs()).readDir(dir)).map((e) => e.name),
+    write: (path, bytes) => invoke("nova_project_write", { path, bytes: Array.from(bytes) }),
+    read: async (path) => Uint8Array.from(await invoke<number[]>("nova_project_read", { path })),
+    rename: (from, to) => invoke("nova_project_rename", { from, to }),
+    remove: (path) => invoke("nova_project_remove", { path }),
+    list: (dir) => invoke("nova_project_list", { dir }),
   };
 }

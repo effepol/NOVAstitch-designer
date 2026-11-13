@@ -36,6 +36,8 @@ const askPath = async (defaultPath: string, filters: { extensions: string[] }[])
   asked.push({ defaultPath, extensions: filters.map((f) => f.extensions.join()).join(";") });
   return answer;
 };
+// «Discard unsaved changes?»: the user says yes
+(globalThis as unknown as { confirm: () => boolean }).confirm = () => true;
 const toasts: string[] = [];
 useStore.setState({ toast: ((m: string) => void toasts.push(m)) as never });
 const state = () => useStore.getState();
@@ -54,7 +56,7 @@ on("doc.saved", () => events.push("saved"));
   check(state().doc.nova?.schemaVersion === 1 && state().doc.objects.length > 0, "a.1 in the app: the .filum opens with nova schema 1");
   answer = path.join(dir, "Stemma.nsd");
   check(await saveDocument(), "a.2 Save works");
-  check(asked.length === 1 && path.basename(asked[0].defaultPath) === "Stemma.nsd" && path.dirname(asked[0].defaultPath) === dir && asked[0].extensions === "nsd", `a.2 Save asked where to save Stemma.nsd, next to the .filum (${JSON.stringify(asked[0])})`);
+  check(asked.length === 1 && path.relative(dir, asked[0].defaultPath) === "Stemma.nsd" && asked[0].extensions === "nsd", `a.2 Save asked where to save Stemma.nsd, next to the .filum (${JSON.stringify(asked[0])})`);
   check(equal(readFileSync(filumPath), fixture), "a.2 the .filum has the same bytes as before");
   check(listing() === "Stemma.filum, Stemma.nsd", `a.2 / a.7 the .nsd is written, no temporary file left (${listing()})`);
   const first = readFileSync(path.join(dir, "Stemma.nsd"));
