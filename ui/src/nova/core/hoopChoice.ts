@@ -5,7 +5,7 @@
 // Modules also add groups of hoops (the user's list) to Filum's hoop pickers.
 
 import { useSyncExternalStore } from "react";
-import type { Hoop } from "../../types";
+import type { Hoop, StitchDocument } from "../../types";
 
 /** Preset ids: "hoops:<name>" (lib/hoops.ts), "machine:<machine id>/<frame id>" (lib/machines.ts). */
 export type HoopChoice = { source: "preset"; id: string } | { source: "user"; id: string } | { source: "custom"; hoop: Hoop };
@@ -14,6 +14,8 @@ export interface HoopChooser {
   module: string;
   /** Applies the choice (as one undo step); false: not handled, Filum's change runs. */
   choose(c: HoopChoice): boolean;
+  /** The same choice on a design not open yet (a new design): a pure function; null: not handled. */
+  apply?(doc: StitchDocument, c: HoopChoice): StitchDocument | null;
 }
 
 let chooser: HoopChooser | null = null;
@@ -29,6 +31,11 @@ export function registerHoopChooser(c: HoopChooser): () => void {
 /** Change the design's hoop: through the module's command, else `fallback` (Filum's own commit). */
 export function chooseHoop(c: HoopChoice, fallback: () => void): void {
   if (!chooser?.choose(c)) fallback();
+}
+
+/** The hoop of a design not open yet (a new design): the module's result, else `fallback` (Filum's own). No undo step. */
+export function withHoop(doc: StitchDocument, c: HoopChoice, fallback: (doc: StitchDocument) => StitchDocument): StitchDocument {
+  return chooser?.apply?.(doc, c) ?? fallback(doc);
 }
 
 export interface HoopGroupEntry {
