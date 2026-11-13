@@ -2,6 +2,7 @@ import { ChevronRight, GripHorizontal, GripVertical, X } from "lucide-react";
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { openExternal } from "../lib/platform";
 import { safeSetItem } from "../lib/storage";
+import { t } from "../nova/i18n/filum";
 
 export function Num({
   value,
@@ -200,7 +201,7 @@ export function Section({ title, children, defaultOpen = true, extra }: { title:
         <button
           className="section-title"
           aria-expanded={shown}
-          title={scope ? "Ctrl+click: open only this one" : undefined}
+          title={scope ? t("filum.pannelli.ctrl_click_open_only_this") : undefined}
           onClick={(e) => {
             // Ctrl+click on a panel header collapses all the others
             if (scope && (e.ctrlKey || e.metaKey)) sectionListeners.forEach((f) => f({ scope, depth, title, kind: "solo" }));
@@ -270,9 +271,9 @@ export function Dialog({
         data-movable
         style={mv.moved ? { transform: `translate(${mv.off[0]}px, ${mv.off[1]}px)` } : undefined}
       >
-        <div className="dialog-head" {...mv.grip} title="Drag to move · double-click: back to the centre">
+        <div className="dialog-head" {...mv.grip} title={t("filum.pannelli.drag_to_move_double_click")}>
           <h2>{title}</h2>
-          <button className="icon-btn dialog-close" onClick={onClose} title="Close (Esc)" aria-label="Close">
+          <button className="icon-btn dialog-close" onClick={onClose} title={t("filum.pannelli.close_esc")} aria-label={t("filum.pannelli.close")}>
             <X size={16} />
           </button>
         </div>
@@ -361,7 +362,7 @@ export function useMovable(remember?: string) {
 /** The drag handle of a movable popover. */
 export function Grip({ grip, vertical, label }: { grip: ReturnType<typeof useMovable>["grip"]; vertical?: boolean; label?: ReactNode }) {
   return (
-    <div className={`pop-grip ${vertical ? "vertical" : ""}`} {...grip} title="Drag to move · double-click: back to its place">
+    <div className={`pop-grip ${vertical ? "vertical" : ""}`} {...grip} title={t("filum.pannelli.drag_to_move_double_click_2")}>
       {vertical ? <GripVertical size={14} /> : <GripHorizontal size={14} />}
       {label && <span>{label}</span>}
     </div>
