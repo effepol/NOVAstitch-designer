@@ -57,7 +57,8 @@ check(!badHoles.length, `i i segnaposto {…} sono gli stessi nelle due lingue (
 
 // --- i.1 (statico): l'italiano non è l'inglese --------------------------------
 // un testo fatto solo di segnaposto e segni ("{name}{unsaved} — {app}") non ha parole da tradurre
-const words = (s: string) => /\p{L}/u.test(s.replace(/\{\w+\}/g, ""));
+// e le parole di non-tradurre.json («mm», «Zoom») non contano: «{v1} × {v2} mm», «Zoom {z}×»
+const words = (s: string) => (s.replace(/\{\w+\}/g, " ").match(/\p{L}+/gu) ?? []).some((w) => !allowed.has(w));
 const same = Object.keys(en).filter((k) => it[k] === en[k] && words(en[k]) && !allowed.has(en[k].trim()));
 check(!same.length, `i.1 nessun testo italiano è rimasto in inglese (${same.slice(0, 20).map((k) => `${k}="${en[k]}"`).join(", ") || "nessuno"})`);
 
