@@ -3,6 +3,50 @@
     "testo": "Filum",
     "file": "(nome del programma: index.html, MenuBar.tsx e altri)"
   },
+  "filum.barre.fit_the_design_double_click": {
+    "testo": "Fit the design (double-click)",
+    "file": "canvas/DesignView.tsx"
+  },
+  "filum.barre.scroll_to_zoom_drag_to": {
+    "testo": "Scroll to zoom · drag to pan · double-click to fit",
+    "file": "canvas/DesignView.tsx"
+  },
+  "filum.dati.ballpoint_70_10_75_11": {
+    "testo": "Ballpoint 70/10–75/11",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.ballpoint_75_11": {
+    "testo": "Ballpoint 75/11",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.ballpoint_fine_65_9": {
+    "testo": "Ballpoint / fine 65/9",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.bar_lying": {
+    "testo": "Bar lying",
+    "file": "lib/calibration.ts"
+  },
+  "filum.dati.bar_standing": {
+    "testo": "Bar standing",
+    "file": "lib/calibration.ts"
+  },
+  "filum.dati.calibration_swatch_fabric": {
+    "testo": "Calibration swatch ({fabric})",
+    "file": "lib/calibration.ts"
+  },
+  "filum.dati.canvas": {
+    "testo": "Canvas",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.cap_structured": {
+    "testo": "Cap / Structured",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.cap_tear_away": {
+    "testo": "Cap tear-away",
+    "file": "lib/materials.ts"
+  },
   "filum.dati.colori_punti.mono.label": {
     "testo": "Monochrome",
     "file": "lib/threads.ts"
@@ -26,6 +70,2050 @@
   "filum.dati.colori_punti.thread.title": {
     "testo": "Stitches in their thread colours",
     "file": "lib/threads.ts"
+  },
+  "filum.dati.cotton": {
+    "testo": "Cotton",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.cut_away_no_show_mesh": {
+    "testo": "Cut-away (no-show mesh for light designs, medium cut-away for dense ones)",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.denim": {
+    "testo": "Denim",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.denser_underlay_always_on": {
+    "testo": "Denser, underlay always on",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.disc_rows_across": {
+    "testo": "Disc, rows across",
+    "file": "lib/calibration.ts"
+  },
+  "filum.dati.disc_rows_up_and_down": {
+    "testo": "Disc, rows up and down",
+    "file": "lib/calibration.ts"
+  },
+  "filum.dati.drawings_and_sketches_few_colours": {
+    "testo": "Drawings and sketches: few colours, the lines as satin or running stitch along their centre",
+    "file": "lib/digitizePresets.ts"
+  },
+  "filum.dati.felt": {
+    "testo": "Felt",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.fine_sharp_microtex_65_9": {
+    "testo": "Fine sharp (Microtex) 65/9–75/11",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.flat_colours_outlines_as_even": {
+    "testo": "Flat colours, outlines as even satin on top, every enclosed area stitched, the outlines sewn as one network",
+    "file": "lib/digitizePresets.ts"
+  },
+  "filum.dati.fleece": {
+    "testo": "Fleece",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.fusible_woven_interfacing_tear_away": {
+    "testo": "Fusible woven interfacing + tear-away",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.heavy_cut_away": {
+    "testo": "Heavy cut-away",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.illustration": {
+    "testo": "Illustration",
+    "file": "lib/digitizePresets.ts"
+  },
+  "filum.dati.knit_jersey": {
+    "testo": "Knit / Jersey",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.leather_vinyl": {
+    "testo": "Leather / Vinyl",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.less_density_minimal_underlay": {
+    "testo": "Less density, minimal underlay",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.light_cut_away_mesh": {
+    "testo": "Light cut-away mesh",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.lighter_density_and_underlay": {
+    "testo": "Lighter density and underlay",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.line_art": {
+    "testo": "Line art",
+    "file": "lib/digitizePresets.ts"
+  },
+  "filum.dati.logo": {
+    "testo": "Logo",
+    "file": "lib/digitizePresets.ts"
+  },
+  "filum.dati.lower_density_minimal_underlay_every": {
+    "testo": "Lower density, minimal underlay — every needle hole stays",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.makers_disagree_on_cutting_wedge": {
+    "testo": "Makers disagree on cutting (wedge) points: Groz-Beckert advises against them, Organ offers a narrow wedge.",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.more_colours_and_finer_detail": {
+    "testo": "More colours and finer detail; lines keep the width they are drawn with",
+    "file": "lib/digitizePresets.ts"
+  },
+  "filum.dati.no_12_very_heavy": {
+    "testo": "No. 12 (very heavy)",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.no_30_heavy": {
+    "testo": "No. 30 (heavy)",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.no_40_standard": {
+    "testo": "No. 40 (standard)",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.no_60_fine": {
+    "testo": "No. 60 (fine)",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.no_75_extra_fine": {
+    "testo": "No. 75 (extra fine)",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.no_maker_lists_woven_polyester": {
+    "testo": "No maker lists woven polyester by name — taken from their densely woven / microfibre advice.",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.no_stabiliser_maker_gives_felt": {
+    "testo": "No stabiliser maker gives felt its own recommendation.",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.none": {
+    "testo": "None",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.optional": {
+    "testo": "Optional",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.optional_water_soluble_film": {
+    "testo": "Optional water-soluble film",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.organza_sheer": {
+    "testo": "Organza / Sheer",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.photo": {
+    "testo": "Photo",
+    "file": "lib/digitizePresets.ts"
+  },
+  "filum.dati.pique_polo": {
+    "testo": "Piqué / Polo",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.polyester": {
+    "testo": "Polyester",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.sharp_75_11": {
+    "testo": "Sharp 75/11",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.sharp_75_11_80_12": {
+    "testo": "Sharp 75/11–80/12",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.sharp_75_11_90_14": {
+    "testo": "Sharp 75/11–90/14",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.sharp_80_12": {
+    "testo": "Sharp 80/12",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.sharp_80_12_90_14": {
+    "testo": "Sharp 80/12–90/14",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.sharp_microtex_65_9_75": {
+    "testo": "Sharp / Microtex 65/9–75/11",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.silk_satin": {
+    "testo": "Silk / Satin",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.slightly_lighter_density_and_underlay": {
+    "testo": "Slightly lighter density and underlay",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.slightly_looser_extra_edge_zigzag": {
+    "testo": "Slightly looser, extra edge + zigzag underlay",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.slightly_looser_underlay_always_on": {
+    "testo": "Slightly looser, underlay always on",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.smoothed_colours_gradient_fills_rows": {
+    "testo": "Smoothed colours, gradient fills, rows that follow the picture",
+    "file": "lib/digitizePresets.ts"
+  },
+  "filum.dati.sprites_and_icons_smooth_depixelized": {
+    "testo": "Sprites and icons: smooth, depixelized shapes",
+    "file": "lib/digitizePresets.ts"
+  },
+  "filum.dati.standard_settings": {
+    "testo": "Standard settings",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.sticky_cut_away_floated_instead": {
+    "testo": "Sticky cut-away, floated instead of hooped (or tear-away)",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.swatch": {
+    "testo": "Swatch",
+    "file": "lib/calibration.ts"
+  },
+  "filum.dati.tear_away": {
+    "testo": "Tear-away",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.tear_away_cut_away_for": {
+    "testo": "Tear-away (cut-away for dense designs on garments)",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.tear_away_cut_away_for_2": {
+    "testo": "Tear-away; cut-away for dense designs",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.tear_away_madeira_floriani_or": {
+    "testo": "Tear-away (Madeira, Floriani) or medium cut-away (OESD)",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.the_makers_disagree_on_the": {
+    "testo": "The makers disagree on the backing; cut-away is the safer choice for garments that are washed often.",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.towel_terry": {
+    "testo": "Towel / Terry",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.underlay_always_on": {
+    "testo": "Underlay always on",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.wash_away_fibrous_or_film": {
+    "testo": "Wash-away (fibrous or film)",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.water_soluble_film": {
+    "testo": "Water-soluble film",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.water_soluble_film_essential_or": {
+    "testo": "Water-soluble film — essential, or the loops swallow the stitches",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.water_soluble_film_keeps_stitches": {
+    "testo": "Water-soluble film (keeps stitches above the texture)",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.water_soluble_film_or_a": {
+    "testo": "Water-soluble film or a permanent cover",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.wider_spacing": {
+    "testo": "Wider spacing",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.wider_spacing_denim_heavy_twill": {
+    "testo": "Wider spacing (denim / heavy twill)",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.wider_spacing_heavy_underlay": {
+    "testo": "Wider spacing, heavy underlay",
+    "file": "lib/materials.ts"
+  },
+  "filum.digitalizza.a_cell_covered_by_several": {
+    "testo": "A cell covered by several shapes goes to the one in front",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.a_disc_s_stitches_run": {
+    "testo": "A disc's stitches run along its rows; a bar's stitches cross it, so its width is measured along them. One disc and one bar are enough; both make it more reliable.",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.a_drawing_that_follows_the": {
+    "testo": "A drawing that follows the picture's flow (flow-based difference of Gaussians).",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.a_learned_line_drawing_informative": {
+    "testo": "A learned line drawing (Informative Drawings, on-device): single clean lines for photos and illustrations — shown on the Original tab.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.a_light_foundation_layer_under": {
+    "testo": "A light foundation layer under each fill",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.a_line_along_every_edge": {
+    "testo": "A line along every edge between contrasting colours.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.a_line_continues_through_a": {
+    "testo": "A line continues through a junction when it bends less than this — fewer, longer lines (0: every junction ends the lines)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.a_quilted_random_walk_light": {
+    "testo": "A quilted random walk — light, few stitches",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.a_running_stitch_along_the": {
+    "testo": "A running stitch along the outlines",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.a_space_filling_curve_texture": {
+    "testo": "A space-filling curve texture",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.a_spiral_around_the_centre": {
+    "testo": "A spiral around the centre (Ink/Stitch circular fill)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.across_them": {
+    "testo": "Across them",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.add_shapes": {
+    "testo": "Add shapes",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.add_the_shapes_and_keep": {
+    "testo": "Add the shapes and keep the stitched objects (Ink/Stitch keep original)",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.add_to_design": {
+    "testo": "Add to design",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.add_to_design_centred": {
+    "testo": "Add to design (centred)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.added_lettering_objects.one": {
+    "testo": "Added {n} lettering object",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.added_lettering_objects.other": {
+    "testo": "Added {n} lettering objects",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.after_adding_show_the_canvas": {
+    "testo": "After adding, show the canvas grid at the cell size",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.ai": {
+    "testo": "AI",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.ai_drawing": {
+    "testo": "AI drawing",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.ai_edges": {
+    "testo": "AI edges",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.all_settings_back_to_the": {
+    "testo": "All settings back to the defaults",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.along_the_stitches": {
+    "testo": "Along the stitches",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.also_update_the": {
+    "testo": "Also update the ",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.always_a_fill_never_lines": {
+    "testo": "Always a fill — never lines, also not as ink",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.always_lines_along_the_centre": {
+    "testo": "Always lines along the centre (outlines, details), whatever their width",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.amount": {
+    "testo": "Amount",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.an_outline_around_the_whole": {
+    "testo": "An outline around the whole design (patches, stickers)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.angle": {
+    "testo": "Angle",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.areas_edited.one": {
+    "testo": " · {n} area edited",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.areas_edited.other": {
+    "testo": " · {n} areas edited",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.as_drawn": {
+    "testo": "as drawn",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.as_drawn_2": {
+    "testo": "As drawn",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.as_you_hoop_real_designs": {
+    "testo": " as you hoop real designs, the letters upright",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.at_right_angles_to_the": {
+    "testo": "At right angles to the thread",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.at_the_edge": {
+    "testo": "At the edge",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.auto": {
+    "testo": "Auto",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.auto_2": {
+    "testo": " Auto",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.auto_digitize_image": {
+    "testo": "Auto-digitize image",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.back": {
+    "testo": " Back",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.back_to_the_defaults_of": {
+    "testo": "Back to the defaults of this tab",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.back_to_the_digitizer_s": {
+    "testo": "Back to the digitizer's order (largest colour first)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.background": {
+    "testo": "Background",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.background_left_out_areas": {
+    "testo": "Background & left-out areas",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.backing": {
+    "testo": "Backing",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.base_direction": {
+    "testo": "Base direction",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.bean_repeats": {
+    "testo": "Bean repeats",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.before": {
+    "testo": "before",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.bold": {
+    "testo": "Bold",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.bold_fewer_simpler_shapes_fine": {
+    "testo": "Bold: fewer, simpler shapes. Fine: small shapes and close tracing (more stitches, more trims)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.border": {
+    "testo": "Border",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.border_width": {
+    "testo": "Border width",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.both_diagonals": {
+    "testo": "Both diagonals",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.boundary_turns_sharper_than_this": {
+    "testo": "Boundary turns sharper than this stay corners",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.bridge_gaps": {
+    "testo": "Bridge gaps",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.buffer": {
+    "testo": "Buffer",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.calibrate_a_fabric": {
+    "testo": "Calibrate a fabric",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.calibrated_v1": {
+    "testo": "Calibrated {v1}",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.cancel": {
+    "testo": "Cancel",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.cell": {
+    "testo": "Cell",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.cell_size_kind_of_cross": {
+    "testo": "Cell size, kind of cross and coverage",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.cells": {
+    "testo": "Cells",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.cells_2": {
+    "testo": " cells · ",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.choose_image": {
+    "testo": " Choose image…",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.choose_the_thread_colour_for": {
+    "testo": "Choose the thread colour for this region",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.circular": {
+    "testo": "Circular",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.cleanup": {
+    "testo": "Cleanup",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.clear": {
+    "testo": "Clear",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.click_an_area_to_flip": {
+    "testo": "Click an area to flip it · Alt-click: the whole colour",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.click_colours_in_the_picture": {
+    "testo": "Click colours in the picture (or in Review) to make them: {v1} — click again to stop",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.click_colours_to_make_them": {
+    "testo": " Click colours to make them ",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.click_to_add_alt_or": {
+    "testo": "Click to add · Alt- or right-click to exclude a part.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.clipboard_access_was_denied_press": {
+    "testo": "Clipboard access was denied — press Ctrl+V instead",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.closed_lines": {
+    "testo": "Closed lines",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.coherent": {
+    "testo": "Coherent",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.colour": {
+    "testo": "Colour",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.colour_edges": {
+    "testo": "Colour edges",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.colour_edges_need_seamless_tracing": {
+    "testo": "Colour edges need seamless tracing — turn it on under Shapes.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.colours": {
+    "testo": "Colours",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.colours_appear_here_after_loading": {
+    "testo": "Colours appear here after loading an image.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.colours_stitched": {
+    "testo": " · {n} stitched",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.contour": {
+    "testo": "Contour",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.contour_simplification_tolerance": {
+    "testo": "Contour simplification tolerance",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.contrast": {
+    "testo": "Contrast",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.copies_of_name_in_a": {
+    "testo": "Copies of “{name}” in a grid, one setting stepped from copy to copy and named after its value — sew them once and keep the best.",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.corners_over": {
+    "testo": "Corners over",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.could_not_load_thread_chart": {
+    "testo": "Could not load thread chart",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.coverage": {
+    "testo": "Coverage",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.cross_stitch": {
+    "testo": "Cross stitch",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.cross_stitch_shapes": {
+    "testo": "Cross stitch shapes",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.crosses": {
+    "testo": "Crosses",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.crosses_in_colours.one": {
+    "testo": " crosses in {n} colour",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.crosses_in_colours.other": {
+    "testo": " crosses in {n} colours",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.curved": {
+    "testo": "Curved",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.custom": {
+    "testo": "Custom",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.custom_settings_pick_a_preset": {
+    "testo": "Custom settings — pick a preset to start from",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.dark_lines_found_on_the": {
+    "testo": "Dark lines found on the picture itself, even where the colour reduction merged them into a neighbour (0 = off)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.dark_lines_outlines_ink_as": {
+    "testo": "Dark lines (outlines, ink) as satin of one even width — 0: as wide as drawn",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.decided_from_the_picture_thin": {
+    "testo": "Decided from the picture: thin, long shapes and ink become lines, the rest fills",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.delete": {
+    "testo": "Delete",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.denoise": {
+    "testo": "Denoise",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.density": {
+    "testo": "Density",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.depixelize_sprites_and_icons_into": {
+    "testo": "Depixelize sprites and icons into smooth shapes (Kopf & Lischinski)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.detail": {
+    "testo": "Detail",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.digitized_length_objects_in_length_": {
+    "testo": "Digitized {length} objects in {length_} colours",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.direction": {
+    "testo": "Direction",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.direction_of_the_rows": {
+    "testo": "Direction of the rows",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.distance_between_the_rows_wider": {
+    "testo": "Distance between the rows — wider: lighter, more graphic",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.done": {
+    "testo": "Done",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.done_selecting": {
+    "testo": "Done selecting",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.double_cross": {
+    "testo": "Double cross",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.download_swatch": {
+    "testo": " Download swatch",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.drawn_drawn": {
+    "testo": "drawn {drawn}",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.drop_paste_or_choose_an": {
+    "testo": "Drop, paste or choose an image",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.e": {
+    "testo": "ΔE",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.each_control_moves_several_settings": {
+    "testo": "Each control moves several settings of the tabs together; it shows Custom once those are changed by hand.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.edge_model": {
+    "testo": "Edge model: ",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.edge_preserving_smoothing_before_colours": {
+    "testo": "Edge-preserving smoothing before colours are reduced (photos, JPEG noise)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.enclosed": {
+    "testo": "Enclosed",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.ends_pulled_in": {
+    "testo": "Ends pulled in",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.enter_at_least_one_disc": {
+    "testo": " Enter at least one disc or one bar, both along and across (",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.erase": {
+    "testo": "Erase",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.even": {
+    "testo": "Even",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.every_dark_line_becomes_a": {
+    "testo": "Every dark line becomes a satin of this width (below 1 mm: a triple running stitch)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.everywhere": {
+    "testo": "Everywhere",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.exact_colours": {
+    "testo": "Exact colours",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.extra_lines": {
+    "testo": "Extra lines",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.field_cells_across_each_shape": {
+    "testo": "Field cells across each shape — more follow smaller features, fewer give long sweeping rows",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.file_format_for_your_machine": {
+    "testo": "File format for your machine",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.fill": {
+    "testo": "Fill",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.fill_fills_satin_satins_running": {
+    "testo": "{fill} fills · {satin} satins · {running} running",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.fill_method_density_and_direction": {
+    "testo": "Fill method, density and direction",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.fill_stitch_a_fill_keeps": {
+    "testo": "Fill stitch (a fill keeps its settings)",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.filled_areas": {
+    "testo": "Filled areas",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.fills": {
+    "testo": "Fills",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.find_text": {
+    "testo": "Find text",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.find_text_again": {
+    "testo": "Find text again",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.fine": {
+    "testo": "Fine",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.first_sewn_first_a_later": {
+    "testo": "First sewn first: a later colour lies on top. Each colour's fills, lines and edges are sewn together.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.fit_hoop": {
+    "testo": " Fit hoop",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.fits_hoop": {
+    "testo": "fits hoop",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.fits_the_name_hoop": {
+    "testo": "Fits the {name} hoop",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.fixed": {
+    "testo": "Fixed",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.flow": {
+    "testo": "Flow",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.follow_width": {
+    "testo": "Follow width",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.forget_the_areas_you_clicked": {
+    "testo": "Forget the areas you clicked",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.forget_the_v1_calibration_new": {
+    "testo": "Forget the {v1} calibration: new objects start from the standard numbers again",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.four_pieces_with_label_s": {
+    "testo": "Four pieces with {label}'s settings and no pull compensation of their own, so the fabric shows what it does.",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.from_a_picture": {
+    "testo": " From a picture…",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.from_step": {
+    "testo": "From · step",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.gradient_rows": {
+    "testo": "Gradient rows",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.gradients": {
+    "testo": "Gradients",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.grid": {
+    "testo": "Grid",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.grid_on_the_cells": {
+    "testo": "Grid on the cells",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.grow_fills_so_neighbouring_colours": {
+    "testo": "Grow fills so neighbouring colours don't gap after pull",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.hairlines": {
+    "testo": "Hairlines",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.half_cross": {
+    "testo": "Half cross",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.higher_darker_darks_lighter_lights": {
+    "testo": "Higher: darker darks, lighter lights",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.hilbert": {
+    "testo": "Hilbert",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.hooping": {
+    "testo": "Hooping",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.how_far_the_smooth_outline": {
+    "testo": "How far the smooth outline may leave the stitches (Ink/Stitch smoothness): more gives simpler, rounder paths",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.how_much_of_a_cell": {
+    "testo": "How much of a cell must be stitched to get a cross",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.how_much_of_a_cell_2": {
+    "testo": "How much of a cell must be inside a shape to get a cross",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.how_much_rows_follow_the": {
+    "testo": "How much rows follow the picture (100 %) instead of the base direction (0 %)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.how_much_stitches_pull_depends": {
+    "testo": "How much stitches pull depends on the fabric, the backing, the hooping and the machine together. Sew one swatch, measure it, and new objects on this fabric start from your numbers.",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.i_ve_sewn_it": {
+    "testo": "I've sewn it",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.images": {
+    "testo": "Images",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.in_this_design_undo_with": {
+    "testo": " in this design (undo with Ctrl+Z)",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.ink_lines": {
+    "testo": "Ink lines",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.ink_stitch_s_defaults_only": {
+    "testo": "Ink/Stitch's defaults: only closed loops of stitches make shapes (outlines, running stitch)",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.inset": {
+    "testo": "Inset",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.it_uses_this_design_s": {
+    "testo": "It uses this design's thread weight and machine settings. Take it out of the hoop and let it rest a minute before you measure.",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.its_own_objects_even_where": {
+    "testo": "Its own objects, even where colours continue outside",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.join_line_ends_that_point": {
+    "testo": "Join line ends that point at each other (or at another line) across a gap up to this size",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.keep": {
+    "testo": "Keep",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.keep_original": {
+    "testo": "Keep original",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.label_calibrated": {
+    "testo": "{label} calibrated",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.label_is_back_to_the": {
+    "testo": "{label} is back to the standard numbers",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.larger_than_hoop": {
+    "testo": "larger than hoop",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.larger_than_the_name_hoop": {
+    "testo": "Larger than the {name} hoop",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.learned_edges_dexined_on_device": {
+    "testo": "Learned edges (DexiNed, on-device): both sides of strong edges — shown on the Original tab.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.leave_light": {
+    "testo": "Leave light",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.leave_out_shapes_and_holes": {
+    "testo": "Leave out shapes and holes smaller than this area (Ink/Stitch threshold)",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.leave_out_the_colour_that": {
+    "testo": "Leave out the colour that dominates the image border",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.leave_this_colour_out": {
+    "testo": "Leave this colour out",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.left_out": {
+    "testo": " left out",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.left_out_2": {
+    "testo": "Left out",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.left_out_review": {
+    "testo": " left out · review",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.length_swatches_v2_v3_v4": {
+    "testo": "{length} swatches: {v2} {v3}–{v4}{unit}",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.letter_across_drawn": {
+    "testo": "{letter}, across the stitches (drawn {drawn} mm)",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.letter_along_drawn": {
+    "testo": "{letter}, along the stitches (drawn {drawn} mm)",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.light_fills_and_wide_rows": {
+    "testo": "Light fills and wide rows (up to 1.2 mm apart)",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.line": {
+    "testo": "Line",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.line_centres_follow_the_drawn": {
+    "testo": "Line centres follow the drawn line (its darkness profile), not the pixel grid — thin, smoothed lines stay straight and smooth",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.line_drawing_model": {
+    "testo": "Line drawing model: ",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.lines": {
+    "testo": "Lines",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.lines_2": {
+    "testo": " lines",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.lines_in_the_picture": {
+    "testo": "Lines in the picture",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.lines_narrower_than_the_hairline": {
+    "testo": "Lines narrower than the hairline width",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.lines_narrower_than_the_hairline_2": {
+    "testo": "Lines narrower than the hairline width are running stitch, wider ones satin.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.lines_of_the_picture_none": {
+    "testo": "Lines of the picture: none, as wide as drawn, or one even satin width (clean logo outlines, sewn as one network; below 1 mm a triple running stitch)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.lines_show_which_way_the": {
+    "testo": "Lines show which way the stitches run.",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.lines_that_meet_are_sewn": {
+    "testo": "Lines that meet are sewn in one go: each walks out under a running path its column covers on the way back — no trims between them",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.lines_up_to_this_width": {
+    "testo": "Lines up to this width become stitched lines; wider shapes stay fills",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.lock_this_palette": {
+    "testo": "Lock this palette",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.locked": {
+    "testo": " Locked · ",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.look": {
+    "testo": "Look",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.lower_strength_straightens_the_rows": {
+    "testo": "Lower strength straightens the rows towards the base direction.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.majority_filter_passes_that_remove": {
+    "testo": "Majority-filter passes that remove noise",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.make_cross_stitch": {
+    "testo": "Make cross stitch",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.make_n_swatches": {
+    "testo": "Make {n} swatches",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.max_width": {
+    "testo": "Max. width",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.meander": {
+    "testo": "Meander",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.measure_it": {
+    "testo": "Measure it",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.merge_colours_closer_than_this": {
+    "testo": "Merge colours closer than this (CIEDE2000; 0 = off)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.merge_into_the_nearest_remaining": {
+    "testo": "Merge into the nearest remaining colour",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.merge_similar": {
+    "testo": "Merge similar",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.merges_the_rows_of_fills": {
+    "testo": "Merges the rows of fills and satins (rows up to 0.6 mm apart) into solid shapes",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.min": {
+    "testo": " min",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.min_length": {
+    "testo": "Min. length",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.min_region": {
+    "testo": "Min. region",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.mm2": {
+    "testo": "mm²",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.mobilesam_click_an_object_in": {
+    "testo": "MobileSAM: click an object in the picture, then decide what happens to it.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.more_lines_and_fainter_ones": {
+    "testo": "More lines, and fainter ones, with higher values",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.n100_100_mm": {
+    "testo": "100 × 100 mm",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.n_objects.one": {
+    "testo": "{n} object",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.n_objects.other": {
+    "testo": "{n} objects",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.n_shapes.one": {
+    "testo": "{n} shape",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.n_shapes.other": {
+    "testo": "{n} shapes",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.name_satin_edge": {
+    "testo": "{name}: satin edge",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.name_sew_as": {
+    "testo": "{name}: sew as",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.narrow_elongated_regions_become_satin": {
+    "testo": "Narrow, elongated regions become satin columns along their medial axis",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.needle": {
+    "testo": "Needle",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.neighbouring_shapes_share_one_traced": {
+    "testo": "Neighbouring shapes share one traced boundary (no gaps, no overlaps); corners stay sharp, pixel steps become smooth curves",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.never_stitch_this_leaves_a": {
+    "testo": "Never stitch this — leaves a gap",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.no_image_on_the_clipboard": {
+    "testo": "No image on the clipboard",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.no_overlaps": {
+    "testo": "No overlaps",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.no_text_found": {
+    "testo": "No text found",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.no_text_found_2": {
+    "testo": "No text found.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.none": {
+    "testo": "None",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.normal": {
+    "testo": "Normal",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.not_measured_these_keep_their": {
+    "testo": "Not measured: these keep their current numbers.",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.nothing_to_stitch_every_colour": {
+    "testo": "Nothing to stitch — every colour is left out.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.object": {
+    "testo": "object",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.objects": {
+    "testo": "Objects",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.objects_2": {
+    "testo": " objects",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.objects_3": {
+    "testo": "objects",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.objects_gave_none.one": {
+    "testo": " · {n} object gave none — try a larger buffer",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.objects_gave_none.other": {
+    "testo": " · {n} objects gave none — try a larger buffer",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.objects_updated.one": {
+    "testo": " · {n} object updated",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.objects_updated.other": {
+    "testo": " · {n} objects updated",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.of_8_so_far": {
+    "testo": " of 8 so far).",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.of_the_picture_left_out": {
+    "testo": " of the picture left out",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.off": {
+    "testo": "Off",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.omit": {
+    "testo": "Omit",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.on": {
+    "testo": "On",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.on_device": {
+    "testo": "on-device",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.on_this_device_new_satins": {
+    "testo": " on this device. New satins and fills on ",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.one_angle_for_every_shape": {
+    "testo": "One angle for every shape",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.one_colour_rows_of_zigzags": {
+    "testo": "One colour, rows of zigzags: wider and denser where the picture is darker, nothing where it is light.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.one_continuous_spiral_from_the": {
+    "testo": "One continuous spiral from the outline inwards",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.one_cross_per_cell_the": {
+    "testo": "One cross per cell; the cells line up with the canvas grid, so crosses of different colours meet exactly.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.one_line_per_place_the": {
+    "testo": "One line per place: the lines in the picture come first, then the border, then these.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.one_network": {
+    "testo": "One network",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.only_edges_between_colours_at": {
+    "testo": "Only edges between colours at least this different (CIEDE2000) — higher: fewer lines",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.only_the_lines_found_in": {
+    "testo": "Only the lines found in the picture itself (Lines in the picture).",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.open_fills": {
+    "testo": "Open fills",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.original": {
+    "testo": "Original",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.outline": {
+    "testo": "Outline",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.outline_width": {
+    "testo": "Outline width",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.outlines": {
+    "testo": "Outlines",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.outlines_ink_strokes_and_narrow": {
+    "testo": "Outlines, ink strokes and narrow shapes become stitched lines along their centre — through junctions, small gaps bridged — and the fills continue under them, so nothing gapes.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.output": {
+    "testo": "Output",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.output_preset_the_look_and": {
+    "testo": "Output, preset, the look and the size",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.outside_holes": {
+    "testo": "Outside & holes",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.overlap": {
+    "testo": "Overlap",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.palette": {
+    "testo": "Palette",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.palette_thread_chart_and_background": {
+    "testo": "Palette, thread chart and background",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.parallel_staggered_rows_the_classic": {
+    "testo": "Parallel staggered rows — the classic, even fill",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.partly_stitched": {
+    "testo": " · partly stitched",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.parts_lighter_than_this_stay": {
+    "testo": "Parts lighter than this stay empty (the fabric shows)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.paste": {
+    "testo": " Paste",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.paste_an_image_ctrl_v": {
+    "testo": "Paste an image (Ctrl+V works too)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.per_shape": {
+    "testo": "Per shape",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.pick_a_colour_on_the": {
+    "testo": "Pick a colour on the picture as",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.pick_on_picture": {
+    "testo": " Pick on picture",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.picture": {
+    "testo": "Picture",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.picture_left_out": {
+    "testo": ", {pct} % left out",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.picture_stitched": {
+    "testo": "{pct} % of the picture stitched",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.pictures_become_cross_stitch_in": {
+    "testo": "Pictures become cross stitch in the digitizer",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.pixel_art": {
+    "testo": "Pixel art",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.placement": {
+    "testo": "Placement",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.png_jpg_webp_bmp_or": {
+    "testo": "PNG, JPG, WebP, BMP or GIF — logos and flat artwork work best",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.preset": {
+    "testo": "Preset",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.pull_compensation": {
+    "testo": "Pull compensation",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.px": {
+    "testo": "px",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.rays_from_the_centre_of": {
+    "testo": "Rays from the centre of each shape",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.realistic": {
+    "testo": "Realistic",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.rebuild_shapes_from_stitches": {
+    "testo": "Rebuild shapes from stitches",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.rebuilt_from": {
+    "testo": "Rebuilt {shapes} from {objects}",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.regions": {
+    "testo": "Regions",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.remove": {
+    "testo": "Remove",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.remove_it_and_fill_the": {
+    "testo": "Remove it and fill the area from its surroundings",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.replace_current_design": {
+    "testo": "Replace current design",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.replace_design": {
+    "testo": "Replace design",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.replace_the_outlines_by_the": {
+    "testo": "Replace the outlines by the grid cells they cover — what will be sewn, editable as shapes (Ink/Stitch pixelize)",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.replace_with_shapes": {
+    "testo": "Replace with shapes",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.reset": {
+    "testo": " Reset ",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.reset_all": {
+    "testo": "Reset all",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.reset_colour_edits": {
+    "testo": "Reset colour edits",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.resolution": {
+    "testo": "Resolution",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.review": {
+    "testo": " Review",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.rings_that_follow_the_outline": {
+    "testo": "Rings that follow the outline of each shape",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.row_spacing": {
+    "testo": "Row spacing",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.row_spacing_density": {
+    "testo": "Row spacing (density)",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.row_spacing_smaller_is_denser": {
+    "testo": "Row spacing — smaller is denser",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.rows_bend_with_the_picture": {
+    "testo": "Rows bend with the picture — streamlines along its edges and shading",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.rows_follow_the_dominant_direction": {
+    "testo": "Rows follow the dominant direction of the picture in each shape",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.rows_follow_the_outline_of": {
+    "testo": "Rows follow the outline of each shape",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.rows_run_along_the_long": {
+    "testo": "Rows run along the long axis of each shape",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.running": {
+    "testo": "Running",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.satin": {
+    "testo": "Satin",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.satin_columns": {
+    "testo": "Satin columns",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.satin_edge_a_satin_in": {
+    "testo": "Satin edge — a satin in this colour's thread where its shapes meet the background (as wide as the border's satin)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.satin_lines_get_wider_and": {
+    "testo": "Satin lines get wider and narrower like the drawn line",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.satin_strokes": {
+    "testo": "Satin strokes",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.satin_strokes_line_art_and": {
+    "testo": "Satin strokes, line art and outlines",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.satin_width_the_border_uses": {
+    "testo": "Satin width (the border uses it too)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.save": {
+    "testo": "Save",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.save_for": {
+    "testo": " Save for ",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.saved_for": {
+    "testo": "Saved for ",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.saved_the_v1_swatch": {
+    "testo": "Saved the {v1} swatch",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.scale_to_90_of_the": {
+    "testo": "Scale to 90 % of the {name} hoop",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.scattered_points_joined_into_one": {
+    "testo": "Scattered points joined into one sketchy line",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.seamless": {
+    "testo": "Seamless",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.see_the_result": {
+    "testo": "See the result",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.segmentation_model": {
+    "testo": "Segmentation model: ",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.select_a_running_stitch_satin": {
+    "testo": "Select a running stitch, satin or fill to make swatches of.",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.select_fill_shapes_to_stitch": {
+    "testo": "Select fill shapes to stitch as crosses — or make cross stitch from a picture in the digitizer.",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.select_objects": {
+    "testo": "Select objects",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.select_objects_and_find_text": {
+    "testo": "Select objects and find text (on-device)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.select_the_objects_to_rebuild": {
+    "testo": "Select the objects to rebuild (e.g. the colours of an imported DST).",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.separate": {
+    "testo": "Separate",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.setting": {
+    "testo": "Setting",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.sew_earlier_underneath": {
+    "testo": "Sew earlier (underneath)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.sew_later_on_top": {
+    "testo": "Sew later (on top)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.sew_name_earlier": {
+    "testo": "Sew {name} earlier",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.sew_name_later": {
+    "testo": "Sew {name} later",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.sew_order": {
+    "testo": "Sew order",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.sew_the_swatch": {
+    "testo": "Sew the swatch",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.shape": {
+    "testo": "Shape",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.shapes": {
+    "testo": "Shapes",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.shapes_set_as_cross_stitch.one": {
+    "testo": "{n} shape set as cross stitch",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.shapes_set_as_cross_stitch.other": {
+    "testo": "{n} shapes set as cross stitch",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.short_stitch": {
+    "testo": "Short stitch",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.shorter_lines_and_side_branches": {
+    "testo": "Shorter lines and side branches (corners, specks) are left out",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.show_the_canvas_grid_at": {
+    "testo": "Show the canvas grid at the cell size",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.show_what_is_left_out": {
+    "testo": "Show what is left out — click areas to stitch them or leave them out",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.show_what_is_left_out_2": {
+    "testo": "Show what is left out and edit it",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.shrink_the_shapes_back_ink": {
+    "testo": "Shrink the shapes back (Ink/Stitch inset) — usually as much as the buffer, so the shapes keep their size",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.simplify": {
+    "testo": "Simplify",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.size": {
+    "testo": "Size",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.size_of_one_cross_ink": {
+    "testo": "Size of one cross (Ink/Stitch pattern size)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.smaller_specks_merge_into_their": {
+    "testo": "Smaller specks merge into their neighbour",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.smooth_colour_ramps_become_dithered": {
+    "testo": "Smooth colour ramps become dithered gradient fills instead of bands",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.smoothing": {
+    "testo": "Smoothing",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.smoothing_passes_of_the_picture": {
+    "testo": "Smoothing passes of the picture's edge flow — more give calmer curves",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.smoothness": {
+    "testo": "Smoothness",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.smyrna_cross": {
+    "testo": "Smyrna cross",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.snap_colours_to_real_threads": {
+    "testo": "Snap colours to real threads",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.snap_to_grid": {
+    "testo": "Snap to grid",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.snapped_to_the_grid": {
+    "testo": ", snapped to the grid",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.spacing_density": {
+    "testo": "Spacing (density)",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.spiral": {
+    "testo": "Spiral",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.square_cells": {
+    "testo": "Square cells",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.standard": {
+    "testo": "standard",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.standard_numbers": {
+    "testo": " Standard numbers",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.standard_numbers_2": {
+    "testo": "Standard numbers",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.start_from_these_numbers_you": {
+    "testo": " start from these numbers; you can still change them per object.",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.stipple": {
+    "testo": "Stipple",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.stitch": {
+    "testo": "Stitch",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.stitch_as": {
+    "testo": "Stitch as",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.stitch_length": {
+    "testo": "Stitch length",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.stitch_only_the_selected_objects": {
+    "testo": "Stitch only the selected objects",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.stitch_types": {
+    "testo": "Stitch types",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.stitched": {
+    "testo": "Stitched",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.stitches": {
+    "testo": "Stitches",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.stitches_2": {
+    "testo": " stitches",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.straight": {
+    "testo": "Straight",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.straight_rows_or_streamlines_that": {
+    "testo": "Straight rows, or streamlines that follow the picture (the colours share them and interleave) — uses the flow settings under Stitches",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.strength": {
+    "testo": "Strength",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.style": {
+    "testo": "Style",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.sub_pixel": {
+    "testo": "Sub-pixel",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.sunburst": {
+    "testo": "Sunburst",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.tatami": {
+    "testo": "Tatami",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.tesseract_ticked_lines_are_erased": {
+    "testo": "Tesseract: ticked lines are erased from the picture and added as real lettering.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.test_swatches": {
+    "testo": "Test swatches",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.text": {
+    "testo": "Text",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.text_recognition": {
+    "testo": "Text recognition: ",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.the_background_colour_left_out": {
+    "testo": "The background colour: left out around the design and in plain holes (letter counters), left out only around it (every enclosed area stitched: a logo's white faces), or stitched everywhere",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.the_border_colour_is_left": {
+    "testo": "The border colour is left out where it reaches the edge of the picture, and in plain holes (letter counters, the inside of rings and outlines). Small enclosed areas (highlights) and ones with shapes on them (a badge face) are stitched.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.the_border_colour_is_left_2": {
+    "testo": "The border colour is left out only where it reaches the edge of the picture: every area enclosed by the design is stitched (a logo's white faces inside its outlines).",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.the_border_colour_is_left_3": {
+    "testo": "The border colour is left out everywhere, also inside shapes (letter counters, holes).",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.the_models_are_bundled_with": {
+    "testo": " The models are bundled with Filum and run on this computer.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.the_one_you_always_use": {
+    "testo": " the one you always use · suggested: ",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.the_palette_is_locked_regions": {
+    "testo": "The palette is locked: regions stay where they are",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.the_picture_s_colours_on": {
+    "testo": "The picture's colours on a grid of crosses — every colour setting (palette, thread chart, background, left-out areas, AI masks) applies.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.the_swatch_couldn_t_be": {
+    "testo": "The swatch couldn't be saved: {message}",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.the_swatch_discs_a_and": {
+    "testo": "The swatch: discs A and B, bars C and D",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.the_way_the_thread_lies": {
+    "testo": "The way the thread lies",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.thicken_the_stitch_lines_by": {
+    "testo": "Thicken the stitch lines by this much (Ink/Stitch buffer): half the row spacing or more merges the rows of a fill into one shape",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.thin_lines": {
+    "testo": "Thin lines",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.thread_chart": {
+    "testo": "Thread chart",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.thread_of_the_colour_edges": {
+    "testo": "Thread of the colour edges and the border",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.threads": {
+    "testo": " threads",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.threshold": {
+    "testo": "Threshold",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.through_junctions": {
+    "testo": "Through junctions",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.topping": {
+    "testo": "Topping",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.traced_shapes_fills_satin_columns": {
+    "testo": "Traced shapes: fills, satin columns and lines.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.tracing": {
+    "testo": "Tracing",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.tracing_and_cleanup": {
+    "testo": "Tracing and cleanup",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.triple": {
+    "testo": "Triple",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.turns_stitches_back_into_shapes": {
+    "testo": "Turns stitches back into shapes (Ink/Stitch Outline) — for designs from a machine file, so they can be re-stitched, resized or given new fills.",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.underlay": {
+    "testo": "Underlay",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.underlay_spacing": {
+    "testo": "Underlay spacing",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.unlock_palette_re_quantise": {
+    "testo": "Unlock palette (re-quantise)",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.up_to": {
+    "testo": "up to",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.upright_cross": {
+    "testo": "Upright cross",
+    "file": "components/CrossStitchAssistant.tsx"
+  },
+  "filum.digitalizza.v1_confident": {
+    "testo": "{v1}% confident",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.v1_crosses_cols_rows_cells": {
+    "testo": "{v1} crosses · {cols} × {rows} cells",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.v1_crosses_in_length_colours": {
+    "testo": "{v1} crosses in {length} colours",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.values": {
+    "testo": "Values: ",
+    "file": "components/TestSwatches.tsx"
+  },
+  "filum.digitalizza.very_thin_lines_become_running": {
+    "testo": "Very thin lines become running stitch",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.what_the_new_shapes_are": {
+    "testo": "What the new shapes are stitched as",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.where_the_picture_has_no": {
+    "testo": "Where the picture has no clear flow, and at lower strength, rows lean this way.",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.width": {
+    "testo": "Width",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.with_a_ruler_or_calipers": {
+    "testo": " With a ruler or calipers, to a tenth of a millimetre. Measure the stitched area only, outside edge to outside edge.",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.digitalizza.working": {
+    "testo": "Working…",
+    "file": "components/RebuildShapes.tsx"
+  },
+  "filum.digitalizza.working_resolution_more_is_slower": {
+    "testo": "Working resolution — more is slower but keeps finer shapes",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.you_left_out": {
+    "testo": " you left out",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.you_stitched": {
+    "testo": " you stitched",
+    "file": "components/DigitizeDialog.tsx"
+  },
+  "filum.digitalizza.zig_zag_photo": {
+    "testo": "Zig-zag photo",
+    "file": "components/DigitizeDialog.tsx"
   },
   "filum.esempio.filo.char": {
     "testo": "Charcoal",
@@ -873,6 +2961,10 @@
   },
   "filum.menu.pen_and_node_tool_points": {
     "testo": "Pen and node tool: points snap to existing points",
+    "file": "components/menuModel.ts"
+  },
+  "filum.menu.pictures": {
+    "testo": "Pictures",
     "file": "components/menuModel.ts"
   },
   "filum.menu.preferences": {
