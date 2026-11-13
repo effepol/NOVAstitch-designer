@@ -135,7 +135,7 @@ on("doc.saved", () => events.push("saved"));
   check(nsd[0]?.role === "Editor", "a.9 the app opens .nsd files as their editor");
   check(!!nsd[0]?.mimeType && /^application\//.test(nsd[0].mimeType!), "a.9 Linux: a MIME type for .nsd");
   check(!!nsd[0]?.exportedType?.identifier && nsd[0].exportedType.identifier.startsWith(conf.identifier), "a.9 macOS: the .nsd type is declared by the app (exported UTI)");
-  check(assoc.some((a) => a.ext.includes("filum")), "the .filum files stay associated too (they open, they are not written)");
+  // .filum files open from File ▸ Open (a.1); the system association is the branding's choice (removed on 13/11)
 
   done("module a in the app");
 })().catch((e) => {
