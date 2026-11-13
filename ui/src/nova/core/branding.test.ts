@@ -44,7 +44,12 @@ check(!assoc.some((a) => a.ext.includes("filum")), "the app is not associated wi
 // 0.11: Filum is not named in tauri.conf.json
 check(!read("src-tauri/tauri.conf.json").includes("Filum"), "0.11 tauri.conf.json does not name Filum");
 check(read("ui/index.html").includes(`<title>${NAME}</title>`), "the page title too");
-check(read("ui/src/components/MenuBar.tsx").includes(`— ${NAME}\``), "the window title follows the design: “Design — NOVAstitch Designer”");
+// the window title follows the design: “Design — NOVAstitch Designer”. Checked on the result, not on MenuBar.tsx's
+// source: the title comes from module i's catalog, the program's name from filum.app.name (rule i.3, 13/11, point 5)
+const filumEn = JSON.parse(read("ui/src/nova/i18n/filum/en.json")) as Record<string, string>;
+const windowTitle = (filumEn["filum.menu.window_title"] ?? "").replace("{name}", "Design").replace("{unsaved}", "").replace("{app}", filumEn["filum.app.name"] ?? "");
+check(filumEn["filum.menu.window_title"] === "{name}{unsaved} — {app}" && filumEn["filum.app.name"] === NAME && windowTitle === `Design — ${NAME}`, "the window title follows the design: “Design — NOVAstitch Designer”");
+check(/t\("filum\.menu\.window_title"/.test(read("ui/src/components/MenuBar.tsx")), "MenuBar.tsx takes the window title from the catalog");
 check(JSON.parse(read("package.json")).name === "novastitch-designer" && JSON.parse(read("ui/package.json")).name === "novastitch-designer-ui", "the packages are named novastitch-designer");
 const lock = (p: string) => JSON.parse(read(p));
 check(lock("package-lock.json").name === "novastitch-designer" && lock("ui/package-lock.json").name === "novastitch-designer-ui", "…in the lock files as well");
