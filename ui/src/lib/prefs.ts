@@ -1,6 +1,7 @@
 // User preferences that outlive a design: look, hints, nudging, autosave.
 // The view toggles (grid, guides, …) are remembered by the store itself.
 import { safeSetItem } from "./storage";
+import { t } from "../nova/i18n/filum";
 
 export interface Prefs {
   /** Highlight colour of the interface (hex). */
@@ -34,14 +35,14 @@ export const DEFAULT_PREFS: Prefs = {
 };
 
 export const ACCENTS: { color: string; label: string }[] = [
-  { color: APP_COLOR, label: "Filum violet" },
-  { color: "#b3203a", label: "Crimson" },
-  { color: "#d9480f", label: "Orange" },
-  { color: "#0f8a7e", label: "Teal" },
-  { color: "#2b8a3e", label: "Green" },
-  { color: "#1971c2", label: "Blue" },
-  { color: "#c2255c", label: "Raspberry" },
-  { color: "#495057", label: "Graphite" },
+  { color: APP_COLOR, get label() { return t("filum.finestre.filum_violet"); } },
+  { color: "#b3203a", get label() { return t("filum.finestre.crimson"); } },
+  { color: "#d9480f", get label() { return t("filum.finestre.orange"); } },
+  { color: "#0f8a7e", get label() { return t("filum.finestre.teal"); } },
+  { color: "#2b8a3e", get label() { return t("filum.finestre.green"); } },
+  { color: "#1971c2", get label() { return t("filum.finestre.blue"); } },
+  { color: "#c2255c", get label() { return t("filum.finestre.raspberry"); } },
+  { color: "#495057", get label() { return t("filum.finestre.graphite"); } },
 ];
 
 const KEY = "filum.prefs";

@@ -493,7 +493,11 @@ try {
         const bare = s.replace(/…$/, "").replace(/#/g, "").replace(/\s+/g, " ").trim();
         // …o fatte solo di parole di non-tradurre.json con numeri e segni («Zoom #×», «· #×# mm · #:#»)
         const words = s.match(/\p{L}+/gu) ?? [];
-        return allowed.has(s) || allowed.has(bare) || !/\p{L}/u.test(bare) || SIGLA.test(s) || words.every((w) => allowed.has(w));
+        // …o sigle in maiuscolo («CC BY-NC-SA #», «SIL OFL»), estensioni («.COL»), elenchi di tasti
+        // («Ctrl+X / Ctrl+C / Ctrl+V»), indirizzi e nomi di archivi GitHub («inkstitch/embroidery-fonts»)
+        if (/^\.[A-Z0-9#]+$/.test(s) || /^https?:\/\/\S+$/.test(s) || /^[\w.-]+\/[\w.-]+( \([\w.-]+\))?$/.test(s)) return true;
+        if (s.split(" / ").every((k) => KEYS.test(k.trim()))) return true;
+        return allowed.has(s) || allowed.has(bare) || !/\p{L}/u.test(bare) || SIGLA.test(s) || words.every((w) => allowed.has(w) || /^\p{Lu}{2,}$/u.test(w));
       };
       const left = texts.filter((s) => english.has(s) && !same(s) && !KEYS.test(s));
       if (left.length) itBad[id] = left;

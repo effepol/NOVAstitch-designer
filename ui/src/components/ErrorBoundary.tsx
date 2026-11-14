@@ -4,6 +4,7 @@
 
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { discardAutosave, useStore } from "../store";
+import { t } from "../nova/i18n/filum";
 
 export class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state: { error: Error | null } = { error: null };
@@ -31,18 +32,18 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { error: E
     };
     return (
       <div className="crash" role="alert">
-        <h2>Something went wrong</h2>
-        <p>The editor ran into an error. Your design is still here: undo the last step, or try again.</p>
+        <h2>{t("filum.finestre.something_went_wrong")}</h2>
+        <p>{t("filum.finestre.the_editor_ran_into_an")}</p>
         <pre>{error.message}</pre>
         <div className="crash-actions">
           <button className="btn primary" onClick={undo}>
-            Undo and continue
+            {t("filum.finestre.undo_and_continue")}
           </button>
           <button className="btn" onClick={retry}>
-            Try again
+            {t("filum.finestre.try_again")}
           </button>
-          <button className="btn ghost" onClick={fresh} title="Forgets the autosaved design and starts with an empty one">
-            Start afresh
+          <button className="btn ghost" onClick={fresh} title={t("filum.finestre.forgets_the_autosaved_design_and")}>
+            {t("filum.finestre.start_afresh")}
           </button>
         </div>
       </div>

@@ -12,7 +12,7 @@ import { useStore } from "../store";
 import type { DesignObject, StitchDocument, SubPath } from "../types";
 import { Dialog, Row, Slider, Toggle } from "./ui";
 import { safeSetItem } from "../lib/storage";
-import { withTexts } from "../nova/i18n/filum";
+import { t, tn, withTexts } from "../nova/i18n/filum";
 
 const KEY = "filum.effects";
 let pending: EffectId | null = null;
@@ -133,29 +133,29 @@ export function ShapeEffectsDialog({ onClose }: { onClose: () => void }) {
   return (
     <Dialog
       live
-      title="Shape effects"
+      title={t("filum.finestre.shape_effects")}
       onClose={onClose}
       wide
       footer={
         <>
           <label className="fx-preview">
-            <Toggle on={preview} onChange={setPreview} /> Preview
+            <Toggle on={preview} onChange={setPreview} />{t("filum.finestre.preview")}
           </label>
           <span className="stat">
-            {orig.length} object{orig.length === 1 ? "" : "s"} · {nodesBefore} → {nodesAfter} anchor points
+            {tn("filum.finestre.n_objects", orig.length)} · {nodesBefore} → {nodesAfter}{t("filum.finestre.anchor_points")}
           </span>
           <div className="spacer" />
           <button className="btn" onClick={onClose}>
-            Cancel
+            {t("filum.finestre.cancel")}
           </button>
           <button className="btn primary" disabled={!orig.length} onClick={apply}>
-            Apply
+            {t("filum.finestre.apply")}
           </button>
         </>
       }
     >
       {!orig.length ? (
-        <p className="hint">Select one or more shapes first{skipped ? " (lettering is edited in the lettering panel)" : ""}.</p>
+        <p className="hint">{t("filum.finestre.select_one_or_more_shapes")}{skipped ? t("filum.finestre.lettering_is_edited_in_the") : ""}.</p>
       ) : (
         <div className="fx">
           <div className="fx-list">
@@ -174,49 +174,49 @@ export function ShapeEffectsDialog({ onClose }: { onClose: () => void }) {
             <p className="hint">{EFFECTS.find((e) => e.id === id)?.title}.</p>
             {id === "corners" && (
               <>
-                <Row label="Style">
+                <Row label={t("filum.finestre.style")}>
                   <div className="seg">
                     {(["round", "inverted", "chamfer"] as const).map((k) => (
                       <button key={k} className={p.corners.style === k ? "on" : ""} onClick={() => set("corners", { style: k })}>
-                        {k === "round" ? "Round" : k === "inverted" ? "Inverted" : "Chamfer"}
+                        {k === "round" ? t("filum.finestre.round") : k === "inverted" ? t("filum.finestre.inverted") : t("filum.finestre.chamfer")}
                       </button>
                     ))}
                   </div>
                 </Row>
-                <Row label="Radius">
+                <Row label={t("filum.finestre.radius")}>
                   <Slider min={0} max={30} step={0.1} unit="mm" value={p.corners.radius} onChange={(v) => set("corners", { radius: v })} />
                 </Row>
-                <Row label="Only corners over" title="Corners that turn less than this stay as they are">
+                <Row label={t("filum.finestre.only_corners_over")} title={t("filum.finestre.corners_that_turn_less_than")}>
                   <Slider min={1} max={170} step={1} digits={0} unit="°" value={p.corners.minTurn} onChange={(v) => set("corners", { minTurn: v })} />
                 </Row>
-                <p className="hint">Tip: with the node tool (A), drag the corner widgets to round single corners.</p>
+                <p className="hint">{t("filum.finestre.tip_with_the_node_tool")}</p>
               </>
             )}
             {id === "pucker" && (
               <>
-                <Row label="Amount" title="Negative: pucker (star-like) · positive: bloat (puffy)">
+                <Row label={t("filum.finestre.amount")} title={t("filum.finestre.negative_pucker_star_like_positive")}>
                   <Slider min={-100} max={100} step={1} digits={0} unit="%" value={p.pucker.amount} onChange={(v) => set("pucker", { amount: v })} />
                 </Row>
-                <Row label="Extra points" title="Anchor points added per segment first (more petals)">
+                <Row label={t("filum.finestre.extra_points")} title={t("filum.finestre.anchor_points_added_per_segment")}>
                   <Slider min={0} max={6} step={1} digits={0} value={p.pucker.detail} onChange={(v) => set("pucker", { detail: Math.round(v) })} />
                 </Row>
               </>
             )}
             {id === "zigzag" && (
               <>
-                <Row label="Size">
+                <Row label={t("filum.finestre.size")}>
                   <Slider min={0.1} max={10} step={0.1} unit="mm" value={p.zigzag.size} onChange={(v) => set("zigzag", { size: v })} />
                 </Row>
-                <Row label="Ridges / segment">
+                <Row label={t("filum.finestre.ridges_segment")}>
                   <Slider min={1} max={40} step={1} digits={0} value={p.zigzag.ridges} onChange={(v) => set("zigzag", { ridges: Math.round(v) })} />
                 </Row>
-                <Row label="Points">
+                <Row label={t("filum.finestre.points")}>
                   <div className="seg">
                     <button className={p.zigzag.smooth ? "on" : ""} onClick={() => set("zigzag", { smooth: true })}>
-                      Smooth
+                      {t("filum.finestre.effetto.smooth.label")}
                     </button>
                     <button className={!p.zigzag.smooth ? "on" : ""} onClick={() => set("zigzag", { smooth: false })}>
-                      Corner
+                      {t("filum.finestre.corner")}
                     </button>
                   </div>
                 </Row>
@@ -224,31 +224,31 @@ export function ShapeEffectsDialog({ onClose }: { onClose: () => void }) {
             )}
             {id === "roughen" && (
               <>
-                <Row label="Size">
+                <Row label={t("filum.finestre.size")}>
                   <Slider min={0.1} max={6} step={0.1} unit="mm" value={p.roughen.size} onChange={(v) => set("roughen", { size: v })} />
                 </Row>
-                <Row label="Detail" title="Points per centimetre">
-                  <Slider min={0.5} max={20} step={0.5} unit="/cm" value={p.roughen.detail} onChange={(v) => set("roughen", { detail: v })} />
+                <Row label={t("filum.finestre.detail")} title={t("filum.finestre.points_per_centimetre")}>
+                  <Slider min={0.5} max={20} step={0.5} unit={t("filum.finestre.cm")} value={p.roughen.detail} onChange={(v) => set("roughen", { detail: v })} />
                 </Row>
-                <Row label="Points">
+                <Row label={t("filum.finestre.points")}>
                   <div className="seg">
                     <button className={p.roughen.smooth ? "on" : ""} onClick={() => set("roughen", { smooth: true })}>
-                      Smooth
+                      {t("filum.finestre.effetto.smooth.label")}
                     </button>
                     <button className={!p.roughen.smooth ? "on" : ""} onClick={() => set("roughen", { smooth: false })}>
-                      Corner
+                      {t("filum.finestre.corner")}
                     </button>
                   </div>
                 </Row>
-                <Row label="Variation">
+                <Row label={t("filum.finestre.variation")}>
                   <button className="btn sm" onClick={() => set("roughen", { seed: (p.roughen.seed % 9973) + 1 })}>
-                    Shuffle
+                    {t("filum.finestre.shuffle")}
                   </button>
                 </Row>
               </>
             )}
             {id === "twist" && (
-              <Row label="Angle">
+              <Row label={t("filum.finestre.angle")}>
                 <Slider min={-360} max={360} step={1} digits={0} unit="°" value={p.twist.angle} onChange={(v) => set("twist", { angle: v })} />
               </Row>
             )}
@@ -264,16 +264,16 @@ export function ShapeEffectsDialog({ onClose }: { onClose: () => void }) {
                     </button>
                   ))}
                 </div>
-                <Row label="Bend">
+                <Row label={t("filum.finestre.bend")}>
                   <Slider min={-100} max={100} step={1} digits={0} unit="%" value={p.warp.bend} onChange={(v) => set("warp", { bend: v })} />
                 </Row>
-                <Row label="Direction">
+                <Row label={t("filum.finestre.direction")}>
                   <div className="seg">
                     <button className={!p.warp.vertical ? "on" : ""} onClick={() => set("warp", { vertical: false })}>
-                      Horizontal
+                      {t("filum.finestre.horizontal")}
                     </button>
                     <button className={p.warp.vertical ? "on" : ""} onClick={() => set("warp", { vertical: true })}>
-                      Vertical
+                      {t("filum.finestre.vertical")}
                     </button>
                   </div>
                 </Row>
@@ -281,33 +281,33 @@ export function ShapeEffectsDialog({ onClose }: { onClose: () => void }) {
             )}
             {id === "simplify" && (
               <>
-                <Row label="Tolerance" title="How far the curve may move (mm)">
+                <Row label={t("filum.finestre.tolerance")} title={t("filum.finestre.how_far_the_curve_may")}>
                   <Slider min={0.02} max={3} step={0.02} unit="mm" value={p.simplify.tolerance} onChange={(v) => set("simplify", { tolerance: v })} />
                 </Row>
-                <Row label="Corner angle" title="Turns sharper than this stay corners">
+                <Row label={t("filum.finestre.corner_angle")} title={t("filum.finestre.turns_sharper_than_this_stay")}>
                   <Slider min={10} max={170} step={1} digits={0} unit="°" value={p.simplify.corner} onChange={(v) => set("simplify", { corner: v })} />
                 </Row>
-                <Row label="Straight lines" title="Straight runs become straight segments (logos, lettering)">
+                <Row label={t("filum.finestre.straight_lines")} title={t("filum.finestre.straight_runs_become_straight_segments")}>
                   <Toggle on={p.simplify.lines ?? true} onChange={(v) => set("simplify", { lines: v })} />
                 </Row>
               </>
             )}
             {id === "smooth" && (
               <>
-                <Row label="Tension">
+                <Row label={t("filum.finestre.tension")}>
                   <Slider min={0.2} max={1.6} step={0.05} value={p.smooth.tension} onChange={(v) => set("smooth", { tension: v })} />
                 </Row>
-                <Row label="Keep corners over" title="Corners turning more than this stay sharp (180° = smooth all)">
+                <Row label={t("filum.finestre.keep_corners_over")} title={t("filum.finestre.corners_turning_more_than_this")}>
                   <Slider min={10} max={180} step={1} digits={0} unit="°" value={p.smooth.keep} onChange={(v) => set("smooth", { keep: v })} />
                 </Row>
               </>
             )}
             {id === "anchors" && (
-              <Row label="Times" title="Each pass splits every segment in half">
+              <Row label={t("filum.finestre.times")} title={t("filum.finestre.each_pass_splits_every_segment")}>
                 <Slider min={1} max={4} step={1} digits={0} value={p.anchors.times} onChange={(v) => set("anchors", { times: Math.round(v) })} />
               </Row>
             )}
-            {skipped > 0 && <p className="hint">{skipped} lettering object{skipped === 1 ? "" : "s"} left out — lettering stays editable text.</p>}
+            {skipped > 0 && <p className="hint">{tn("filum.finestre.lettering_objects_left_out", skipped)}</p>}
           </div>
         </div>
       )}
@@ -319,13 +319,13 @@ export function ShapeEffectsDialog({ onClose }: { onClose: () => void }) {
 export function pathCommand(fn: (sp: SubPath) => SubPath, label: string) {
   const s = useStore.getState();
   const ids = new Set(s.doc.objects.filter((o) => s.selection.includes(o.id) && !o.text).map((o) => o.id));
-  if (!ids.size) return s.toast("Select one or more shapes first");
+  if (!ids.size) return s.toast(t("filum.finestre.select_one_or_more_shapes"));
   s.commit((d) => {
     let next: StitchDocument = { ...d, objects: d.objects.map((o) => (ids.has(o.id) ? { ...o, paths: o.paths.map((sp) => (sp.nodes.length >= 2 ? fn(sp) : sp)) } : o)) };
     for (const o of next.objects) if (ids.has(o.id)) next = syncGradientGeometry(next, o);
     return next;
   });
-  s.toast(`${label}: ${ids.size} object${ids.size === 1 ? "" : "s"}`);
+  s.toast(`${label}: ${tn("filum.finestre.n_objects", ids.size)}`);
 }
 
 /** Guided fill: the selected open line becomes the guide of the selected fill (and is removed). */
@@ -334,7 +334,7 @@ export function lineAsFillGuide() {
   const sel = s.doc.objects.filter((o) => s.selection.includes(o.id));
   const fill = sel.find((o) => o.stitch.type === "fill" && !o.stitch.gradient && o.paths.some((sp) => sp.closed));
   const line = sel.find((o) => o !== fill && o.paths.some((sp) => !sp.closed && sp.nodes.length >= 2));
-  if (!fill || !line) return s.toast("Select a fill shape and an open line together (Shift-click)");
+  if (!fill || !line) return s.toast(t("filum.finestre.select_a_fill_shape_and"));
   const guide = line.paths.find((sp) => !sp.closed && sp.nodes.length >= 2)!;
   s.commit((d) => ({
     ...d,
@@ -343,5 +343,5 @@ export function lineAsFillGuide() {
       .map((o) => (o.id === fill.id && o.stitch.type === "fill" ? { ...o, stitch: { ...o.stitch, method: "guided" as const, guide } } : o)),
   }));
   s.select([fill.id]);
-  s.toast("Guided fill: the rows follow the line");
+  s.toast(t("filum.finestre.guided_fill_the_rows_follow"));
 }

@@ -8,6 +8,7 @@
 import type { PathNode, SubPath, Vec2 } from "../types";
 import { cubicAt, fitPath, flattenSubPath, segmentOf, splitCubic, type Cubic } from "./bezier";
 import { smoothPath } from "./geometry";
+import { t } from "../nova/i18n/filum";
 
 const add = (a: Vec2, b: Vec2): Vec2 => [a[0] + b[0], a[1] + b[1]];
 const sub = (a: Vec2, b: Vec2): Vec2 => [a[0] - b[0], a[1] - b[1]];
@@ -350,15 +351,15 @@ export function twist(sp: SubPath, angleDeg: number, centre: Vec2, reach: number
 export type WarpStyle = "arc" | "arch" | "bulge" | "flag" | "wave" | "fish" | "rise" | "inflate" | "squeeze";
 
 export const WARPS: { id: WarpStyle; label: string }[] = [
-  { id: "arc", label: "Arc" },
-  { id: "arch", label: "Arch" },
-  { id: "bulge", label: "Bulge" },
-  { id: "flag", label: "Flag" },
-  { id: "wave", label: "Wave" },
-  { id: "fish", label: "Fish" },
-  { id: "rise", label: "Rise" },
-  { id: "inflate", label: "Inflate" },
-  { id: "squeeze", label: "Squeeze" },
+  { id: "arc", get label() { return t("filum.finestre.arc"); } },
+  { id: "arch", get label() { return t("filum.finestre.arch"); } },
+  { id: "bulge", get label() { return t("filum.finestre.bulge"); } },
+  { id: "flag", get label() { return t("filum.finestre.flag"); } },
+  { id: "wave", get label() { return t("filum.finestre.wave"); } },
+  { id: "fish", get label() { return t("filum.finestre.fish"); } },
+  { id: "rise", get label() { return t("filum.finestre.rise"); } },
+  { id: "inflate", get label() { return t("filum.finestre.inflate"); } },
+  { id: "squeeze", get label() { return t("filum.finestre.squeeze"); } },
 ];
 
 /** The warp as a map of normalised coordinates (u along, v across, both −1…1). */

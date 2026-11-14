@@ -10,6 +10,7 @@ import { formatBytes, installPack, removePack, useDownloads, type DownloadPack, 
 import { embroideryIndex } from "../lib/fonts";
 import { useStore } from "../store";
 import { ExtLink } from "./ui";
+import { t, tData, tx } from "../nova/i18n/filum";
 
 type Job = { progress: Progress; abort: AbortController } | { error: string };
 
@@ -44,31 +45,30 @@ export function DownloadsPanel() {
     try {
       await installPack(pack, (progress) => setJob(pack.id, { progress, abort }), abort.signal);
       setJob(pack.id, null);
-      useStore.getState().toast(`${pack.title}: installed`, "success");
+      useStore.getState().toast(t("filum.finestre.title_installed", { title: tData(`filum.finestre.pacchetto.${pack.id}.titolo`, pack.title) }), "success");
     } catch (e) {
       if ((e as Error).name === "AbortError") return setJob(pack.id, null);
       setJob(pack.id, { error: (e as Error).message || String(e) });
     }
   };
   const remove = async (pack: DownloadPack) => {
-    if (!confirm(`Remove ${pack.title} from this device? Designs that use them keep their stitches, but can't be changed until you download them again.`)) return;
+    if (!confirm(t("filum.finestre.remove_title_from_this_device", { title: tData(`filum.finestre.pacchetto.${pack.id}.titolo`, pack.title) }))) return;
     await removePack(pack.id, pack.kind);
-    useStore.getState().toast(`${pack.title}: removed`);
+    useStore.getState().toast(t("filum.finestre.title_removed", { title: tData(`filum.finestre.pacchetto.${pack.id}.titolo`, pack.title) }));
   };
 
   return (
     <>
       <section className="st-sec">
-        <h4>Optional downloads</h4>
+        <h4>{t("filum.finestre.optional_downloads")}</h4>
         <p className="dl-intro">
-          Filum includes only what it may share with everyone. Some fonts and thread charts have licences that don't allow that, so you can download them
-          yourself here: read the licence, then <b>Accept &amp; download</b>. They come straight from their authors' repositories and stay on this device.
+          {t("filum.finestre.filum_includes_only_what_it")}<b>{t("filum.finestre.accept_amp_download")}</b>{t("filum.finestre.they_come_straight_from_their")}
         </p>
       </section>
       {packs === null ? (
-        <p className="hint">Loading…</p>
+        <p className="hint">{t("filum.finestre.loading")}</p>
       ) : !packs.length ? (
-        <p className="hint">This version of Filum offers no downloads.</p>
+        <p className="hint">{t("filum.finestre.this_version_of_filum_offers")}</p>
       ) : (
         packs.map((p) => <PackCard key={p.id} pack={p} installed={installed.get(p.id)} job={jobs[p.id]} online={online} onStart={() => start(p)} onRemove={() => remove(p)} />)
       )}
@@ -102,7 +102,7 @@ function PackCard({
   const pct = running ? Math.min(100, Math.round((running.progress.done / Math.max(1, running.progress.total)) * 100)) : 0;
   const licence = (
     <ExtLink href={pack.license.url} className="dl-link">
-      {pack.license.name}
+      {tData(`filum.finestre.pacchetto.${pack.id}.licenza`, pack.license.name)}
       <ExternalLink size={10} />
     </ExtLink>
   );
@@ -111,46 +111,45 @@ function PackCard({
       <header className="dl-head">
         <span className="dl-icon">{pack.kind === "fonts" ? <Type size={17} /> : <Spool size={17} />}</span>
         <div className="dl-title">
-          <b>{pack.title}</b>
+          <b>{tData(`filum.finestre.pacchetto.${pack.id}.titolo`, pack.title)}</b>
           <span className="dl-meta">
-            {pack.items.length} {unit} · {formatBytes(pack.bytes)} · from{" "}
+            {pack.items.length} {unit} · {formatBytes(pack.bytes)}{t("filum.finestre.from")}{" "}
             <ExtLink href={pack.source.url} title={pack.source.label}>
-              {pack.source.label.split("/")[0]} on GitHub
-            </ExtLink>
+              {t("filum.finestre.n_on_github", { n: pack.source.label.split("/")[0] })}</ExtLink>
           </span>
         </div>
         <span className={`dl-status ${installed ? (outdated ? "update" : "ok") : ""}`}>
           {installed ? (
             outdated ? (
-              "Update available"
+              t("filum.finestre.update_available")
             ) : (
               <>
-                <Check size={12} /> Installed
+                <Check size={12} />{t("filum.finestre.installed")}
               </>
             )
           ) : (
-            "Not installed"
+            t("filum.finestre.not_installed")
           )}
         </span>
       </header>
-      <p className="dl-sum">{pack.summary}</p>
+      <p className="dl-sum">{tData(`filum.finestre.pacchetto.${pack.id}.descrizione`, pack.summary)}</p>
       <div className="dl-licence">
         <Scale size={15} />
         <div>
-          <b>Licence: {licence}</b>
-          <p>{pack.license.terms}</p>
+          <b>{tx("filum.finestre.licence_licence", { licence })}</b>
+          <p>{tData(`filum.finestre.pacchetto.${pack.id}.condizioni`, pack.license.terms)}</p>
         </div>
       </div>
       <button className={`dl-items-toggle ${open ? "open" : ""}`} onClick={() => setOpen(!open)} aria-expanded={open}>
         <ChevronRight size={12} />
-        What's included
+        {t("filum.finestre.what_s_included")}
       </button>
       {open && (
         <ul className="dl-items">
           {pack.items.map((it) => (
             <li key={it.id}>
               <span>{it.name}</span>
-              <span className="dl-item-meta">{it.count ? `${it.count} colours` : formatBytes(it.files.reduce((n, f) => n + f[1], 0))}</span>
+              <span className="dl-item-meta">{it.count ? t("filum.finestre.count_colours", { count: it.count }) : formatBytes(it.files.reduce((n, f) => n + f[1], 0))}</span>
             </li>
           ))}
         </ul>
@@ -162,41 +161,41 @@ function PackCard({
               <i style={{ width: `${pct}%` }} />
             </div>
             <span className="dl-prog">
-              {running.progress.stage === "convert" ? "Preparing…" : `${formatBytes(running.progress.done)} of ${formatBytes(running.progress.total)}`}
+              {running.progress.stage === "convert" ? t("filum.finestre.preparing") : t("filum.finestre.v1_of_v2", { v1: formatBytes(running.progress.done), v2: formatBytes(running.progress.total) })}
             </span>
             <button className="btn sm ghost" onClick={() => running.abort.abort()}>
-              <X size={13} /> Cancel
+              <X size={13} />{t("filum.finestre.cancel_2")}
             </button>
           </>
         ) : installed && !outdated ? (
           <>
             <span className="dl-accepted">
               <PackageCheck size={14} />
-              {unlicensed ? `Downloaded for your own use on ${new Date(installed.acceptedAt).toLocaleDateString()}` : `You accepted ${installed.license} on ${new Date(installed.acceptedAt).toLocaleDateString()}`}
+              {unlicensed ? t("filum.finestre.downloaded_for_your_own_use", { v1: new Date(installed.acceptedAt).toLocaleDateString() }) : t("filum.finestre.you_accepted_license_on_v2", { license: installed.license, v2: new Date(installed.acceptedAt).toLocaleDateString() })}
             </span>
             <button className="btn sm ghost" onClick={onRemove}>
-              <Trash2 size={13} /> Remove
+              <Trash2 size={13} />{t("filum.finestre.remove_2")}
             </button>
           </>
         ) : (
           <>
             <span className="dl-accept">
-              {failed ? <span className="dl-err">Download failed: {failed}</span> : !online ? (
-                "You're offline. Connect to the internet to download."
+              {failed ? <span className="dl-err">{t("filum.finestre.download_failed_failed", { failed })}</span> : !online ? (
+                t("filum.finestre.you_re_offline_connect_to")
               ) : unlicensed ? (
-                <>No licence is published ({licence}): by downloading you agree to use them only for yourself.</>
+                <>{tx("filum.finestre.no_licence_is_published_licence", { licence })}</>
               ) : (
-                <>By downloading you accept the {licence} licence.</>
+                <>{tx("filum.finestre.by_downloading_you_accept_the", { licence })}</>
               )}
             </span>
             {installed && (
               <button className="btn sm ghost" onClick={onRemove}>
-                <Trash2 size={13} /> Remove
+                <Trash2 size={13} />{t("filum.finestre.remove_2")}
               </button>
             )}
             <button className="btn primary" disabled={!online} onClick={onStart}>
               {installed ? <RefreshCw size={14} /> : <Download size={14} />}
-              {failed ? "Try again" : installed ? (unlicensed ? "Update" : "Accept & update") : unlicensed ? "Agree & download" : "Accept & download"}
+              {failed ? t("filum.finestre.try_again") : installed ? (unlicensed ? t("filum.finestre.update") : t("filum.finestre.accept_update")) : unlicensed ? t("filum.finestre.agree_download") : t("filum.finestre.accept_download")}
             </button>
           </>
         )}
@@ -224,33 +223,33 @@ function Included() {
   }, []);
   return (
     <section className="st-sec">
-      <h4>Included with Filum</h4>
+      <h4>{t("filum.finestre.included_with_filum")}</h4>
       <ul className="dl-included">
         <li>
           <Type size={13} />
-          <span>{fonts ? `${fonts.n} embroidery fonts` : "Embroidery fonts"}</span>
-          <span className="dl-item-meta">{fonts ? fonts.licences.join(", ") : ""}</span>
+          <span>{fonts ? t("filum.finestre.n_embroidery_fonts", { n: fonts.n }) : t("filum.finestre.embroidery_fonts")}</span>
+          <span className="dl-item-meta">{fonts ? fonts.licences.map((l) => (l === "public domain" ? t("filum.finestre.public_domain") : l)).join(", ") : ""}</span>
         </li>
         <li>
           <Type size={13} />
-          <span>3 outline fonts: Nunito, Bebas Neue, Pacifico</span>
-          <span className="dl-item-meta">SIL OFL</span>
+          <span>{t("filum.finestre.n3_outline_fonts_nunito_bebas")}</span>
+          <span className="dl-item-meta">{t("filum.finestre.sil_ofl")}</span>
         </li>
         <li>
           <Spool size={13} />
-          <span>{charts ? `${charts} thread charts` : "Thread charts"} from Ink/Stitch and Madeira colour cards</span>
-          <span className="dl-item-meta">GPL-3.0, colours sampled from published cards</span>
+          <span>{charts ? t("filum.finestre.charts_thread_charts", { charts }) : t("filum.finestre.thread_charts")}{t("filum.finestre.from_ink_stitch_and_madeira")}</span>
+          <span className="dl-item-meta">{t("filum.finestre.gpl_3_0_colours_sampled")}</span>
         </li>
         <li>
           <PackageCheck size={13} />
-          <span>On-device AI models (MobileSAM, DexiNed, Informative Drawings, Tesseract)</span>
-          <span className="dl-item-meta">MIT, Apache-2.0</span>
+          <span>{t("filum.finestre.on_device_ai_models_mobilesam")}</span>
+          <span className="dl-item-meta">{t("filum.finestre.mit_apache_2_0")}</span>
         </li>
       </ul>
       <p className="hint">
-        Filum itself is free software under the GPL-3.0-or-later.{" "}
+        {t("filum.finestre.filum_itself_is_free_software")}{" "}
         <button className="link" onClick={() => useStore.getState().setDialog("licenses")}>
-          Every licence and its full text…
+          {t("filum.finestre.every_licence_and_its_full")}
         </button>
       </p>
     </section>

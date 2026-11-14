@@ -29,7 +29,7 @@ const walk = (dir: string): string[] =>
     return /\.(ts|tsx)$/.test(f) && !/\.(test|d)\.ts$/.test(f) ? [p] : [];
   });
 export const keysIn = (text: string): string[] =>
-  [...text.matchAll(/\b(tn?)\(\s*["'`](filum\.[A-Za-z0-9_.-]+)["'`]/g)].flatMap((m) => (m[1] === "tn" ? [`${m[2]}.one`, `${m[2]}.other`] : [m[2]]));
+  [...text.matchAll(/\b(tn?|tx|tData)\(\s*["'`](filum\.[A-Za-z0-9_.-]+)["'`]/g)].flatMap((m) => (m[1] === "tn" ? [`${m[2]}.one`, `${m[2]}.other`] : [m[2]]));
 check(keysIn(`t("filum.a.b"); tn('filum.c.d', n); t("core.x"); t(\`filum.e.\${x}\`)`).join() === "filum.a.b,filum.c.d.one,filum.c.d.other", "i la ricerca trova t(\"filum.…\") e tn(\"filum.…\")");
 
 const used = new Set<string>();
