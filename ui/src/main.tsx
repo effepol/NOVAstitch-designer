@@ -13,6 +13,7 @@ import { calibratedDefaults } from "./lib/calibration";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { isTauri } from "./lib/platform";
 import { installBridge } from "./nova/core/bridge";
+import { t } from "./nova/i18n/filum";
 
 // NOVAstitch: Filum's changes of document, selection, view and plan go on the event bus
 installBridge();
@@ -39,7 +40,7 @@ if (isTauri)
       // what the autosave couldn't keep (it's off, or the design didn't fit) is asked about
       const kept = flushAutosave();
       const s = useStore.getState();
-      if (!kept && !s.saved && s.doc.objects.length && !confirm("Close without saving? Your changes will be lost.")) e.preventDefault();
+      if (!kept && !s.saved && s.doc.objects.length && !confirm(t("filum.barre.close_without_saving_your_changes"))) e.preventDefault();
     }),
   );
 document.documentElement.dataset.theme = useStore.getState().theme;

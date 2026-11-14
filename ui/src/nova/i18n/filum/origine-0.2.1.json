@@ -3,13 +3,1745 @@
     "testo": "Filum",
     "file": "(nome del programma: index.html, MenuBar.tsx e altri)"
   },
+  "filum.barre.a_closed_path_becomes_a": {
+    "testo": "A closed path becomes a filled area",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.a_closed_path_stays_a": {
+    "testo": "A closed path stays a running-stitch outline",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.a_gradient_keeps_at_least": {
+    "testo": "A gradient keeps at least one colour point",
+    "file": "App.tsx"
+  },
+  "filum.barre.a_lettering_with_locked_letters": {
+    "testo": "A lettering with locked letters stays in place: unlock it in Layers to move it",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.a_path_needs_at_least": {
+    "testo": "A path needs at least two points",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.a_satin_column_along_the": {
+    "testo": "A satin column along the stroke",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.a_stroke_that_ends_at": {
+    "testo": "A stroke that ends at its start becomes a filled area",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.add_a_direction_guide": {
+    "testo": "Add a direction guide",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.add_a_point": {
+    "testo": "Add a point",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.add_a_shape": {
+    "testo": "Add a shape",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.add_a_stop": {
+    "testo": "Add a stop",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.add_overlapping_shapes": {
+    "testo": "Add overlapping shapes",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.add_remove": {
+    "testo": "Add / remove",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.add_remove_a_point": {
+    "testo": "Add / remove a point",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.add_to_the_selection": {
+    "testo": "Add to the selection",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.adjust_a_reference_picture": {
+    "testo": "Adjust a reference picture",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.align_the_selected_points_horizontally": {
+    "testo": "Align the selected points horizontally",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.align_the_selected_points_vertically": {
+    "testo": "Align the selected points vertically",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.all_corners": {
+    "testo": "All corners",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.alt_click_a_widget_style": {
+    "testo": " · Alt-click a widget: style",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.and_show_only_this_colour": {
+    "testo": " and show only this colour",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.angle_angle": {
+    "testo": "Angle {angle}°",
+    "file": "canvas/handles.ts"
+  },
+  "filum.barre.animate": {
+    "testo": "Animate",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.animate_the_stitch_out_with": {
+    "testo": "Animate the stitch-out, with a timeline of the colour blocks",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.arch_spacing": {
+    "testo": "Arch · spacing",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.auto_digitize": {
+    "testo": "Auto-digitize",
+    "file": "App.tsx"
+  },
+  "filum.barre.auto_digitize_this_picture": {
+    "testo": "Auto-digitize this picture",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.auto_route": {
+    "testo": " Auto-route",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.auto_route_join_the_lines": {
+    "testo": "Auto-route: join the lines into as few continuous paths as possible, travelling along lines already sewn (Ink/Stitch auto-route running stitch)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.auto_route_satins": {
+    "testo": " Auto-route satins",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.auto_route_satins_one_sewing": {
+    "testo": "Auto-route satins: one sewing order through the selected satin columns — cut where the route turns, running underpaths hidden beneath them instead of jumps (Ink/Stitch auto-route satin columns). Running lines in the selection show where to travel.",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.average": {
+    "testo": "Average",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.back_to_a_plain_fill": {
+    "testo": "Back to a plain fill (a blend keeps its first colour)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.back_to_editing": {
+    "testo": "Back to editing",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.back_to_select": {
+    "testo": "Back to select",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.behind": {
+    "testo": "Behind",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.behind_the_stitches": {
+    "testo": "Behind the stitches",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.bend_the_curve": {
+    "testo": "Bend the curve",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.blend": {
+    "testo": "Blend",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.box_add_points": {
+    "testo": "Box: add points",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.box_remove_points": {
+    "testo": "Box: remove points",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.box_select": {
+    "testo": "Box select",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.box_select_points": {
+    "testo": "Box select points",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.break": {
+    "testo": "Break",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.break_the_handles": {
+    "testo": "Break the handles",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.break_the_path_at_the": {
+    "testo": "Break the path at the selected points (Shift+B)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.centre_v1_v2": {
+    "testo": "Centre {v1}% · {v2}%",
+    "file": "canvas/handles.ts"
+  },
+  "filum.barre.chamfer": {
+    "testo": "chamfer",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.choose_a_satin_column": {
+    "testo": "Choose a satin column",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.choose_a_shape": {
+    "testo": "Choose a shape",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.choose_a_shape_to_edit": {
+    "testo": "Choose a shape to edit",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.click_a_closed_shape_a": {
+    "testo": "Click a closed shape: a gradient mesh with a new colour node where you click",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.click_a_closed_shape_freeform": {
+    "testo": "Click a closed shape: freeform colour points, the new colour where you click",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.click_a_closed_shape_to": {
+    "testo": "Click a closed shape to add a gradient mesh",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.click_a_closed_shape_to_2": {
+    "testo": "Click a closed shape to add colour points",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.click_a_fill_shift_click": {
+    "testo": "Click a fill, Shift-click the fills overlapping it — the regions appear",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.click_a_line_to_split": {
+    "testo": "Click a line to split it · drag across a fill to cut it",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.click_or_drag_a_box": {
+    "testo": "Click or drag a box to select points · Shift adds · Ctrl+A all · click a path to add a point · Alt-click deletes",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.click_outside_or_press_enter": {
+    "testo": "Click outside or press Enter when done",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.click_to_cut_here": {
+    "testo": "Click to cut here",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.click_to_type_stitched_embroidery": {
+    "testo": "Click to type: stitched embroidery fonts, TTF/OTF, arcs.",
+    "file": "App.tsx"
+  },
+  "filum.barre.close": {
+    "testo": "Close",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.close_the_path_open_it": {
+    "testo": "Close the path / open it at the selected point",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.close_the_stitch_out_player": {
+    "testo": "Close the stitch-out player (Esc)",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.close_without_saving_your_changes": {
+    "testo": "Close without saving? Your changes will be lost.",
+    "file": "main.tsx"
+  },
+  "filum.barre.closed_loops": {
+    "testo": "Closed loops",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.closed_shapes": {
+    "testo": "Closed shapes",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.colour": {
+    "testo": "Colour",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.colour_blend": {
+    "testo": "Colour blend",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.colour_blending_this_colour_fades": {
+    "testo": "Colour blending: this colour fades out while a second fades in",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.colour_block": {
+    "testo": "Colour block",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.colour_the_stitches_by": {
+    "testo": "Colour the stitches by",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.column_width": {
+    "testo": "Column width",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.computing": {
+    "testo": " · computing…",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.continue_that_path": {
+    "testo": "Continue that path",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.continuing_the_path_enter_to": {
+    "testo": "Continuing the path — Enter to finish",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.copy": {
+    "testo": " · copy",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.corner": {
+    "testo": "Corner",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.corner_no_handles_shift_c": {
+    "testo": "Corner: no handles (Shift+C)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.corner_point": {
+    "testo": "Corner point",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.corner_radius_0_sharp": {
+    "testo": "Corner radius (0 = sharp)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.corner_smooth": {
+    "testo": "Corner ↔ smooth",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.corner_style": {
+    "testo": "Corner style: {style}",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.corners": {
+    "testo": "Corners",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.corners_2": {
+    "testo": "corners",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.curvature_u_click_points_the": {
+    "testo": "Curvature (U) — click points, the path curves smoothly through them; double-click a point for a corner",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.curve_fitting_straight_runs_of": {
+    "testo": "Curve fitting: straight runs of the stroke become straight lines",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.curve_fitting_turns_sharper_than": {
+    "testo": "Curve fitting: turns sharper than this stay corners",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.curve_point": {
+    "testo": "Curve point",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.curved_segments": {
+    "testo": "Curved segments",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.curved_segments_between_the_selected": {
+    "testo": "Curved segments between the selected points (Shift+U)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.cut_fills_in_two.one": {
+    "testo": "Cut {n} fill in two",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.cut_fills_in_two.other": {
+    "testo": "Cut {n} fills in two",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.cut_it_in_two": {
+    "testo": "Cut it in two",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.cutter_c_click_a_line": {
+    "testo": "Cutter (C) — click a line to split it, drag across a fill to cut it",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.delete": {
+    "testo": "Delete",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.delete_a_point": {
+    "testo": "Delete a point",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.delete_it": {
+    "testo": "Delete it",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.delete_keep_the_shape": {
+    "testo": "Delete, keep the shape",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.delete_keeping_the_shape_del": {
+    "testo": "Delete, keeping the shape (Del) · Shift+Del: plain delete",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.delete_regions": {
+    "testo": "Delete regions",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dense": {
+    "testo": "Dense",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.dense_end": {
+    "testo": "Dense end",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.density": {
+    "testo": "Density",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.density_gradient": {
+    "testo": "Density gradient",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.deselect": {
+    "testo": "Deselect",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.deselect_points": {
+    "testo": "Deselect points",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.design_name": {
+    "testo": "Design name",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.digitize_a_picture": {
+    "testo": "Digitize a picture",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.direction_guides_are_for_satin": {
+    "testo": "Direction guides are for satin columns",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.direction_reversed_click_to_restore": {
+    "testo": "Direction reversed (click to restore)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.divide_every_overlap_region_becomes": {
+    "testo": "Divide: every overlap region becomes its own shape",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.done": {
+    "testo": "Done",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.done_2": {
+    "testo": " Done",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.done_enter": {
+    "testo": "Done (Enter)",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.dove.across": {
+    "testo": "across",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.across_a_fill": {
+    "testo": "across a fill",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.across_regions": {
+    "testo": "across regions",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.back_to_the_start": {
+    "testo": "back to the start",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.corner": {
+    "testo": "corner",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.corner_widget": {
+    "testo": "corner widget",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.dot": {
+    "testo": "dot",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.empty": {
+    "testo": "empty",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.end": {
+    "testo": "end",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.first_point": {
+    "testo": "first point",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.guide": {
+    "testo": "guide",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.handle": {
+    "testo": "handle",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.handles": {
+    "testo": "handles",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.knob": {
+    "testo": "knob",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.lettering": {
+    "testo": "lettering",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.line": {
+    "testo": "line",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.other": {
+    "testo": "other",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.outside_corner": {
+    "testo": "outside corner",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.path": {
+    "testo": "path",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.path_end": {
+    "testo": "path end",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.picture": {
+    "testo": "picture",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.point": {
+    "testo": "point",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.region": {
+    "testo": "region",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.ring": {
+    "testo": "ring",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.shape": {
+    "testo": "shape",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.side": {
+    "testo": "side",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.stop": {
+    "testo": "stop",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.dove.timeline": {
+    "testo": "timeline",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.drag": {
+    "testo": "drag",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.drag_across_a_fill_dense": {
+    "testo": "Drag across a fill: dense where you start, open where you end · Shift: 45° steps",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.drag_across_a_fill_its": {
+    "testo": "Drag across a fill: its colour fades out, the next colour (the active one) fades in",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.drag_across_a_satin_to": {
+    "testo": "Drag across a satin to guide its stitch angle · drag an end to turn it · Alt-click to delete · Shift: 15° steps",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.drag_across_regions_to": {
+    "testo": "Drag across regions to",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.drag_across_regions_to_delete": {
+    "testo": "Drag across regions to delete them (or hold Alt)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.drag_across_regions_to_merge": {
+    "testo": "Drag across regions to merge them into one shape",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.drag_across_regions_to_merge_2": {
+    "testo": "Drag across regions to merge them · Alt-drag deletes · click one region to make it its own shape · Shift-click adds shapes",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.drag_for_curves_alt_breaks": {
+    "testo": "Drag for curves · Alt breaks handles · Space moves the point · points snap to existing points (Ctrl: off) · ending on another path's end joins them · Alt-click a point to delete",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.drag_for_curves_scroll_over": {
+    "testo": "Drag for curves · scroll over a point to change its width · click a segment to add a point · Alt-click to delete · click the first point to close",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.drag_to_bend_the_curve": {
+    "testo": "Drag to bend the curve · click to add a point · Alt-click a point to delete · double-click: smooth ↔ corner",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.drag_to_draw_shift_square": {
+    "testo": "Drag to draw · Shift: square / regular · round corners later with the node tool's corner widgets or Path ▸ Round corners",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.drag_to_move_arrows_nudge": {
+    "testo": "Drag to move · arrows nudge 0.1 mm (Shift 1 mm) · Shift-drag: straight · points snap to other points (Ctrl: off)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.drag_to_round_this_corner": {
+    "testo": "Drag to round this corner ({cornerStyle}) · Shift-drag: all corners · Alt-click: corner style",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.draw": {
+    "testo": "Draw",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.draw_the_line_trails_the": {
+    "testo": "Draw · the line trails the pointer for smooth curves · end at the start to close",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.draw_with_the_tools_on": {
+    "testo": "Draw with the tools on the left, or drop an SVG, image or embroidery file here.",
+    "file": "App.tsx"
+  },
+  "filum.barre.duplicate": {
+    "testo": "Duplicate",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.edit_it": {
+    "testo": "Edit it",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.edit_nodes": {
+    "testo": "Edit nodes",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.edit_nodes_a": {
+    "testo": "Edit nodes (A)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.edit_the_text": {
+    "testo": "Edit the text",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.edited": {
+    "testo": "Edited",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.ellipse_e": {
+    "testo": "Ellipse (E)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.end_point": {
+    "testo": "End point",
+    "file": "canvas/handles.ts"
+  },
+  "filum.barre.engine_err": {
+    "testo": "Engine: {err}",
+    "file": "App.tsx"
+  },
+  "filum.barre.every_point": {
+    "testo": "Every point",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.exclude_where_an_odd_number": {
+    "testo": "Exclude: where an odd number overlap",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.export": {
+    "testo": "Export",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.fabric_adjusts_density_and_underlay": {
+    "testo": "Fabric — adjusts density and underlay (calibrate it for pull compensation)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.fabric_preset": {
+    "testo": "Fabric preset",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.fill": {
+    "testo": "Fill",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.fill_angle": {
+    "testo": "Fill angle",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.fill_angle_satin_width": {
+    "testo": "Fill angle · satin width",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.finish": {
+    "testo": "Finish",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.finished_piece_4_the_jump": {
+    "testo": "Finished piece (4): the jump threads you snip by hand and the basting left out",
+    "file": "App.tsx"
+  },
+  "filum.barre.fit": {
+    "testo": "Fit",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.fit_design_shift_0": {
+    "testo": "Fit design (Shift+0)",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.fit_hoop_0": {
+    "testo": "Fit hoop (0)",
+    "file": "components/BottomBar.tsx"
+  },
   "filum.barre.fit_the_design_double_click": {
     "testo": "Fit the design (double-click)",
     "file": "canvas/DesignView.tsx"
   },
+  "filum.barre.fit_the_hoop": {
+    "testo": "Fit the hoop",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.five_passes_very_bold_line": {
+    "testo": "Five passes — very bold line",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.for_more": {
+    "testo": "for more",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.freehand": {
+    "testo": "Freehand",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.freehand_f": {
+    "testo": "Freehand (F)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.generating_stitches": {
+    "testo": " generating stitches…",
+    "file": "App.tsx"
+  },
+  "filum.barre.gradient": {
+    "testo": "Gradient",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.gradient_across_the_shape": {
+    "testo": "Gradient across the shape",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.gradient_drag_hint": {
+    "testo": " · drag the dot (dense) or the ring (open) · drag across the shape again for a new direction",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.gradient_fill_one_colour_dense": {
+    "testo": "Gradient fill: one colour, dense rows opening up along the drag",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.gradient_g_colour_gradients_density": {
+    "testo": "Gradient (G): colour gradients, density gradients and colour blends — drag across a shape",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.gradient_type": {
+    "testo": "Gradient type",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.gradient_v1_mm_shift_45": {
+    "testo": "Gradient {v1} mm · Shift: 45° steps",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.gradients_left_whole.one": {
+    "testo": "{n} gradient, tartan or blend left whole: a layer is locked or hidden",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.gradients_left_whole.other": {
+    "testo": "{n} gradients, tartans or blends left whole: a layer is locked or hidden",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.grey_thread_colours_stand_out": {
+    "testo": "Grey: thread colours stand out against it",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.group": {
+    "testo": "Group",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.heavy": {
+    "testo": "Heavy",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.height_keeps_the_proportions": {
+    "testo": "Height (keeps the proportions)",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.hold": {
+    "testo": "hold",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.hoop": {
+    "testo": "Hoop",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.hoop_name_width_height_mm": {
+    "testo": "Hoop: {name} — {width} × {height} mm",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.how_the_density_changes_along": {
+    "testo": "How the density changes along the drag",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.import": {
+    "testo": "Import",
+    "file": "App.tsx"
+  },
+  "filum.barre.import_artwork_or_embroidery_file": {
+    "testo": "Import artwork or embroidery file",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.in_45_steps": {
+    "testo": "In 45° steps",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.ink_stitch_svg_pes_dst": {
+    "testo": "Ink/Stitch SVG, PES, DST, JEF, EXP, VP3…",
+    "file": "App.tsx"
+  },
+  "filum.barre.inner": {
+    "testo": "inner",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.inner_radius_share_of_the": {
+    "testo": "Inner radius (share of the outer radius)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.intersect_only_where_all_overlap": {
+    "testo": "Intersect: only where all overlap",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.inverted": {
+    "testo": "inverted",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.inverted_round": {
+    "testo": "inverted round",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.join": {
+    "testo": "Join",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.join_two_selected_end_points": {
+    "testo": "Join two selected end points (Shift+J)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.joined_to": {
+    "testo": "Joined to {name}",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.keep_proportions": {
+    "testo": "Keep proportions",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.lay_the_lettering_along_the": {
+    "testo": "Lay the lettering along the selected line (Ink/Stitch lettering along path)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.length_points": {
+    "testo": "{length} points · ",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.lettering": {
+    "testo": "Lettering",
+    "file": "App.tsx"
+  },
+  "filum.barre.lettering_message": {
+    "testo": "Lettering: {message}",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.lettering_t_click_to_place": {
+    "testo": "Lettering (T): click to place, type, then drag the handles",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.lines": {
+    "testo": "Lines",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.lock_the_picture_stays_put": {
+    "testo": "Lock: the picture stays put (unlock it in Layers ▸ References)",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.loops": {
+    "testo": "Loops",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.make_all_v1": {
+    "testo": "Make all {v1}",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.make_it_its_own_shape": {
+    "testo": "Make it its own shape",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.maximize": {
+    "testo": "Maximize",
+    "file": "components/WindowControls.tsx"
+  },
+  "filum.barre.measure": {
+    "testo": "Measure",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.merge": {
+    "testo": "Merge",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.merge_them": {
+    "testo": "Merge them",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.minimize": {
+    "testo": "Minimize",
+    "file": "components/WindowControls.tsx"
+  },
+  "filum.barre.minus_front_the_bottom_shape": {
+    "testo": "Minus front: the bottom shape minus the others",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.mirror": {
+    "testo": "Mirror",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.move": {
+    "testo": "Move",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.move_a_copy": {
+    "testo": "Move a copy",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.move_by_the_title": {
+    "testo": "Move by the title",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.move_it": {
+    "testo": "Move it",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.move_picture": {
+    "testo": "Move picture",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.move_the_dense_end": {
+    "testo": "Move the dense end",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.move_the_open_end": {
+    "testo": "Move the open end",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.move_the_point": {
+    "testo": "Move the point",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.multi_colour_gradients_with_dithering": {
+    "testo": "Multi-colour gradients with dithering (linear, radial, mesh, points)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.n_objects.one": {
+    "testo": "{n} object",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.n_objects.other": {
+    "testo": "{n} objects",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.n_points.one": {
+    "testo": "{n} point",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.n_points.other": {
+    "testo": "{n} points",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.n_selected": {
+    "testo": "{n} selected · ",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.new": {
+    "testo": "New",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.new_line": {
+    "testo": "New line",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.no_smart_guides": {
+    "testo": "No smart guides",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.no_snapping": {
+    "testo": "No snapping",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.nudge": {
+    "testo": "Nudge",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.one_stitch": {
+    "testo": "One stitch",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.opacity": {
+    "testo": "Opacity",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.open": {
+    "testo": "Open",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.open_end": {
+    "testo": "Open end",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.open_the_mountain_badge_demo": {
+    "testo": "Open the mountain badge demo.",
+    "file": "App.tsx"
+  },
+  "filum.barre.opened_the_closed_path_at": {
+    "testo": "Opened the closed path at this point",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.optimise": {
+    "testo": " Optimise",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.options_trim_keep_order_keep": {
+    "testo": "Options: trim, keep order, keep originals",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.outline": {
+    "testo": "Outline",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.output": {
+    "testo": "Output",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.over": {
+    "testo": "Over",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.over_the_stitches_like_tracing": {
+    "testo": "Over the stitches, like tracing paper",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.pan": {
+    "testo": "Pan",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.pan_h_space": {
+    "testo": "Pan (H / Space)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.passes_along_the_line": {
+    "testo": "Passes along the line",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.pen": {
+    "testo": "Pen",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.pen_p_click_for_corners": {
+    "testo": "Pen (P) — click for corners, drag for curves; click first point to close",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.pick_another_satin": {
+    "testo": "Pick another satin",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.pick_inside_a_group": {
+    "testo": "Pick inside a group",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.pivot_for_rotating_and_scaling": {
+    "testo": "Pivot for rotating and scaling · Alt-double-click to reset",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.place_lettering": {
+    "testo": "Place lettering",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.placement": {
+    "testo": "Placement",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.plain_delete": {
+    "testo": "Plain delete",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.points": {
+    "testo": "Points",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.points_2": {
+    "testo": "points",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.polygon": {
+    "testo": "Polygon",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.profile": {
+    "testo": "Profile",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.pull_compensation": {
+    "testo": "Pull compensation",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.realistic_view_3": {
+    "testo": "Realistic view (3)",
+    "file": "App.tsx"
+  },
+  "filum.barre.record_a_stitch_out_video": {
+    "testo": "Record a stitch-out video",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.rectangle": {
+    "testo": "Rectangle",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.rectangle_r": {
+    "testo": "Rectangle (R)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.redwork": {
+    "testo": "Redwork",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.redwork_every_line_sewn_exactly": {
+    "testo": "Redwork: every line sewn exactly twice, out and back — one path without jumps that ends where it began (Ink/Stitch redwork)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.reference_picture": {
+    "testo": "Reference picture",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.remove": {
+    "testo": " Remove",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.remove_it": {
+    "testo": "Remove it",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.remove_picture": {
+    "testo": "Remove picture",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.remove_the_last_point": {
+    "testo": "Remove the last point",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.remove_the_picture_del": {
+    "testo": "Remove the picture (Del)",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.reorder_to_minimise_colour_changes": {
+    "testo": "Reorder to minimise colour changes and jumps (keeps stacking)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.restore_down": {
+    "testo": "Restore down",
+    "file": "components/WindowControls.tsx"
+  },
+  "filum.barre.reverse_direction": {
+    "testo": "Reverse direction",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.ripple_centre": {
+    "testo": "Ripple centre",
+    "file": "canvas/handles.ts"
+  },
+  "filum.barre.rotate": {
+    "testo": "Rotate",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.rotate_in_15_steps": {
+    "testo": "Rotate in 15° steps",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.rotation_shift_15_steps": {
+    "testo": "{rotation}° · Shift: 15° steps",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.round": {
+    "testo": "round",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.round_every_corner": {
+    "testo": "Round every corner",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.round_the_corner": {
+    "testo": "Round the corner",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.row_spacing": {
+    "testo": "Row spacing",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.row_spacing_where_the_fill": {
+    "testo": "Row spacing where the fill is densest",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.row_spacing_where_the_fill_2": {
+    "testo": "Row spacing where the fill is most open",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.ruler_m": {
+    "testo": "Ruler (M)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.run": {
+    "testo": "Run",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.running_stitch": {
+    "testo": "Running stitch",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.sample": {
+    "testo": "Sample",
+    "file": "App.tsx"
+  },
+  "filum.barre.satin_column": {
+    "testo": "Satin column",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.satin_column_s_click_drag": {
+    "testo": "Satin column (S) — click / drag for curves, scroll or [ ] for width, Enter to finish",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.saved": {
+    "testo": "Saved",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.scale": {
+    "testo": "Scale",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.scale_freely": {
+    "testo": "Scale freely",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.scale_from_the_centre": {
+    "testo": "Scale from the centre",
+    "file": "components/StatusHints.tsx"
+  },
   "filum.barre.scroll_to_zoom_drag_to": {
     "testo": "Scroll to zoom · drag to pan · double-click to fit",
     "file": "canvas/DesignView.tsx"
+  },
+  "filum.barre.scrub": {
+    "testo": "Scrub",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.sel_objects_selected": {
+    "testo": "{sel} objects selected",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.select": {
+    "testo": "Select",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.select_a_closed_shape_or": {
+    "testo": "Select a closed shape (or start the drag on one)",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.select_a_closed_shape_then": {
+    "testo": "Select a closed shape, then drag across it to set the direction (Shift: 45° steps)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.select_a_closed_shape_then_2": {
+    "testo": "Select a closed shape, then drag across it",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.select_a_point": {
+    "testo": "Select a point",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.select_a_shape": {
+    "testo": "Select a shape",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.select_all": {
+    "testo": "Select all",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.select_an_object_to_edit": {
+    "testo": "Select an object to edit its stitch settings",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.select_or_start_on_a": {
+    "testo": "Select or start on a closed shape",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.select_overlapping_fills_shift_click": {
+    "testo": "Select overlapping fills (Shift-click to add), then drag across regions to merge them",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.select_v": {
+    "testo": "Select (V)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.sewn_in_n_blocks": {
+    "testo": " · sewn in {n} blocks",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.shape": {
+    "testo": "Shape",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.shape_builder": {
+    "testo": "Shape builder",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.shape_builder_b_drag_across": {
+    "testo": "Shape builder (B): drag across overlapping regions to merge them, Alt to delete",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.shape_builder_message": {
+    "testo": "Shape builder: {message}",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.shape_builder_n.one": {
+    "testo": "Shape builder · {n} shape",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.shape_builder_n.other": {
+    "testo": "Shape builder · {n} shapes",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.shift_all_corners": {
+    "testo": " · Shift: all corners",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.shift_straight_ctrl_no_snapping": {
+    "testo": " · Shift: straight · Ctrl: no snapping",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.shortcuts": {
+    "testo": "Shortcuts",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.show_only_the_active_colour": {
+    "testo": "Show only the active colour (dim the others)",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.sides": {
+    "testo": "Sides",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.sides_2": {
+    "testo": "sides",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.single_running_stitch": {
+    "testo": "Single running stitch",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.skew": {
+    "testo": "Skew",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.skew_v1": {
+    "testo": "Skew {v1}°",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.smooth": {
+    "testo": "Smooth",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.smooth_corner": {
+    "testo": "Smooth ↔ corner",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.smooth_handles_in_line_shift": {
+    "testo": "Smooth: handles in line (Shift+S)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.smooth_point": {
+    "testo": "Smooth point",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.smoothing": {
+    "testo": "Smoothing",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.snapped": {
+    "testo": " · snapped",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.spacing_v1_mm": {
+    "testo": "Spacing {v1} mm",
+    "file": "canvas/handles.ts"
+  },
+  "filum.barre.split_into_two_objects": {
+    "testo": "Split into two objects",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.split_it": {
+    "testo": "Split it",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.spread": {
+    "testo": "Spread ",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.square_regular": {
+    "testo": "Square / regular",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.stabiliser_the_line_trails_the": {
+    "testo": "Stabiliser: the line trails the pointer and is fitted with smooth curves",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.star": {
+    "testo": "Star",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.start_a_design": {
+    "testo": "Start a design",
+    "file": "App.tsx"
+  },
+  "filum.barre.start_end": {
+    "testo": "Start · end",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.start_point": {
+    "testo": "Start point",
+    "file": "canvas/handles.ts"
+  },
+  "filum.barre.start_the_path": {
+    "testo": "Start the path",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.start_with_a_corner": {
+    "testo": "Start with a corner",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.start_with_a_curve": {
+    "testo": "Start with a curve",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.stitch": {
+    "testo": "Stitch",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.stitch_direction": {
+    "testo": " Stitch direction",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.stitch_direction_d_drag_across": {
+    "testo": "Stitch direction (D): drag across a satin to guide its stitch angle, drag an end to turn it, Alt-click to delete",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.stitch_length": {
+    "testo": "Stitch length",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.stitch_type": {
+    "testo": "Stitch type",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.stitch_view_2": {
+    "testo": "Stitch view (2)",
+    "file": "App.tsx"
+  },
+  "filum.barre.stitches": {
+    "testo": " stitches",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.straight_only": {
+    "testo": "Straight only",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.straight_segments": {
+    "testo": "Straight segments",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.straight_segments_between_the_selected": {
+    "testo": "Straight segments between the selected points (Shift+L)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.straighten_rotation": {
+    "testo": "Straighten ({rotation}°)",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.symmetric": {
+    "testo": "Symmetric",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.symmetric_handles_in_line_and": {
+    "testo": "Symmetric: handles in line and of equal length (Shift+Y)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.tasto.arrows": {
+    "testo": "Arrows",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.backspace": {
+    "testo": "Backspace",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.dblclick": {
+    "testo": "DblClick",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.del": {
+    "testo": "Del",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.double_click": {
+    "testo": "Double-click",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.drag": {
+    "testo": "Drag",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.end": {
+    "testo": "End",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.enter": {
+    "testo": "Enter",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.home": {
+    "testo": "Home",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.lmb": {
+    "testo": "LMB",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.mmb": {
+    "testo": "MMB",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.rmb": {
+    "testo": "RMB",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.space": {
+    "testo": "Space",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.type": {
+    "testo": "Type",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.wheel": {
+    "testo": "Wheel",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.text_on_path": {
+    "testo": "Text on path",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.the_mesh_border_stays_alt": {
+    "testo": "The mesh border stays — Alt-click an inner node to remove its lines",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.the_mesh_border_stays_select": {
+    "testo": "The mesh border stays — select an inner node",
+    "file": "App.tsx"
+  },
+  "filum.barre.the_path": {
+    "testo": "the path",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.the_result_is_a_clean": {
+    "testo": "The result is a clean Bézier path — edit it with the node tool (A)",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.thread_click": {
+    "testo": "\nClick: select its objects",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.thread_colours": {
+    "testo": "Thread colours",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.thread_colours_2": {
+    "testo": "Thread colours…",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.thread_double_click": {
+    "testo": " · double-click: thread colours",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.thread_stats": {
+    "testo": "\n{stitches} stitches · {metres} m",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.tools": {
+    "testo": "Tools",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.trace_over_it_with_the": {
+    "testo": "Trace over it with the pen and node tools — never stitched",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.triple": {
+    "testo": "Triple",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.triple_bean_stitch": {
+    "testo": "Triple (bean) stitch",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.triple_bean_stitch_bold_outlines": {
+    "testo": "Triple (bean) stitch: bold outlines",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.turn_a_logo_or_picture": {
+    "testo": "Turn a logo or picture into stitches.",
+    "file": "App.tsx"
+  },
+  "filum.barre.turn_it": {
+    "testo": "Turn it",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.turn_the_picture_into_stitches": {
+    "testo": "Turn the picture into stitches",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.underlay": {
+    "testo": "Underlay",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.underlay_2": {
+    "testo": " Underlay",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.underlay_automatic_by_the_shape": {
+    "testo": "Underlay: automatic (by the shape and the fabric)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.unite_one_shape_of_all": {
+    "testo": "Unite: one shape of all",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.v1_v2_mm_shift_free": {
+    "testo": "{v1} × {v2} mm · Shift: free aspect",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.v1_v2_mm_v3": {
+    "testo": " · {v1}×{v2} mm · {v3}",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.v1_v2_mm_v3_v4": {
+    "testo": "{v1} × {v2} mm · {v3} % × {v4} %",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.vector_view_1": {
+    "testo": "Vector view (1)",
+    "file": "App.tsx"
+  },
+  "filum.barre.video": {
+    "testo": "Video",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.view_mode": {
+    "testo": "View mode",
+    "file": "App.tsx"
+  },
+  "filum.barre.wheel": {
+    "testo": "wheel",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.width": {
+    "testo": "Width",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.width_height_mm": {
+    "testo": "{width} × {height} mm",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.width_height_mm_width_height": {
+    "testo": "{width} × {height} mm (width × height)",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.width_keeps_the_proportions": {
+    "testo": "Width (keeps the proportions)",
+    "file": "components/ReferenceBar.tsx"
+  },
+  "filum.barre.width_of_the_next_point": {
+    "testo": "Width of the next point (scroll or [ ])",
+    "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.width_v1_mm": {
+    "testo": "Width {v1} mm",
+    "file": "canvas/handles.ts"
+  },
+  "filum.barre.width_v1_mm_scroll_or": {
+    "testo": "Width {v1} mm · scroll or [ ] to change",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.zig_zag_spacing": {
+    "testo": "Zig-zag spacing",
+    "file": "components/Bars.tsx"
+  },
+  "filum.barre.zoom": {
+    "testo": "Zoom",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.zoom_1_actual_size": {
+    "testo": "Zoom 1× (actual size)",
+    "file": "components/BottomBar.tsx"
+  },
+  "filum.barre.zoom_z": {
+    "testo": "Zoom {z}×",
+    "file": "components/BottomBar.tsx"
   },
   "filum.dati.ballpoint_70_10_75_11": {
     "testo": "Ballpoint 70/10–75/11",
@@ -3339,6 +5071,10 @@
     "testo": "Zoom out",
     "file": "components/menuModel.ts"
   },
+  "filum.pannelli.choose_a_satin_column": {
+    "testo": "Choose a satin column",
+    "file": "components/SatinGuides.tsx"
+  },
   "filum.pannelli.close": {
     "testo": "Close",
     "file": "components/ui.tsx"
@@ -3358,5 +5094,53 @@
   "filum.pannelli.drag_to_move_double_click_2": {
     "testo": "Drag to move · double-click: back to its place",
     "file": "components/ui.tsx"
+  },
+  "filum.pannelli.sfumatura.conic": {
+    "testo": "Conic",
+    "file": "components/GradientPanel.tsx"
+  },
+  "filum.pannelli.sfumatura.conic_hint": {
+    "testo": "Sweeps around the start",
+    "file": "components/GradientPanel.tsx"
+  },
+  "filum.pannelli.sfumatura.freeform": {
+    "testo": "Points",
+    "file": "components/GradientPanel.tsx"
+  },
+  "filum.pannelli.sfumatura.freeform_hint": {
+    "testo": "Freeform colour points, each with its own spread — click the shape to add points",
+    "file": "components/GradientPanel.tsx"
+  },
+  "filum.pannelli.sfumatura.linear": {
+    "testo": "Linear",
+    "file": "components/GradientPanel.tsx"
+  },
+  "filum.pannelli.sfumatura.linear_hint": {
+    "testo": "Straight from start to end",
+    "file": "components/GradientPanel.tsx"
+  },
+  "filum.pannelli.sfumatura.mesh": {
+    "testo": "Mesh",
+    "file": "components/GradientPanel.tsx"
+  },
+  "filum.pannelli.sfumatura.mesh_hint": {
+    "testo": "Gradient mesh: a grid of colour nodes blended smoothly — click inside to add mesh lines, drag nodes to warp",
+    "file": "components/GradientPanel.tsx"
+  },
+  "filum.pannelli.sfumatura.radial": {
+    "testo": "Radial",
+    "file": "components/GradientPanel.tsx"
+  },
+  "filum.pannelli.sfumatura.radial_hint": {
+    "testo": "Circles around the start",
+    "file": "components/GradientPanel.tsx"
+  },
+  "filum.pannelli.sfumatura.reflected": {
+    "testo": "Reflect",
+    "file": "components/GradientPanel.tsx"
+  },
+  "filum.pannelli.sfumatura.reflected_hint": {
+    "testo": "Mirrored around the start",
+    "file": "components/GradientPanel.tsx"
   }
 }
