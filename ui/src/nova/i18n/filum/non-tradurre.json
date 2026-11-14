@@ -42,7 +42,21 @@
     "Home": "nome del tasto",
     "End": "nome del tasto",
     "Video": "uguale in italiano",
-    "Zoom": "uguale in italiano"
+    "Zoom": "uguale in italiano",
+    "cm": "unità di misura",
+    "dpi": "unità di misura",
+    "m": "unità di misura (metri)",
+    "s": "unità di misura (secondi)",
+    "GNU General Public License": "nome della licenza",
+    "MIT, Apache-2.0": "nomi di licenze",
+    "SIL OFL": "nome della licenza",
+    "Knockdown": "termine del ricamo usato anche in italiano (glossario)",
+    "Letter": "formato di carta americano, si chiama così anche in italiano",
+    "zip": "estensione di file",
+    "Shift+← / Shift+→": "scorciatoie",
+    "JavaScript": "nome di un linguaggio di programmazione (scheda della finestra Licenze)",
+    "Rust": "nome di un linguaggio di programmazione (scheda della finestra Licenze)",
+    "satin": "punto satin: in italiano si dice così (glossario)"
   },
   "chiavi_con_filum": {
     "filum.menu.about_filum": "la voce apre la finestra Informazioni, che parla di Filum e non usa {app} (decisione dell'Architetto, 13/11)"

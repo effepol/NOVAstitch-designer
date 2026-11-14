@@ -13,7 +13,7 @@ import { patternSatin, SATIN_PATTERNS, type SatinPattern, type ZigzagPattern } f
 import { applies, applyPlan, DEFAULT_CONVERT, planConversion, UNDERLAYS, type ConvertId, type ConvertOptions, type ConvertPlan } from "../lib/convertActions";
 import { Dialog, Num, Row, Slider, Toggle } from "./ui";
 import { safeSetItem } from "../lib/storage";
-import { withTexts } from "../nova/i18n/filum";
+import { t, withTexts } from "../nova/i18n/filum";
 
 const KEY = "filum.convert";
 let pending: ConvertId | null = null;
@@ -100,9 +100,9 @@ const outlineOf = (paths: SubPath[]) => {
 const polyline = (pts: Vec2[]) => pts.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join("");
 
 const ZIGZAGS: { id: ZigzagPattern; label: string; pts: Vec2[]; title: string }[] = [
-  { id: "square", label: "Square", title: "|_|▔|_| — four points per stitch block", pts: [[3, 22], [3, 10], [9, 10], [9, 22], [15, 22], [15, 10], [21, 10], [21, 22], [27, 22], [27, 10]] },
-  { id: "sawtooth", label: "Sawtooth", title: "|/|/| — every point on the other rail", pts: [[3, 22], [6, 10], [10, 22], [13, 10], [17, 22], [20, 10], [24, 22], [27, 10]] },
-  { id: "zigzag", label: "Zig-zag", title: "VVV — the stitches follow the drawn line", pts: [[3, 22], [7, 10], [11, 22], [15, 10], [19, 22], [23, 10], [27, 22]] },
+  { id: "square", get label() { return t("filum.finestre.square"); }, get title() { return t("filum.finestre.____four_points_per"); }, pts: [[3, 22], [3, 10], [9, 10], [9, 22], [15, 22], [15, 10], [21, 10], [21, 22], [27, 22], [27, 10]] },
+  { id: "sawtooth", get label() { return t("filum.finestre.sawtooth"); }, get title() { return t("filum.finestre.every_point_on_the_other"); }, pts: [[3, 22], [6, 10], [10, 22], [13, 10], [17, 22], [20, 10], [24, 22], [27, 10]] },
+  { id: "zigzag", label: "Zig-zag", get title() { return t("filum.finestre.vvv_the_stitches_follow_the"); }, pts: [[3, 22], [7, 10], [11, 22], [15, 10], [19, 22], [23, 10], [27, 22]] },
 ];
 
 export function ConvertDialog({ onClose }: { onClose: () => void }) {
@@ -198,21 +198,21 @@ export function ConvertDialog({ onClose }: { onClose: () => void }) {
   return (
     <Dialog
       live
-      title="Convert shapes"
+      title={t("filum.finestre.convert_shapes")}
       onClose={onClose}
       wide
       footer={
         <>
           <label className="fx-preview">
-            <Toggle on={preview} onChange={setPreview} /> Preview
+            <Toggle on={preview} onChange={setPreview} />{t("filum.finestre.preview")}
           </label>
-          <span className="stat">{busy ? "Working…" : error ? "" : plan?.summary}</span>
+          <span className="stat">{busy ? t("filum.finestre.working") : error ? "" : plan?.summary}</span>
           <div className="spacer" />
           <button className="btn" onClick={onClose}>
-            Cancel
+            {t("filum.finestre.cancel")}
           </button>
           <button className="btn primary" disabled={!plan || busy} onClick={apply}>
-            Apply
+            {t("filum.finestre.apply")}
           </button>
         </>
       }
@@ -232,30 +232,30 @@ export function ConvertDialog({ onClose }: { onClose: () => void }) {
           {error && <p className="hint warn">{error}</p>}
           {id === "fillToSatin" && (
             <>
-              <p className="hint">Select the fill together with lines drawn right across it (rungs): each rung crosses the outline twice and sets the stitch direction there. Where more than two rungs meet one part, the satins end.</p>
-              <Row label="Start / end at rung" title="Leave out the rounded ends: the satins start and end at the first and last rung (needs at least two rungs)">
+              <p className="hint">{t("filum.finestre.select_the_fill_together_with")}</p>
+              <Row label={t("filum.finestre.start_end_at_rung")} title={t("filum.finestre.leave_out_the_rounded_ends")}>
                 <Toggle on={o.fillToSatin.skipEndSection} onChange={(v) => set("fillToSatin", { skipEndSection: v })} />
               </Row>
-              <Row label="Underlay">
+              <Row label={t("filum.finestre.underlay")}>
                 <div className="seg">
-                  {UNDERLAYS.map(([k, label, , title]) => (
+                  {UNDERLAYS().map(([k, label, , title]) => (
                     <button key={k} title={title} className={o.fillToSatin.underlay === k ? "on" : ""} onClick={() => set("fillToSatin", { underlay: k })}>
                       {label}
                     </button>
                   ))}
                 </div>
               </Row>
-              <Row label="Pull compensation" title="Widen the columns so they keep the shape's width once sewn">
+              <Row label={t("filum.finestre.pull_compensation")} title={t("filum.finestre.widen_the_columns_so_they")}>
                 <Num value={o.fillToSatin.pullComp} unit="mm" step={0.05} min={-10} max={10} onChange={(v) => set("fillToSatin", { pullComp: v })} />
               </Row>
-              <Row label="Keep" title="What stays of the selection besides the new satins">
+              <Row label={t("filum.finestre.keep")} title={t("filum.finestre.what_stays_of_the_selection")}>
                 <div className="seg">
                   {(
                     [
-                      ["unused", "Unconverted parts", "Parts of the fill no rung crosses stay a fill"],
-                      ["none", "Nothing", "Remove the fills and the rungs"],
-                      ["fills", "Fills", "Keep the fills, remove the rungs"],
-                      ["all", "All", "Keep the fills and the rungs"],
+                      ["unused", t("filum.finestre.unconverted_parts"), t("filum.finestre.parts_of_the_fill_no")],
+                      ["none", t("filum.finestre.nothing"), t("filum.finestre.remove_the_fills_and_the")],
+                      ["fills", t("filum.finestre.fills"), t("filum.finestre.keep_the_fills_remove_the")],
+                      ["all", t("filum.finestre.all"), t("filum.finestre.keep_the_fills_and_the")],
                     ] as const
                   ).map(([k, label, title]) => (
                     <button key={k} title={title} className={o.fillToSatin.keep === k ? "on" : ""} onClick={() => set("fillToSatin", { keep: k })}>
@@ -268,40 +268,40 @@ export function ConvertDialog({ onClose }: { onClose: () => void }) {
           )}
           {id === "fillToStroke" && (
             <>
-              <Row label="Stitch as" title="Running stitch along the centre lines, or satins as wide as the shape">
+              <Row label={t("filum.finestre.stitch_as")} title={t("filum.finestre.running_stitch_along_the_centre")}>
                 <div className="seg">
                   <button className={o.fillToStroke.output === "running" ? "on" : ""} onClick={() => set("fillToStroke", { output: "running" })}>
-                    Running stitch
+                    {t("filum.finestre.running_stitch")}
                   </button>
                   <button className={o.fillToStroke.output === "satin" ? "on" : ""} onClick={() => set("fillToStroke", { output: "satin" })}>
                     Satin
                   </button>
                 </div>
               </Row>
-              <Row label="Dead ends under" title="Side branches shorter than this are removed — about the line width of the shape works in most cases">
+              <Row label={t("filum.finestre.dead_ends_under")} title={t("filum.finestre.side_branches_shorter_than_this")}>
                 <Slider min={0} max={30} step={0.5} unit="mm" value={o.fillToStroke.deadEnd} onChange={(v) => set("fillToStroke", { deadEnd: v })} />
               </Row>
-              <Row label="Keep original" title="Keep the fill (and the cut lines)">
+              <Row label={t("filum.finestre.keep_original")} title={t("filum.finestre.keep_the_fill_and_the")}>
                 <Toggle on={o.fillToStroke.keepOriginal} onChange={(v) => set("fillToStroke", { keepOriginal: v })} />
               </Row>
               {hasCutLines && (
-                <Row label="Close gaps at cuts" title="Lines ending at a cut line are joined to the line beyond it">
+                <Row label={t("filum.finestre.close_gaps_at_cuts")} title={t("filum.finestre.lines_ending_at_a_cut")}>
                   <Toggle on={o.fillToStroke.closeGaps} onChange={(v) => set("fillToStroke", { closeGaps: v })} />
                 </Row>
               )}
-              <p className="hint">{hasCutLines ? "The selected lines cut the shape apart first — use them to split crossings or set where lines end." : "Tip: select lines with the shape to cut it apart first (where lines should end or cross)."}</p>
+              <p className="hint">{hasCutLines ? t("filum.finestre.the_selected_lines_cut_the") : t("filum.finestre.tip_select_lines_with_the")}</p>
             </>
           )}
           {id === "satinToStroke" && (
-            <Row label="Keep satin" title="Keep the satin column too (the running stitch is sewn first)">
+            <Row label={t("filum.finestre.keep_satin")} title={t("filum.finestre.keep_the_satin_column_too")}>
               <Toggle on={o.satinToStroke.keepSatin} onChange={(v) => set("satinToStroke", { keepSatin: v })} />
             </Row>
           )}
           {id === "satinToRails" && (
             <>
-              <p className="hint">The satin keeps its width and settings; rungs sit away from sharp corners. Edit the rails and rungs with the node tool (A).</p>
+              <p className="hint">{t("filum.finestre.the_satin_keeps_its_width")}</p>
               {hasLines && (
-                <Row label="Width of lines" title="Column width for selected running-stitch lines (satins keep theirs)">
+                <Row label={t("filum.finestre.width_of_lines")} title={t("filum.finestre.column_width_for_selected_running")}>
                   <Num value={o.satinToRails.width} unit="mm" step={0.1} min={0.3} max={20} onChange={(v) => set("satinToRails", { width: v })} />
                 </Row>
               )}
@@ -319,14 +319,14 @@ export function ConvertDialog({ onClose }: { onClose: () => void }) {
                   </button>
                 ))}
               </div>
-              <Row label="Smoothing" title="Smooth curves through the rail points (draw a doubled point to keep a corner)">
+              <Row label={t("filum.finestre.smoothing")} title={t("filum.finestre.smooth_curves_through_the_rail")}>
                 <Toggle on={o.zigzagToSatin.smoothing} onChange={(v) => set("zigzagToSatin", { smoothing: v })} />
               </Row>
-              <Row label="Rungs" title="Keep the stitch direction of the drawing">
+              <Row label={t("filum.finestre.rungs")} title={t("filum.finestre.keep_the_stitch_direction_of")}>
                 <Toggle on={o.zigzagToSatin.rungs} onChange={(v) => set("zigzagToSatin", { rungs: v })} />
               </Row>
               {o.zigzagToSatin.rungs && o.zigzagToSatin.pattern !== "zigzag" && (
-                <Row label="Fewer rungs" title="Every other rung only">
+                <Row label={t("filum.finestre.fewer_rungs")} title={t("filum.finestre.every_other_rung_only")}>
                   <Toggle on={o.zigzagToSatin.reduceRungs} onChange={(v) => set("zigzagToSatin", { reduceRungs: v })} />
                 </Row>
               )}
@@ -344,71 +344,71 @@ export function ConvertDialog({ onClose }: { onClose: () => void }) {
                   </button>
                 ))}
               </div>
-              <Row label="Min width" title="The narrowest point of the column">
+              <Row label={t("filum.finestre.min_width")} title={t("filum.finestre.the_narrowest_point_of_the")}>
                 <Slider min={0.5} max={20} step={0.1} unit="mm" value={o.patternSatin.minWidth} onChange={(v) => set("patternSatin", { minWidth: v })} />
               </Row>
               {o.patternSatin.pattern !== "normal" && (
-                <Row label="Max width" title="The widest point of the column">
+                <Row label={t("filum.finestre.max_width")} title={t("filum.finestre.the_widest_point_of_the")}>
                   <Slider min={0.5} max={30} step={0.1} unit="mm" value={o.patternSatin.maxWidth} onChange={(v) => set("patternSatin", { maxWidth: v })} />
                 </Row>
               )}
-              <Row label="Repeat length" title="Length of one pattern repeat along the line">
+              <Row label={t("filum.finestre.repeat_length")} title={t("filum.finestre.length_of_one_pattern_repeat")}>
                 <Slider min={1} max={60} step={0.5} unit="mm" value={o.patternSatin.length} onChange={(v) => set("patternSatin", { length: v })} />
               </Row>
-              <Row label="Stretch to fit" title="Stretch the repeats so they fill the line exactly (off: whole repeats, the rest of the line stays free)">
+              <Row label={t("filum.finestre.stretch_to_fit")} title={t("filum.finestre.stretch_the_repeats_so_they")}>
                 <Toggle on={o.patternSatin.stretched} onChange={(v) => set("patternSatin", { stretched: v })} />
               </Row>
-              <Row label="Rungs" title="A rung in every repeat: the stitch angle follows the pattern">
+              <Row label={t("filum.finestre.rungs")} title={t("filum.finestre.a_rung_in_every_repeat")}>
                 <Toggle on={o.patternSatin.rungs} onChange={(v) => set("patternSatin", { rungs: v })} />
               </Row>
             </>
           )}
           {id === "breakApart" && (
             <>
-              <Row label="Method" title="How overlapping sub-paths are treated">
+              <Row label={t("filum.finestre.method")} title={t("filum.finestre.how_overlapping_sub_paths_are")}>
                 <div className="seg">
-                  <button title="Every sub-path is a shape of its own; shapes inside others become their holes" className={o.breakApart.method === "simple" ? "on" : ""} onClick={() => set("breakApart", { method: "simple" })}>
-                    Simple
+                  <button title={t("filum.finestre.every_sub_path_is_a")} className={o.breakApart.method === "simple" ? "on" : ""} onClick={() => set("breakApart", { method: "simple" })}>
+                    {t("filum.finestre.simple")}
                   </button>
-                  <button title="Overlapping sub-paths cancel out where they overlap" className={o.breakApart.method === "complex" ? "on" : ""} onClick={() => set("breakApart", { method: "complex" })}>
-                    Complex
+                  <button title={t("filum.finestre.overlapping_sub_paths_cancel_out")} className={o.breakApart.method === "complex" ? "on" : ""} onClick={() => set("breakApart", { method: "complex" })}>
+                    {t("filum.finestre.complex")}
                   </button>
                 </div>
               </Row>
-              <Row label="Remove smaller than" title="Shapes and holes smaller than this are removed">
+              <Row label={t("filum.finestre.remove_smaller_than")} title={t("filum.finestre.shapes_and_holes_smaller_than")}>
                 <Num value={o.breakApart.minArea} unit="mm²" step={0.5} min={0.05} max={100} onChange={(v) => set("breakApart", { minArea: v })} />
               </Row>
-              <p className="hint">A shape that is already one clean outline with holes is left as it is.</p>
+              <p className="hint">{t("filum.finestre.a_shape_that_is_already")}</p>
             </>
           )}
           {id === "connectLines" && (
             <>
-              <Row label="Join ends within" title="Line ends closer than this meet (they move to their middle)">
+              <Row label={t("filum.finestre.join_ends_within")} title={t("filum.finestre.line_ends_closer_than_this")}>
                 <Num value={o.connectLines.join} unit="mm" step={0.1} min={0.01} max={5} digits={2} onChange={(v) => set("connectLines", { join: v })} />
               </Row>
-              <Row label="Bridge gaps up to" title="Loose ends this close are joined by a short straight line (0: never)">
+              <Row label={t("filum.finestre.bridge_gaps_up_to")} title={t("filum.finestre.loose_ends_this_close_are")}>
                 <Num value={o.connectLines.bridge} unit="mm" step={0.5} min={0} max={50} digits={1} onChange={(v) => set("connectLines", { bridge: v })} />
               </Row>
-              <Row label="Straight through" title="Where lines cross or branch, go on along the straightest one (else: any)">
+              <Row label={t("filum.finestre.straight_through")} title={t("filum.finestre.where_lines_cross_or_branch")}>
                 <Toggle on={o.connectLines.straight} onChange={(v) => set("connectLines", { straight: v })} />
               </Row>
-              <Row label="Leave out doubled" title="Pieces lying on top of another piece are left out">
+              <Row label={t("filum.finestre.leave_out_doubled")} title={t("filum.finestre.pieces_lying_on_top_of")}>
                 <Toggle on={o.connectLines.dropDoubled} onChange={(v) => set("connectLines", { dropDoubled: v })} />
               </Row>
-              <p className="hint">Lines of one colour and stitch are connected together. Each piece is sewn once: a network that branches needs a line per pair of loose ends.</p>
+              <p className="hint">{t("filum.finestre.lines_of_one_colour_and")}</p>
             </>
           )}
           {id === "dedupe" && (
             <>
-              <Row label="Distance" title="A point closer than this to an earlier point is removed">
+              <Row label={t("filum.finestre.distance")} title={t("filum.finestre.a_point_closer_than_this")}>
                 <Num value={o.dedupe.distance} unit="mm" step={0.01} min={0} max={10} digits={3} onChange={(v) => set("dedupe", { distance: v })} />
               </Row>
-              <Row label="Look back" title="Compare with this many points before it">
+              <Row label={t("filum.finestre.look_back")} title={t("filum.finestre.compare_with_this_many_points")}>
                 <Num value={o.dedupe.window} step={1} min={1} max={5000} digits={0} onChange={(v) => set("dedupe", { window: Math.round(v) })} />
               </Row>
             </>
           )}
-          {!sel.length && <p className="hint warn">Select the objects to convert first.</p>}
+          {!sel.length && <p className="hint warn">{t("filum.finestre.select_the_objects_to_convert")}</p>}
         </div>
       </div>
     </Dialog>
@@ -432,13 +432,13 @@ export function ConvertMenuButton({ objects }: { objects: DesignObject[] }) {
     <>
       <button
         className="btn sm ghost convert-btn"
-        title="Convert the selection: fill ↔ satin, centre lines, rails, patterned satins, repair"
+        title={t("filum.finestre.convert_the_selection_fill_satin")}
         onClick={(e) => {
           const r = e.currentTarget.getBoundingClientRect();
           setAt(at ? null : { x: r.left, y: r.bottom + 4 });
         }}
       >
-        <ArrowRightLeft size={13} /> Convert <ChevronDown size={11} />
+        <ArrowRightLeft size={13} />{t("filum.finestre.convert")}<ChevronDown size={11} />
       </button>
       {at && (
         <div className="menu convert-menu" style={{ left: at.x, top: at.y }}>

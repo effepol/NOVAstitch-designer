@@ -52,8 +52,8 @@ function hintsFor(s: ReturnType<typeof useStore.getState>): Hint[] {
             [["Shift", "Drag", "outside corner"], t("filum.barre.rotate_in_15_steps")],
             [["Ctrl", "Drag"], t("filum.barre.no_smart_guides")],
             [["DblClick"], t("filum.barre.edit_nodes")],
-            [["Arrows"], `Nudge ${s.prefs.nudge} mm`],
-            [["Shift", "Arrows"], `Nudge ${s.prefs.nudgeBig} mm`],
+            [["Arrows"], t("filum.barre.nudge_mm", { mm: s.prefs.nudge })],
+            [["Shift", "Arrows"], t("filum.barre.nudge_mm", { mm: s.prefs.nudgeBig })],
             [["[", "]"], t("filum.barre.fill_angle_satin_width")],
             [["Del"], t("filum.barre.delete")],
             [[mod, "D"], t("filum.barre.duplicate")],
@@ -71,14 +71,14 @@ function hintsFor(s: ReturnType<typeof useStore.getState>): Hint[] {
       if (!sel) return [[["LMB"], t("filum.barre.choose_a_shape_to_edit")], [["Esc"], t("filum.barre.back_to_select")]];
       return s.nodeSel.length
         ? [
-            [["Drag"], `Move ${s.nodeSel.length} point${s.nodeSel.length > 1 ? "s" : ""}`],
+            [["Drag"], tn("filum.barre.move_n_points", s.nodeSel.length)],
             [["Shift", "Drag"], t("filum.barre.straight_only")],
             [["Ctrl", "Drag"], t("filum.barre.no_snapping")],
             [["Shift", "LMB"], t("filum.barre.add_remove_a_point")],
             [["Shift", "Drag"], t("filum.barre.box_add_points")],
             [["Alt", "Drag"], t("filum.barre.box_remove_points")],
-            [["Arrows"], `Nudge ${s.prefs.nodeNudge} mm`],
-            [["Shift", "Arrows"], `Nudge ${s.prefs.nodeNudgeBig} mm`],
+            [["Arrows"], t("filum.barre.nudge_mm", { mm: s.prefs.nodeNudge })],
+            [["Shift", "Arrows"], t("filum.barre.nudge_mm", { mm: s.prefs.nodeNudgeBig })],
             [["Del"], t("filum.barre.delete_keep_the_shape")],
             [["Shift", "Del"], t("filum.barre.plain_delete")],
             [["Shift", "C"], t("filum.barre.corner")],

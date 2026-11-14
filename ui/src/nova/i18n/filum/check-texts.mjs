@@ -33,7 +33,7 @@ const ts = require("typescript");
 const json = (f) => JSON.parse(readFileSync(path.join(here, f), "utf8"));
 
 /** Attributi e proprietà che finiscono a schermo. */
-const VISIBLE_NAME = /^(title|placeholder|alt|label|hint|tip|tooltip|caption|heading|subtitle|text|desc|description|help|note|message|empty|emptyText|confirmText|okText|cancelText|unit|suffix|prefix|aria-(label|description|roledescription|valuetext|placeholder)|[a-z]+(Label|Title|Hint|Text|Tip|Message))$/;
+const VISIBLE_NAME = /^(title|placeholder|alt|label|hint|tip|tooltip|caption|heading|subtitle|group|text|desc|description|help|note|message|empty|emptyText|confirmText|okText|cancelText|unit|suffix|prefix|aria-(label|description|roledescription|valuetext|placeholder)|[a-z]+(Label|Title|Hint|Text|Tip|Message))$/;
 /** Funzioni il cui primo argomento è un messaggio per l'utente. */
 const MESSAGE_FN = /^(toast|alert|confirm|prompt|setError|setStatus|setMessage|setNote|setWarning|notify|ask)$/;
 const LETTER = /\p{L}/u;
@@ -110,7 +110,7 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
     if (ts.isCallExpression(node)) {
       const callee = node.expression;
       const fn = ts.isIdentifier(callee) ? callee.text : ts.isPropertyAccessExpression(callee) ? callee.name.text : null;
-      if (fn === "t" || fn === "tn") {
+      if (fn === "t" || fn === "tn" || fn === "tx" || fn === "tData") {
         // fuori da ogni funzione t() gira una volta sola, al caricamento, prima che la lingua sia scelta
         let up = node.parent;
         while (up && !ts.isFunctionLike(up)) up = up.parent;
@@ -137,6 +137,7 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
       // elenchi di etichette: ["axis", "Per shape", "…"], ["Sew the swatch", "Measure it"]
       for (const el of node.elements)
         if ((ts.isStringLiteral(el) || ts.isNoSubstitutionTemplateLiteral(el)) && LOOKS_LIKE_TEXT(el.text)) strings(el, "testo in un elenco");
+        else if (ts.isTemplateExpression(el) && LOOKS_LIKE_TEXT(el.head.text)) strings(el, "testo in un elenco");
     } else if (ts.isPropertyAssignment(node)) {
       const name = nameOf(node.name);
       if (name && (VISIBLE_NAME.test(name) || propsOf.has(name))) strings(node.initializer, `proprietà ${name}`);

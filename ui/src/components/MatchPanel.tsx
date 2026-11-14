@@ -9,6 +9,7 @@ import { fitTargetId, loadMatchOptions, myLines, previewFit, saveMatchOptions, u
 import { MATCH_PRESETS, type MatchOptions } from "../lib/threadMatch";
 import { useStore } from "../store";
 import { Grip, Num, Row, Slider, Toggle, useMovable } from "./ui";
+import { t } from "../nova/i18n/filum";
 
 /** The match options, shared by the panel and the fit (localStorage). */
 export function useMatchOptions(): [MatchOptions, (p: Partial<MatchOptions>, preset?: MatchOptions["preset"]) => void] {
@@ -30,7 +31,7 @@ export function MatchButton({ target, opts, set }: { target: FitTarget; opts: Ma
   const btn = useRef<HTMLButtonElement>(null);
   return (
     <>
-      <button ref={btn} className={`btn sm ${open ? "on" : ""}`} onClick={() => setOpen((v) => !v)} title="How threads are matched to spools">
+      <button ref={btn} className={`btn sm ${open ? "on" : ""}`} onClick={() => setOpen((v) => !v)} title={t("filum.finestre.how_threads_are_matched_to")}>
         <SlidersHorizontal size={13} /> {presetLabel(opts.preset)}
         <ChevronDown size={12} />
       </button>
@@ -76,7 +77,7 @@ function MatchPanel({ anchor, target, opts, set, onClose }: { anchor: HTMLElemen
   }, [fitTargetId(target), opts, doc]);
   return createPortal(
     <div className="match-panel" ref={ref} style={{ ...pos, transform: mv.moved ? `translate(${mv.off[0]}px, ${mv.off[1]}px)` : undefined }} data-movable>
-      <Grip grip={mv.grip} label="Thread matching" />
+      <Grip grip={mv.grip} label={t("filum.finestre.thread_matching")} />
       <div className="mp-presets">
         {MATCH_PRESETS.map((p) => (
           <button key={p.id} className={opts.preset === p.id ? "on" : ""} title={p.hint} onClick={() => set(p.opts, p.id)}>
@@ -84,49 +85,49 @@ function MatchPanel({ anchor, target, opts, set, onClose }: { anchor: HTMLElemen
           </button>
         ))}
       </div>
-      <p className="hint">{MATCH_PRESETS.find((p) => p.id === opts.preset)?.hint ?? "Your own settings."}</p>
+      <p className="hint">{MATCH_PRESETS.find((p) => p.id === opts.preset)?.hint ?? t("filum.finestre.your_own_settings")}</p>
 
-      <div className="mp-sec">Colour difference</div>
-      <Row label="Lightness" title="How much lightness differences count">
+      <div className="mp-sec">{t("filum.finestre.colour_difference")}</div>
+      <Row label={t("filum.finestre.lightness")} title={t("filum.finestre.how_much_lightness_differences_count")}>
         <Slider min={0.25} max={3} step={0.05} value={opts.weights.l} onChange={(v) => set({ weights: { ...opts.weights, l: v } })} />
       </Row>
-      <Row label="Saturation" title="How much saturation (chroma) differences count">
+      <Row label={t("filum.finestre.saturation")} title={t("filum.finestre.how_much_saturation_chroma_differences")}>
         <Slider min={0.25} max={3} step={0.05} value={opts.weights.c} onChange={(v) => set({ weights: { ...opts.weights, c: v } })} />
       </Row>
-      <Row label="Hue" title="How much hue shifts count (orange turning red)">
+      <Row label={t("filum.finestre.hue")} title={t("filum.finestre.how_much_hue_shifts_count")}>
         <Slider min={0.25} max={3} step={0.05} value={opts.weights.h} onChange={(v) => set({ weights: { ...opts.weights, h: v } })} />
       </Row>
-      <Row label="Saturation boost" title="Match against more saturated colours: thread on fabric reads duller than a screen">
+      <Row label={t("filum.finestre.saturation_boost")} title={t("filum.finestre.match_against_more_saturated_colours")}>
         <Slider min={0} max={0.6} step={0.05} value={opts.saturationBias} onChange={(v) => set({ saturationBias: v })} />
       </Row>
 
-      <div className="mp-sec">Keep colours apart</div>
-      <Row label="One spool each" title="Different colours get different spools (when there are enough)">
+      <div className="mp-sec">{t("filum.finestre.keep_colours_apart")}</div>
+      <Row label={t("filum.finestre.one_spool_each")} title={t("filum.finestre.different_colours_get_different_spools")}>
         <Toggle on={opts.unique} onChange={(v) => set({ unique: v })} />
       </Row>
-      <Row label="Min. distance" title="Fitted colours stay at least this far apart (ΔE; colours that were closer to begin with may share)">
+      <Row label={t("filum.finestre.min_distance")} title={t("filum.finestre.fitted_colours_stay_at_least")}>
         <Slider min={0} max={20} step={1} digits={0} unit="ΔE" value={opts.minSeparation} onChange={(v) => set({ minSeparation: v })} />
       </Row>
-      <Row label="Light order" title="A lighter colour never gets a darker spool than a darker one (shading stays shading)">
+      <Row label={t("filum.finestre.light_order")} title={t("filum.finestre.a_lighter_colour_never_gets")}>
         <Toggle on={opts.keepLightOrder} onChange={(v) => set({ keepLightOrder: v })} />
       </Row>
-      <Row label="Neighbour contrast" title="Colours that touch in the design keep about their contrast">
+      <Row label={t("filum.finestre.neighbour_contrast")} title={t("filum.finestre.colours_that_touch_in_the")}>
         <Toggle on={opts.keepContrast} onChange={(v) => set({ keepContrast: v })} />
       </Row>
 
-      <div className="mp-sec">Spools</div>
-      <Row label="Spool budget" title="Use at most this many spools for the whole design (0 = no limit) — fewer colour changes">
+      <div className="mp-sec">{t("filum.finestre.spools")}</div>
+      <Row label={t("filum.finestre.spool_budget")} title={t("filum.finestre.use_at_most_this_many")}>
         <span className="dz-inline">
           <Num value={opts.budget} min={0} max={64} step={1} digits={0} onChange={(v) => set({ budget: Math.round(v) })} />
-          <span className="stat">{opts.budget ? "spools" : "no limit"}</span>
+          <span className="stat">{opts.budget ? t("filum.finestre.spools_2") : t("filum.finestre.no_limit")}</span>
         </span>
       </Row>
-      <Row label="Prefer owned" title="With a chart as target: spools in My threads win close calls">
+      <Row label={t("filum.finestre.prefer_owned")} title={t("filum.finestre.with_a_chart_as_target")}>
         <Toggle on={opts.preferOwned} onChange={(v) => set({ preferOwned: v })} />
       </Row>
-      <Row label="Prefer brand" title="Spools of this brand win close calls">
+      <Row label={t("filum.finestre.prefer_brand")} title={t("filum.finestre.spools_of_this_brand_win")}>
         <select className="select" value={opts.preferBrand} onChange={(e) => set({ preferBrand: e.target.value })}>
-          <option value="">Any</option>
+          <option value="">{t("filum.finestre.any")}</option>
           {brands.map((b) => (
             <option key={b} value={b}>
               {b}
@@ -134,7 +135,7 @@ function MatchPanel({ anchor, target, opts, set, onClose }: { anchor: HTMLElemen
           ))}
         </select>
       </Row>
-      <Row label="Fabric aware" title="Avoid spools that almost match the fabric colour (they vanish)">
+      <Row label={t("filum.finestre.fabric_aware")} title={t("filum.finestre.avoid_spools_that_almost_match")}>
         <span className="dz-inline">
           <Toggle on={opts.fabricAware} onChange={(v) => set({ fabricAware: v })} />
           {opts.fabricAware && <Num value={opts.fabricMinDelta} min={2} max={30} step={1} digits={0} unit="ΔE" onChange={(v) => set({ fabricMinDelta: v })} />}
@@ -145,15 +146,15 @@ function MatchPanel({ anchor, target, opts, set, onClose }: { anchor: HTMLElemen
         {preview ? (
           <>
             <span>
-              ΔE avg <b>{preview.mean.toFixed(1)}</b> · worst <b className={preview.worst > 6 ? "far" : ""}>{preview.worst.toFixed(1)}</b>
+              {t("filum.finestre.e_avg")}<b>{preview.mean.toFixed(1)}</b>{t("filum.finestre.worst")}<b className={preview.worst > 6 ? "far" : ""}>{preview.worst.toFixed(1)}</b>
             </span>
             <span>
-              <b>{preview.spools}</b> spools{preview.merged ? ` · ${preview.merged} merged` : ""}
-              {preview.poor ? ` · ${preview.poor} poor` : ""}
+              <b>{preview.spools}</b>{t("filum.finestre.spools_3")}{preview.merged ? t("filum.finestre.merged_merged", { merged: preview.merged }) : ""}
+              {preview.poor ? t("filum.finestre.poor_poor", { poor: preview.poor }) : ""}
             </span>
           </>
         ) : (
-          <span className="stat">{target.kind === "mine" && !mine.length ? "My threads is empty" : "Preview…"}</span>
+          <span className="stat">{target.kind === "mine" && !mine.length ? t("filum.finestre.my_threads_is_empty") : t("filum.finestre.preview_dots")}</span>
         )}
       </div>
     </div>,

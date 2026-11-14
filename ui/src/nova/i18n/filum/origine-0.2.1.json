@@ -963,6 +963,14 @@
     "testo": "Move it",
     "file": "components/StatusHints.tsx"
   },
+  "filum.barre.move_n_points.one": {
+    "testo": "Move {n} point",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.move_n_points.other": {
+    "testo": "Move {n} points",
+    "file": "components/StatusHints.tsx"
+  },
   "filum.barre.move_picture": {
     "testo": "Move picture",
     "file": "components/StatusHints.tsx"
@@ -1021,6 +1029,10 @@
   },
   "filum.barre.nudge": {
     "testo": "Nudge",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.nudge_mm": {
+    "testo": "Nudge {mm} mm",
     "file": "components/StatusHints.tsx"
   },
   "filum.barre.one_stitch": {
@@ -1810,6 +1822,26 @@
   "filum.dati.cut_away_no_show_mesh": {
     "testo": "Cut-away (no-show mesh for light designs, medium cut-away for dense ones)",
     "file": "lib/materials.ts"
+  },
+  "filum.dati.delta_close": {
+    "testo": "close",
+    "file": "lib/threads.ts"
+  },
+  "filum.dati.delta_different": {
+    "testo": "different",
+    "file": "lib/threads.ts"
+  },
+  "filum.dati.delta_identical": {
+    "testo": "identical",
+    "file": "lib/threads.ts"
+  },
+  "filum.dati.delta_similar": {
+    "testo": "similar",
+    "file": "lib/threads.ts"
+  },
+  "filum.dati.delta_very_close": {
+    "testo": "very close",
+    "file": "lib/threads.ts"
   },
   "filum.dati.denim": {
     "testo": "Denim",
@@ -3919,6 +3951,810 @@
     "testo": "Birds",
     "file": "sample.ts"
   },
+  "filum.finestre.____four_points_per": {
+    "testo": "|_|▔|_| — four points per stitch block",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.a_light_net_sewn_first": {
+    "testo": "A light net sewn first under the whole design — it follows every edit",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.a_lighter_colour_never_gets": {
+    "testo": "A lighter colour never gets a darker spool than a darker one (shading stays shading)",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.a_page_of_your_own": {
+    "testo": "A page of your own text (care instructions, contact, …)",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.a_page_per_colour": {
+    "testo": "A page per colour",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.a_point_closer_than_this": {
+    "testo": "A point closer than this to an earlier point is removed",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.a_rung_in_every_repeat": {
+    "testo": "A rung in every repeat: the stitch angle follows the pattern",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.a_shape_that_is_already": {
+    "testo": "A shape that is already one clean outline with holes is left as it is.",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.accept_amp_download": {
+    "testo": "Accept & download",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.accept_download": {
+    "testo": "Accept & download",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.accept_update": {
+    "testo": "Accept & update",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.across_the_whole_design_select": {
+    "testo": "Across the whole design (select objects to limit it).",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.add_a_gpl_thread_chart": {
+    "testo": "Add a .gpl thread chart (Ink/Stitch “Install custom palette”); it stays available in this app",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.add_a_point_a_rung": {
+    "testo": "Add a point (a rung pair on two-rail satins) / delete it",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.add_from_charts": {
+    "testo": " Add from charts",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.add_the_design_s_threads": {
+    "testo": "Add the design's threads to My threads",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.add_the_design_s_threads_2": {
+    "testo": "Add the design's threads",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.add_the_threads_you_own": {
+    "testo": "Add the threads you own, then fit any design to them.",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.add_to_total": {
+    "testo": "Add to total",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.added_threads_to_my.one": {
+    "testo": "Added {n} thread to My threads",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.added_threads_to_my.other": {
+    "testo": "Added {n} threads to My threads",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.added_v1_spools": {
+    "testo": "Added {v1} spools",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.added_v1_threads": {
+    "testo": "Added {v1} threads",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.adds_the_exact_thread_list": {
+    "testo": "Adds the exact thread list",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.adjust_it_enter_done_del": {
+    "testo": "Adjust it · Enter: done · Del: remove",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.agree_download": {
+    "testo": "Agree & download",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.all": {
+    "testo": "All",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.all_keyboard_shortcuts": {
+    "testo": "All keyboard shortcuts…",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.all_my_threads_mine": {
+    "testo": "All my threads ({mine})",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.all_threads_back_to_their": {
+    "testo": "All threads back to their original colours (also undoes merges)",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.alt_drag_a_handle": {
+    "testo": "Alt-drag a handle",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.alt_drag_an_object": {
+    "testo": "Alt + drag an object",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.amount": {
+    "testo": "Amount",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.an_editable_fill_under_the": {
+    "testo": "An editable fill under the selection, sewn before it — reorder, reshape or recolour it like any object.",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.an_editable_object_under_the": {
+    "testo": "An editable object under the selected objects",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.anchor_points": {
+    "testo": " anchor points",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.anchor_points_added_per_segment": {
+    "testo": "Anchor points added per segment first (more petals)",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.angle": {
+    "testo": "Angle",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.animate_bottom_bar": {
+    "testo": "Animate (bottom bar)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.any": {
+    "testo": "Any",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.appearance": {
+    "testo": "Appearance",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.applied_blocks.one": {
+    "testo": "Applied {applied} of {n} colour block from {file}",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.applied_blocks.other": {
+    "testo": "Applied {applied} of {n} colour blocks from {file}",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.apply": {
+    "testo": "Apply",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.apply_2": {
+    "testo": "Apply ",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.apply_thread_list": {
+    "testo": "Apply thread list",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.arc": {
+    "testo": "Arc",
+    "file": "lib/shapeOps.ts"
+  },
+  "filum.finestre.arch": {
+    "testo": "Arch",
+    "file": "lib/convert.ts"
+  },
+  "filum.finestre.arrow_keys": {
+    "testo": "Arrow keys",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.arrows_shift": {
+    "testo": "Arrows (Shift)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.as_colour_v1": {
+    "testo": "as colour {v1}",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.as_published_by_the_free": {
+    "testo": " as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. It includes algorithms ported from Ink/Stitch (GPL-3.0) and its file library pystitch (MIT); the other tabs list every font, library and crate shipped with the app and their licences.",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.at": {
+    "testo": " at ",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.auto": {
+    "testo": "Auto",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.automatic_under_everything_following_every": {
+    "testo": "Automatic: under everything, following every edit",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.autosave": {
+    "testo": "Autosave",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.autosave_cleared": {
+    "testo": "Autosave cleared",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.average_the_selected_points_onto": {
+    "testo": "Average: the selected points onto their average point (node tool)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.avoid_spools_that_almost_match": {
+    "testo": "Avoid spools that almost match the fabric colour (they vanish)",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.back_to_select_or_clear": {
+    "testo": "Back to Select (or clear the selection)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.back_to_the_defaults": {
+    "testo": "Back to the defaults",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.back_to_the_original_colour": {
+    "testo": "Back to the original colour",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.backing": {
+    "testo": "Backing",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.behind_the_stitches": {
+    "testo": "Behind the stitches",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.bend": {
+    "testo": "Bend",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.bend_the_curve_a_click": {
+    "testo": "Bend the curve; a click adds a point",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.between_the_selected_objects": {
+    "testo": "Between the selected objects.",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.bevel": {
+    "testo": "Bevel",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.block_stats": {
+    "testo": "\n{stitches} stitches · {metres} m",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.blue": {
+    "testo": "Blue",
+    "file": "lib/prefs.ts"
+  },
+  "filum.finestre.brand": {
+    "testo": "Brand",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.branding": {
+    "testo": "Branding",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.break_the_path_at_the": {
+    "testo": "Break the path at the points / join two end points",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.break_the_symmetry": {
+    "testo": "Break the symmetry",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.bridge_gaps_up_to": {
+    "testo": "Bridge gaps up to",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.bulge": {
+    "testo": "Bulge",
+    "file": "lib/shapeOps.ts"
+  },
+  "filum.finestre.bundled_with_filum_and_run": {
+    "testo": "Bundled with Filum and run on this computer — nothing is uploaded.",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.by_downloading_you_accept_the": {
+    "testo": "By downloading you accept the {licence} licence.",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.cancel": {
+    "testo": "Cancel",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.cancel_2": {
+    "testo": " Cancel",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.care_instructions_terms_contact": {
+    "testo": "Care instructions, terms, contact…",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.centre": {
+    "testo": "Centre",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.centre_walk_narrow_columns": {
+    "testo": "Centre walk — narrow columns",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.chamfer": {
+    "testo": "Chamfer",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.chart": {
+    "testo": "Chart",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.chart_2": {
+    "testo": "chart",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.charts_thread_charts": {
+    "testo": "{charts} thread charts",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.checked_colours_are_in_my": {
+    "testo": "Checked colours are in My threads. Matching uses CIEDE2000 (ΔE < 1 is invisible, < 3 barely visible in thread).",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.choose": {
+    "testo": " Choose…",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.choose_a_reference_to_trace": {
+    "testo": "Choose: a reference to trace (never stitched) or digitize it",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.choose_a_thread_list_ink": {
+    "testo": "Choose a thread list: Ink/Stitch's TXT (ZIP export), another program's TXT, COL, EDR or INF.",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.choose_file": {
+    "testo": "Choose file…",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.chosen_by_the_column_s": {
+    "testo": "Chosen by the column's width and the fabric",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.circle": {
+    "testo": "Circle",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.clear": {
+    "testo": "Clear",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.clear_the_autosaved_design": {
+    "testo": "Clear the autosaved design",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.click_a_line_to_split": {
+    "testo": "Click a line to split it, drag across fills to cut them",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.click_a_segment_alt_click": {
+    "testo": "Click a segment / Alt-click a point",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.click_an_end_of_a": {
+    "testo": "Click an end of a selected path",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.click_drag": {
+    "testo": "Click · drag",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.click_or_drag_the_timeline": {
+    "testo": "Click or drag the timeline",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.click_shift_click_drag_a": {
+    "testo": "Click · Shift-click · drag a box",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.click_the_colours_you_own": {
+    "testo": "Click the colours you own — they get a check mark; click again to take them out. Search by code or name.",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.client": {
+    "testo": "Client",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.client_detailed_view": {
+    "testo": "Client detailed view",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.client_name": {
+    "testo": "Client name",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.client_overview": {
+    "testo": "Client overview",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.client_pages": {
+    "testo": "Client pages",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.close": {
+    "testo": "Close",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.close_esc": {
+    "testo": "Close (Esc)",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.close_gaps_at_cuts": {
+    "testo": "Close gaps at cuts",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.close_the_player": {
+    "testo": "Close the player",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.closest_for_name": {
+    "testo": "Closest for {name}",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.cm": {
+    "testo": "/cm",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.code": {
+    "testo": "Code",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.colour": {
+    "testo": "Colour",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.colour_block_1_gets_the": {
+    "testo": "Colour block 1 gets the first thread of the list, block 2 the second, and so on (Ink/Stitch). Use it to bring back the colours of a DST or EXP — they store none — from the COL, EDR, INF or thread list that came with it.",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.colour_blocks": {
+    "testo": " colour blocks",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.colour_blocks_2": {
+    "testo": "Colour blocks",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.colour_change": {
+    "testo": "Colour change",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.colour_change_word.one": {
+    "testo": " colour change",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.colour_change_word.other": {
+    "testo": " colour changes",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.colour_difference": {
+    "testo": "Colour difference",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.colour_difference_between_the_original": {
+    "testo": "Colour difference between the original colours and the spools (CIEDE2000)",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.colours_that_touch_in_the": {
+    "testo": "Colours that touch in the design keep about their contrast",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.column_width_for_selected_running": {
+    "testo": "Column width for selected running-stitch lines (satins keep theirs)",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.command_palette": {
+    "testo": "Command palette…",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.command_palette_find_any_command": {
+    "testo": "Command palette — find any command by name",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.compare_with_this_many_points": {
+    "testo": "Compare with this many points before it",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.complex": {
+    "testo": "Complex",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.constrain_rotation_in_15_steps": {
+    "testo": "Constrain · rotation in 15° steps",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.contact_website": {
+    "testo": "Contact, website…",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.continue_drawing_that_path": {
+    "testo": "Continue drawing that path",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.contour_underlay_crisp_edges": {
+    "testo": "Contour underlay — crisp edges",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.contour_zig_zag_wide_columns": {
+    "testo": "Contour + zig-zag — wide columns",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_a_from_b": {
+    "testo": "{a} from {b}",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_along_satin_centre": {
+    "testo": "{lines} along the satin centre",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_already_valid": {
+    "testo": "{n} already valid",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_also_select_the_rungs": {
+    "testo": "Also select the rungs: lines drawn across the shape that set the stitch direction",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_auto_route_joins": {
+    "testo": " · Path → Auto-route joins them into one",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_cant_break_apart": {
+    "testo": "Gradients, tartans and colour blends can't be broken apart: remove them first",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_from_zigzag": {
+    "testo": "{satins} from zig-zag lines",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_gaps_bridged": {
+    "testo": "{gaps} bridged",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_lines_dont_meet": {
+    "testo": "These lines don't meet: nothing to connect (raise “Bridge gaps up to”)",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_lines_shorter_than_repeat": {
+    "testo": "The lines are shorter than one repeat",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_doubled_piece.one": {
+    "testo": "{n} doubled piece",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_doubled_piece.other": {
+    "testo": "{n} doubled pieces",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_duplicated_point.one": {
+    "testo": "{n} duplicated point",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_duplicated_point.other": {
+    "testo": "{n} duplicated points",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_fill.one": {
+    "testo": "{n} fill",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_fill.other": {
+    "testo": "{n} fills",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_gap.one": {
+    "testo": "{n} gap",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_gap.other": {
+    "testo": "{n} gaps",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_line.one": {
+    "testo": "{n} line",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_line.other": {
+    "testo": "{n} lines",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_patterned_satin.one": {
+    "testo": "{n} patterned satin",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_patterned_satin.other": {
+    "testo": "{n} patterned satins",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_piece.one": {
+    "testo": "{n} piece",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_piece.other": {
+    "testo": "{n} pieces",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_rung.one": {
+    "testo": "{n} rung",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_rung.other": {
+    "testo": "{n} rungs",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_running_line.one": {
+    "testo": "{n} running stitch line",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_running_line.other": {
+    "testo": "{n} running stitch lines",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_satin.one": {
+    "testo": "{n} satin",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_satin.other": {
+    "testo": "{n} satins",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_shape.one": {
+    "testo": "{n} shape",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_n_shape.other": {
+    "testo": "{n} shapes",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_name_centre_line": {
+    "testo": "{name} (centre line)",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_name_centre_line_n": {
+    "testo": "{name} centre line {n}",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_name_centre_run": {
+    "testo": "{name} (centre run)",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_name_not_converted": {
+    "testo": "{name} (not converted)",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_name_satin": {
+    "testo": "{name} (satin)",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_name_satin_n": {
+    "testo": "{name} satin {n}",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_no_centre_line": {
+    "testo": "No centre line found — lower the dead-end threshold for small shapes",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_no_duplicated_points": {
+    "testo": "No duplicated points",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_no_rung_crosses": {
+    "testo": "No rung crosses a fill outline exactly twice — draw the rungs right across the shape",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_no_usable_rails": {
+    "testo": "These satins have no usable rails",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_nothing_to_convert": {
+    "testo": "Nothing to convert",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_nothing_to_repair.one": {
+    "testo": "Nothing to repair: the shape is already one valid outline with holes",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_nothing_to_repair.other": {
+    "testo": "Nothing to repair: the shapes are already one valid outline with holes",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_pieces_left_out": {
+    "testo": "{pieces} left out",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_pieces_to_lines": {
+    "testo": "{pieces} → {lines}",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_points_removed": {
+    "testo": "{points} removed",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_rungs_not_crossing": {
+    "testo": " · {rungs} not crossing the outline twice",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_satins_kept": {
+    "testo": " (satins kept)",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_select_a_fill_shape": {
+    "testo": "Select a fill shape — its outline becomes the satin's edges",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_select_centre_line_satins": {
+    "testo": "Select centre-line satins or lines",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_select_fill_shapes": {
+    "testo": "Select one or more fill shapes",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_select_line_pieces": {
+    "testo": "Select two or more line pieces",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_select_lines_or_satins": {
+    "testo": "Select lines (running stitch) or centre-line satins",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_select_satin_columns": {
+    "testo": "Select one or more satin columns",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_select_shapes": {
+    "testo": "Select one or more shapes",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_select_zigzag_line": {
+    "testo": "Select a zig-zag line: a line drawn back and forth between the two edges of the column",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_too_few_points": {
+    "testo": "Too few points for a column",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_too_small_removed": {
+    "testo": "{n} too small, removed",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_with_editable_rails": {
+    "testo": "{satins} with editable rails — drag the rails and rungs with the node tool (A)",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.conv_without_rungs": {
+    "testo": " · {n} without rungs left as they are",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.convert": {
+    "testo": " Convert ",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.convert_jumps": {
+    "testo": "Convert jumps",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.convert_shapes": {
+    "testo": "Convert shapes",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.convert_the_selection_fill_satin": {
+    "testo": "Convert the selection: fill ↔ satin, centre lines, rails, patterned satins, repair",
+    "file": "components/ConvertTools.tsx"
+  },
   "filum.finestre.converti.breakApart.label": {
     "testo": "Break apart",
     "file": "components/ConvertTools.tsx"
@@ -4027,6 +4863,322 @@
     "testo": "A line drawn back and forth across a column (square, sawtooth or zig-zag) becomes a satin",
     "file": "components/ConvertTools.tsx"
   },
+  "filum.finestre.copies_below_each_other_ink": {
+    "testo": "Copies below each other (Ink/Stitch vertical repeats)",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.copies_each_colour_sews_all": {
+    "testo": " copies · each colour sews all copies before the next colour",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.copies_side_by_side_ink": {
+    "testo": "Copies side by side (Ink/Stitch horizontal repeats)",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.copy_paste_stitch_properties": {
+    "testo": "Copy / paste stitch properties",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.corner": {
+    "testo": "Corner",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.corner_angle": {
+    "testo": "Corner angle",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.corner_point_smooth_point_with": {
+    "testo": "Corner point · smooth point with handles (Alt: break the handles, Space: move the point, Shift: snap angles)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.corner_smooth_symmetric_points": {
+    "testo": "Corner / smooth / symmetric points",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.corner_style_of_the_grown": {
+    "testo": "Corner style of the grown outline",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.corners": {
+    "testo": "Corners",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.corners_that_turn_less_than": {
+    "testo": "Corners that turn less than this stay as they are",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.corners_turning_more_than_this": {
+    "testo": "Corners turning more than this stay sharp (180° = smooth all)",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.could_not_apply_the_thread": {
+    "testo": "Could not apply the thread list: {message}",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.could_not_load_the_licence": {
+    "testo": "Could not load the licence list: {error}",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.count_colours": {
+    "testo": "{count} colours",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.create_knockdown": {
+    "testo": "Create knockdown",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.crimson": {
+    "testo": "Crimson",
+    "file": "lib/prefs.ts"
+  },
+  "filum.finestre.crossed": {
+    "testo": "Crossed",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.ctrl_click": {
+    "testo": "Ctrl-click",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.ctrl_d_alt_d_del": {
+    "testo": "Ctrl+D / Alt+D / Del",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.ctrl_drag_a_side_handle": {
+    "testo": "Ctrl + drag a side handle",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.ctrl_k_finds_any_command": {
+    "testo": "Ctrl+K finds any command by name; ? lists every shortcut.",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.ctrl_wheel_on_the_timeline": {
+    "testo": "Ctrl + wheel on the timeline",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.ctrl_while_dragging": {
+    "testo": "Ctrl while dragging",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.curvature_click_points_the_path": {
+    "testo": "Curvature: click points, the path curves smoothly through them · double-click a point for a corner",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.custom": {
+    "testo": "Custom",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.custom_colour": {
+    "testo": "custom colour",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.cut_copy_paste_objects_also": {
+    "testo": "Cut / copy / paste objects (also between windows; a pasted picture becomes a reference)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.cut_out_design": {
+    "testo": "Cut out design",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.cutter": {
+    "testo": "Cutter",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.dark": {
+    "testo": "Dark",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.dead_ends_under": {
+    "testo": "Dead ends under",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.default_100_100_mm": {
+    "testo": "Default (100 × 100 mm)",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.del_shift_del": {
+    "testo": "Del / Shift+Del",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.delete": {
+    "testo": "Delete",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.delete_the_points_keeping_the": {
+    "testo": "Delete the points keeping the curve's shape / plain delete",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.density_map": {
+    "testo": "Density map",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.design": {
+    "testo": "design",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.design_2": {
+    "testo": "Design",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.detail": {
+    "testo": "Detail",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.dexined_learned_edges_for_line": {
+    "testo": " DexiNed — learned edges for line art",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.diamonds": {
+    "testo": "Diamonds",
+    "file": "lib/convert.ts"
+  },
+  "filum.finestre.different_colours_get_different_spools": {
+    "testo": "Different colours get different spools (when there are enough)",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.digitizer": {
+    "testo": "Digitizer",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.direction": {
+    "testo": "Direction",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.distance": {
+    "testo": "Distance",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.distance_from_one_copy_to": {
+    "testo": "Distance from one copy to the next, left edge to left edge (Ink/Stitch horizontal spacing)",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.distance_from_one_copy_to_2": {
+    "testo": "Distance from one copy to the next, top edge to top edge (Ink/Stitch vertical spacing)",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.distinct": {
+    "testo": "Distinct",
+    "file": "lib/threadMatch.ts"
+  },
+  "filum.finestre.done": {
+    "testo": "Done",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.double_click_a_reference": {
+    "testo": "Double-click a reference",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.double_click_an_object": {
+    "testo": "Double-click an object",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.download_failed_failed": {
+    "testo": "Download failed: {failed}",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.download_in_preferences": {
+    "testo": "download in Preferences…",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.downloaded_for_your_own_use": {
+    "testo": "Downloaded for your own use on {v1}",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.downloads": {
+    "testo": "Downloads",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.dpi": {
+    "testo": "dpi",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.drag_a_path_segment_node": {
+    "testo": "Drag a path segment (node tool)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.drag_across_a_fill_dense": {
+    "testo": "Drag across a fill: dense where you start, open where you end (Blend: a second colour fades in)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.drag_just_outside_a_corner": {
+    "testo": "Drag just outside a corner (or the top knob) · Alt-drag the pivot to move it",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.drag_points_and_handles_click": {
+    "testo": "Drag points and handles · click a segment to add a point · Alt-click a point to delete · double-click: smooth ↔ corner",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.drag_the_arch_handle_to": {
+    "testo": "Drag the arch handle to bend, the arrows to space letters · double-click to reset",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.drag_to_resize": {
+    "testo": "Drag to resize",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.drawing_tools": {
+    "testo": "Drawing tools",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.drop_or_paste_a_picture": {
+    "testo": "Drop or paste a picture",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.duplicate": {
+    "testo": "Duplicate",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.duplicate_linked_clone_delete": {
+    "testo": "Duplicate / linked clone / delete",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.e_avg": {
+    "testo": "ΔE avg ",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.e_avg_2": {
+    "testo": " · ΔE avg ",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.e_d": {
+    "testo": "ΔE {d}",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.e_lt": {
+    "testo": "ΔE <",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.e_n": {
+    "testo": "ΔE {n}",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.each_design_keeps_its_own": {
+    "testo": "Each design keeps its own machine and hoop (Design ▸ Machine); the export dialog changes the design's.",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.each_pass_splits_every_segment": {
+    "testo": "Each pass splits every segment in half",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.each_tool_remembers_its_settings": {
+    "testo": "Each tool remembers its settings from the tool bar.",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.edges": {
+    "testo": "Edges",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.edit_colour": {
+    "testo": "Edit colour",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.edit_its_nodes_lettering_edit": {
+    "testo": "Edit its nodes (lettering: edit its text)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.editing": {
+    "testo": "Editing",
+    "file": "components/SettingsDialog.tsx"
+  },
   "filum.finestre.effetto.anchors.label": {
     "testo": "Add anchors",
     "file": "components/ShapeEffects.tsx"
@@ -4098,6 +5250,2518 @@
   "filum.finestre.effetto.zigzag.title": {
     "testo": "Ridges along the path — sharp or wavy",
     "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.embroidery_fonts": {
+    "testo": "Embroidery fonts",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.embroidery_fonts_come_from_the": {
+    "testo": "Embroidery fonts come from the Ink/Stitch community collection",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.embroidery_fonts_n": {
+    "testo": "Embroidery fonts ({n})",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.enter_esc_backspace": {
+    "testo": "Enter / Esc / Backspace",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.estimated_time": {
+    "testo": "Estimated time",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.every_colour_block_with_thread": {
+    "testo": "Every colour block with thread, stitches, time, trims, stops and your notes",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.every_colour_its_own_spool": {
+    "testo": "Every colour its own spool, kept apart, light-to-dark order and contrast kept",
+    "file": "lib/threadMatch.ts"
+  },
+  "filum.finestre.every_ink_stitch_embroidery_font": {
+    "testo": "Every Ink/Stitch embroidery font with the licence file shipped by its author. Fonts marked optional download aren't included with Filum; you can download them in Preferences → Downloads. ",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.every_licence_and_its_full": {
+    "testo": "Every licence and its full text…",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.every_line_is_sewn_out": {
+    "testo": "Every line is sewn out and back, so the path ends where it began.",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.every_other_rung_only": {
+    "testo": "Every other rung only",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.every_point_on_the_other": {
+    "testo": "|/|/| — every point on the other rail",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.every_sub_path_is_a": {
+    "testo": "Every sub-path is a shape of its own; shapes inside others become their holes",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.every_thread_is_in_use": {
+    "testo": "Every thread is in use",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.everywhere_group": {
+    "testo": "Everywhere",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.export": {
+    "testo": "Export",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.export_my_threads_as_a": {
+    "testo": "Export My threads as a .gpl palette",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.export_the_threads_as_a": {
+    "testo": "Export the threads as a .gpl palette",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.extra_points": {
+    "testo": "Extra points",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.fabric": {
+    "testo": "Fabric",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.fabric_aware": {
+    "testo": "Fabric aware",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.faithful": {
+    "testo": "Faithful",
+    "file": "lib/threadMatch.ts"
+  },
+  "filum.finestre.few_spools": {
+    "testo": "Few spools",
+    "file": "lib/threadMatch.ts"
+  },
+  "filum.finestre.fewer_rungs": {
+    "testo": "Fewer rungs",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.files_data": {
+    "testo": "Files & data",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.fills": {
+    "testo": "Fills",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.filter_shortcuts": {
+    "testo": "Filter shortcuts…",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.filter_shortcuts_2": {
+    "testo": "Filter shortcuts",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.filum_includes_only_what_it": {
+    "testo": "Filum includes only what it may share with everyone. Some fonts and thread charts have licences that don't allow that, so you can download them yourself here: read the licence, then ",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.filum_is_free_software_you": {
+    "testo": "Filum is free software: you can redistribute it and/or modify it under the terms of the ",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.filum_itself_is_free_software": {
+    "testo": "Filum itself is free software under the GPL-3.0-or-later.",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.filum_violet": {
+    "testo": "Filum violet",
+    "file": "lib/prefs.ts"
+  },
+  "filum.finestre.finish_the_path_the_tool": {
+    "testo": "Finish the path (the tool stays) / finish / remove the last point",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.finished_piece_without_the_jump": {
+    "testo": "Finished piece: without the jump threads you snip and the basting",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.fish": {
+    "testo": "Fish",
+    "file": "lib/shapeOps.ts"
+  },
+  "filum.finestre.fit": {
+    "testo": "Fit",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.fit_all": {
+    "testo": " Fit all",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.fit_every_unlocked_thread_with": {
+    "testo": "Fit every unlocked thread with the matching options, starting from its original colour",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.fit_hoop_fit_design": {
+    "testo": "Fit hoop / fit design",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.fit_only_the_selected_thread": {
+    "testo": "Fit only the selected thread",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.fit_selected": {
+    "testo": "Fit selected",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.fit_the_whole_stitch_out": {
+    "testo": "Fit the whole stitch-out",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.fit_threads": {
+    "testo": "Fit threads",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.fit_threads_to": {
+    "testo": "Fit threads to",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.fit_to_all_your_spools": {
+    "testo": "Fit to all your spools, one brand or one product line of My threads, or the chart chosen on the right",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.fitted": {
+    "testo": " fitted",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.fitted_colours_stay_at_least": {
+    "testo": "Fitted colours stay at least this far apart (ΔE; colours that were closer to begin with may share)",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.fitted_threads_to.one": {
+    "testo": "Fitted {n} thread to {target}",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.fitted_threads_to.other": {
+    "testo": "Fitted {n} threads to {target}",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.fitted_to": {
+    "testo": " fitted to ",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.flag": {
+    "testo": "Flag",
+    "file": "lib/shapeOps.ts"
+  },
+  "filum.finestre.follow_the_design_or_a": {
+    "testo": "Follow the design, or a rectangle / circle around it with the design cut out (an embossed look)",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.follow_the_needle_keep_it": {
+    "testo": "Follow the needle: keep it in view on the canvas",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.fonts_may_carry_their_own": {
+    "testo": ". Fonts may carry their own terms (most are SIL OFL 1.1) — check a font's licence before selling designs made with it.",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.fonts_n": {
+    "testo": "Fonts ({n})",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.footer": {
+    "testo": "Footer",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.forgets_the_autosaved_design_and": {
+    "testo": "Forgets the autosaved design and starts with an empty one",
+    "file": "components/ErrorBoundary.tsx"
+  },
+  "filum.finestre.format": {
+    "testo": "Format",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.frame_out_on_stops": {
+    "testo": "Frame out on stops",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.free_shift_keep_proportions_alt": {
+    "testo": "Free · Shift: keep proportions · Alt: from the centre · drag past an edge to flip",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.freehand": {
+    "testo": "Freehand",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.from": {
+    "testo": " · from",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.from_ink_stitch_and_madeira": {
+    "testo": " from Ink/Stitch and Madeira colour cards",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.full": {
+    "testo": "Full",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.full_page_pattern": {
+    "testo": "Full page pattern",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.give_name_this_spool": {
+    "testo": "Give {name} this spool",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.gnu_general_public_license": {
+    "testo": "GNU General Public License",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.go_to_that_stitch": {
+    "testo": "Go to that stitch",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.gpl_3_0_colours_sampled": {
+    "testo": "GPL-3.0, colours sampled from published cards",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.gradient_drag_across_a_shape": {
+    "testo": "Gradient: drag across a shape · click the line to add a stop · Alt-click a stop to remove it",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.graphite": {
+    "testo": "Graphite",
+    "file": "lib/prefs.ts"
+  },
+  "filum.finestre.green": {
+    "testo": "Green",
+    "file": "lib/prefs.ts"
+  },
+  "filum.finestre.group_ungroup_groups_nest_group": {
+    "testo": "Group / ungroup (groups nest: group groups; ungroup opens one level)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.guided_fill_the_rows_follow": {
+    "testo": "Guided fill: the rows follow the line",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.hide_the_selection_show_all": {
+    "testo": "Hide the selection / show all",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.highlight_colour": {
+    "testo": "Highlight colour",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.hoop": {
+    "testo": "Hoop",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.horizontal": {
+    "testo": "Horizontal",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.how_far_the_curve_may": {
+    "testo": "How far the curve may move (mm)",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.how_far_the_knockdown_reaches": {
+    "testo": "How far the knockdown reaches beyond the selection (negative: inside)",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.how_far_the_net_reaches": {
+    "testo": "How far the net reaches beyond the design",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.how_much_hue_shifts_count": {
+    "testo": "How much hue shifts count (orange turning red)",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.how_much_lightness_differences_count": {
+    "testo": "How much lightness differences count",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.how_much_saturation_chroma_differences": {
+    "testo": "How much saturation (chroma) differences count",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.how_overlapping_sub_paths_are": {
+    "testo": "How overlapping sub-paths are treated",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.how_threads_are_matched_to": {
+    "testo": "How threads are matched to spools",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.hue": {
+    "testo": "Hue",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.hue_shifts_cost_most_orange": {
+    "testo": "Hue shifts cost most: orange stays orange, it may get lighter or darker instead",
+    "file": "lib/threadMatch.ts"
+  },
+  "filum.finestre.ignore_smart_guides": {
+    "testo": "Ignore smart guides",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.import_a_gpl_palette_as": {
+    "testo": "Import a .gpl palette as threads",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.import_export_embroidery_print": {
+    "testo": "Import / export embroidery / print",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.import_gpl": {
+    "testo": "Import .gpl",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.import_spools_from_a_gpl": {
+    "testo": "Import spools from a .gpl palette",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.in_blocks_v1": {
+    "testo": "in blocks {v1}",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.in_design": {
+    "testo": "in design",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.in_my_threads": {
+    "testo": " · in My threads",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.in_use_merge_it_into": {
+    "testo": "In use: merge it into another thread instead",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.included_with_filum": {
+    "testo": "Included with Filum",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.inflate": {
+    "testo": "Inflate",
+    "file": "lib/shapeOps.ts"
+  },
+  "filum.finestre.information_sheet": {
+    "testo": "Information sheet",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.informative_drawings_a_learned_line": {
+    "testo": " Informative Drawings — a learned line drawing",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.ink_stitch_panelization_the_design": {
+    "testo": "Ink/Stitch panelization: the design several times side by side and below each other in one file — for patches and labels sewn in one hooping",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.ink_stitch_stop_position_frame": {
+    "testo": "Ink/Stitch stop position (frame out): before every stop the frame moves the design away from the needle, so you can place appliqué fabric or foam, then it comes back",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.ink_stitch_svg": {
+    "testo": "Ink/Stitch SVG",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.install_palette_gpl": {
+    "testo": " Install palette (.gpl)…",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.installed": {
+    "testo": " Installed",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.installed_group": {
+    "testo": "Installed",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.interface": {
+    "testo": "Interface",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.inverted": {
+    "testo": "Inverted",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.is_ink_stitch_en_embroidery": {
+    "testo": "IS Ink/Stitch · EN Embroidery Nerds · MD Madeira card",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.javascript_packages_in_the_app": {
+    "testo": "JavaScript packages in the app's user interface. ",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.job": {
+    "testo": "Job",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.job_details_estimated_time_fabric": {
+    "testo": "Job details, estimated time, fabric and stabiliser",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.job_title": {
+    "testo": "Job title",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.join_close_an_open_path": {
+    "testo": "Join: close an open path, or join open paths at their nearest ends",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.join_ends_within": {
+    "testo": "Join ends within",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.jumps": {
+    "testo": "Jumps",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.jumps_shorter_than_this_stay": {
+    "testo": "Jumps shorter than this stay jumps (the machine sews through them anyway)",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.keep": {
+    "testo": "Keep",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.keep_colours_apart": {
+    "testo": "Keep colours apart",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.keep_corners_over": {
+    "testo": "Keep corners over",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.keep_holes": {
+    "testo": "Keep holes",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.keep_hue": {
+    "testo": "Keep hue",
+    "file": "lib/threadMatch.ts"
+  },
+  "filum.finestre.keep_order": {
+    "testo": "Keep order",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.keep_original": {
+    "testo": "Keep original",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.keep_originals": {
+    "testo": "Keep originals",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.keep_satin": {
+    "testo": "Keep satin",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.keep_the_fill_and_the": {
+    "testo": "Keep the fill (and the cut lines)",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.keep_the_fills_and_the": {
+    "testo": "Keep the fills and the rungs",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.keep_the_fills_remove_the": {
+    "testo": "Keep the fills, remove the rungs",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.keep_the_order_of_the": {
+    "testo": "Keep the order of the selection — only split satins and add underpaths",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.keep_the_original_satins_hidden": {
+    "testo": "Keep the original satins (hidden) to edit them later",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.keep_the_satin_column_too": {
+    "testo": "Keep the satin column too (the running stitch is sewn first)",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.keep_the_stitch_direction_of": {
+    "testo": "Keep the stitch direction of the drawing",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.keeps_colours_saturated_thread_on": {
+    "testo": "Keeps colours saturated: thread on fabric reads duller than a screen",
+    "file": "lib/threadMatch.ts"
+  },
+  "filum.finestre.keeps_its_colour": {
+    "testo": "keeps its colour",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.keeps_the_design_in_this": {
+    "testo": "Keeps the design in this app's storage while you work, restored at the next start. Use Save for real files.",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.key_density_blend": {
+    "testo": "G · Density / Blend",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.key_wheel_pinch": {
+    "testo": "+ / − · wheel / pinch",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.key_with_a_selection": {
+    "testo": "[ / ] with a selection",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.keyboard": {
+    "testo": "Keyboard",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.keyboard_shortcuts": {
+    "testo": "Keyboard shortcuts",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.knockdown": {
+    "testo": "Knockdown",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.knockdown_created.one": {
+    "testo": "Knockdown with {n} outline created — sewn before the selection",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.knockdown_created.other": {
+    "testo": "Knockdown with {n} outlines created — sewn before the selection",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.layouts": {
+    "testo": "Layouts",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.leave_out": {
+    "testo": "Leave out",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.leave_out_doubled": {
+    "testo": "Leave out doubled",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.leave_out_the_rounded_ends": {
+    "testo": "Leave out the rounded ends: the satins start and end at the first and last rung (needs at least two rungs)",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.leave_the_pile_standing_inside": {
+    "testo": "Leave the pile standing inside the design's holes (letter counters, gaps)",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.length_of_length__colours": {
+    "testo": "{length} of {length_} colours",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.length_of_one_pattern_repeat": {
+    "testo": "Length of one pattern repeat along the line",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.length_threads_on_this_spool": {
+    "testo": "\n{length} threads on this spool",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.letter": {
+    "testo": "Letter",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.lettering_handles": {
+    "testo": "Lettering handles",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.lettering_is_edited_in_the": {
+    "testo": " (lettering is edited in the lettering panel)",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.lettering_objects_left_out.one": {
+    "testo": "{n} lettering object left out — lettering stays editable text.",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.lettering_objects_left_out.other": {
+    "testo": "{n} lettering objects left out — lettering stays editable text.",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.letterings_became_shapes.one": {
+    "testo": " · {n} lettering got several colours for one font colour and became shapes",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.letterings_became_shapes.other": {
+    "testo": " · {n} letterings got several colours for one font colour and became shapes",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.licence_licence": {
+    "testo": "Licence: {licence}",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.licence_list_generated_generated": {
+    "testo": " Licence list generated {generated}.",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.licences": {
+    "testo": "Licences",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.licensed_under_license": {
+    "testo": "Licensed under {license}.",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.light": {
+    "testo": "Light",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.light_order": {
+    "testo": "Light order",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.lightness": {
+    "testo": "Lightness",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.line_ends_closer_than_this": {
+    "testo": "Line ends closer than this meet (they move to their middle)",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.line_width": {
+    "testo": "Line width",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.lines_are_joined_into_as": {
+    "testo": "Lines are joined into as few paths as possible; where the route has to travel, it sews over a line twice.",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.lines_ending_at_a_cut": {
+    "testo": "Lines ending at a cut line are joined to the line beyond it",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.lines_of_one_colour_and": {
+    "testo": "Lines of one colour and stitch are connected together. Each piece is sewn once: a network that branches needs a line per pair of loose ends.",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.list_longer.one": {
+    "testo": "The list is longer: {n} thread is left over — is it the list of this design?",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.list_longer.other": {
+    "testo": "The list is longer: {n} threads are left over — is it the list of this design?",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.list_shorter.one": {
+    "testo": "The list is shorter: the last {n} block keeps its colour.",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.list_shorter.other": {
+    "testo": "The list is shorter: the last {n} blocks keep their colour.",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.list_threads_in_the_order": {
+    "testo": "List threads in the order they are sewn",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.loading": {
+    "testo": "Loading…",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.loading_chart": {
+    "testo": "Loading chart…",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.lock_fitting_keeps_this_spool": {
+    "testo": "Lock: fitting keeps this spool",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.lock_the_selection_unlock_all": {
+    "testo": "Lock the selection / unlock all",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.locked_fitting_keeps_this_spool": {
+    "testo": "Locked: fitting keeps this spool — click to unlock",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.long_stitches_lie_over_the": {
+    "testo": "Long stitches lie over the loops (about 4 mm)",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.long_stitches_lie_over_the_2": {
+    "testo": "Long stitches lie over the loops; the rows are √3⁄2 of it apart, with a ±60° underlay (Ink/Stitch)",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.longer_jumps_stay_jumps_and": {
+    "testo": "Longer jumps stay jumps and are trimmed",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.longest": {
+    "testo": "Longest",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.look_back": {
+    "testo": "Look back",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.look_hints_snapping_and_arrow": {
+    "testo": "Look, hints, snapping and arrow-key steps back to the defaults (designs, threads and My threads stay).",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.loose_ends_this_close_are": {
+    "testo": "Loose ends this close are joined by a short straight line (0: never)",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.m": {
+    "testo": " m",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.m_sewn": {
+    "testo": " m · sewn ",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.m_top_thread": {
+    "testo": " m top thread",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.machine_for_new_designs": {
+    "testo": "Machine for new designs",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.machine_time_at_spm_spm": {
+    "testo": "Machine time at {spm} spm, with trims and thread changes",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.make_release_a_compound_path": {
+    "testo": "Make / release a compound path",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.margin_between_the_design_s": {
+    "testo": "Margin between the design's outline and the rectangle / circle",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.match_against_more_saturated_colours": {
+    "testo": "Match against more saturated colours: thread on fabric reads duller than a screen",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.match_numbers_in": {
+    "testo": "Match numbers in",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.matching": {
+    "testo": "Matching",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.max_width": {
+    "testo": "Max width",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.merge": {
+    "testo": "Merge…",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.merge_into_another_thread_its": {
+    "testo": "Merge into another thread: its objects take that thread",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.merge_similar": {
+    "testo": "Merge similar",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.merge_threads_whose_colours_differ": {
+    "testo": "Merge threads whose colours differ by less than this ΔE (CIEDE2000; 2–3 is barely visible)",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.merged_colours": {
+    "testo": "Merged colours:",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.merged_merged": {
+    "testo": " · {merged} merged",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.method": {
+    "testo": "Method",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.min_distance": {
+    "testo": "Min. distance",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.min_width": {
+    "testo": "Min width",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.mit_apache_2_0": {
+    "testo": "MIT, Apache-2.0",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.mitre": {
+    "testo": "Mitre",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.mitre_limit": {
+    "testo": "Mitre limit",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.mobilesam_select_objects_in_a": {
+    "testo": " MobileSAM — select objects in a picture",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.more_charts_from_embroidery_nerds": {
+    "testo": " more charts from Embroidery Nerds: ",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.more_colours_thread_charts_custom": {
+    "testo": "More colours: thread charts, custom, recent",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.more_threads_on_spool.one": {
+    "testo": "{n} more thread on this spool — sewn as one colour",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.more_threads_on_spool.other": {
+    "testo": "{n} more threads on this spool — sewn as one colour",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.most_compatible_what_ink_stitch": {
+    "testo": "Most compatible (what Ink/Stitch writes)",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.move_a_copy": {
+    "testo": "Move a copy",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.move_down": {
+    "testo": "Move down",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.move_to_point": {
+    "testo": "Move to point",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.move_up": {
+    "testo": "Move up",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.my_collection_mine": {
+    "testo": "My collection · {mine}",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.my_threads": {
+    "testo": "My threads",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.my_threads_is_empty": {
+    "testo": "My threads is empty",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.n1_1_the_design_once": {
+    "testo": "1 × 1: the design once.",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.n3_outline_fonts_nunito_bebas": {
+    "testo": "3 outline fonts: Nunito, Bebas Neue, Pacifico",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.n_chart_on_the_right": {
+    "testo": "{n} (chart on the right)",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.n_colour_blocks.one": {
+    "testo": "{n} colour block",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.n_colour_blocks.other": {
+    "testo": "{n} colour blocks",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.n_colours.one": {
+    "testo": "{n} colour",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.n_colours.other": {
+    "testo": "{n} colours",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.n_embroidery_fonts": {
+    "testo": "{n} embroidery fonts",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.n_files_pick_formats.one": {
+    "testo": "{n} file — pick formats on the left",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.n_files_pick_formats.other": {
+    "testo": "{n} files — pick formats on the left",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.n_left": {
+    "testo": "{n} left",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.n_objects.one": {
+    "testo": "{n} object",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.n_objects.other": {
+    "testo": "{n} objects",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.n_on_github": {
+    "testo": "{n} on GitHub",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.n_threads.one": {
+    "testo": "{n} thread",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.n_threads.other": {
+    "testo": "{n} threads",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.name_code_or_hex": {
+    "testo": "Name, code or #hex",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.name_count_colours_v3": {
+    "testo": "{name} · {count} colours · {v3}",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.name_v2_the_colour_wanted": {
+    "testo": "{name} {v2} — the colour wanted",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.nearest": {
+    "testo": "Nearest",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.needle": {
+    "testo": "Needle",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.needle_for_thread": {
+    "testo": " · thread: {needle}",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.needs": {
+    "testo": "Needs",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.needs_v1_v2_sewn_with": {
+    "testo": "Needs {v1} {v2}\nSewn with {v3} · ΔE {v4} ({v5})",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.negative_pucker_star_like_positive": {
+    "testo": "Negative: pucker (star-like) · positive: bloat (puffy)",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.neighbour_contrast": {
+    "testo": "Neighbour contrast",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.net": {
+    "testo": "Net",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.new_designs": {
+    "testo": "New designs",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.new_open_save_shift_save": {
+    "testo": "New / open / save (Shift: save as)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.next_colour_block_shift": {
+    "testo": "Next colour block (Shift+→)",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.no_background_place_it_on": {
+    "testo": "No background — place it on anything (Ink/Stitch)",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.no_block": {
+    "testo": "— no block",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.no_chart": {
+    "testo": "None",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.no_chart_matches_q": {
+    "testo": "No chart matches “{q}”.",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.no_close_spool_e_gt": {
+    "testo": "No close spool (ΔE > 6):",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.no_colour": {
+    "testo": "no colour",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.no_licence_is_published_licence": {
+    "testo": "No licence is published ({licence}): by downloading you agree to use them only for yourself.",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.no_limit": {
+    "testo": "no limit",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.no_match": {
+    "testo": "No match.",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.no_shortcut_matches_q": {
+    "testo": "No shortcut matches “{q}”.",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.no_spool_matches_q": {
+    "testo": "No spool matches “{q}”.",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.no_spools_in_my_threads": {
+    "testo": "No spools in My threads for this choice — add some first",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.no_spools_yet": {
+    "testo": "No spools yet",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.no_stitches_yet": {
+    "testo": "No stitches yet",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.no_threads_yet_pick_colours": {
+    "testo": "No threads yet — pick colours from the chart.",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.no_underlay_thin_columns": {
+    "testo": "No underlay — thin columns",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.node_tool_group": {
+    "testo": "Node tool",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.none": {
+    "testo": "None",
+    "file": "lib/convertActions.ts"
+  },
+  "filum.finestre.not_included_with_filum_because": {
+    "testo": "Not included with Filum because no licence is stated: download them from their author",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.not_installed": {
+    "testo": "Not installed",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.nothing": {
+    "testo": "Nothing",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.nothing_found": {
+    "testo": "Nothing found.",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.nothing_to_show_yet": {
+    "testo": "Nothing to show yet",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.nudge_0_5_mm_5": {
+    "testo": "Nudge 0.5 mm (5 mm)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.nudge_the_points_0_1": {
+    "testo": "Nudge the points 0.1 mm (1 mm)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.objects": {
+    "testo": "Objects",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.off_the_whole_rectangle_circle": {
+    "testo": "Off: the whole rectangle / circle is flattened, the design included",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.on_device_ai": {
+    "testo": "On-device AI",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.on_device_ai_models_mobilesam": {
+    "testo": "On-device AI models (MobileSAM, DexiNed, Informative Drawings, Tesseract)",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.one_layer_or_two_crossing": {
+    "testo": "One layer, or two crossing at 90° for deep pile",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.one_path_through_the_selected": {
+    "testo": "One path through the selected running-stitch lines, sewn twice where it travels (Ink/Stitch auto-route running stitch)",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.one_sewing_order_through_the": {
+    "testo": "One sewing order through the selected satins, cut where the route turns, running underpaths instead of jumps (Ink/Stitch auto-route satin columns)",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.one_spool_each": {
+    "testo": "One spool each",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.one_stitch_back_forward": {
+    "testo": "One stitch back / forward",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.only_corners_over": {
+    "testo": "Only corners over",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.only_jumps_within_one_colour": {
+    "testo": " Only jumps within one colour.",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.open_the_player_and_play": {
+    "testo": "Open the player and play the stitch-out",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.opens_the_print_dialog_choose": {
+    "testo": "Opens the print dialog — choose “Save as PDF” there for a PDF",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.operator_detailed_view": {
+    "testo": "Operator detailed view",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.operator_notes": {
+    "testo": "Operator notes",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.operator_overview": {
+    "testo": "Operator overview",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.optimise_stitch_order": {
+    "testo": " Optimise stitch order",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.optional_downloads": {
+    "testo": "Optional downloads",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.orange": {
+    "testo": "Orange",
+    "file": "lib/prefs.ts"
+  },
+  "filum.finestre.originally_v1_v2": {
+    "testo": "Originally {v1} {v2}",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.other_file": {
+    "testo": "Other file…",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.out_and_back": {
+    "testo": "Out and back",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.outline_fonts_bundled_for_lettering": {
+    "testo": "Outline fonts bundled for lettering. ",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.overlapping_sub_paths_cancel_out": {
+    "testo": "Overlapping sub-paths cancel out where they overlap",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.owned": {
+    "testo": "owned",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.pacchetto.embroiderynerd-charts.condizioni": {
+    "testo": "The author offers these charts as a free download for embroiderers but has not published a licence, so Filum can't include them. Filum downloads them from the author's repository to this device, for your own use. Brand and colour names belong to their owners.",
+    "file": "public/downloads/embroiderynerd-charts.json"
+  },
+  "filum.finestre.pacchetto.embroiderynerd-charts.descrizione": {
+    "testo": "164 more thread charts from the Embroidery Nerds thread database, by Matthew Enderle — Amann, Angelking, ARC, Aurifil, Coats, Fil-Tec, Floriani, Hemingworth, Kingfisher, Sulky and many more.",
+    "file": "public/downloads/embroiderynerd-charts.json"
+  },
+  "filum.finestre.pacchetto.embroiderynerd-charts.licenza": {
+    "testo": "No licence stated",
+    "file": "public/downloads/embroiderynerd-charts.json"
+  },
+  "filum.finestre.pacchetto.embroiderynerd-charts.titolo": {
+    "testo": "Embroidery Nerds thread charts",
+    "file": "public/downloads/embroiderynerd-charts.json"
+  },
+  "filum.finestre.pacchetto.nc-fonts.condizioni": {
+    "testo": "Free for personal and other non-commercial use. Give the font's author credit and share changes to the font under the same licence. Designs stitched with these fonts may not be sold or used commercially.",
+    "file": "public/downloads/nc-fonts.json"
+  },
+  "filum.finestre.pacchetto.nc-fonts.descrizione": {
+    "testo": "8 more fonts from the Ink/Stitch community collection (Flowery Crosses, Flowery Crosses Multicolor, Handkerchief, Ladie's present, Magic Crosses, Nautical, Priscilla, Very crossy). Their authors allow only non-commercial use, so Filum doesn't include them.",
+    "file": "public/downloads/nc-fonts.json"
+  },
+  "filum.finestre.pacchetto.nc-fonts.titolo": {
+    "testo": "Non-commercial embroidery fonts",
+    "file": "public/downloads/nc-fonts.json"
+  },
+  "filum.finestre.pan": {
+    "testo": "Pan",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.paper": {
+    "testo": "Paper",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.parts_of_the_fill_no": {
+    "testo": "Parts of the fill no rung crosses stay a fill",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.pause": {
+    "testo": "Pause",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.pearls": {
+    "testo": "Pearls",
+    "file": "lib/convert.ts"
+  },
+  "filum.finestre.pen": {
+    "testo": "Pen",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.pen_and_node_tool_new": {
+    "testo": "Pen and node tool: new and moved points snap to existing points (hold Ctrl to ignore)",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.pen_running_stitch_freehand_satin": {
+    "testo": "Pen (running stitch) · Freehand · Satin column",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.pen_satin_group": {
+    "testo": "Pen & satin",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.pes_v1_brother_colours": {
+    "testo": "v1 · Brother colours",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.pes_v6_exact_threads": {
+    "testo": "v6 · exact threads",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.pes_version": {
+    "testo": "PES version",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.pick_one_object_inside_a": {
+    "testo": "Pick one object inside a group",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.pick_the_files_to_include": {
+    "testo": "Pick the files to include on the left",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.picture": {
+    "testo": "Picture",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.picture_2": {
+    "testo": "picture",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.pictures": {
+    "testo": "Pictures",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.pictures_lettering_group": {
+    "testo": "Pictures & lettering",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.pieces_lying_on_top_of": {
+    "testo": "Pieces lying on top of another piece are left out",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.pixels_per_inch_300_prints": {
+    "testo": "Pixels per inch: 300 prints sharp at the real size; 150 for screens and e-mail (Ink/Stitch DPI, 100–2000)",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.plain": {
+    "testo": "Plain",
+    "file": "lib/convert.ts"
+  },
+  "filum.finestre.play": {
+    "testo": "Play",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.playback_speed_stitches_per_second": {
+    "testo": "Playback speed (stitches per second)",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.points": {
+    "testo": "Points",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.points_per_centimetre": {
+    "testo": "Points per centimetre",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.points_snap_to_existing_points": {
+    "testo": "Points snap to existing points (Ctrl: off) · ending on the end of another running path joins them",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.poor_poor": {
+    "testo": " · {poor} poor",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.ported_code": {
+    "testo": "Ported code",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.prefer_brand": {
+    "testo": "Prefer brand",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.prefer_owned": {
+    "testo": "Prefer owned",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.preferences": {
+    "testo": "Preferences",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.preparing": {
+    "testo": "Preparing…",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.preparing_the_machine_thread_breaks": {
+    "testo": "Preparing the machine, thread breaks, bobbin changes…",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.preview": {
+    "testo": " Preview",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.preview_dots": {
+    "testo": "Preview…",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.previous_colour_block_shift": {
+    "testo": "Previous colour block (Shift+←)",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.previous_next_colour_block": {
+    "testo": "Previous / next colour block",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.print_preview": {
+    "testo": "Print preview",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.print_save_as_pdf": {
+    "testo": " Print / Save as PDF",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.print_title": {
+    "testo": "Print — {name}",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.project": {
+    "testo": "project",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.projects_whose_code_or_data": {
+    "testo": "Projects whose code or data Filum's engine is derived from. ",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.public_domain": {
+    "testo": "public domain",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.pull_compensation": {
+    "testo": "Pull compensation",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.purchase_order": {
+    "testo": "Purchase order #",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.radius": {
+    "testo": "Radius",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.raspberry": {
+    "testo": "Raspberry",
+    "file": "lib/prefs.ts"
+  },
+  "filum.finestre.reach": {
+    "testo": "Reach",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.realistic": {
+    "testo": "Realistic",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.realistic_as_sewn_stitches_every": {
+    "testo": "Realistic: as sewn · Stitches: every stitch as a line",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.recent": {
+    "testo": "Recent",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.record_a_stitch_out_video": {
+    "testo": "Record a stitch-out video",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.recording_failed_message": {
+    "testo": "Recording failed: {message}",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.recording_the_stitch_out": {
+    "testo": "Recording the stitch-out…",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.rectangle": {
+    "testo": "Rectangle",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.rectangle_ellipse_lettering_click_to": {
+    "testo": "Rectangle · Ellipse · Lettering (click to place, type, Esc to finish)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.redwork_every_line_sewn_twice": {
+    "testo": "Redwork: every line sewn twice, once each way — one path, no jumps (Ink/Stitch redwork)",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.remove": {
+    "testo": "Remove",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.remove_2": {
+    "testo": " Remove",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.remove_all_length_spools_from": {
+    "testo": "Remove all {length} spools from My threads?",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.remove_every_spool_from_my": {
+    "testo": "Remove every spool from My threads",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.remove_from_my_threads": {
+    "testo": "Remove from My threads",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.remove_smaller_than": {
+    "testo": "Remove smaller than",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.remove_the_fills_and_the": {
+    "testo": "Remove the fills and the rungs",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.remove_this_installed_chart": {
+    "testo": "Remove this installed chart",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.remove_title_from_this_device": {
+    "testo": "Remove {title} from this device? Designs that use them keep their stitches, but can't be changed until you download them again.",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.remove_unused": {
+    "testo": "Remove unused",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.removed_unused_threads.one": {
+    "testo": "Removed {n} unused thread",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.removed_unused_threads.other": {
+    "testo": "Removed {n} unused threads",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.reorder_objects_to_minimise_colour": {
+    "testo": "Reorder objects to minimise colour changes and jumps (keeps stacking)",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.repeat_length": {
+    "testo": "Repeat length",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.repeats": {
+    "testo": "Repeats",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.replace": {
+    "testo": "Replace ",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.reset": {
+    "testo": "Reset",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.reset_digitizer_settings": {
+    "testo": "Reset digitizer settings",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.reset_every_tool_s_settings": {
+    "testo": "Reset every tool's settings",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.reset_preferences": {
+    "testo": "Reset preferences",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.revert_all": {
+    "testo": " Revert all",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.ridges_segment": {
+    "testo": "Ridges / segment",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.right_click": {
+    "testo": "Right-click",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.rise": {
+    "testo": "Rise",
+    "file": "lib/shapeOps.ts"
+  },
+  "filum.finestre.rotate": {
+    "testo": "Rotate",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.rotate_the_fill_angle_5": {
+    "testo": "Rotate the fill angle 5° · change the satin width (Shift: more)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.round": {
+    "testo": "Round",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.route": {
+    "testo": "Route",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.row_distance_of_the_net": {
+    "testo": "Row distance of the net: 1.5–2 mm for deep pile, 2–2.5 mm for medium",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.rows_blocks": {
+    "testo": "{rows} blocks",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.rungs": {
+    "testo": "Rungs",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.running_lines_in_the_selection": {
+    "testo": "Running lines in the selection show where the route may travel.",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.running_stitch": {
+    "testo": "Running stitch",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.running_stitch_along_the_centre": {
+    "testo": "Running stitch along the centre lines, or satins as wide as the shape",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.rust_crates_compiled_into_the": {
+    "testo": "Rust crates compiled into the stitch engine and the desktop app (all platforms). ",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.satin_columns": {
+    "testo": "Satin columns",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.satin_scroll_or": {
+    "testo": "Satin: scroll or [ ]",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.saturation": {
+    "testo": "Saturation",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.saturation_boost": {
+    "testo": "Saturation boost",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.saved_with_the_design_and": {
+    "testo": "Saved with the design and redone with every edit. For towels, fleece and fur.",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.sawtooth": {
+    "testo": "Sawtooth",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.scale_handles": {
+    "testo": "Scale handles",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.scaled_down_to_16_000": {
+    "testo": " — scaled down to 16,000 px",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.search": {
+    "testo": "Search",
+    "file": "components/Licenses.tsx"
+  },
+  "filum.finestre.search_length_spools": {
+    "testo": "Search {length} spools",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.search_total_charts_brand_line": {
+    "testo": "Search {total} charts — brand, line, collection",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.seconds_for_every_colour_change": {
+    "testo": "Seconds for every colour change — saved with the design",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.seconds_for_every_trim_saved": {
+    "testo": "Seconds for every trim — saved with the design",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.select_a_design_thread_to": {
+    "testo": "Select a design thread to give it this spool",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.select_a_fill_shape_and": {
+    "testo": "Select a fill shape and an open line together (Shift-click)",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.select_a_thread_first": {
+    "testo": "Select a thread first",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.select_a_thread_to_recolour": {
+    "testo": "Select a thread to recolour it",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.select_all_node_tool_every": {
+    "testo": "Select all (node tool: every point)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.select_edit_nodes_cutter_pan": {
+    "testo": "Select · Edit nodes · Cutter · Pan · Ruler",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.select_its_objects": {
+    "testo": "Select its objects",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.select_one_or_more_shapes": {
+    "testo": "Select one or more shapes first",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.select_points_drag_to_move": {
+    "testo": "Select points · drag to move them (Shift: straight, Ctrl: no snapping)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.select_the_fill_together_with": {
+    "testo": "Select the fill together with lines drawn right across it (rungs): each rung crosses the outline twice and sets the stitch direction there. Where more than two rungs meet one part, the satins end.",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.select_the_objects_to_convert": {
+    "testo": "Select the objects to convert first.",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.select_the_objects_to_knock": {
+    "testo": "Select the objects to knock down first.",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.selection_objects_group": {
+    "testo": "Selection & objects",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.selections_active_tools_buttons_and": {
+    "testo": "Selections, active tools, buttons and handles. The default is the Filum colour.",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.settings": {
+    "testo": "Settings",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.sew_later_earlier_shift_last": {
+    "testo": "Sew later / earlier (Shift: last / first)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.sewn": {
+    "testo": "Sewn",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.shape": {
+    "testo": "Shape",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.shape_builder_drag_across_overlaps": {
+    "testo": "Shape builder: drag across overlaps to merge them · Alt-drag deletes · Shift-click adds shapes",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.shape_corners": {
+    "testo": "Shape corners",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.shape_effects": {
+    "testo": "Shape effects",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.shape_margin": {
+    "testo": "Shape margin",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.shapes_and_holes_smaller_than": {
+    "testo": "Shapes and holes smaller than this are removed",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.shared_sharing_a_spool": {
+    "testo": " · {shared} sharing a spool",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.shared_sharing_a_spool_sewn": {
+    "testo": " · {shared} sharing a spool (sewn as one colour)",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.sharp_mitred_corners_reaching_further": {
+    "testo": "Sharp mitred corners reaching further than this many times the reach are cut off",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.shift_moves_by_the_larger": {
+    "testo": "Shift moves by the larger step.",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.shift_shift": {
+    "testo": "Shift+← / Shift+→",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.shift_while_dragging": {
+    "testo": "Shift while dragging",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.short_jumps_between_objects_of": {
+    "testo": "Short jumps between objects of one colour become running stitches (Ink/Stitch jump to stroke)",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.shortcut_hints": {
+    "testo": "Shortcut hints",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.shortcuts": {
+    "testo": "Shortcuts",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.shortest": {
+    "testo": "Shortest",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.show_only_this_colour_dim": {
+    "testo": "Show only this colour (dim the others)",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.show_the_estimated_time_on": {
+    "testo": "Show the estimated time on the client pages too",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.shuffle": {
+    "testo": "Shuffle",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.side_branches_shorter_than_this": {
+    "testo": "Side branches shorter than this are removed — about the line width of the shape works in most cases",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.sil_ofl": {
+    "testo": "SIL OFL",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.simple": {
+    "testo": "Simple",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.single": {
+    "testo": "Single",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.size": {
+    "testo": "Size",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.size_of_the_colour_pictures": {
+    "testo": "Size of the colour pictures in the operator detailed view (Ink/Stitch 15–110 mm)",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.skew_shift_15_steps": {
+    "testo": "Skew (Shift: 15° steps)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.smart_guides": {
+    "testo": "Smart guides",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.smart_guides_and_point_snapping": {
+    "testo": "Smart guides and point snapping are also in View ▸ Snapping; grid, jumps, underlay and stitch colours in the View menu; the fabric's look in the Design tab.",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.smooth_curves_through_the_rail": {
+    "testo": "Smooth curves through the rail points (draw a doubled point to keep a corner)",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.smoothing": {
+    "testo": "Smoothing",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.snap_to_brand_code_name": {
+    "testo": "Snap to {brand} {code} {name} (ΔE {v4}, {v5})",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.snap_to_other_objects_and": {
+    "testo": "Snap to other objects and the hoop while moving and scaling (Ctrl while dragging: off)",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.snap_to_points": {
+    "testo": "Snap to points",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.snapping": {
+    "testo": "Snapping",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.something_went_wrong": {
+    "testo": "Something went wrong",
+    "file": "components/ErrorBoundary.tsx"
+  },
+  "filum.finestre.sort_by_sew_order": {
+    "testo": " Sort by sew order",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.space_drag_middle_mouse": {
+    "testo": "Space + drag · middle mouse",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.spacing": {
+    "testo": "Spacing",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.speed": {
+    "testo": "Speed",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.spm": {
+    "testo": " spm",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.spm_2": {
+    "testo": "spm",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.spool_budget": {
+    "testo": "Spool budget",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.spools": {
+    "testo": "Spools",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.spools_2": {
+    "testo": "spools",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.spools_3": {
+    "testo": " spools",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.spools_of_this_brand_win": {
+    "testo": "Spools of this brand win close calls",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.square": {
+    "testo": "Square",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.squares": {
+    "testo": "Squares",
+    "file": "lib/convert.ts"
+  },
+  "filum.finestre.squeeze": {
+    "testo": "Squeeze",
+    "file": "lib/shapeOps.ts"
+  },
+  "filum.finestre.st": {
+    "testo": " st · ",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.start_afresh": {
+    "testo": "Start afresh",
+    "file": "components/ErrorBoundary.tsx"
+  },
+  "filum.finestre.start_end_at_rung": {
+    "testo": "Start / end at rung",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.stay": {
+    "testo": "Stay",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.stitch_as": {
+    "testo": "Stitch as",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.stitch_direction_draw_guide_lines": {
+    "testo": "Stitch direction: draw guide lines the rows follow",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.stitch_file": {
+    "testo": "stitch file",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.stitch_length": {
+    "testo": "Stitch length",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.stitch_out": {
+    "testo": "Stitch-out",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.stitch_out_player_group": {
+    "testo": "Stitch-out player",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.stitches": {
+    "testo": "Stitches",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.stitches_per_minute_saved_with": {
+    "testo": "Stitches per minute — saved with the design (Design ▸ Time estimates)",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.stitches_sewn_so_far": {
+    "testo": "Stitches sewn so far",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.stops_needle_goes.one": {
+    "testo": "{n} stop: the needle goes to {x}, {y} mm (hoop coordinates) before each.",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.stops_needle_goes.other": {
+    "testo": "{n} stops: the needle goes to {x}, {y} mm (hoop coordinates) before each.",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.straight_curved_segments": {
+    "testo": "Straight / curved segments",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.straight_lines": {
+    "testo": "Straight lines",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.straight_runs_become_straight_segments": {
+    "testo": "Straight runs become straight segments (logos, lettering)",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.straight_through": {
+    "testo": "Straight through",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.stretch_the_repeats_so_they": {
+    "testo": "Stretch the repeats so they fill the line exactly (off: whole repeats, the rest of the line stays free)",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.stretch_to_fit": {
+    "testo": "Stretch to fit",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.style": {
+    "testo": "Style",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.teal": {
+    "testo": "Teal",
+    "file": "lib/prefs.ts"
+  },
+  "filum.finestre.tension": {
+    "testo": "Tension",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.tesseract_text_that_becomes_lettering": {
+    "testo": " Tesseract — text that becomes lettering",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.the_bar_along_the_bottom": {
+    "testo": "The bar along the bottom shows the keys and clicks of the current tool",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.the_best_6_spools_for": {
+    "testo": "The best 6 spools for the whole design — fewer colour changes",
+    "file": "lib/threadMatch.ts"
+  },
+  "filum.finestre.the_chart_is_empty": {
+    "testo": "The chart is empty",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.the_closest_spool_for_every": {
+    "testo": "The closest spool for every colour (CIEDE2000)",
+    "file": "lib/threadMatch.ts"
+  },
+  "filum.finestre.the_commands_for_what_is": {
+    "testo": "The commands for what is under the pointer (right-drag pans)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.the_copies_overlap_spacing_below": {
+    "testo": " · the copies overlap: spacing below the design size",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.the_design_as_large_as": {
+    "testo": "The design as large as the page",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.the_design_has": {
+    "testo": " · the design has ",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.the_design_has_no_stops": {
+    "testo": "The design has no stops yet (Stop after, appliqué) — nothing changes.",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.the_design_its_colours_and": {
+    "testo": "The design, its colours and a line for the client's signature",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.the_digitizer_remembers_its_settings": {
+    "testo": "The digitizer remembers its settings between pictures.",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.the_editor_ran_into_an": {
+    "testo": "The editor ran into an error. Your design is still here: undo the last step, or try again.",
+    "file": "components/ErrorBoundary.tsx"
+  },
+  "filum.finestre.the_export_dialog_starts_with": {
+    "testo": "The export dialog starts with this format and remembers what you choose there.",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.the_fabric_colour_of_the": {
+    "testo": "The fabric colour of the realistic view",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.the_frame_new_designs_start": {
+    "testo": "The frame new designs start in",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.the_frame_stays_where_the": {
+    "testo": "The frame stays where the stop happens",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.the_line_trails_the_pointer": {
+    "testo": "The line trails the pointer and becomes a clean Bézier path · end at the start to close",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.the_list_names_catalogue_numbers": {
+    "testo": "The list names catalogue numbers but no colours (Ink/Stitch: Apply other thread list): the colours come from this chart",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.the_machine_new_designs_start": {
+    "testo": "The machine new designs start with (each design keeps its own: Design ▸ Machine)",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.the_machine_stops": {
+    "testo": "The machine stops",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.the_machine_stops_here": {
+    "testo": "The machine stops here",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.the_narrowest_point_of_the": {
+    "testo": "The narrowest point of the column",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.the_needle_goes_to_this": {
+    "testo": "The needle goes to this point of the hoop before every stop: by default the top centre, which brings the design towards you",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.the_satin_keeps_its_width": {
+    "testo": "The satin keeps its width and settings; rungs sit away from sharp corners. Edit the rails and rungs with the node tool (A).",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.the_selected_lines_cut_the": {
+    "testo": "The selected lines cut the shape apart first — use them to split crossings or set where lines end.",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.the_spools_you_own_fit": {
+    "testo": "The spools you own: fit a design to them in Thread colours.",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.the_widest_point_of_the": {
+    "testo": "The widest point of the column",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.theme": {
+    "testo": "Theme",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.they_are_all_in_my": {
+    "testo": "They are all in My threads already",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.they_come_straight_from_their": {
+    "testo": ". They come straight from their authors' repositories and stay on this device.",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.this_version_of_filum_offers": {
+    "testo": "This version of Filum offers no downloads.",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.thread": {
+    "testo": "Thread",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.thread_charts": {
+    "testo": "Thread charts",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.thread_colours": {
+    "testo": "Thread colours…",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.thread_colours_2": {
+    "testo": "Thread colours",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.thread_cuts_trims_and_thread": {
+    "testo": "Thread cuts: trims and thread changes",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.thread_list": {
+    "testo": "thread list",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.thread_lists_txt_col_edr": {
+    "testo": "Thread lists (TXT, COL, EDR, INF)",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.thread_matching": {
+    "testo": "Thread matching",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.thread_no": {
+    "testo": "No. {n}",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.thread_weight_a_heavier_or": {
+    "testo": "Thread weight — a heavier or finer thread than the design's gets its own spacing and counts by its thickness in the density map",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.threads": {
+    "testo": "Threads",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.threads_2": {
+    "testo": " threads",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.thumbnails": {
+    "testo": "Thumbnails",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.timeline_zoom": {
+    "testo": "Timeline zoom",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.times": {
+    "testo": "Times",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.tip_select_lines_with_the": {
+    "testo": "Tip: select lines with the shape to cut it apart first (where lines should end or cross).",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.tip_with_the_node_tool": {
+    "testo": "Tip: with the node tool (A), drag the corner widgets to round single corners.",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.title": {
+    "testo": "Title",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.title_click_go_to_this": {
+    "testo": "{title}\nClick: go to this block",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.title_installed": {
+    "testo": "{title}: installed",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.title_removed": {
+    "testo": "{title}: removed",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.to_the_end_end": {
+    "testo": "To the end (End)",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.to_the_start_home": {
+    "testo": "To the start (Home)",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.to_the_start_the_end": {
+    "testo": "To the start / the end",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.tolerance": {
+    "testo": "Tolerance",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.tools_group": {
+    "testo": "Tools",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.transform_group": {
+    "testo": "Transform",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.transparent": {
+    "testo": "Transparent",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.transport": {
+    "testo": "Transport",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.triangles": {
+    "testo": "Triangles",
+    "file": "lib/convert.ts"
+  },
+  "filum.finestre.trim": {
+    "testo": "Trim",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.trim_and_change_the_thread": {
+    "testo": "Trim and change the thread",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.trim_between_parts_that_do": {
+    "testo": "Trim between parts that do not touch, instead of a jump",
+    "file": "components/RouteDialog.tsx"
+  },
+  "filum.finestre.trim_time": {
+    "testo": "Trim time",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.try_again": {
+    "testo": "Try again",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.turns_sharper_than_this_stay": {
+    "testo": "Turns sharper than this stay corners",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.unchanged_already_match": {
+    "testo": " · {unchanged} already match",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.unconverted_parts": {
+    "testo": "Unconverted parts",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.under_the_selection": {
+    "testo": "Under the selection",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.underlay": {
+    "testo": "Underlay",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.undo_and_continue": {
+    "testo": "Undo and continue",
+    "file": "components/ErrorBoundary.tsx"
+  },
+  "filum.finestre.undo_redo": {
+    "testo": "Undo / redo",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.unit_seconds": {
+    "testo": "s",
+    "file": "components/PrintDialog.tsx"
+  },
+  "filum.finestre.unused": {
+    "testo": "unused",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.update": {
+    "testo": "Update",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.update_available": {
+    "testo": "Update available",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.use_at_most_this_many": {
+    "testo": "Use at most this many spools for the whole design (0 = no limit) — fewer colour changes",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.use_colour": {
+    "testo": "Use colour",
+    "file": "components/ThreadPicker.tsx"
+  },
+  "filum.finestre.use_distinct_or_lock_one": {
+    "testo": "— use “Distinct” or lock one to keep them apart",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.use_the_fabric_colour": {
+    "testo": "Use the fabric colour",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.usually_the_fabric_s_colour": {
+    "testo": "Usually the fabric's colour, so the knockdown disappears",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.v1_e_v2_v3_hue": {
+    "testo": "{v1}\nΔE {v2} ({v3}) · hue {v4} · saturation {v5} · lightness {v6}",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.v1_match": {
+    "testo": "{v1} match",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.v1_not_in_the_chart": {
+    "testo": " (“{v1}” not in the chart)",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.v1_of_v2": {
+    "testo": "{v1} of {v2}",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.v1_v2_px_at_dpi": {
+    "testo": "{v1} × {v2} px at {dpi} dpi",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.variation": {
+    "testo": "Variation",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.vector_stitch_realistic_view": {
+    "testo": "Vector · Stitch · Realistic view",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.vertical": {
+    "testo": "Vertical",
+    "file": "components/ShapeEffects.tsx"
+  },
+  "filum.finestre.video_recording_is_not_supported": {
+    "testo": "Video recording is not supported here",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.view_group": {
+    "testo": "View",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.vivid": {
+    "testo": "Vivid",
+    "file": "lib/threadMatch.ts"
+  },
+  "filum.finestre.vvv_the_stitches_follow_the": {
+    "testo": "VVV — the stitches follow the drawn line",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.wave": {
+    "testo": "Wave",
+    "file": "lib/convert.ts"
+  },
+  "filum.finestre.what_s_included": {
+    "testo": "What's included",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.what_stays_of_the_selection": {
+    "testo": "What stays of the selection besides the new satins",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.where_lines_cross_or_branch": {
+    "testo": "Where lines cross or branch, go on along the straightest one (else: any)",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.while_drawing": {
+    "testo": "While drawing",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.white": {
+    "testo": "White",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.whole_design": {
+    "testo": "Whole design",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.widen_the_columns_so_they": {
+    "testo": "Widen the columns so they keep the shape's width once sewn",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.width_of_lines": {
+    "testo": "Width of lines",
+    "file": "components/ConvertTools.tsx"
+  },
+  "filum.finestre.width_of_the_next_point": {
+    "testo": "Width of the next point · scroll over a point to change its width",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.width_of_the_stitch_lines": {
+    "testo": "Width of the stitch lines in the simple picture (Ink/Stitch line width, 0.3 mm)",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.with_a_chart_as_target": {
+    "testo": "With a chart as target: spools in My threads win close calls",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.with_a_chart_colour": {
+    "testo": " with a chart colour",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.working": {
+    "testo": "Working…",
+    "file": "components/KnockdownDialog.tsx"
+  },
+  "filum.finestre.worst": {
+    "testo": " · worst ",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.wt": {
+    "testo": "wt",
+    "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.you_accepted_license_on_v2": {
+    "testo": "You accepted {license} on {v2}",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.you_re_offline_connect_to": {
+    "testo": "You're offline. Connect to the internet to download.",
+    "file": "components/DownloadsPanel.tsx"
+  },
+  "filum.finestre.your_own_colour": {
+    "testo": "Your own colour",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.your_own_settings": {
+    "testo": "Your own settings.",
+    "file": "components/MatchPanel.tsx"
+  },
+  "filum.finestre.your_own_settings_thread_colours": {
+    "testo": "Your own settings (Thread colours ▸ matching options).",
+    "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.zip": {
+    "testo": ".zip",
+    "file": "components/ExportExtras.tsx"
+  },
+  "filum.finestre.zoom_at_the_cursor": {
+    "testo": "Zoom (at the cursor)",
+    "file": "components/Dialogs.tsx"
+  },
+  "filum.finestre.zoom_in_ctrl_wheel": {
+    "testo": "Zoom in (Ctrl+wheel)",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.zoom_out_ctrl_wheel": {
+    "testo": "Zoom out (Ctrl+wheel)",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.zoom_the_timeline": {
+    "testo": "Zoom the timeline",
+    "file": "components/Dialogs.tsx"
   },
   "filum.menu.a_net_that_flattens_pile": {
     "testo": "A net that flattens pile fabrics — under the whole design or the selection",

@@ -62,6 +62,7 @@ import type { Thread, ThreadSource } from "../types";
 import { ChartBrowser, lastChart, setLastChart, threadTitle, useChart } from "./ThreadPicker";
 import { Dialog, Num } from "./ui";
 import { safeSetItem } from "../lib/storage";
+import { t, tn } from "../nova/i18n/filum";
 
 const fmtK = (n: number) => (n >= 10000 ? `${(n / 1000).toFixed(1)}k` : n.toLocaleString());
 
@@ -77,13 +78,13 @@ export function FitStrip({ onPick, active }: { onPick?: (threadId: string) => vo
   const total = blocks.reduce((a, b) => a + b.stitches, 0) || 1;
   const fitted = Object.keys(doc.threadSources ?? {}).length > 0;
   const showNeeds = fitted || blocks.some((b) => b.needs.length > 1);
-  if (!blocks.length) return <div className="seq-strip empty">No stitches yet</div>;
+  if (!blocks.length) return <div className="seq-strip empty">{t("filum.finestre.no_stitches_yet")}</div>;
   return (
     <div className={`fit-strip ${showNeeds ? "two" : ""}`}>
       {showNeeds && (
         <div className="fs-labels">
-          <span>Sewn</span>
-          <span>Needs</span>
+          <span>{t("filum.finestre.sewn")}</span>
+          <span>{t("filum.finestre.needs")}</span>
         </div>
       )}
       <div className="fs-blocks">
@@ -95,7 +96,7 @@ export function FitStrip({ onPick, active }: { onPick?: (threadId: string) => vo
                 type="button"
                 className="fs-spool"
                 style={{ background: b.thread.color, color: inkOn(b.thread.color) }}
-                title={`${b.index + 1}. ${threadTitle(b.thread)}\n${b.stitches.toLocaleString()} stitches · ${b.metres.toFixed(1)} m${b.needs.length > 1 ? `\n${b.needs.length} threads on this spool` : ""}`}
+                title={`${b.index + 1}. ${threadTitle(b.thread)}${t("filum.finestre.block_stats", { stitches: b.stitches.toLocaleString(), metres: b.metres.toFixed(1) })}${b.needs.length > 1 ? t("filum.finestre.length_threads_on_this_spool", { length: b.needs.length }) : ""}`}
                 onClick={() => b.threadId && onPick?.(b.threadId)}
               >
                 {b.index + 1}
@@ -114,7 +115,7 @@ export function FitStrip({ onPick, active }: { onPick?: (threadId: string) => vo
                       key={i}
                       className={`${n.threadId === active ? "on" : ""} ${n.d > 6 ? "far" : ""}`}
                       style={{ flexGrow: n.stitches, background: n.need.color }}
-                      title={`Needs ${[n.need.name, n.need.brand, n.need.code].filter(Boolean).join(" ")} ${n.need.color.toUpperCase()}\nSewn with ${threadTitle(b.thread)} · ΔE ${n.d.toFixed(1)} (${deltaLabel(n.d)})`}
+                      title={t("filum.finestre.needs_v1_v2_sewn_with", { v1: [n.need.name, n.need.brand, n.need.code].filter(Boolean).join(" "), v2: n.need.color.toUpperCase(), v3: threadTitle(b.thread), v4: n.d.toFixed(1), v5: deltaLabel(n.d) })}
                       onClick={() => onPick?.(n.threadId)}
                     />
                   ))}
@@ -129,7 +130,7 @@ export function FitStrip({ onPick, active }: { onPick?: (threadId: string) => vo
 }
 
 function ThreadRow({
-  t,
+  t: th,
   index,
   count,
   selected,
@@ -162,22 +163,22 @@ function ThreadRow({
   const editFrom = useRef<Thread | null>(null);
   // the catalogue colour of the thread's spool (the chart's, when the chart has its code)
   const spoolColor = (from: Thread) => (match && from.code && match.code === from.code ? match.color : from.color);
-  const [hex, setHex] = useState(t.color.toUpperCase());
-  useEffect(() => setHex(t.color.toUpperCase()), [t.color]);
+  const [hex, setHex] = useState(th.color.toUpperCase());
+  useEffect(() => setHex(th.color.toUpperCase()), [th.color]);
   const used = usage.objects > 0;
-  const exact = match && match.d < 0.5 && (t.code === match.code || !t.code);
+  const exact = match && match.d < 0.5 && (th.code === match.code || !th.code);
   return (
     <div className={`tm-row ${selected ? "on" : ""}`} onClick={onSelect}>
       <button
         type="button"
         className="tm-swatch"
-        style={{ background: t.color, color: inkOn(t.color) }}
-        title="Edit colour"
+        style={{ background: th.color, color: inkOn(th.color) }}
+        title={t("filum.finestre.edit_colour")}
         onClick={(e) => {
           e.stopPropagation();
           onSelect();
           useStore.getState().checkpoint();
-          editFrom.current = t;
+          editFrom.current = th;
           colorRef.current?.click();
         }}
       >
@@ -185,16 +186,16 @@ function ThreadRow({
         <input
           ref={colorRef}
           type="color"
-          value={t.color}
+          value={th.color}
           onChange={(e) => {
-            const from = editFrom.current ?? t;
-            updateThread(t.id, colourEdit(from, e.target.value, spoolColor(from)), true);
+            const from = editFrom.current ?? th;
+            updateThread(th.id, colourEdit(from, e.target.value, spoolColor(from)), true);
           }}
           tabIndex={-1}
         />
       </button>
       <div className="tm-main">
-        <input className="input tm-name" defaultValue={t.name} key={t.name} onBlur={(e) => e.target.value !== t.name && updateThread(t.id, { name: e.target.value })} />
+        <input className="input tm-name" defaultValue={th.name} key={th.name} onBlur={(e) => e.target.value !== th.name && updateThread(th.id, { name: e.target.value })} />
         <div className="tm-meta">
           <input
             className="input mono tm-hex"
@@ -203,21 +204,21 @@ function ThreadRow({
             onChange={(e) => setHex(e.target.value)}
             onBlur={() => {
               const h = normHex(hex);
-              if (h && h !== t.color) updateThread(t.id, colourEdit(t, h, spoolColor(t)));
-              else setHex(t.color.toUpperCase());
+              if (h && h !== th.color) updateThread(th.id, colourEdit(th, h, spoolColor(th)));
+              else setHex(th.color.toUpperCase());
             }}
             onKeyDown={(e) => e.key === "Enter" && (e.target as HTMLInputElement).blur()}
           />
-          <input className="input tm-brand" placeholder="Brand" defaultValue={t.brand} key={`b${t.brand}`} onBlur={(e) => e.target.value !== t.brand && updateThread(t.id, { brand: e.target.value })} />
-          <input className="input tm-code" placeholder="Code" defaultValue={t.code} key={`c${t.code}`} onBlur={(e) => e.target.value !== t.code && updateThread(t.id, { code: e.target.value })} />
+          <input className="input tm-brand" placeholder={t("filum.finestre.brand")} defaultValue={th.brand} key={`b${th.brand}`} onBlur={(e) => e.target.value !== th.brand && updateThread(th.id, { brand: e.target.value })} />
+          <input className="input tm-code" placeholder={t("filum.finestre.code")} defaultValue={th.code} key={`c${th.code}`} onBlur={(e) => e.target.value !== th.code && updateThread(th.id, { code: e.target.value })} />
           <select
             className="input tm-weight"
-            value={t.weight ?? ""}
-            title="Thread weight — a heavier or finer thread than the design's gets its own spacing and counts by its thickness in the density map"
+            value={th.weight ?? ""}
+            title={t("filum.finestre.thread_weight_a_heavier_or")}
             onClick={(e) => e.stopPropagation()}
-            onChange={(e) => updateThread(t.id, { weight: e.target.value ? Number(e.target.value) : undefined })}
+            onChange={(e) => updateThread(th.id, { weight: e.target.value ? Number(e.target.value) : undefined })}
           >
-            <option value="">wt</option>
+            <option value="">{t("filum.finestre.wt")}</option>
             {THREAD_WEIGHTS.map((w) => (
               <option key={w.weight} value={w.weight}>
                 {w.weight}
@@ -229,35 +230,35 @@ function ThreadRow({
       <div className="tm-usage">
         {used ? (
           <>
-            <b>{fmtK(usage.stitches)}</b> st · {usage.metres.toFixed(1)} m
+            <b>{fmtK(usage.stitches)}</b>{t("filum.finestre.st")}{usage.metres.toFixed(1)}{t("filum.finestre.m")}
             <span className="stat">
-              {usage.objects} object{usage.objects === 1 ? "" : "s"}
+              {tn("filum.finestre.n_objects", usage.objects)}
             </span>
           </>
         ) : (
-          <span className="stat">unused</span>
+          <span className="stat">{t("filum.finestre.unused")}</span>
         )}
       </div>
       <div className="tm-match">
         {need ? (
-          <span className="tm-fit" title={`Originally ${[need.name, need.brand, need.code].filter(Boolean).join(" ")} ${need.color.toUpperCase()}`}>
+          <span className="tm-fit" title={t("filum.finestre.originally_v1_v2", { v1: [need.name, need.brand, need.code].filter(Boolean).join(" "), v2: need.color.toUpperCase() })}>
             <i style={{ background: need.color }} />
             <span className="stat">→</span>
-            <b className={`q-${qualityOf(deltaE(lab(need.color), lab(t.color)))}`} title={`${qualityOf(deltaE(lab(need.color), lab(t.color)))} match`}>
-              ΔE {deltaE(lab(need.color), lab(t.color)).toFixed(1)}
+            <b className={`q-${qualityOf(deltaE(lab(need.color), lab(th.color)))}`} title={t("filum.finestre.v1_match", { v1: qualityOf(deltaE(lab(need.color), lab(th.color))) })}>
+              {t("filum.finestre.e_n", { n: deltaE(lab(need.color), lab(th.color)).toFixed(1) })}
             </b>
             {!!shared && (
-              <span className="badge" title={`${shared} more thread${shared === 1 ? "" : "s"} on this spool — sewn as one colour`}>
+              <span className="badge" title={tn("filum.finestre.more_threads_on_spool", shared)}>
                 <Link2 size={10} /> {shared + 1}
               </span>
             )}
             <button
               type="button"
               className="icon-btn"
-              title="Back to the original colour"
+              title={t("filum.finestre.back_to_the_original_colour")}
               onClick={(e) => {
                 e.stopPropagation();
-                revertFit([t.id]);
+                revertFit([th.id]);
               }}
             >
               <Undo2 size={12} />
@@ -273,59 +274,59 @@ function ThreadRow({
             <button
               type="button"
               className="tm-snap"
-              title={`Snap to ${match.brand} ${match.code} ${match.name} (ΔE ${match.d.toFixed(1)}, ${deltaLabel(match.d)})`}
+              title={t("filum.finestre.snap_to_brand_code_name", { brand: match.brand, code: match.code, name: match.name, v4: match.d.toFixed(1), v5: deltaLabel(match.d) })}
               onClick={(e) => {
                 e.stopPropagation();
-                assignChart(t.id, match);
+                assignChart(th.id, match);
               }}
             >
               <i style={{ background: match.color }} />
-              {match.code} <span className="stat">ΔE {match.d.toFixed(1)}</span>
+              {match.code} <span className="stat">{t("filum.finestre.e_d", { d: match.d.toFixed(1) })}</span>
             </button>
           ))
         )}
       </div>
       <div className="tm-actions" onClick={(e) => e.stopPropagation()}>
-        <button type="button" className={`icon-btn ${locked ? "on" : ""}`} title={locked ? "Locked: fitting keeps this spool — click to unlock" : "Lock: fitting keeps this spool"} onClick={() => toggleLock(t.id)}>
+        <button type="button" className={`icon-btn ${locked ? "on" : ""}`} title={locked ? t("filum.finestre.locked_fitting_keeps_this_spool") : t("filum.finestre.lock_fitting_keeps_this_spool")} onClick={() => toggleLock(th.id)}>
           {locked ? <Lock size={13} /> : <Unlock size={13} />}
         </button>
         <button
           type="button"
           className="icon-btn"
-          title="Select its objects"
+          title={t("filum.finestre.select_its_objects")}
           disabled={!used}
           onClick={() => {
             const s = useStore.getState();
-            s.select(s.doc.objects.filter((o) => o.thread === t.id).map((o) => o.id));
-            s.set({ activeThread: t.id });
+            s.select(s.doc.objects.filter((o) => o.thread === th.id).map((o) => o.id));
+            s.set({ activeThread: th.id });
           }}
         >
           <Crosshair size={14} />
         </button>
-        <button type="button" className="icon-btn" title="Move up" disabled={index === 0} onClick={() => moveThread(t.id, -1)}>
+        <button type="button" className="icon-btn" title={t("filum.finestre.move_up")} disabled={index === 0} onClick={() => moveThread(th.id, -1)}>
           <ChevronUp size={14} />
         </button>
-        <button type="button" className="icon-btn" title="Move down" disabled={index === count - 1} onClick={() => moveThread(t.id, 1)}>
+        <button type="button" className="icon-btn" title={t("filum.finestre.move_down")} disabled={index === count - 1} onClick={() => moveThread(th.id, 1)}>
           <ChevronDown size={14} />
         </button>
-        <button type="button" className="icon-btn" title="Duplicate" onClick={() => duplicateThread(t.id)}>
+        <button type="button" className="icon-btn" title={t("filum.finestre.duplicate")} onClick={() => duplicateThread(th.id)}>
           <Copy size={14} />
         </button>
         <select
           className="select tm-merge"
           value=""
-          title="Merge into another thread: its objects take that thread"
+          title={t("filum.finestre.merge_into_another_thread_its")}
           disabled={!others.length}
-          onChange={(e) => e.target.value && mergeThreads([t.id], e.target.value)}
+          onChange={(e) => e.target.value && mergeThreads([th.id], e.target.value)}
         >
-          <option value="">Merge…</option>
+          <option value="">{t("filum.finestre.merge")}</option>
           {others.map((o) => (
             <option key={o.id} value={o.id}>
               {o.name}
             </option>
           ))}
         </select>
-        <button type="button" className="icon-btn" title={used ? "In use: merge it into another thread instead" : "Delete"} disabled={used} onClick={() => deleteThread(t.id)}>
+        <button type="button" className="icon-btn" title={used ? t("filum.finestre.in_use_merge_it_into") : t("filum.finestre.delete")} disabled={used} onClick={() => deleteThread(th.id)}>
           <Trash2 size={14} />
         </button>
       </div>
@@ -358,53 +359,53 @@ function MyThreadsPanel({ selected }: { selected: Thread | null }) {
       <div className="mine-head">
         <div className="seg">
           <button className={mode === "collection" ? "on" : ""} onClick={() => setMode("collection")}>
-            My collection · {mine.length}
+            {t("filum.finestre.my_collection_mine", { mine: mine.length })}
           </button>
           <button className={mode === "add" ? "on" : ""} onClick={() => setMode("add")}>
-            <ListPlus size={13} /> Add from charts
+            <ListPlus size={13} />{t("filum.finestre.add_from_charts")}
           </button>
         </div>
         <div className="spacer" />
         <button
           className="icon-btn"
-          title="Add the design's threads to My threads"
+          title={t("filum.finestre.add_the_design_s_threads")}
           disabled={!doc.threads.length}
           onClick={() => {
             const n = addDesignThreadsToMine();
-            toast(n ? `Added ${n} thread${n === 1 ? "" : "s"} to My threads` : "They are all in My threads already");
+            toast(n ? tn("filum.finestre.added_threads_to_my", n) : t("filum.finestre.they_are_all_in_my"));
           }}
         >
           <Spool size={14} />
         </button>
-        <button className="icon-btn" title="Import spools from a .gpl palette" onClick={async () => toast(`Added ${await importMyThreads()} spools`)}>
+        <button className="icon-btn" title={t("filum.finestre.import_spools_from_a_gpl")} onClick={async () => toast(t("filum.finestre.added_v1_spools", { v1: await importMyThreads() }))}>
           <Upload size={14} />
         </button>
-        <button className="icon-btn" title="Export My threads as a .gpl palette" disabled={!mine.length} onClick={() => exportMyThreads()}>
+        <button className="icon-btn" title={t("filum.finestre.export_my_threads_as_a")} disabled={!mine.length} onClick={() => exportMyThreads()}>
           <Download size={14} />
         </button>
-        <button className="icon-btn" title="Remove every spool from My threads" disabled={!mine.length} onClick={() => window.confirm(`Remove all ${mine.length} spools from My threads?`) && clearMyThreads()}>
+        <button className="icon-btn" title={t("filum.finestre.remove_every_spool_from_my")} disabled={!mine.length} onClick={() => window.confirm(t("filum.finestre.remove_all_length_spools_from", { length: mine.length })) && clearMyThreads()}>
           <Trash2 size={14} />
         </button>
       </div>
 
       {mode === "add" ? (
         <>
-          <p className="hint">Click the colours you own — they get a check mark; click again to take them out. Search by code or name.</p>
+          <p className="hint">{t("filum.finestre.click_the_colours_you_own")}</p>
           <ChartBrowser markOwned near={selected?.color} height={290} onPick={(e) => toggleMyThread({ name: e.name, code: e.code, brand: e.brand, color: e.color })} />
         </>
       ) : !mine.length ? (
         <div className="mine-empty">
-          <b>No spools yet</b>
-          <span>Add the threads you own, then fit any design to them.</span>
+          <b>{t("filum.finestre.no_spools_yet")}</b>
+          <span>{t("filum.finestre.add_the_threads_you_own")}</span>
           <div className="dz-inline">
             <button className="btn sm primary" onClick={() => setMode("add")}>
-              <ListPlus size={13} /> Add from charts
+              <ListPlus size={13} />{t("filum.finestre.add_from_charts")}
             </button>
             <button className="btn sm" disabled={!doc.threads.length} onClick={() => addDesignThreadsToMine()}>
-              Add the design's threads
+              {t("filum.finestre.add_the_design_s_threads_2")}
             </button>
             <button className="btn sm" onClick={() => importMyThreads()}>
-              Import .gpl
+              {t("filum.finestre.import_gpl")}
             </button>
           </div>
         </div>
@@ -412,7 +413,7 @@ function MyThreadsPanel({ selected }: { selected: Thread | null }) {
         <>
           {selected && closest.length > 0 && (
             <div className="chart-near">
-              <span className="chart-cap">Closest for {selected.name}</span>
+              <span className="chart-cap">{t("filum.finestre.closest_for_name", { name: selected.name })}</span>
               {closest.map((e) => (
                 <button key={ownedKey(e)} type="button" className="chart-near-item" title={`${e.brand} ${e.code} ${e.name} · ΔE ${e.d.toFixed(1)} (${deltaLabel(e.d)})`} onClick={() => assignChart(selected.id, e)}>
                   <i style={{ background: e.color }} />
@@ -423,7 +424,7 @@ function MyThreadsPanel({ selected }: { selected: Thread | null }) {
           )}
           <label className="chart-search">
             <Search size={13} />
-            <input className="input" placeholder={`Search ${mine.length} spools`} value={q} onChange={(e) => setQ(e.target.value)} />
+            <input className="input" placeholder={t("filum.finestre.search_length_spools", { length: mine.length })} value={q} onChange={(e) => setQ(e.target.value)} />
           </label>
           <div className="mine-list">
             {groups.map(([brand, list]) => (
@@ -431,25 +432,25 @@ function MyThreadsPanel({ selected }: { selected: Thread | null }) {
                 <div className="cm-head">
                   {brand} · {list.length}
                 </div>
-                {list.map((t) => (
+                {list.map((th) => (
                   <div
-                    key={ownedKey(t)}
+                    key={ownedKey(th)}
                     className="mine-row"
                     role="button"
                     tabIndex={0}
-                    title={selected ? `Give ${selected.name} this spool` : "Select a design thread to give it this spool"}
-                    onClick={() => (selected ? assignChart(selected.id, { ...t, lab: [0, 0, 0] }) : toast("Select a thread first"))}
+                    title={selected ? t("filum.finestre.give_name_this_spool", { name: selected.name }) : t("filum.finestre.select_a_design_thread_to")}
+                    onClick={() => (selected ? assignChart(selected.id, { ...th, lab: [0, 0, 0] }) : toast(t("filum.finestre.select_a_thread_first")))}
                   >
-                    <i style={{ background: t.color }} />
-                    <span className="mr-name">{t.name}</span>
-                    <span className="stat mono">{t.code}</span>
-                    {inDesign.has(ownedKey(t)) && <span className="badge ok">in design</span>}
+                    <i style={{ background: th.color }} />
+                    <span className="mr-name">{th.name}</span>
+                    <span className="stat mono">{th.code}</span>
+                    {inDesign.has(ownedKey(th)) && <span className="badge ok">{t("filum.finestre.in_design")}</span>}
                     <button
                       className="icon-btn"
-                      title="Remove from My threads"
+                      title={t("filum.finestre.remove_from_my_threads")}
                       onClick={(e) => {
                         e.stopPropagation();
-                        removeMyThread(t);
+                        removeMyThread(th);
                       }}
                     >
                       <X size={12} />
@@ -458,7 +459,7 @@ function MyThreadsPanel({ selected }: { selected: Thread | null }) {
                 ))}
               </div>
             ))}
-            {!groups.length && <p className="hint">No spool matches “{q}”.</p>}
+            {!groups.length && <p className="hint">{t("filum.finestre.no_spool_matches_q", { q })}</p>}
           </div>
         </>
       )}
@@ -483,7 +484,7 @@ function CandidateStrip({ target, thread, matchKey }: { target: FitTarget; threa
   const sign = (v: number, unit: string) => `${v > 0 ? "+" : ""}${v.toFixed(0)}${unit}`;
   return (
     <div className="tm-cands">
-      <span className="tm-cands-need" title={`${need.name} ${need.color.toUpperCase()} — the colour wanted`}>
+      <span className="tm-cands-need" title={t("filum.finestre.name_v2_the_colour_wanted", { name: need.name, v2: need.color.toUpperCase() })}>
         <i style={{ background: need.color }} />
         <b>{need.name}</b>
       </span>
@@ -493,7 +494,7 @@ function CandidateStrip({ target, thread, matchKey }: { target: FitTarget; threa
           <button
             key={spoolKey(c.entry)}
             className={`tm-cand ${on ? "on" : ""}`}
-            title={`${[c.entry.brand, c.entry.code, c.entry.name].filter(Boolean).join(" ")}\nΔE ${c.d.toFixed(1)} (${qualityOf(c.d)}) · hue ${sign(c.hue, "°")} · saturation ${sign(c.chroma * 100, "%")} · lightness ${sign(c.lightness, "")}`}
+            title={t("filum.finestre.v1_e_v2_v3_hue", { v1: [c.entry.brand, c.entry.code, c.entry.name].filter(Boolean).join(" "), v2: c.d.toFixed(1), v3: qualityOf(c.d), v4: sign(c.hue, "°"), v5: sign(c.chroma * 100, "%"), v6: sign(c.lightness, "") })}
             onClick={() => assignChart(thread.id, c.entry)}
           >
             <i style={{ background: c.entry.color }} />
@@ -560,46 +561,46 @@ export function ThreadManager({ onClose }: { onClose: () => void }) {
   }, [doc.threads]);
   const runFit = async (only?: string[]) => {
     const r = await fitThreads(fitTarget, { only, match });
-    if (!r) return toast(fitTarget.kind === "mine" ? "No spools in My threads for this choice — add some first" : "The chart is empty", "info");
+    if (!r) return toast(fitTarget.kind === "mine" ? t("filum.finestre.no_spools_in_my_threads") : t("filum.finestre.the_chart_is_empty"), "info");
     setReport(r);
-    toast(`Fitted ${r.fitted} thread${r.fitted === 1 ? "" : "s"} to ${r.target}${r.shared ? ` · ${r.shared} sharing a spool` : ""}`, "success");
+    toast(`${tn("filum.finestre.fitted_threads_to", r.fitted, { target: r.target })}${r.shared ? t("filum.finestre.shared_sharing_a_spool", { shared: r.shared }) : ""}`, "success");
   };
   return (
     <Dialog
       live
-      title="Thread colours"
+      title={t("filum.finestre.thread_colours_2")}
       onClose={onClose}
       xwide
       footer={
         <>
-          <span className="tm-similar" title="Merge threads whose colours differ by less than this ΔE (CIEDE2000; 2–3 is barely visible)">
+          <span className="tm-similar" title={t("filum.finestre.merge_threads_whose_colours_differ")}>
             <button
               className="btn"
               onClick={mergeSimilarColours}
             >
-              Merge similar
+              {t("filum.finestre.merge_similar")}
             </button>
-            <span className="stat">ΔE &lt;</span>
+            <span className="stat">{t("filum.finestre.e_lt")}</span>
             <Num value={similar} min={1} max={30} step={1} digits={0} onChange={setSimilar} />
           </span>
           <button
             className="btn"
             onClick={() => {
               const n = removeUnused();
-              toast(n ? `Removed ${n} unused thread${n === 1 ? "" : "s"}` : "Every thread is in use");
+              toast(n ? tn("filum.finestre.removed_unused_threads", n) : t("filum.finestre.every_thread_is_in_use"));
             }}
           >
-            Remove unused
+            {t("filum.finestre.remove_unused")}
           </button>
           <div className="spacer" />
-          <button className="icon-btn" title="Import a .gpl palette as threads" onClick={async () => toast(`Added ${await importPalette()} threads`)}>
+          <button className="icon-btn" title={t("filum.finestre.import_a_gpl_palette_as")} onClick={async () => toast(t("filum.finestre.added_v1_threads", { v1: await importPalette() }))}>
             <Upload size={15} />
           </button>
-          <button className="icon-btn" title="Export the threads as a .gpl palette" onClick={() => exportPalette()}>
+          <button className="icon-btn" title={t("filum.finestre.export_the_threads_as_a")} onClick={() => exportPalette()}>
             <Download size={15} />
           </button>
           <button className="btn primary" onClick={onClose}>
-            Done
+            {t("filum.finestre.done")}
           </button>
         </>
       }
@@ -607,36 +608,36 @@ export function ThreadManager({ onClose }: { onClose: () => void }) {
       <div className="tm-top">
         <div className="tm-stats">
           <span>
-            <b>{doc.threads.length}</b> threads
+            <b>{doc.threads.length}</b>{t("filum.finestre.threads_2")}
           </span>
           <span>
-            <b>{seq.length}</b> colour blocks
+            <b>{seq.length}</b>{t("filum.finestre.colour_blocks")}
           </span>
           <span>
-            <b>{changes}</b> colour change{changes === 1 ? "" : "s"}
+            <b>{changes}</b>{tn("filum.finestre.colour_change_word", changes)}
           </span>
           <span>
-            <b>{metres.toFixed(1)}</b> m top thread
+            <b>{metres.toFixed(1)}</b>{t("filum.finestre.m_top_thread")}
           </span>
           {fittedIds.length > 0 && (
             <span className="fitted">
-              <b>{fittedIds.length}</b> fitted
+              <b>{fittedIds.length}</b>{t("filum.finestre.fitted")}
             </span>
           )}
         </div>
-        <button className="btn sm" title="Reorder objects to minimise colour changes and jumps (keeps stacking)" onClick={optimizeOrder}>
-          <SewOrder size={13} /> Optimise stitch order
+        <button className="btn sm" title={t("filum.finestre.reorder_objects_to_minimise_colour")} onClick={optimizeOrder}>
+          <SewOrder size={13} />{t("filum.finestre.optimise_stitch_order")}
         </button>
-        <button className="btn sm ghost" title="List threads in the order they are sewn" onClick={sortBySewOrder}>
-          <ArrowDownUp size={13} /> Sort by sew order
+        <button className="btn sm ghost" title={t("filum.finestre.list_threads_in_the_order")} onClick={sortBySewOrder}>
+          <ArrowDownUp size={13} />{t("filum.finestre.sort_by_sew_order")}
         </button>
       </div>
       <FitStrip active={sel} onPick={setSel} />
       <div className="tm-fitbar">
-        <span className="tm-fit-label">Fit threads to</span>
-        <select className="select" value={target} onChange={(e) => setTarget(e.target.value)} title="Fit to all your spools, one brand or one product line of My threads, or the chart chosen on the right">
-          <optgroup label="My threads">
-            <option value="mine">All my threads ({mine.length})</option>
+        <span className="tm-fit-label">{t("filum.finestre.fit_threads_to")}</span>
+        <select className="select" value={target} onChange={(e) => setTarget(e.target.value)} title={t("filum.finestre.fit_to_all_your_spools")}>
+          <optgroup label={t("filum.finestre.my_threads")}>
+            <option value="mine">{t("filum.finestre.all_my_threads_mine", { mine: mine.length })}</option>
             {lines.map((b) => [
               <option key={b.brand} value={fitTargetId({ kind: "mine", brand: b.brand })}>
                 {b.brand} ({b.count})
@@ -651,50 +652,50 @@ export function ThreadManager({ onClose }: { onClose: () => void }) {
                 : []),
             ])}
           </optgroup>
-          <optgroup label="Chart">
-            <option value="chart:">{chartLabel(chart)} (chart on the right)</option>
+          <optgroup label={t("filum.finestre.chart")}>
+            <option value="chart:">{t("filum.finestre.n_chart_on_the_right", { n: chartLabel(chart) })}</option>
           </optgroup>
         </select>
         <MatchButton target={fitTarget} opts={match} set={setMatch} />
-        <button className="btn sm primary" disabled={!doc.threads.length} onClick={() => runFit()} title="Fit every unlocked thread with the matching options, starting from its original colour">
-          <Replace size={13} /> Fit all
+        <button className="btn sm primary" disabled={!doc.threads.length} onClick={() => runFit()} title={t("filum.finestre.fit_every_unlocked_thread_with")}>
+          <Replace size={13} />{t("filum.finestre.fit_all")}
         </button>
-        <button className="btn sm" disabled={!selected} onClick={() => selected && runFit([selected.id])} title="Fit only the selected thread">
-          Fit selected
+        <button className="btn sm" disabled={!selected} onClick={() => selected && runFit([selected.id])} title={t("filum.finestre.fit_only_the_selected_thread")}>
+          {t("filum.finestre.fit_selected")}
         </button>
         <div className="spacer" />
         {quality && (
-          <span className="tm-quality" title="Colour difference between the original colours and the spools (CIEDE2000)">
-            ΔE avg <b>{quality.mean.toFixed(1)}</b> · worst <b className={quality.worst > 6 ? "far" : ""}>{quality.worst.toFixed(1)}</b>
+          <span className="tm-quality" title={t("filum.finestre.colour_difference_between_the_original")}>
+            {t("filum.finestre.e_avg")}<b>{quality.mean.toFixed(1)}</b>{t("filum.finestre.worst")}<b className={quality.worst > 6 ? "far" : ""}>{quality.worst.toFixed(1)}</b>
           </span>
         )}
-        <button className="btn sm ghost" disabled={!fittedIds.length} onClick={() => (revertFit(), setReport(null))} title="All threads back to their original colours (also undoes merges)">
-          <RotateCcw size={13} /> Revert all{fittedIds.length ? ` (${fittedIds.length})` : ""}
+        <button className="btn sm ghost" disabled={!fittedIds.length} onClick={() => (revertFit(), setReport(null))} title={t("filum.finestre.all_threads_back_to_their")}>
+          <RotateCcw size={13} />{t("filum.finestre.revert_all")}{fittedIds.length ? ` (${fittedIds.length})` : ""}
         </button>
       </div>
       {report && (
         <div className={`tm-report ${report.far.length ? "warn" : ""}`}>
-          <button className="icon-btn" title="Close" onClick={() => setReport(null)}>
+          <button className="icon-btn" title={t("filum.finestre.close")} onClick={() => setReport(null)}>
             <X size={12} />
           </button>
           <span>
-            <Check size={12} /> {report.fitted} fitted to {report.target} · ΔE avg {report.mean.toFixed(1)}
-            {report.shared ? ` · ${report.shared} sharing a spool (sewn as one colour)` : ""}
+            <Check size={12} /> {report.fitted}{t("filum.finestre.fitted_to")}{report.target}{t("filum.finestre.e_avg_2")}{report.mean.toFixed(1)}
+            {report.shared ? t("filum.finestre.shared_sharing_a_spool_sewn", { shared: report.shared }) : ""}
           </span>
           {report.merged.length > 0 && (
             <span className="tm-far">
-              Merged colours:{" "}
+              {t("filum.finestre.merged_colours")}{" "}
               {report.merged.map((m, i) => (
                 <span key={i}>
-                  {m.a} + {m.b} <b>ΔE {m.d.toFixed(1)}</b>
+                  {m.a} + {m.b} <b>{t("filum.finestre.e_d", { d: m.d.toFixed(1) })}</b>
                 </span>
               ))}
-              <span className="stat">— use “Distinct” or lock one to keep them apart</span>
+              <span className="stat">{t("filum.finestre.use_distinct_or_lock_one")}</span>
             </span>
           )}
           {report.far.length > 0 && (
             <span className="tm-far">
-              No close spool (ΔE &gt; 6):{" "}
+              {t("filum.finestre.no_close_spool_e_gt")}{" "}
               {report.far.map((f, i) => (
                 <span key={i}>
                   {f.name} → {f.spool} <b>{f.d.toFixed(1)}</b>
@@ -707,32 +708,32 @@ export function ThreadManager({ onClose }: { onClose: () => void }) {
       {selected && <CandidateStrip target={fitTarget} thread={selected} matchKey={JSON.stringify(match)} />}
       <div className="tm-body">
         <div className="tm-list">
-          {doc.threads.map((t, i) => (
+          {doc.threads.map((th, i) => (
             <ThreadRow
-              key={t.id}
-              t={t}
+              key={th.id}
+              t={th}
               index={i}
               count={doc.threads.length}
-              selected={t.id === sel}
-              usage={usage.get(t.id) ?? { objects: 0, stitches: 0, metres: 0, blocks: [] }}
-              match={matches.get(t.id) ?? null}
-              others={doc.threads.filter((x) => x.id !== t.id)}
-              onSelect={() => setSel(t.id)}
-              matchLabel={side === "mine" ? "owned" : "chart"}
-              need={sources[t.id] ? needOf(doc, t) : undefined}
-              locked={isLocked(doc, t.id)}
-              shared={(spoolCount.get(spoolKey(t)) ?? 1) - 1}
+              selected={th.id === sel}
+              usage={usage.get(th.id) ?? { objects: 0, stitches: 0, metres: 0, blocks: [] }}
+              match={matches.get(th.id) ?? null}
+              others={doc.threads.filter((x) => x.id !== th.id)}
+              onSelect={() => setSel(th.id)}
+              matchLabel={side === "mine" ? t("filum.finestre.owned") : t("filum.finestre.chart_2")}
+              need={sources[th.id] ? needOf(doc, th) : undefined}
+              locked={isLocked(doc, th.id)}
+              shared={(spoolCount.get(spoolKey(th)) ?? 1) - 1}
             />
           ))}
-          {!doc.threads.length && <p className="hint">No threads yet — pick colours from the chart.</p>}
+          {!doc.threads.length && <p className="hint">{t("filum.finestre.no_threads_yet_pick_colours")}</p>}
         </div>
         <div className="tm-chart">
           <div className="seg seg-full tm-side">
             <button className={side === "charts" ? "on" : ""} onClick={() => pickSide("charts")}>
-              Thread charts
+              {t("filum.finestre.thread_charts")}
             </button>
             <button className={side === "mine" ? "on" : ""} onClick={() => pickSide("mine")}>
-              My threads{mineCount ? ` · ${mineCount}` : ""}
+              {t("filum.finestre.my_threads")}{mineCount ? ` · ${mineCount}` : ""}
             </button>
           </div>
           {side === "mine" ? (
@@ -744,11 +745,11 @@ export function ThreadManager({ onClose }: { onClose: () => void }) {
               <>
                 <span className="tm-cur" style={{ background: selected.color }} />
                 <span>
-                  Replace <b>{selected.name}</b> with a chart colour
+                  {t("filum.finestre.replace")}<b>{selected.name}</b>{t("filum.finestre.with_a_chart_colour")}
                 </span>
               </>
             ) : (
-              <span className="stat">Select a thread to recolour it</span>
+              <span className="stat">{t("filum.finestre.select_a_thread_to_recolour")}</span>
             )}
           </div>
           <ChartBrowser
@@ -762,10 +763,10 @@ export function ThreadManager({ onClose }: { onClose: () => void }) {
             markOwned
             onPick={(e) => {
               if (selected) assignChart(selected.id, e);
-              else toast("Select a thread first");
+              else toast(t("filum.finestre.select_a_thread_first"));
             }}
           />
-          <p className="hint">Checked colours are in My threads. Matching uses CIEDE2000 (ΔE &lt; 1 is invisible, &lt; 3 barely visible in thread).</p>
+          <p className="hint">{t("filum.finestre.checked_colours_are_in_my")}</p>
             </>
           )}
         </div>

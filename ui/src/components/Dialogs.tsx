@@ -22,6 +22,7 @@ import { ExportDialog } from "./ExportDialog";
 import { SettingsDialog } from "./SettingsDialog";
 import { ThreadManager } from "./ThreadManager";
 import { ShapeEffectsDialog } from "./ShapeEffects";
+import { t } from "../nova/i18n/filum";
 
 // ---------------------------------------------------------------------------
 // Threads
@@ -32,120 +33,120 @@ import { ShapeEffectsDialog } from "./ShapeEffects";
 // ---------------------------------------------------------------------------
 
 /** Keyboard shortcuts, by what they act on. */
-const SHORTCUTS: { group: string; rows: [string, string][] }[] = [
+const SHORTCUTS = (): { group: string; rows: [string, string][] }[] => [
   {
-    group: "Everywhere",
+    group: t("filum.finestre.everywhere_group"),
     rows: [
-      ["Ctrl+K", "Command palette — find any command by name"],
-      ["Ctrl+Z / Ctrl+Shift+Z", "Undo / redo"],
-      ["Ctrl+N / Ctrl+O / Ctrl+S", "New / open / save (Shift: save as)"],
-      ["Ctrl+I / Ctrl+E / Ctrl+P", "Import / export embroidery / print"],
-      ["Ctrl+,", "Preferences"],
-      ["?", "Keyboard shortcuts"],
+      ["Ctrl+K", t("filum.finestre.command_palette_find_any_command")],
+      ["Ctrl+Z / Ctrl+Shift+Z", t("filum.finestre.undo_redo")],
+      ["Ctrl+N / Ctrl+O / Ctrl+S", t("filum.finestre.new_open_save_shift_save")],
+      ["Ctrl+I / Ctrl+E / Ctrl+P", t("filum.finestre.import_export_embroidery_print")],
+      ["Ctrl+,", t("filum.finestre.preferences")],
+      ["?", t("filum.finestre.keyboard_shortcuts")],
     ],
   },
   {
-    group: "Tools",
+    group: t("filum.finestre.tools_group"),
     rows: [
-      ["V / A / C / H / M", "Select · Edit nodes · Cutter · Pan · Ruler"],
-      ["P / F / S", "Pen (running stitch) · Freehand · Satin column"],
-      ["U", "Curvature: click points, the path curves smoothly through them · double-click a point for a corner"],
-      ["R / E / T", "Rectangle · Ellipse · Lettering (click to place, type, Esc to finish)"],
-      ["G", "Gradient: drag across a shape · click the line to add a stop · Alt-click a stop to remove it"],
-      ["G · Density / Blend", "Drag across a fill: dense where you start, open where you end (Blend: a second colour fades in)"],
-      ["D", "Stitch direction: draw guide lines the rows follow"],
-      ["B", "Shape builder: drag across overlaps to merge them · Alt-drag deletes · Shift-click adds shapes"],
-      ["Esc", "Back to Select (or clear the selection)"],
+      ["V / A / C / H / M", t("filum.finestre.select_edit_nodes_cutter_pan")],
+      ["P / F / S", t("filum.finestre.pen_running_stitch_freehand_satin")],
+      ["U", t("filum.finestre.curvature_click_points_the_path")],
+      ["R / E / T", t("filum.finestre.rectangle_ellipse_lettering_click_to")],
+      ["G", t("filum.finestre.gradient_drag_across_a_shape")],
+      [t("filum.finestre.key_density_blend"), t("filum.finestre.drag_across_a_fill_dense")],
+      ["D", t("filum.finestre.stitch_direction_draw_guide_lines")],
+      ["B", t("filum.finestre.shape_builder_drag_across_overlaps")],
+      ["Esc", t("filum.finestre.back_to_select_or_clear")],
     ],
   },
   {
-    group: "View",
+    group: t("filum.finestre.view_group"),
     rows: [
-      ["1 / 2 / 3", "Vector · Stitch · Realistic view"],
-      ["4", "Finished piece: without the jump threads you snip and the basting"],
-      ["0 / Shift+0", "Fit hoop / fit design"],
-      ["+ / − · wheel / pinch", "Zoom (at the cursor)"],
-      ["Space + drag · middle mouse", "Pan"],
-      ["Shift+D", "Density map"],
+      ["1 / 2 / 3", t("filum.finestre.vector_stitch_realistic_view")],
+      ["4", t("filum.finestre.finished_piece_without_the_jump")],
+      ["0 / Shift+0", t("filum.finestre.fit_hoop_fit_design")],
+      [t("filum.finestre.key_wheel_pinch"), t("filum.finestre.zoom_at_the_cursor")],
+      [t("filum.finestre.space_drag_middle_mouse"), t("filum.finestre.pan")],
+      ["Shift+D", t("filum.finestre.density_map")],
     ],
   },
   {
-    group: "Stitch-out player",
+    group: t("filum.finestre.stitch_out_player_group"),
     rows: [
-      ["Animate (bottom bar)", "Open the player and play the stitch-out"],
-      ["← / →", "One stitch back / forward"],
-      ["Shift+← / Shift+→", "Previous / next colour block"],
-      ["Home / End", "To the start / the end"],
-      ["Click or drag the timeline", "Go to that stitch"],
-      ["Ctrl + wheel on the timeline", "Zoom the timeline"],
-      ["Esc", "Close the player"],
+      [t("filum.finestre.animate_bottom_bar"), t("filum.finestre.open_the_player_and_play")],
+      ["← / →", t("filum.finestre.one_stitch_back_forward")],
+      [t("filum.finestre.shift_shift"), t("filum.finestre.previous_next_colour_block")],
+      ["Home / End", t("filum.finestre.to_the_start_the_end")],
+      [t("filum.finestre.click_or_drag_the_timeline"), t("filum.finestre.go_to_that_stitch")],
+      [t("filum.finestre.ctrl_wheel_on_the_timeline"), t("filum.finestre.zoom_the_timeline")],
+      ["Esc", t("filum.finestre.close_the_player")],
     ],
   },
   {
-    group: "Selection & objects",
+    group: t("filum.finestre.selection_objects_group"),
     rows: [
-      ["Ctrl+A", "Select all (node tool: every point)"],
-      ["Ctrl+X / Ctrl+C / Ctrl+V", "Cut / copy / paste objects (also between windows; a pasted picture becomes a reference)"],
-      ["Ctrl+] / Ctrl+[", "Sew later / earlier (Shift: last / first)"],
-      ["Ctrl+3 / Ctrl+Alt+3", "Hide the selection / show all"],
-      ["Ctrl+2 / Ctrl+Alt+2", "Lock the selection / unlock all"],
-      ["Right-click", "The commands for what is under the pointer (right-drag pans)"],
-      ["Ctrl+D / Alt+D / Del", "Duplicate / linked clone / delete"],
-      ["Arrows (Shift)", "Nudge 0.5 mm (5 mm)"],
-      ["Ctrl+G / Ctrl+Shift+G", "Group / ungroup (groups nest: group groups; ungroup opens one level)"],
-      ["Ctrl+J", "Join: close an open path, or join open paths at their nearest ends"],
-      ["Ctrl+Alt+J", "Average: the selected points onto their average point (node tool)"],
-      ["Ctrl+8 / Ctrl+Alt+Shift+8", "Make / release a compound path"],
-      ["Ctrl+Shift+C / Ctrl+Shift+V", "Copy / paste stitch properties"],
-      ["[ / ] with a selection", "Rotate the fill angle 5° · change the satin width (Shift: more)"],
-      ["Double-click an object", "Edit its nodes (lettering: edit its text)"],
-      ["Ctrl-click", "Pick one object inside a group"],
-      ["Drag a path segment (node tool)", "Bend the curve; a click adds a point"],
+      ["Ctrl+A", t("filum.finestre.select_all_node_tool_every")],
+      ["Ctrl+X / Ctrl+C / Ctrl+V", t("filum.finestre.cut_copy_paste_objects_also")],
+      ["Ctrl+] / Ctrl+[", t("filum.finestre.sew_later_earlier_shift_last")],
+      ["Ctrl+3 / Ctrl+Alt+3", t("filum.finestre.hide_the_selection_show_all")],
+      ["Ctrl+2 / Ctrl+Alt+2", t("filum.finestre.lock_the_selection_unlock_all")],
+      [t("filum.finestre.right_click"), t("filum.finestre.the_commands_for_what_is")],
+      [t("filum.finestre.ctrl_d_alt_d_del"), t("filum.finestre.duplicate_linked_clone_delete")],
+      [t("filum.finestre.arrows_shift"), t("filum.finestre.nudge_0_5_mm_5")],
+      ["Ctrl+G / Ctrl+Shift+G", t("filum.finestre.group_ungroup_groups_nest_group")],
+      ["Ctrl+J", t("filum.finestre.join_close_an_open_path")],
+      ["Ctrl+Alt+J", t("filum.finestre.average_the_selected_points_onto")],
+      ["Ctrl+8 / Ctrl+Alt+Shift+8", t("filum.finestre.make_release_a_compound_path")],
+      ["Ctrl+Shift+C / Ctrl+Shift+V", t("filum.finestre.copy_paste_stitch_properties")],
+      [t("filum.finestre.key_with_a_selection"), t("filum.finestre.rotate_the_fill_angle_5")],
+      [t("filum.finestre.double_click_an_object"), t("filum.finestre.edit_its_nodes_lettering_edit")],
+      [t("filum.finestre.ctrl_click"), t("filum.finestre.pick_one_object_inside_a")],
+      [t("filum.finestre.drag_a_path_segment_node"), t("filum.finestre.bend_the_curve_a_click")],
     ],
   },
   {
-    group: "Transform",
+    group: t("filum.finestre.transform_group"),
     rows: [
-      ["Alt + drag an object", "Move a copy"],
-      ["Shift while dragging", "Constrain · rotation in 15° steps"],
-      ["Scale handles", "Free · Shift: keep proportions · Alt: from the centre · drag past an edge to flip"],
-      ["Rotate", "Drag just outside a corner (or the top knob) · Alt-drag the pivot to move it"],
-      ["Ctrl + drag a side handle", "Skew (Shift: 15° steps)"],
-      ["Ctrl while dragging", "Ignore smart guides"],
+      [t("filum.finestre.alt_drag_an_object"), t("filum.finestre.move_a_copy")],
+      [t("filum.finestre.shift_while_dragging"), t("filum.finestre.constrain_rotation_in_15_steps")],
+      [t("filum.finestre.scale_handles"), t("filum.finestre.free_shift_keep_proportions_alt")],
+      [t("filum.finestre.rotate"), t("filum.finestre.drag_just_outside_a_corner")],
+      [t("filum.finestre.ctrl_drag_a_side_handle"), t("filum.finestre.skew_shift_15_steps")],
+      [t("filum.finestre.ctrl_while_dragging"), t("filum.finestre.ignore_smart_guides")],
     ],
   },
   {
-    group: "Pen & satin",
+    group: t("filum.finestre.pen_satin_group"),
     rows: [
-      ["Click · drag", "Corner point · smooth point with handles (Alt: break the handles, Space: move the point, Shift: snap angles)"],
-      ["While drawing", "Drag points and handles · click a segment to add a point · Alt-click a point to delete · double-click: smooth ↔ corner"],
-      ["Click an end of a selected path", "Continue drawing that path"],
-      ["Satin: scroll or [ ]", "Width of the next point · scroll over a point to change its width"],
-      ["Enter / Esc / Backspace", "Finish the path (the tool stays) / finish / remove the last point"],
-      ["Freehand", "The line trails the pointer and becomes a clean Bézier path · end at the start to close"],
-      ["Pen", "Points snap to existing points (Ctrl: off) · ending on the end of another running path joins them"],
-      ["Cutter", "Click a line to split it, drag across fills to cut them"],
+      [t("filum.finestre.click_drag"), t("filum.finestre.corner_point_smooth_point_with")],
+      [t("filum.finestre.while_drawing"), t("filum.finestre.drag_points_and_handles_click")],
+      [t("filum.finestre.click_an_end_of_a"), t("filum.finestre.continue_drawing_that_path")],
+      [t("filum.finestre.satin_scroll_or"), t("filum.finestre.width_of_the_next_point")],
+      [t("filum.finestre.enter_esc_backspace"), t("filum.finestre.finish_the_path_the_tool")],
+      [t("filum.finestre.freehand"), t("filum.finestre.the_line_trails_the_pointer")],
+      [t("filum.finestre.pen"), t("filum.finestre.points_snap_to_existing_points")],
+      [t("filum.finestre.cutter"), t("filum.finestre.click_a_line_to_split")],
     ],
   },
   {
-    group: "Node tool",
+    group: t("filum.finestre.node_tool_group"),
     rows: [
-      ["Click a segment / Alt-click a point", "Add a point (a rung pair on two-rail satins) / delete it"],
-      ["Click · Shift-click · drag a box", "Select points · drag to move them (Shift: straight, Ctrl: no snapping)"],
-      ["Del / Shift+Del", "Delete the points keeping the curve's shape / plain delete"],
-      ["Arrows (Shift)", "Nudge the points 0.1 mm (1 mm)"],
-      ["Shift+C / S / Y", "Corner / smooth / symmetric points"],
-      ["Shift+L / U", "Straight / curved segments"],
-      ["Shift+B / J", "Break the path at the points / join two end points"],
-      ["Alt-drag a handle", "Break the symmetry"],
+      [t("filum.finestre.click_a_segment_alt_click"), t("filum.finestre.add_a_point_a_rung")],
+      [t("filum.finestre.click_shift_click_drag_a"), t("filum.finestre.select_points_drag_to_move")],
+      [t("filum.finestre.del_shift_del"), t("filum.finestre.delete_the_points_keeping_the")],
+      [t("filum.finestre.arrows_shift"), t("filum.finestre.nudge_the_points_0_1")],
+      ["Shift+C / S / Y", t("filum.finestre.corner_smooth_symmetric_points")],
+      ["Shift+L / U", t("filum.finestre.straight_curved_segments")],
+      ["Shift+B / J", t("filum.finestre.break_the_path_at_the")],
+      [t("filum.finestre.alt_drag_a_handle"), t("filum.finestre.break_the_symmetry")],
     ],
   },
   {
-    group: "Pictures & lettering",
+    group: t("filum.finestre.pictures_lettering_group"),
     rows: [
-      ["Drop or paste a picture", "Choose: a reference to trace (never stitched) or digitize it"],
-      ["Double-click a reference", "Adjust it · Enter: done · Del: remove"],
-      ["Lettering handles", "Drag the arch handle to bend, the arrows to space letters · double-click to reset"],
+      [t("filum.finestre.drop_or_paste_a_picture"), t("filum.finestre.choose_a_reference_to_trace")],
+      [t("filum.finestre.double_click_a_reference"), t("filum.finestre.adjust_it_enter_done_del")],
+      [t("filum.finestre.lettering_handles"), t("filum.finestre.drag_the_arch_handle_to")],
     ],
   },
 ];
@@ -154,10 +155,10 @@ export function ShortcutsDialog({ onClose }: { onClose: () => void }) {
   const [q, setQ] = useState("");
   const words = q.toLowerCase().split(/\s+/).filter(Boolean);
   const match = (r: [string, string]) => words.every((w) => (r[0] + " " + r[1]).toLowerCase().includes(w));
-  const groups = SHORTCUTS.map((g) => ({ ...g, rows: g.rows.filter(match) })).filter((g) => g.rows.length);
+  const groups = SHORTCUTS().map((g) => ({ ...g, rows: g.rows.filter(match) })).filter((g) => g.rows.length);
   return (
-    <Dialog wide title="Keyboard shortcuts" onClose={onClose}>
-      <input className="input" style={{ width: "100%", marginBottom: 10 }} placeholder="Filter shortcuts…" value={q} autoFocus onChange={(e) => setQ(e.target.value)} aria-label="Filter shortcuts" />
+    <Dialog wide title={t("filum.finestre.keyboard_shortcuts")} onClose={onClose}>
+      <input className="input" style={{ width: "100%", marginBottom: 10 }} placeholder={t("filum.finestre.filter_shortcuts")} value={q} autoFocus onChange={(e) => setQ(e.target.value)} aria-label={t("filum.finestre.filter_shortcuts_2")} />
       <div className="shortcut-groups">
         {groups.map((g) => (
           <section key={g.group}>
@@ -176,7 +177,7 @@ export function ShortcutsDialog({ onClose }: { onClose: () => void }) {
             </table>
           </section>
         ))}
-        {!groups.length && <p className="hint">No shortcut matches “{q}”.</p>}
+        {!groups.length && <p className="hint">{t("filum.finestre.no_shortcut_matches_q", { q })}</p>}
       </div>
     </Dialog>
   );

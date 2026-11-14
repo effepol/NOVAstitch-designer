@@ -7,6 +7,7 @@
     "filum.finestre.effetto.": "gli effetti sui tracciati (EFFECTS in ShapeEffects.tsx): withTexts() legge <id>.label, .title",
     "filum.dati.colori_punti.": "i modi di colorare i punti (STITCH_COLORS in lib/threads.ts): withTexts() legge <id>.label, .title",
     "filum.barre.tasto.": "i nomi dei tasti nella barra dei suggerimenti: shown() in StatusHints.tsx compone filum.barre.tasto.<nome>",
-    "filum.barre.dove.": "le indicazioni accanto ai tasti (corner, knob…): shown() in StatusHints.tsx compone filum.barre.dove.<nome>"
+    "filum.barre.dove.": "le indicazioni accanto ai tasti (corner, knob…): shown() in StatusHints.tsx compone filum.barre.dove.<nome>",
+    "filum.finestre.pacchetto.": "i testi dei pacchetti scaricabili (public/downloads/*.json): tData() in DownloadsPanel.tsx compone filum.finestre.pacchetto.<id>.<campo>"
   }
 }
