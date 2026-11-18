@@ -13,15 +13,16 @@ import { useStore } from "../store";
 import { Dialog, Num, Row, Section, Toggle } from "./ui";
 import "../output.css";
 import { safeSetItem } from "../lib/storage";
+import { t, tn } from "../nova/i18n/filum";
 
 const KEY = "filum.print";
-const VIEWS: [PrintView, string, string][] = [
-  ["clientOverview", "Client overview", "The design, its colours and a line for the client's signature"],
-  ["clientDetailed", "Client detailed view", "A page per colour"],
-  ["operatorOverview", "Operator overview", "Job details, estimated time, fabric and stabiliser"],
-  ["operatorDetailed", "Operator detailed view", "Every colour block with thread, stitches, time, trims, stops and your notes"],
-  ["pattern", "Full page pattern", "The design as large as the page"],
-  ["info", "Information sheet", "A page of your own text (care instructions, contact, …)"],
+const VIEWS = (): [PrintView, string, string][] => [
+  ["clientOverview", t("filum.finestre.client_overview"), t("filum.finestre.the_design_its_colours_and")],
+  ["clientDetailed", t("filum.finestre.client_detailed_view"), t("filum.finestre.a_page_per_colour")],
+  ["operatorOverview", t("filum.finestre.operator_overview"), t("filum.finestre.job_details_estimated_time_fabric")],
+  ["operatorDetailed", t("filum.finestre.operator_detailed_view"), t("filum.finestre.every_colour_block_with_thread")],
+  ["pattern", t("filum.finestre.full_page_pattern"), t("filum.finestre.the_design_as_large_as")],
+  ["info", t("filum.finestre.information_sheet"), t("filum.finestre.a_page_of_your_own")],
 ];
 
 function loadSettings(): PrintSettings {
@@ -99,12 +100,12 @@ export function PrintDialog({ onClose }: { onClose: () => void }) {
         overview: pictures.overview,
         blockPictures: pictures.blocks,
         materials: [
-          ["Hoop", doc.hoop.name],
-          ["Fabric", fabric.label],
-          ["Backing", fabric.backing],
+          [t("filum.finestre.hoop"), doc.hoop.name],
+          [t("filum.finestre.fabric"), fabric.label],
+          [t("filum.finestre.backing"), fabric.backing],
           ["Topping", fabric.topping],
-          ["Thread", `No. ${weight.weight}`],
-          ["Needle", fabric.needle + (weight.weight !== 40 ? ` · thread: ${weight.needle}` : "")],
+          [t("filum.finestre.thread"), t("filum.finestre.thread_no", { n: weight.weight })],
+          [t("filum.finestre.needle"), fabric.needle + (weight.weight !== 40 ? t("filum.finestre.needle_for_thread", { needle: weight.needle }) : "")],
         ],
       },
       { title, client, purchaseOrder: po, notes, date: new Date() },
@@ -135,7 +136,7 @@ export function PrintDialog({ onClose }: { onClose: () => void }) {
     w.print();
   };
   const pickLogo = async () => {
-    const f = await openFile([{ name: "Pictures", extensions: ["png", "jpg", "jpeg", "svg", "webp", "gif"] }]);
+    const f = await openFile([{ name: t("filum.finestre.pictures"), extensions: ["png", "jpg", "jpeg", "svg", "webp", "gif"] }]);
     if (!f) return;
     const ext = f.name.split(".").pop()?.toLowerCase();
     const type = ext === "svg" ? "image/svg+xml" : ext === "jpg" ? "image/jpeg" : `image/${ext}`;
@@ -147,80 +148,80 @@ export function PrintDialog({ onClose }: { onClose: () => void }) {
     set({ logo: url });
   };
   if (!plan) return null;
-  const pages = VIEWS.filter(([v]) => s.views[v]).length;
+  const pages = VIEWS().filter(([v]) => s.views[v]).length;
 
   return (
     <Dialog
       live
       xwide
-      title={`Print — ${doc.name || "design"}`}
+      title={t("filum.finestre.print_title", { name: doc.name || t("filum.finestre.design") })}
       onClose={onClose}
       footer={
         <>
           <span className="stat">
-            {blocks.length} colour block{blocks.length === 1 ? "" : "s"} · {duration(jobSeconds(blocks, s))} at {s.spm} spm
+            {tn("filum.finestre.n_colour_blocks", blocks.length)} · {duration(jobSeconds(blocks, s))}{t("filum.finestre.at")}{s.spm}{t("filum.finestre.spm")}
           </span>
           <div className="spacer" />
           <button className="btn" onClick={onClose}>
-            Close
+            {t("filum.finestre.close")}
           </button>
-          <button className="btn primary" disabled={!pages || !html} onClick={print} title="Opens the print dialog — choose “Save as PDF” there for a PDF">
-            <Printer size={14} /> Print / Save as PDF
+          <button className="btn primary" disabled={!pages || !html} onClick={print} title={t("filum.finestre.opens_the_print_dialog_choose")}>
+            <Printer size={14} />{t("filum.finestre.print_save_as_pdf")}
           </button>
         </>
       }
     >
       <div className="pr">
         <div className="pr-side">
-          <Section title="Layouts">
-            {VIEWS.map(([v, l, hint]) => (
+          <Section title={t("filum.finestre.layouts")}>
+            {VIEWS().map(([v, l, hint]) => (
               <label key={v} className="check" title={hint}>
                 <input type="checkbox" checked={s.views[v]} onChange={(e) => set({ views: { ...s.views, [v]: e.target.checked } })} />
                 {l}
               </label>
             ))}
-            <Row label="Paper">
+            <Row label={t("filum.finestre.paper")}>
               <div className="seg">
                 <button className={s.paper === "a4" ? "on" : ""} onClick={() => set({ paper: "a4" })}>
                   A4
                 </button>
                 <button className={s.paper === "letter" ? "on" : ""} onClick={() => set({ paper: "letter" })}>
-                  Letter
+                  {t("filum.finestre.letter")}
                 </button>
               </div>
             </Row>
-            <Row label="Pictures" title="Realistic: as sewn · Stitches: every stitch as a line">
+            <Row label={t("filum.finestre.pictures")} title={t("filum.finestre.realistic_as_sewn_stitches_every")}>
               <div className="seg">
                 <button className={s.realistic ? "on" : ""} onClick={() => set({ realistic: true })}>
-                  Realistic
+                  {t("filum.finestre.realistic")}
                 </button>
                 <button className={!s.realistic ? "on" : ""} onClick={() => set({ realistic: false })}>
-                  Stitches
+                  {t("filum.finestre.stitches")}
                 </button>
               </div>
             </Row>
             {s.views.operatorDetailed && (
-              <Row label="Thumbnails" title="Size of the colour pictures in the operator detailed view (Ink/Stitch 15–110 mm)">
+              <Row label={t("filum.finestre.thumbnails")} title={t("filum.finestre.size_of_the_colour_pictures")}>
                 <Num value={s.thumbnail} unit="mm" step={5} min={10} max={110} digits={0} onChange={(v) => set({ thumbnail: v })} />
               </Row>
             )}
           </Section>
-          <Section title="Job">
+          <Section title={t("filum.finestre.job")}>
             <label className="pr-field">
-              <span className="stat">Title</span>
-              <input className="input" value={title} placeholder={doc.name || "Job title"} onChange={(e) => setTitle(e.target.value)} />
+              <span className="stat">{t("filum.finestre.title")}</span>
+              <input className="input" value={title} placeholder={doc.name || t("filum.finestre.job_title")} onChange={(e) => setTitle(e.target.value)} />
             </label>
             <label className="pr-field">
-              <span className="stat">Client</span>
-              <input className="input" value={client} placeholder="Client name" onChange={(e) => setClient(e.target.value)} />
+              <span className="stat">{t("filum.finestre.client")}</span>
+              <input className="input" value={client} placeholder={t("filum.finestre.client_name")} onChange={(e) => setClient(e.target.value)} />
             </label>
             <label className="pr-field">
-              <span className="stat">Purchase order #</span>
+              <span className="stat">{t("filum.finestre.purchase_order")}</span>
               <input className="input" value={po} onChange={(e) => setPo(e.target.value)} />
             </label>
           </Section>
           {s.views.operatorDetailed && (
-            <Section title="Operator notes" defaultOpen={false}>
+            <Section title={t("filum.finestre.operator_notes")} defaultOpen={false}>
               {blocks.map((b, i) => (
                 <label key={i} className="pr-note">
                   <i style={{ background: b.thread.color }} />
@@ -234,52 +235,52 @@ export function PrintDialog({ onClose }: { onClose: () => void }) {
               ))}
             </Section>
           )}
-          <Section title="Estimated time" defaultOpen={false}>
+          <Section title={t("filum.finestre.estimated_time")} defaultOpen={false}>
             {/* the design's own values (Design ▸ Time estimates): one place, saved with the design */}
-            <Row label="Speed" title="Stitches per minute — saved with the design (Design ▸ Time estimates)">
-              <Num value={s.spm} unit="spm" step={50} min={100} max={2000} digits={0} onChange={(v) => (set({ spm: v }), machine({ spm: v }))} />
+            <Row label={t("filum.finestre.speed")} title={t("filum.finestre.stitches_per_minute_saved_with")}>
+              <Num value={s.spm} unit={t("filum.finestre.spm_2")} step={50} min={100} max={2000} digits={0} onChange={(v) => (set({ spm: v }), machine({ spm: v }))} />
             </Row>
-            <Row label="Trim time" title="Seconds for every trim — saved with the design">
-              <Num value={s.timeTrim} unit="s" step={1} min={0} max={120} digits={0} onChange={(v) => (set({ timeTrim: v }), machine({ trimSeconds: v }))} />
+            <Row label={t("filum.finestre.trim_time")} title={t("filum.finestre.seconds_for_every_trim_saved")}>
+              <Num value={s.timeTrim} unit={t("filum.finestre.unit_seconds")} step={1} min={0} max={120} digits={0} onChange={(v) => (set({ timeTrim: v }), machine({ trimSeconds: v }))} />
             </Row>
-            <Row label="Colour change" title="Seconds for every colour change — saved with the design">
-              <Num value={s.timeColorChange} unit="s" step={1} min={0} max={600} digits={0} onChange={(v) => (set({ timeColorChange: v }), machine({ colorChangeSeconds: v }))} />
+            <Row label={t("filum.finestre.colour_change")} title={t("filum.finestre.seconds_for_every_colour_change")}>
+              <Num value={s.timeColorChange} unit={t("filum.finestre.unit_seconds")} step={1} min={0} max={600} digits={0} onChange={(v) => (set({ timeColorChange: v }), machine({ colorChangeSeconds: v }))} />
             </Row>
-            <Row label="Add to total" title="Preparing the machine, thread breaks, bobbin changes…">
-              <Num value={s.timeAdditional} unit="s" step={30} min={0} max={36000} digits={0} onChange={(v) => set({ timeAdditional: v })} />
+            <Row label={t("filum.finestre.add_to_total")} title={t("filum.finestre.preparing_the_machine_thread_breaks")}>
+              <Num value={s.timeAdditional} unit={t("filum.finestre.unit_seconds")} step={30} min={0} max={36000} digits={0} onChange={(v) => set({ timeAdditional: v })} />
             </Row>
-            <Row label="Client pages" title="Show the estimated time on the client pages too">
+            <Row label={t("filum.finestre.client_pages")} title={t("filum.finestre.show_the_estimated_time_on")}>
               <Toggle on={s.clientTimes} onChange={(v) => set({ clientTimes: v })} />
             </Row>
           </Section>
-          <Section title="Branding" defaultOpen={false}>
+          <Section title={t("filum.finestre.branding")} defaultOpen={false}>
             <Row label="Logo">
               <span style={{ display: "flex", gap: 6, alignItems: "center" }}>
                 {s.logo && <img src={s.logo} alt="" style={{ maxHeight: 24, maxWidth: 70 }} />}
                 <button className="btn sm" onClick={pickLogo}>
-                  <FileImage size={12} /> Choose…
+                  <FileImage size={12} />{t("filum.finestre.choose")}
                 </button>
                 {s.logo && (
                   <button className="btn sm ghost" onClick={() => set({ logo: "" })}>
-                    Remove
+                    {t("filum.finestre.remove")}
                   </button>
                 )}
               </span>
             </Row>
-            <Row label="Footer">
+            <Row label={t("filum.finestre.footer")}>
               <Toggle on={s.showFooter} onChange={(v) => set({ showFooter: v })} />
             </Row>
-            {s.showFooter && <input className="input" value={s.footer} onChange={(e) => set({ footer: e.target.value })} placeholder="Contact, website…" />}
+            {s.showFooter && <input className="input" value={s.footer} onChange={(e) => set({ footer: e.target.value })} placeholder={t("filum.finestre.contact_website")} />}
             {s.views.info && (
               <>
-                <span className="stat">Information sheet</span>
-                <textarea className="input" value={s.infoText} onChange={(e) => set({ infoText: e.target.value })} placeholder="Care instructions, terms, contact…" />
+                <span className="stat">{t("filum.finestre.information_sheet")}</span>
+                <textarea className="input" value={s.infoText} onChange={(e) => set({ infoText: e.target.value })} placeholder={t("filum.finestre.care_instructions_terms_contact")} />
               </>
             )}
           </Section>
         </div>
         <div className="pr-preview" ref={box}>
-          <iframe ref={frame} title="Print preview" />
+          <iframe ref={frame} title={t("filum.finestre.print_preview")} />
         </div>
       </div>
     </Dialog>

@@ -12,6 +12,7 @@ import { useStore } from "../store";
 import type { ExportOptions, PlanData } from "../types";
 import { Num } from "./ui";
 import "../output.css";
+import { t, tn } from "../nova/i18n/filum";
 
 /** Ink/Stitch "stop position": where the frame moves before every stop. */
 export function StopPositionChoice({ stops }: { stops: number }) {
@@ -21,19 +22,19 @@ export function StopPositionChoice({ stops }: { stops: number }) {
   const set = (p: [number, number] | undefined) => commit((d) => ({ ...d, options: { ...(d.options ?? defaultDesignOptions()), stopPosition: p } }));
   return (
     <>
-      <h4 title="Ink/Stitch stop position (frame out): before every stop the frame moves the design away from the needle, so you can place appliqué fabric or foam, then it comes back">
-        Frame out on stops
+      <h4 title={t("filum.finestre.ink_stitch_stop_position_frame")}>
+        {t("filum.finestre.frame_out_on_stops")}
       </h4>
       <div className="seg seg-full">
-        <button className={!at ? "on" : ""} onClick={() => set(undefined)} title="The frame stays where the stop happens">
-          Stay
+        <button className={!at ? "on" : ""} onClick={() => set(undefined)} title={t("filum.finestre.the_frame_stays_where_the")}>
+          {t("filum.finestre.stay")}
         </button>
         <button
           className={at ? "on" : ""}
           onClick={() => set(at ?? [+(hoop.width / 2).toFixed(1), 0])}
-          title="The needle goes to this point of the hoop before every stop: by default the top centre, which brings the design towards you"
+          title={t("filum.finestre.the_needle_goes_to_this")}
         >
-          Move to point
+          {t("filum.finestre.move_to_point")}
         </button>
       </div>
       {at && (
@@ -46,7 +47,7 @@ export function StopPositionChoice({ stops }: { stops: number }) {
           </label>
         </div>
       )}
-      {at && <p className="hint">{stops ? `${stops} stop${stops === 1 ? "" : "s"}: the needle goes to ${at[0].toFixed(0)}, ${at[1].toFixed(0)} mm (hoop coordinates) before each.` : "The design has no stops yet (Stop after, appliqué) — nothing changes."}</p>}
+      {at && <p className="hint">{stops ? tn("filum.finestre.stops_needle_goes", stops, { x: at[0].toFixed(0), y: at[1].toFixed(0) }) : t("filum.finestre.the_design_has_no_stops")}</p>}
     </>
   );
 }
@@ -58,33 +59,33 @@ export function RepeatOptions({ opts, set, width, height }: { opts: ExportOption
   const on = xr > 1 || yr > 1;
   return (
     <>
-      <h4 title="Ink/Stitch panelization: the design several times side by side and below each other in one file — for patches and labels sewn in one hooping">Repeats</h4>
+      <h4 title={t("filum.finestre.ink_stitch_panelization_the_design")}>{t("filum.finestre.repeats")}</h4>
       <div className="xp-repeat">
-        <label className="ctx-field" title="Copies side by side (Ink/Stitch horizontal repeats)">
+        <label className="ctx-field" title={t("filum.finestre.copies_side_by_side_ink")}>
           ↔ <Num value={xr} step={1} min={1} max={20} digits={0} onChange={(v) => set({ ...opts, xRepeats: Math.round(v) })} />
         </label>
-        <label className="ctx-field" title="Distance from one copy to the next, left edge to left edge (Ink/Stitch horizontal spacing)">
+        <label className="ctx-field" title={t("filum.finestre.distance_from_one_copy_to")}>
           <Num value={opts.xSpacing ?? 100} unit="mm" step={1} min={-1000} max={1000} onChange={(v) => set({ ...opts, xSpacing: v })} />
         </label>
-        <label className="ctx-field" title="Copies below each other (Ink/Stitch vertical repeats)">
+        <label className="ctx-field" title={t("filum.finestre.copies_below_each_other_ink")}>
           ↕ <Num value={yr} step={1} min={1} max={20} digits={0} onChange={(v) => set({ ...opts, yRepeats: Math.round(v) })} />
         </label>
-        <label className="ctx-field" title="Distance from one copy to the next, top edge to top edge (Ink/Stitch vertical spacing)">
+        <label className="ctx-field" title={t("filum.finestre.distance_from_one_copy_to_2")}>
           <Num value={opts.ySpacing ?? 100} unit="mm" step={1} min={-1000} max={1000} onChange={(v) => set({ ...opts, ySpacing: v })} />
         </label>
       </div>
       <p className="hint">
         {on ? (
           <>
-            {xr * yr} copies · each colour sews all copies before the next colour
-            {(Math.abs(opts.xSpacing ?? 100) < width && xr > 1) || (Math.abs(opts.ySpacing ?? 100) < height && yr > 1) ? " · the copies overlap: spacing below the design size" : ""}
+            {xr * yr}{t("filum.finestre.copies_each_colour_sews_all")}
+            {(Math.abs(opts.xSpacing ?? 100) < width && xr > 1) || (Math.abs(opts.ySpacing ?? 100) < height && yr > 1) ? t("filum.finestre.the_copies_overlap_spacing_below") : ""}
             {" · "}
             <button className="link" onClick={() => set({ ...opts, xRepeats: 1, yRepeats: 1 })}>
-              Reset
+              {t("filum.finestre.reset")}
             </button>
           </>
         ) : (
-          "1 × 1: the design once."
+          t("filum.finestre.n1_1_the_design_once")
         )}
       </p>
     </>
@@ -101,7 +102,7 @@ export function PictureOptionsPanel({ kinds, pics, set }: { kinds: string[]; pic
     [600, "600"],
   ];
   const dpiRow = (value: number, put: (v: number) => void, label: string) => (
-    <label className="xp-dpi" title="Pixels per inch: 300 prints sharp at the real size; 150 for screens and e-mail (Ink/Stitch DPI, 100–2000)">
+    <label className="xp-dpi" title={t("filum.finestre.pixels_per_inch_300_prints")}>
       <span>{label}</span>
       <div className="seg">
         {dpis.map(([v, l]) => (
@@ -110,26 +111,26 @@ export function PictureOptionsPanel({ kinds, pics, set }: { kinds: string[]; pic
           </button>
         ))}
       </div>
-      <Num value={value} unit="dpi" step={50} min={100} max={2000} digits={0} onChange={put} />
+      <Num value={value} unit={t("filum.finestre.dpi")} step={50} min={100} max={2000} digits={0} onChange={put} />
     </label>
   );
   return (
     <>
-      <h4>Picture</h4>
+      <h4>{t("filum.finestre.picture")}</h4>
       {realistic && dpiRow(pics.dpiRealistic, (v) => set({ ...pics, dpiRealistic: v }), simple ? "Realistic" : "Resolution")}
       {simple && dpiRow(pics.dpiSimple, (v) => set({ ...pics, dpiSimple: v }), realistic ? "Simple" : "Resolution")}
       {simple && (
-        <label className="xp-dpi" title="Width of the stitch lines in the simple picture (Ink/Stitch line width, 0.3 mm)">
-          <span>Line width</span>
+        <label className="xp-dpi" title={t("filum.finestre.width_of_the_stitch_lines")}>
+          <span>{t("filum.finestre.line_width")}</span>
           <Num value={pics.lineWidth} unit="mm" step={0.05} min={0.01} max={5} onChange={(v) => set({ ...pics, lineWidth: v })} />
         </label>
       )}
-      <div className="seg seg-full" title="Behind the stitches">
+      <div className="seg seg-full" title={t("filum.finestre.behind_the_stitches")}>
         {(
           [
-            ["transparent", "Transparent", "No background — place it on anything (Ink/Stitch)"],
-            ["white", "White", "A white background"],
-            ["fabric", "Fabric", "The fabric colour of the realistic view"],
+            ["transparent", t("filum.finestre.transparent"), t("filum.finestre.no_background_place_it_on")],
+            ["white", t("filum.finestre.white"), "A white background"],
+            ["fabric", t("filum.finestre.fabric"), t("filum.finestre.the_fabric_colour_of_the")],
           ] as const
         ).map(([v, l, t]) => (
           <button key={v} className={pics.background === v ? "on" : ""} title={t} onClick={() => set({ ...pics, background: v })}>
@@ -183,8 +184,8 @@ export function PicturePreview({ kind, pics, opts }: { kind: string; pics: Pictu
     <div className="xp-pic">
       <div className={`xp-pic-box ${pics.background === "transparent" ? "checker" : ""}`} ref={ref} />
       <p className="hint">
-        <ImageIcon size={12} /> {size ? `${size.w.toLocaleString()} × ${size.h.toLocaleString()} px at ${dpi} dpi` : "Nothing to show yet"}
-        {size && Math.max(size.w, size.h) > 16000 && " — scaled down to 16,000 px"}
+        <ImageIcon size={12} /> {size ? t("filum.finestre.v1_v2_px_at_dpi", { v1: size.w.toLocaleString(), v2: size.h.toLocaleString(), dpi }) : t("filum.finestre.nothing_to_show_yet")}
+        {size && Math.max(size.w, size.h) > 16000 && t("filum.finestre.scaled_down_to_16_000")}
       </p>
     </div>
   );
@@ -196,16 +197,16 @@ export function ZipFileList({ targets, name, onRemove }: { targets: string[]; na
     <div className="xp-zip">
       <div className="exp-colours-head">
         <b>
-          <FileArchive size={14} /> {name}.zip
+          <FileArchive size={14} /> {name}{t("filum.finestre.zip")}
         </b>
-        <span className="stat">{targets.length ? `${targets.length} file${targets.length === 1 ? "" : "s"} — pick formats on the left` : "Pick the files to include on the left"}</span>
+        <span className="stat">{targets.length ? tn("filum.finestre.n_files_pick_formats", targets.length) : t("filum.finestre.pick_the_files_to_include")}</span>
       </div>
       <div className="xp-zip-list">
-        {targets.map((t) => (
-          <div key={t} className="xp-zip-file">
-            <span>{targetFileName(t, name, true)}</span>
-            <span className="stat">{isPicture(t) ? "picture" : t === "threadlist" ? "thread list" : t === "svg" ? "Ink/Stitch SVG" : t === "filum" ? "project" : "stitch file"}</span>
-            <button className="mini" title="Leave out" onClick={() => onRemove(t)}>
+        {targets.map((th) => (
+          <div key={th} className="xp-zip-file">
+            <span>{targetFileName(th, name, true)}</span>
+            <span className="stat">{isPicture(th) ? t("filum.finestre.picture_2") : th === "threadlist" ? t("filum.finestre.thread_list") : th === "svg" ? t("filum.finestre.ink_stitch_svg") : th === "filum" ? t("filum.finestre.project") : t("filum.finestre.stitch_file")}</span>
+            <button className="mini" title={t("filum.finestre.leave_out")} onClick={() => onRemove(th)}>
               ×
             </button>
           </div>

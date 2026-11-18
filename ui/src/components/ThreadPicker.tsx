@@ -33,6 +33,7 @@ import {
 import { useStore } from "../store";
 import type { Thread } from "../types";
 import { safeSetItem } from "../lib/storage";
+import { t } from "../nova/i18n/filum";
 
 const CHART_KEY = "filum.chart";
 export const lastChart = () => localStorage.getItem(CHART_KEY) ?? DEFAULT_CHART;
@@ -60,14 +61,14 @@ export function ChartSelect({ value, onChange, none }: { value: string; onChange
   const [open, setOpen] = useState(false);
   const btn = useRef<HTMLButtonElement>(null);
   const meta = list.find((c) => c.id === value);
-  const label = value ? (meta?.name ?? chartLabel(value)) : (none ?? "None");
+  const label = value ? (meta?.name ?? chartLabel(value)) : (none ?? t("filum.finestre.no_chart"));
   return (
     <>
       <button
         type="button"
         ref={btn}
         className={`chart-select ${open ? "on" : ""}`}
-        title={meta ? `${meta.name} · ${meta.count} colours · ${SOURCE_LABEL[meta.source]}` : label}
+        title={meta ? t("filum.finestre.name_count_colours_v3", { name: meta.name, count: meta.count, v3: SOURCE_LABEL[meta.source] }) : label}
         onClick={() => setOpen((v) => !v)}
       >
         <span className="cs-name">{label}</span>
@@ -139,12 +140,12 @@ function ChartMenu({ anchor, value, none, onPick, onClose }: { anchor: HTMLEleme
       const recent = recentCharts()
         .map((id) => list.find((c) => c.id === id))
         .filter((c): c is ChartMeta => !!c);
-      if (recent.length) out.push(["Recent", recent]);
+      if (recent.length) out.push([t("filum.finestre.recent"), recent]);
     }
     const mine = shown.filter((c) => c.source === "mine");
-    if (mine.length) out.unshift(["My threads", mine]);
+    if (mine.length) out.unshift([t("filum.finestre.my_threads"), mine]);
     const installed = shown.filter((c) => c.source === "custom");
-    if (installed.length) out.push(["Installed", installed]);
+    if (installed.length) out.push([t("filum.finestre.installed_group"), installed]);
     const byBrand = new Map<string, ChartMeta[]>();
     for (const c of shown) if (c.source !== "custom" && c.source !== "mine") byBrand.set(c.brand, [...(byBrand.get(c.brand) ?? []), c]);
     for (const [b, cs] of [...byBrand].sort((x, y) => x[0].localeCompare(y[0]))) out.push([b, cs]);
@@ -166,9 +167,9 @@ function ChartMenu({ anchor, value, none, onPick, onClose }: { anchor: HTMLEleme
     <div className="chart-menu" ref={ref} style={{ left: pos.left, top: pos.top, maxHeight: pos.maxHeight }}>
       <label className="chart-search">
         <Search size={13} />
-        <input ref={input} className="input" placeholder={`Search ${total} charts — brand, line, collection`} value={q} onChange={(e) => setQ(e.target.value)} />
+        <input ref={input} className="input" placeholder={t("filum.finestre.search_total_charts_brand_line", { total })} value={q} onChange={(e) => setQ(e.target.value)} />
         {q && (
-          <button type="button" className="icon-btn" onClick={() => setQ("")} title="Clear">
+          <button type="button" className="icon-btn" onClick={() => setQ("")} title={t("filum.finestre.clear")}>
             <X size={12} />
           </button>
         )}
@@ -183,7 +184,7 @@ function ChartMenu({ anchor, value, none, onPick, onClose }: { anchor: HTMLEleme
           <div key={g} className="cm-group">
             <div className="cm-head">{g}</div>
             {cs.map((c) => (
-              <div key={g + c.id} className={`cm-row ${c.id === value ? "on" : ""}`} role="button" tabIndex={0} title={`${c.name} · ${c.count} colours · ${SOURCE_LABEL[c.source]}`} onClick={() => onPick(c.id)} onKeyDown={(e) => e.key === "Enter" && onPick(c.id)}>
+              <div key={g + c.id} className={`cm-row ${c.id === value ? "on" : ""}`} role="button" tabIndex={0} title={t("filum.finestre.name_count_colours_v3", { name: c.name, count: c.count, v3: SOURCE_LABEL[c.source] })} onClick={() => onPick(c.id)} onKeyDown={(e) => e.key === "Enter" && onPick(c.id)}>
                 <span className="cm-name">{c.name}</span>
                 <span className="cm-count">{c.count || ""}</span>
                 <i className={`src-tag ${c.source}`} title={SOURCE_LABEL[c.source]}>
@@ -193,7 +194,7 @@ function ChartMenu({ anchor, value, none, onPick, onClose }: { anchor: HTMLEleme
                   <button
                     type="button"
                     className="icon-btn cm-del"
-                    title="Remove this installed chart"
+                    title={t("filum.finestre.remove_this_installed_chart")}
                     onClick={(e) => {
                       e.stopPropagation();
                       removeInstalledChart(c.id);
@@ -206,13 +207,13 @@ function ChartMenu({ anchor, value, none, onPick, onClose }: { anchor: HTMLEleme
             ))}
           </div>
         ))}
-        {!groups.length && <p className="hint" style={{ padding: "6px 10px" }}>No chart matches “{q}”.</p>}
+        {!groups.length && <p className="hint" style={{ padding: "6px 10px" }}>{t("filum.finestre.no_chart_matches_q", { q })}</p>}
       </div>
       {more > 0 && (
         <button
           type="button"
           className="cm-more"
-          title="Not included with Filum because no licence is stated: download them from their author"
+          title={t("filum.finestre.not_included_with_filum_because")}
           onClick={() => {
             onClose();
             useStore.getState().openSettings("downloads");
@@ -220,15 +221,15 @@ function ChartMenu({ anchor, value, none, onPick, onClose }: { anchor: HTMLEleme
         >
           <Download size={12} />
           <span>
-            {more} more charts from Embroidery Nerds: <b>download in Preferences…</b>
+            {more}{t("filum.finestre.more_charts_from_embroidery_nerds")}<b>{t("filum.finestre.download_in_preferences")}</b>
           </span>
         </button>
       )}
       <div className="cm-foot">
-        <button type="button" className="btn sm" onClick={install} disabled={busy} title="Add a .gpl thread chart (Ink/Stitch “Install custom palette”); it stays available in this app">
-          <Download size={12} /> Install palette (.gpl)…
+        <button type="button" className="btn sm" onClick={install} disabled={busy} title={t("filum.finestre.add_a_gpl_thread_chart")}>
+          <Download size={12} />{t("filum.finestre.install_palette_gpl")}
         </button>
-        <span className="stat">IS Ink/Stitch · EN Embroidery Nerds · MD Madeira card</span>
+        <span className="stat">{t("filum.finestre.is_ink_stitch_en_embroidery")}</span>
       </div>
     </div>,
     document.body,
@@ -309,9 +310,9 @@ export function ChartBrowser({
         />
         <label className="chart-search">
           <Search size={13} />
-          <input className="input" placeholder="Name, code or #hex" value={q} onChange={(e) => setQ(e.target.value)} />
+          <input className="input" placeholder={t("filum.finestre.name_code_or_hex")} value={q} onChange={(e) => setQ(e.target.value)} />
           {q && (
-            <button type="button" className="icon-btn" onClick={() => setQ("")} title="Clear">
+            <button type="button" className="icon-btn" onClick={() => setQ("")} title={t("filum.finestre.clear")}>
               <X size={12} />
             </button>
           )}
@@ -319,7 +320,7 @@ export function ChartBrowser({
       </div>
       {closest.length > 0 && !q && (
         <div className="chart-near">
-          <span className="chart-cap">Nearest</span>
+          <span className="chart-cap">{t("filum.finestre.nearest")}</span>
           {closest.map((e, i) => (
             <button
               type="button"
@@ -338,15 +339,15 @@ export function ChartBrowser({
         </div>
       )}
       <div className="chart-grid" style={{ maxHeight: height }}>
-        {!entries && <span className="hint">Loading chart…</span>}
-        {entries && !shown.length && <span className="hint">No match.</span>}
+        {!entries && <span className="hint">{t("filum.finestre.loading_chart")}</span>}
+        {entries && !shown.length && <span className="hint">{t("filum.finestre.no_match")}</span>}
         {shown.map((e, i) => (
           <button
             type="button"
             key={`${i}|${e.brand}|${e.code}|${e.name}|${e.color}`}
             style={{ background: e.color, color: inkOn(e.color) }}
             className={owned?.has(ownedKey(e)) ? "owned" : undefined}
-            title={`${e.name} · ${e.code}${owned?.has(ownedKey(e)) ? " · in My threads" : ""}`}
+            title={`${e.name} · ${e.code}${owned?.has(ownedKey(e)) ? t("filum.finestre.in_my_threads") : ""}`}
             onPointerEnter={() => setHover(e)}
             onPointerLeave={() => setHover(null)}
             onClick={() => onPick(e)}
@@ -363,7 +364,7 @@ export function ChartBrowser({
             </span>
           </>
         ) : (
-          <span className="stat">{entries ? `${shown.length} of ${entries.length} colours` : ""}</span>
+          <span className="stat">{entries ? t("filum.finestre.length_of_length__colours", { length: shown.length, length_: entries.length }) : ""}</span>
         )}
       </div>
     </div>
@@ -407,10 +408,10 @@ function ThreadPopover({ anchor, current, onPick, onClose }: { anchor: HTMLEleme
   };
   return createPortal(
     <div className="thread-pop" ref={ref} style={{ ...pos, transform: mv.moved ? `translate(${mv.off[0]}px, ${mv.off[1]}px)` : undefined }} data-movable>
-      <Grip grip={mv.grip} label="Thread" />
+      <Grip grip={mv.grip} label={t("filum.finestre.thread")} />
       <ChartBrowser near={custom} onPick={(e) => pick({ name: e.name, color: e.color, brand: e.brand, code: e.code })} height={170} />
       <div className="pop-sec">
-        <span className="chart-cap">Custom</span>
+        <span className="chart-cap">{t("filum.finestre.custom")}</span>
         <input
           type="color"
           className="color-big"
@@ -432,12 +433,12 @@ function ThreadPopover({ anchor, current, onPick, onClose }: { anchor: HTMLEleme
           style={{ width: 84 }}
         />
         <button type="button" className="btn sm primary" onClick={() => pick({ name: custom.toUpperCase(), color: custom, brand: "", code: "" })}>
-          Use colour
+          {t("filum.finestre.use_colour")}
         </button>
       </div>
       {recent.length > 0 && (
         <div className="pop-sec">
-          <span className="chart-cap">Recent</span>
+          <span className="chart-cap">{t("filum.finestre.recent")}</span>
           <div className="swatch-row">
             {recent.map((t, i) => (
               <Swatch key={i} color={t.color} size={18} title={threadTitle(t)} onClick={() => pick(t)} />
@@ -464,7 +465,7 @@ export function ThreadPicker({ value, onPick, disabled, mixed }: { value?: strin
       {threads.map((t) => (
         <Swatch key={t.id} color={t.color} on={t.id === value && !mixed} title={threadTitle(t)} onClick={disabled ? undefined : () => onPick(t.id)} />
       ))}
-      <button type="button" ref={plus} className={`swatch-add ${open ? "on" : ""}`} title="More colours: thread charts, custom, recent" disabled={disabled} onClick={() => setOpen((v) => !v)}>
+      <button type="button" ref={plus} className={`swatch-add ${open ? "on" : ""}`} title={t("filum.finestre.more_colours_thread_charts_custom")} disabled={disabled} onClick={() => setOpen((v) => !v)}>
         <Plus size={13} />
       </button>
       {open && plus.current && <ThreadPopover anchor={plus.current} current={cur?.color} onPick={onPick} onClose={() => setOpen(false)} />}
@@ -477,27 +478,27 @@ export function ThreadCard({ threadId }: { threadId: string }) {
   const doc = useStore((s) => s.doc);
   const plan = useStore((s) => s.plan);
   const focus = useStore((s) => s.colorFocus && s.activeThread === threadId);
-  const t = doc.threads.find((x) => x.id === threadId);
+  const th = doc.threads.find((x) => x.id === threadId);
   const u = useMemo(() => threadUsage(doc, plan).get(threadId), [doc, plan, threadId]);
-  if (!t) return null;
+  if (!th) return null;
   return (
     <div className="thread-card">
-      <span className="tc-swatch" style={{ background: t.color }} />
+      <span className="tc-swatch" style={{ background: th.color }} />
       <div className="tc-text">
-        <b>{t.name}</b>
+        <b>{th.name}</b>
         <span className="stat">
-          {[t.brand, t.code].filter(Boolean).join(" ") || "custom colour"} · {t.color.toUpperCase()}
+          {[th.brand, th.code].filter(Boolean).join(" ") || t("filum.finestre.custom_colour")} · {th.color.toUpperCase()}
         </span>
         {u && u.stitches > 0 && (
           <span className="stat">
-            {u.stitches.toLocaleString()} st · {u.metres.toFixed(1)} m · sewn {u.blocks.length === 1 ? `as colour ${u.blocks[0]}` : `in blocks ${u.blocks.join(", ")}`}
+            {u.stitches.toLocaleString()}{t("filum.finestre.st")}{u.metres.toFixed(1)}{t("filum.finestre.m_sewn")}{u.blocks.length === 1 ? t("filum.finestre.as_colour_v1", { v1: u.blocks[0] }) : t("filum.finestre.in_blocks_v1", { v1: u.blocks.join(", ") })}
           </span>
         )}
       </div>
       <button
         type="button"
         className={`icon-btn ${focus ? "on" : ""}`}
-        title="Show only this colour (dim the others)"
+        title={t("filum.finestre.show_only_this_colour_dim")}
         onClick={() => {
           const s = useStore.getState();
           s.set(focus ? { colorFocus: false } : { colorFocus: true, activeThread: threadId });
@@ -505,7 +506,7 @@ export function ThreadCard({ threadId }: { threadId: string }) {
       >
         <Focus size={14} />
       </button>
-      <button type="button" className="icon-btn" title="Thread colours…" onClick={() => useStore.getState().setDialog("threads")}>
+      <button type="button" className="icon-btn" title={t("filum.finestre.thread_colours")} onClick={() => useStore.getState().setDialog("threads")}>
         <SlidersHorizontal size={14} />
       </button>
     </div>

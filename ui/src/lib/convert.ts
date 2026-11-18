@@ -12,6 +12,7 @@
 import type { PathNode, SubPath, Vec2 } from "../types";
 import { cubicAt, fitPath, flattenSubPath, segmentOf, vdist } from "./bezier";
 import { offsetPolyline } from "./geometry";
+import { t } from "../nova/i18n/filum";
 
 const sub = (a: Vec2, b: Vec2): Vec2 => [a[0] - b[0], a[1] - b[1]];
 const add = (a: Vec2, b: Vec2): Vec2 => [a[0] + b[0], a[1] + b[1]];
@@ -525,13 +526,13 @@ const PATTERNS: Record<SatinPattern, { segs: Seg[]; flip: boolean }> = {
 };
 
 export const SATIN_PATTERNS: { id: SatinPattern; label: string }[] = [
-  { id: "normal", label: "Plain" },
-  { id: "pearl", label: "Pearls" },
-  { id: "diamond", label: "Diamonds" },
-  { id: "square", label: "Squares" },
-  { id: "triangle", label: "Triangles" },
-  { id: "wave", label: "Wave" },
-  { id: "arch", label: "Arch" },
+  { id: "normal", get label() { return t("filum.finestre.plain"); } },
+  { id: "pearl", get label() { return t("filum.finestre.pearls"); } },
+  { id: "diamond", get label() { return t("filum.finestre.diamonds"); } },
+  { id: "square", get label() { return t("filum.finestre.squares"); } },
+  { id: "triangle", get label() { return t("filum.finestre.triangles"); } },
+  { id: "wave", get label() { return t("filum.finestre.wave"); } },
+  { id: "arch", get label() { return t("filum.finestre.arch"); } },
 ];
 
 function bbox(segs: Seg[]): { x0: number; x1: number; y0: number; y1: number } {

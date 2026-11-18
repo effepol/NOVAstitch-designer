@@ -18,6 +18,7 @@ import { useStore } from "../store";
 import type { DesignOptions } from "../types";
 import { Dialog, Num, Row, Toggle } from "./ui";
 import { safeSetItem } from "../lib/storage";
+import { t, tn } from "../nova/i18n/filum";
 
 type Scope = "design" | "selection";
 let pendingScope: Scope | null = null;
@@ -37,10 +38,10 @@ const loadSelection = (): KnockdownSelectionOptions => {
   }
 };
 
-const JOINS: [JoinStyle, string][] = [
-  ["round", "Round"],
-  ["mitre", "Mitre"],
-  ["bevel", "Bevel"],
+const JOINS = (): [JoinStyle, string][] => [
+  ["round", t("filum.finestre.round")],
+  ["mitre", t("filum.finestre.mitre")],
+  ["bevel", t("filum.finestre.bevel")],
 ];
 
 function Seg<T extends string | number>({ value, options, onChange }: { value: T; options: [T, string][]; onChange: (v: T) => void }) {
@@ -59,11 +60,11 @@ function ColourRow({ value, onChange }: { value: string; onChange: (hex: string)
   const fabricColor = useStore((s) => s.fabricColor);
   const color = value || fabricColor;
   return (
-    <Row label="Colour" title="Usually the fabric's colour, so the knockdown disappears">
+    <Row label={t("filum.finestre.colour")} title={t("filum.finestre.usually_the_fabric_s_colour")}>
       <div className="kd-color">
         <input type="color" value={color} onChange={(e) => onChange(e.target.value)} />
-        <button className="btn sm ghost" disabled={color.toLowerCase() === fabricColor.toLowerCase()} title="Use the fabric colour" onClick={() => onChange(fabricColor)}>
-          Fabric
+        <button className="btn sm ghost" disabled={color.toLowerCase() === fabricColor.toLowerCase()} title={t("filum.finestre.use_the_fabric_colour")} onClick={() => onChange(fabricColor)}>
+          {t("filum.finestre.fabric")}
         </button>
       </div>
     </Row>
@@ -76,34 +77,34 @@ export function DesignKnockdownFields({ o, set }: { o: DesignOptions; set: (p: P
   const on = !!o.knockdown;
   return (
     <>
-      <Row label="Knockdown" title="A light net sewn first under the whole design — it follows every edit">
+      <Row label={t("filum.finestre.knockdown")} title={t("filum.finestre.a_light_net_sewn_first")}>
         <Toggle on={on} onChange={(v) => set(v ? { knockdown: true, knockdownColor: o.knockdownColor || fabricColor } : { knockdown: false })} />
       </Row>
       {on && (
         <>
-          <Row label="Reach" title="How far the net reaches beyond the design">
+          <Row label={t("filum.finestre.reach")} title={t("filum.finestre.how_far_the_net_reaches")}>
             <Num value={o.knockdownOffset ?? 2} unit="mm" step={0.5} min={0} max={15} onChange={(v) => set({ knockdownOffset: v })} />
           </Row>
-          <Row label="Keep holes" title="Leave the pile standing inside the design's holes (letter counters, gaps)">
+          <Row label={t("filum.finestre.keep_holes")} title={t("filum.finestre.leave_the_pile_standing_inside")}>
             <Toggle on={!!o.knockdownHoles} onChange={(v) => set({ knockdownHoles: v })} />
           </Row>
-          <Row label="Net" title="One layer, or two crossing at 90° for deep pile">
+          <Row label={t("filum.finestre.net")} title={t("filum.finestre.one_layer_or_two_crossing")}>
             <Seg
               value={o.knockdownLayers ?? 2}
               onChange={(v) => set({ knockdownLayers: v })}
               options={[
-                [1, "Single"],
-                [2, "Crossed"],
+                [1, t("filum.finestre.single")],
+                [2, t("filum.finestre.crossed")],
               ]}
             />
           </Row>
-          <Row label="Spacing" title="Row distance of the net: 1.5–2 mm for deep pile, 2–2.5 mm for medium">
+          <Row label={t("filum.finestre.spacing")} title={t("filum.finestre.row_distance_of_the_net")}>
             <Num value={o.knockdownSpacing ?? 2} unit="mm" step={0.25} min={0.5} max={6} onChange={(v) => set({ knockdownSpacing: v })} />
           </Row>
-          <Row label="Stitch length" title="Long stitches lie over the loops (about 4 mm)">
+          <Row label={t("filum.finestre.stitch_length")} title={t("filum.finestre.long_stitches_lie_over_the")}>
             <Num value={o.knockdownLength ?? 4} unit="mm" step={0.5} min={1} max={8} onChange={(v) => set({ knockdownLength: v })} />
           </Row>
-          <Row label="Angle">
+          <Row label={t("filum.finestre.angle")}>
             <Num value={o.knockdownAngle ?? 45} unit="°" step={15} onChange={(v) => set({ knockdownAngle: v })} />
           </Row>
           <ColourRow value={o.knockdownColor ?? ""} onChange={(v) => set({ knockdownColor: v })} />
@@ -117,47 +118,47 @@ export function DesignKnockdownFields({ o, set }: { o: DesignOptions; set: (p: P
 function SelectionKnockdownFields({ o, set }: { o: KnockdownSelectionOptions; set: (p: Partial<KnockdownSelectionOptions>) => void }) {
   return (
     <>
-      <Row label="Reach" title="How far the knockdown reaches beyond the selection (negative: inside)">
+      <Row label={t("filum.finestre.reach")} title={t("filum.finestre.how_far_the_knockdown_reaches")}>
         <Num value={o.offset} unit="mm" step={0.5} min={-50} max={50} onChange={(v) => set({ offset: v })} />
       </Row>
-      <Row label="Keep holes" title="Leave the pile standing inside the design's holes (letter counters, gaps)">
+      <Row label={t("filum.finestre.keep_holes")} title={t("filum.finestre.leave_the_pile_standing_inside")}>
         <Toggle on={o.keepHoles} onChange={(v) => set({ keepHoles: v })} />
       </Row>
-      <Row label="Corners" title="Corner style of the grown outline">
-        <Seg value={o.join} onChange={(v) => set({ join: v })} options={JOINS} />
+      <Row label={t("filum.finestre.corners")} title={t("filum.finestre.corner_style_of_the_grown")}>
+        <Seg value={o.join} onChange={(v) => set({ join: v })} options={JOINS()} />
       </Row>
       {(o.join === "mitre" || (o.frame === "rect" && o.frameJoin === "mitre")) && (
-        <Row label="Mitre limit" title="Sharp mitred corners reaching further than this many times the reach are cut off">
+        <Row label={t("filum.finestre.mitre_limit")} title={t("filum.finestre.sharp_mitred_corners_reaching_further")}>
           <Num value={o.mitreLimit} step={0.5} min={0.1} max={50} onChange={(v) => set({ mitreLimit: v })} />
         </Row>
       )}
-      <Row label="Shape" title="Follow the design, or a rectangle / circle around it with the design cut out (an embossed look)">
+      <Row label={t("filum.finestre.shape")} title={t("filum.finestre.follow_the_design_or_a")}>
         <Seg
           value={o.frame}
           onChange={(v) => set({ frame: v })}
           options={[
-            ["none", "Design"],
-            ["rect", "Rectangle"],
-            ["circle", "Circle"],
+            ["none", t("filum.finestre.design_2")],
+            ["rect", t("filum.finestre.rectangle")],
+            ["circle", t("filum.finestre.circle")],
           ]}
         />
       </Row>
       {o.frame !== "none" && (
         <>
-          <Row label="Shape margin" title="Margin between the design's outline and the rectangle / circle">
+          <Row label={t("filum.finestre.shape_margin")} title={t("filum.finestre.margin_between_the_design_s")}>
             <Num value={o.frameOffset} unit="mm" step={0.5} min={0} max={50} onChange={(v) => set({ frameOffset: v })} />
           </Row>
           {o.frame === "rect" && (
-            <Row label="Shape corners">
-              <Seg value={o.frameJoin} onChange={(v) => set({ frameJoin: v })} options={JOINS} />
+            <Row label={t("filum.finestre.shape_corners")}>
+              <Seg value={o.frameJoin} onChange={(v) => set({ frameJoin: v })} options={JOINS()} />
             </Row>
           )}
-          <Row label="Cut out design" title="Off: the whole rectangle / circle is flattened, the design included">
+          <Row label={t("filum.finestre.cut_out_design")} title={t("filum.finestre.off_the_whole_rectangle_circle")}>
             <Toggle on={!o.frameOnly} onChange={(v) => set({ frameOnly: !v })} />
           </Row>
         </>
       )}
-      <Row label="Stitch length" title="Long stitches lie over the loops; the rows are √3⁄2 of it apart, with a ±60° underlay (Ink/Stitch)">
+      <Row label={t("filum.finestre.stitch_length")} title={t("filum.finestre.long_stitches_lie_over_the_2")}>
         <Num value={o.stitchLength} unit="mm" step={0.5} min={0.5} max={10} onChange={(v) => set({ stitchLength: v })} />
       </Row>
       <ColourRow value={o.color} onChange={(v) => set({ color: v })} />
@@ -186,7 +187,7 @@ export function KnockdownDialog({ onClose }: { onClose: () => void }) {
     setBusy(true);
     try {
       const n = await createKnockdown(kd);
-      if (n) useStore.getState().toast(`Knockdown with ${n} outline${n > 1 ? "s" : ""} created — sewn before the selection`, "success");
+      if (n) useStore.getState().toast(tn("filum.finestre.knockdown_created", n), "success");
       onClose();
     } catch (e) {
       useStore.getState().toast(String((e as Error).message ?? e), "error");
@@ -196,47 +197,47 @@ export function KnockdownDialog({ onClose }: { onClose: () => void }) {
   return (
     <Dialog
       live
-      title="Knockdown"
+      title={t("filum.finestre.knockdown")}
       onClose={onClose}
       footer={
         scope === "design" ? (
           <>
             <div className="spacer" />
             <button className="btn primary" onClick={onClose}>
-              Done
+              {t("filum.finestre.done")}
             </button>
           </>
         ) : (
           <>
             <div className="spacer" />
             <button className="btn" onClick={onClose}>
-              Cancel
+              {t("filum.finestre.cancel")}
             </button>
             <button className="btn primary" disabled={!hasSel || busy} onClick={create}>
-              {busy ? "Working…" : "Create knockdown"}
+              {busy ? t("filum.finestre.working") : t("filum.finestre.create_knockdown")}
             </button>
           </>
         )
       }
     >
       <div className="seg seg-full" style={{ marginBottom: 10 }}>
-        <button className={scope === "design" ? "on" : ""} onClick={() => setScope("design")} title="Automatic: under everything, following every edit">
-          Whole design
+        <button className={scope === "design" ? "on" : ""} onClick={() => setScope("design")} title={t("filum.finestre.automatic_under_everything_following_every")}>
+          {t("filum.finestre.whole_design")}
         </button>
-        <button className={scope === "selection" ? "on" : ""} onClick={() => setScope("selection")} title="An editable object under the selected objects">
-          Under the selection
+        <button className={scope === "selection" ? "on" : ""} onClick={() => setScope("selection")} title={t("filum.finestre.an_editable_object_under_the")}>
+          {t("filum.finestre.under_the_selection")}
         </button>
       </div>
       {scope === "design" ? (
         <>
           <DesignKnockdownFields o={options} set={setDesign} />
-          <p className="hint">Saved with the design and redone with every edit. For towels, fleece and fur.</p>
+          <p className="hint">{t("filum.finestre.saved_with_the_design_and")}</p>
         </>
       ) : (
         <>
-          {!hasSel && <p className="hint warn">Select the objects to knock down first.</p>}
+          {!hasSel && <p className="hint warn">{t("filum.finestre.select_the_objects_to_knock")}</p>}
           <SelectionKnockdownFields o={kd} set={setSelection} />
-          <p className="hint">An editable fill under the selection, sewn before it — reorder, reshape or recolour it like any object.</p>
+          <p className="hint">{t("filum.finestre.an_editable_fill_under_the")}</p>
         </>
       )}
     </Dialog>

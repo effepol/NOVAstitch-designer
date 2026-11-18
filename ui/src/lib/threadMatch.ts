@@ -15,6 +15,7 @@
 
 import { deltaE, lab, type Lab } from "./colorMath";
 import type { ChartEntry } from "./threads";
+import { t } from "../nova/i18n/filum";
 
 export type MatchPreset = "faithful" | "hue" | "vivid" | "distinct" | "few" | "custom";
 
@@ -59,11 +60,11 @@ export const DEFAULT_MATCH: MatchOptions = {
 };
 
 export const MATCH_PRESETS: { id: Exclude<MatchPreset, "custom">; label: string; hint: string; opts: Partial<MatchOptions> }[] = [
-  { id: "faithful", label: "Faithful", hint: "The closest spool for every colour (CIEDE2000)", opts: { weights: { l: 1, c: 1, h: 1 }, saturationBias: 0, unique: false, minSeparation: 0, keepLightOrder: false, keepContrast: false, budget: 0 } },
-  { id: "hue", label: "Keep hue", hint: "Hue shifts cost most: orange stays orange, it may get lighter or darker instead", opts: { weights: { l: 0.7, c: 1, h: 2.2 }, saturationBias: 0, unique: false, minSeparation: 0, budget: 0 } },
-  { id: "vivid", label: "Vivid", hint: "Keeps colours saturated: thread on fabric reads duller than a screen", opts: { weights: { l: 0.8, c: 1.8, h: 1.4 }, saturationBias: 0.25, unique: false, budget: 0 } },
-  { id: "distinct", label: "Distinct", hint: "Every colour its own spool, kept apart, light-to-dark order and contrast kept", opts: { weights: { l: 1, c: 1, h: 1 }, saturationBias: 0, unique: true, minSeparation: 8, keepLightOrder: true, keepContrast: true, budget: 0 } },
-  { id: "few", label: "Few spools", hint: "The best 6 spools for the whole design — fewer colour changes", opts: { weights: { l: 1, c: 1, h: 1 }, saturationBias: 0, unique: false, minSeparation: 0, keepLightOrder: true, keepContrast: false, budget: 6 } },
+  { id: "faithful", get label() { return t("filum.finestre.faithful"); }, get hint() { return t("filum.finestre.the_closest_spool_for_every"); }, opts: { weights: { l: 1, c: 1, h: 1 }, saturationBias: 0, unique: false, minSeparation: 0, keepLightOrder: false, keepContrast: false, budget: 0 } },
+  { id: "hue", get label() { return t("filum.finestre.keep_hue"); }, get hint() { return t("filum.finestre.hue_shifts_cost_most_orange"); }, opts: { weights: { l: 0.7, c: 1, h: 2.2 }, saturationBias: 0, unique: false, minSeparation: 0, budget: 0 } },
+  { id: "vivid", get label() { return t("filum.finestre.vivid"); }, get hint() { return t("filum.finestre.keeps_colours_saturated_thread_on"); }, opts: { weights: { l: 0.8, c: 1.8, h: 1.4 }, saturationBias: 0.25, unique: false, budget: 0 } },
+  { id: "distinct", get label() { return t("filum.finestre.distinct"); }, get hint() { return t("filum.finestre.every_colour_its_own_spool"); }, opts: { weights: { l: 1, c: 1, h: 1 }, saturationBias: 0, unique: true, minSeparation: 8, keepLightOrder: true, keepContrast: true, budget: 0 } },
+  { id: "few", get label() { return t("filum.finestre.few_spools"); }, get hint() { return t("filum.finestre.the_best_6_spools_for"); }, opts: { weights: { l: 1, c: 1, h: 1 }, saturationBias: 0, unique: false, minSeparation: 0, keepLightOrder: true, keepContrast: false, budget: 6 } },
 ];
 
 /** Lightness, chroma and hue (degrees) of a Lab colour. */

@@ -34,6 +34,8 @@ const cases: [string, string][] = [
   ["proprietà label", `export const items = [{ label: "New design" }];`],
   ["template", "export const A = (n: number) => <b title={`${n} stitches`} />;"],
   ["messaggio", `declare const s: { toast(m: string): void }; s.toast("Saved");`],
+  ["proprietà group", `export const groups = [{ group: "Everywhere", rows: [] }];`],
+  ["template in un elenco", "export const tabs = (n: number) => [[\"fonts\", `Fonts (${n})`]];"],
 ];
 for (const [name, code] of cases) {
   const r = lint(`case-${name.replace(/\W/g, "")}.tsx`, code);

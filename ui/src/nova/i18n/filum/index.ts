@@ -4,6 +4,7 @@
 // Il nome del programma sta in una sola chiave, filum.app.name: nei testi si
 // scrive {app}, e t() lo riempie da sé.
 
+import { createElement, Fragment, type ReactNode } from "react";
 import { addCatalog, getLanguage, t as coreT } from "../../core/i18n";
 import it from "./it.json";
 import en from "./en.json";
@@ -55,4 +56,22 @@ let reverse: Map<string, string[]> | null = null;
 export function withTexts<T extends { id: string }, K extends string>(prefix: string, fields: readonly K[], item: T): T & { readonly [k in K]: string } {
   for (const f of fields) Object.defineProperty(item, f, { get: () => t(`${prefix}.${item.id}.${f}`), enumerable: true });
   return item as T & { readonly [k in K]: string };
+}
+
+/**
+ * Come t(), ma i segnaposto di `nodes` diventano elementi (un link, un grassetto): per una frase
+ * come «By downloading you accept the {licence} licence.», dove {licence} è un link.
+ */
+export function tx(key: string, nodes: Record<string, ReactNode>, vars?: Record<string, string | number>): ReactNode {
+  const parts = t(key, vars).split(/\{(\w+)\}/);
+  return createElement(Fragment, null, ...parts.map((p, i) => (i % 2 ? createElement(Fragment, { key: i }, p in nodes ? nodes[p] : `{${p}}`) : p)));
+}
+
+/**
+ * Un testo che viene da dati generati (i pacchetti scaricabili): tradotto se il catalogo ha
+ * per `key` proprio questa frase inglese, altrimenti mostrato com'è (i dati sono cambiati).
+ */
+export function tData(key: string, original: string): string {
+  const english = (en as Record<string, string>)[key];
+  return english !== undefined && english.replaceAll("{app}", "Filum") === original ? t(key) : original;
 }

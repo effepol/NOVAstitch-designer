@@ -46,5 +46,14 @@ Per cambiarne una basta scrivere la scelta nella colonna «Decisione»: la PR su
 | shape builder | costruttore di forme | generatore di forme | filum.barre.shape_builder | |
 | smart guides | guide intelligenti | guide dinamiche | filum.barre.no_smart_guides | |
 | nudge | sposta di poco | sposta a scatti | filum.barre.nudge | |
+| rung (satin) | traversina | piolo, traversa | filum.finestre.conv_n_rung, filum.finestre.conv_also_select_the_rungs e vicine | |
+| rail (satin) | binario | guida, bordo | filum.finestre.conv_with_editable_rails, filum.finestre.converti.* | |
+| centre run, centre walk (underlay) | passata centrale | sottopunto centrale | filum.finestre.conv_name_centre_run, filum.finestre.centre_walk_narrow_columns | |
+| contour underlay, zig-zag underlay | sottopunto di contorno, zig-zag | sottopunto perimetrale | filum.finestre.contour_underlay_crisp_edges, filum.finestre.contour_zig_zag_wide_columns | |
+| embroidery fonts | font da ricamo | caratteri da ricamo | filum.finestre.embroidery_fonts, filum.finestre.embroidery_fonts_n | |
+| My threads | Miei fili | I miei fili, Fili posseduti | filum.finestre.my_threads, filum.finestre.in_my_threads | |
+| hue / lightness / saturation (abbinamento dei fili) | tinta / luminosità / saturazione | tonalità / chiarezza / croma | filum.finestre.hue, filum.finestre.lightness, filum.finestre.saturation | |
+| Filum violet (colore d'accento) | Viola {app} | Viola NOVAstitch | filum.finestre.filum_violet | |
+| warp shapes (Arc, Bulge, Flag, Squeeze…) | Arcata, Rigonfio, Bandiera, Strizza… | Arco, Gonfiore, Onda, Comprimi | filum.finestre.arc, filum.finestre.bulge, filum.finestre.flag, filum.finestre.squeeze | |
 
 Le righe si aggiungono a ogni PR di traduzione, area per area.

@@ -23,7 +23,7 @@ import { hexToRgb, rgbToHex, normHex, lab, deltaE, type Lab } from "./colorMath"
 import { remapThreads, threadsOf } from "./copies";
 import { safeSetItem } from "./storage";
 import { bySewOrder, chartIdFor, myThreadsGpl, ownedKey, paletteBrand, similarMerges, spoolsOfPalette, type ParsedPalette } from "./threadTools";
-import { withTexts } from "../nova/i18n/filum";
+import { t, withTexts } from "../nova/i18n/filum";
 export { colourEdit, ownedKey } from "./threadTools";
 
 export const hexDeltaE = (a: string, b: string) => deltaE(lab(a), lab(b));
@@ -36,11 +36,11 @@ export function inkOn(hex: string): string {
 
 /** Human description of a colour difference. */
 export function deltaLabel(d: number): string {
-  if (d < 1) return "identical";
-  if (d < 3) return "very close";
-  if (d < 6) return "close";
-  if (d < 12) return "similar";
-  return "different";
+  if (d < 1) return t("filum.dati.delta_identical");
+  if (d < 3) return t("filum.dati.delta_very_close");
+  if (d < 6) return t("filum.dati.delta_close");
+  if (d < 12) return t("filum.dati.delta_similar");
+  return t("filum.dati.delta_different");
 }
 
 // ---------------------------------------------------------------------------

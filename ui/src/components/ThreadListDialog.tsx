@@ -14,10 +14,11 @@ import type { ThreadListEntry } from "../types";
 import { lastChart } from "./ThreadPicker";
 import { Dialog } from "./ui";
 import "../output.css";
+import { t, tn } from "../nova/i18n/filum";
 
 /** Pick a thread list file and open the dialog with it. */
 export async function chooseThreadList() {
-  const f = await openFile([{ name: "Thread lists (TXT, COL, EDR, INF)", extensions: THREAD_LIST_EXT }]);
+  const f = await openFile([{ name: t("filum.finestre.thread_lists_txt_col_edr"), extensions: THREAD_LIST_EXT }]);
   if (!f) return;
   pendingThreadList.name = f.name;
   pendingThreadList.bytes = f.bytes;
@@ -89,17 +90,17 @@ export function ThreadListDialog({ onClose }: { onClose: () => void }) {
         return { ...d, threads: r.document.threads, objects: synced.objects, threadSources: r.document.threadSources };
       });
       s.toast(
-        `Applied ${r.report.applied} of ${r.report.blocks} colour block${r.report.blocks === 1 ? "" : "s"} from ${file.name}` +
-          (shapes ? ` · ${shapes} lettering${shapes === 1 ? "" : "s"} got several colours for one font colour and became shapes` : ""),
+        tn("filum.finestre.applied_blocks", r.report.blocks, { applied: r.report.applied, file: file.name }) +
+          (shapes ? tn("filum.finestre.letterings_became_shapes", shapes) : ""),
         "success",
       );
       onClose();
     } catch (e) {
-      s.toast(`Could not apply the thread list: ${(e as Error).message}`, "error");
+      s.toast(t("filum.finestre.could_not_apply_the_thread", { message: (e as Error).message }), "error");
     }
   };
   const pick = async () => {
-    const f = await openFile([{ name: "Thread lists (TXT, COL, EDR, INF)", extensions: THREAD_LIST_EXT }]);
+    const f = await openFile([{ name: t("filum.finestre.thread_lists_txt_col_edr"), extensions: THREAD_LIST_EXT }]);
     if (f) setFile({ name: f.name, bytes: f.bytes });
   };
   const sw = (c: string | null | undefined) => <i className={c ? "" : "none"} style={c ? { background: c } : undefined} />;
@@ -109,28 +110,27 @@ export function ThreadListDialog({ onClose }: { onClose: () => void }) {
     <Dialog
       live
       wide
-      title="Apply thread list"
+      title={t("filum.finestre.apply_thread_list")}
       onClose={onClose}
       footer={
         <>
           <button className="btn" onClick={pick}>
-            <FileText size={14} /> {file.bytes.length ? "Other file…" : "Choose file…"}
+            <FileText size={14} /> {file.bytes.length ? t("filum.finestre.other_file") : t("filum.finestre.choose_file")}
           </button>
           <div className="spacer" />
           <button className="btn" onClick={onClose}>
-            Cancel
+            {t("filum.finestre.cancel")}
           </button>
           <button className="btn primary" disabled={!applied || !blocks.length} onClick={apply}>
-            Apply {applied ? `${applied} colour${applied === 1 ? "" : "s"}` : ""}
+            {t("filum.finestre.apply_2")}{applied ? tn("filum.finestre.n_colours", applied) : ""}
           </button>
         </>
       }
     >
       <p className="hint" style={{ marginTop: 0 }}>
-        Colour block 1 gets the first thread of the list, block 2 the second, and so on (Ink/Stitch). Use it to bring back the colours of a DST or EXP — they store none — from the COL, EDR, INF or
-        thread list that came with it.
+        {t("filum.finestre.colour_block_1_gets_the")}
       </p>
-      {!file.bytes.length && <p className="hint">Choose a thread list: Ink/Stitch's TXT (ZIP export), another program's TXT, COL, EDR or INF.</p>}
+      {!file.bytes.length && <p className="hint">{t("filum.finestre.choose_a_thread_list_ink")}</p>}
       {error && <p className="hint" style={{ color: "var(--danger-text)" }}>{file.name}: {error}</p>}
       {list && (
         <>
@@ -138,20 +138,20 @@ export function ThreadListDialog({ onClose }: { onClose: () => void }) {
             <b>{file.name}</b>
             <span className="badge">{KIND[list.kind] ?? list.kind.toUpperCase()}</span>
             <span className="stat">
-              {list.entries.length} thread{list.entries.length === 1 ? "" : "s"} · the design has {blocks.length} colour block{blocks.length === 1 ? "" : "s"}
-              {unchanged ? ` · ${unchanged} already match` : ""}
+              {tn("filum.finestre.n_threads", list.entries.length)}{t("filum.finestre.the_design_has")}{tn("filum.finestre.n_colour_blocks", blocks.length)}
+              {unchanged ? t("filum.finestre.unchanged_already_match", { unchanged }) : ""}
             </span>
           </div>
           {list.entries.length !== blocks.length && blocks.length > 0 && (
             <p className="hint">
               {list.entries.length < blocks.length
-                ? `The list is shorter: the last ${blocks.length - list.entries.length} block${blocks.length - list.entries.length === 1 ? " keeps its" : "s keep their"} colour.`
-                : `The list is longer: ${list.entries.length - blocks.length} thread${list.entries.length - blocks.length === 1 ? " is" : "s are"} left over — is it the list of this design?`}
+                ? tn("filum.finestre.list_shorter", blocks.length - list.entries.length)
+                : tn("filum.finestre.list_longer", list.entries.length - blocks.length)}
             </p>
           )}
           {chartNeeded && (
-            <label className="row" title="The list names catalogue numbers but no colours (Ink/Stitch: Apply other thread list): the colours come from this chart">
-              <span>Match numbers in</span>
+            <label className="row" title={t("filum.finestre.the_list_names_catalogue_numbers")}>
+              <span>{t("filum.finestre.match_numbers_in")}</span>
               <select className="select" value={chart} onChange={(e) => setChart(e.target.value)}>
                 {charts.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -172,12 +172,12 @@ export function ThreadListDialog({ onClose }: { onClose: () => void }) {
                   <span className="stat">{i + 1}</span>
                   {sw(b?.color)}
                   <span className="nm" title={b ? label(b) : undefined}>
-                    {b ? label(b) || b.color : <span className="stat">— no block</span>}
+                    {b ? label(b) || b.color : <span className="stat">{t("filum.finestre.no_block")}</span>}
                   </span>
                   <ArrowRight size={12} className="stat" />
                   {sw(e?.color)}
                   <span className="nm" title={e ? label(e) : undefined}>
-                    {!e ? <span className="stat">keeps its colour</span> : e.color ? label(e) || e.color : <span className="stat">no colour{e.tokens?.length ? ` (“${e.tokens.join(" ")}” not in the chart)` : ""}</span>}
+                    {!e ? <span className="stat">{t("filum.finestre.keeps_its_colour")}</span> : e.color ? label(e) || e.color : <span className="stat">{t("filum.finestre.no_colour")}{e.tokens?.length ? t("filum.finestre.v1_not_in_the_chart", { v1: e.tokens.join(" ") }) : ""}</span>}
                   </span>
                 </div>
               );

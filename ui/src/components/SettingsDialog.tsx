@@ -14,17 +14,18 @@ import { MATCH_PRESETS } from "../lib/threadMatch";
 import { DEFAULT_TOOL_OPTIONS, useStore } from "../store";
 import { Dialog, Num, Row, Toggle } from "./ui";
 import { safeSetItem } from "../lib/storage";
+import { t } from "../nova/i18n/filum";
 
 type Tab = "appearance" | "canvas" | "export" | "threads" | "digitizer" | "downloads" | "files" | "keys";
 const TABS: { id: Tab; label: string; icon: ReactNode }[] = [
-  { id: "appearance", label: "Appearance", icon: <Brush size={15} /> },
-  { id: "canvas", label: "Editing", icon: <MousePointer2 size={15} /> },
-  { id: "export", label: "Export", icon: <FileDown size={15} /> },
-  { id: "threads", label: "Threads", icon: <Spool size={15} /> },
-  { id: "digitizer", label: "Digitizer", icon: <Digitize size={15} /> },
-  { id: "downloads", label: "Downloads", icon: <Download size={15} /> },
-  { id: "files", label: "Files & data", icon: <FolderCog size={15} /> },
-  { id: "keys", label: "Keyboard", icon: <Keyboard size={15} /> },
+  { id: "appearance", get label() { return t("filum.finestre.appearance"); }, icon: <Brush size={15} /> },
+  { id: "canvas", get label() { return t("filum.finestre.editing"); }, icon: <MousePointer2 size={15} /> },
+  { id: "export", get label() { return t("filum.finestre.export"); }, icon: <FileDown size={15} /> },
+  { id: "threads", get label() { return t("filum.finestre.threads"); }, icon: <Spool size={15} /> },
+  { id: "digitizer", get label() { return t("filum.finestre.digitizer"); }, icon: <Digitize size={15} /> },
+  { id: "downloads", get label() { return t("filum.finestre.downloads"); }, icon: <Download size={15} /> },
+  { id: "files", get label() { return t("filum.finestre.files_data"); }, icon: <FolderCog size={15} /> },
+  { id: "keys", get label() { return t("filum.finestre.keyboard"); }, icon: <Keyboard size={15} /> },
 ];
 
 function Seg<T extends string | number>({ value, options, onChange }: { value: T; options: [T, string, string?][]; onChange: (v: T) => void }) {
@@ -66,7 +67,7 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
   const tab: Tab = TABS.some((t) => t.id === stored) ? stored : "appearance";
   const setTab = (t: Tab) => useStore.setState({ settingsTab: t });
   return (
-    <Dialog wide live title="Preferences" onClose={onClose}>
+    <Dialog wide live title={t("filum.finestre.preferences")} onClose={onClose}>
       <div className="st">
         <nav className="st-nav">
           {TABS.map((t) => (
@@ -98,19 +99,19 @@ function Appearance() {
   const custom = !ACCENTS.some((a) => a.color === prefs.accent);
   return (
     <>
-      <Section title="Theme">
-        <Row label="Interface">
+      <Section title={t("filum.finestre.theme")}>
+        <Row label={t("filum.finestre.interface")}>
           <Seg
             value={theme}
             onChange={setTheme}
             options={[
-              ["light", "Light"],
-              ["dark", "Dark"],
+              ["light", t("filum.finestre.light")],
+              ["dark", t("filum.finestre.dark")],
             ]}
           />
         </Row>
       </Section>
-      <Section title="Highlight colour" hint="Selections, active tools, buttons and handles. The default is the Filum colour.">
+      <Section title={t("filum.finestre.highlight_colour")} hint={t("filum.finestre.selections_active_tools_buttons_and")}>
         <div className="st-accents">
           {ACCENTS.map((a) => (
             <button key={a.color} className={prefs.accent === a.color ? "on" : ""} title={a.label} style={{ ["--c" as string]: a.color }} onClick={() => setPrefs({ accent: a.color })}>
@@ -118,9 +119,9 @@ function Appearance() {
               <span>{a.color === APP_COLOR ? "Filum" : a.label}</span>
             </button>
           ))}
-          <label className={`st-custom ${custom ? "on" : ""}`} title="Your own colour">
+          <label className={`st-custom ${custom ? "on" : ""}`} title={t("filum.finestre.your_own_colour")}>
             <input type="color" value={prefs.accent} onChange={(e) => setPrefs({ accent: e.target.value })} />
-            <span>Custom</span>
+            <span>{t("filum.finestre.custom")}</span>
           </label>
         </div>
       </Section>
@@ -133,23 +134,23 @@ function CanvasPrefs() {
   const p = s.prefs;
   return (
     <>
-      <Section title="Snapping" hint="Smart guides and point snapping are also in View ▸ Snapping; grid, jumps, underlay and stitch colours in the View menu; the fabric's look in the Design tab.">
-        <Row label="Smart guides" title="Snap to other objects and the hoop while moving and scaling (Ctrl while dragging: off)">
+      <Section title={t("filum.finestre.snapping")} hint={t("filum.finestre.smart_guides_and_point_snapping")}>
+        <Row label={t("filum.finestre.smart_guides")} title={t("filum.finestre.snap_to_other_objects_and")}>
           <Toggle on={s.smartGuides} onChange={(v) => s.set({ smartGuides: v })} />
         </Row>
-        <Row label="Snap to points" title="Pen and node tool: new and moved points snap to existing points (hold Ctrl to ignore)">
+        <Row label={t("filum.finestre.snap_to_points")} title={t("filum.finestre.pen_and_node_tool_new")}>
           <Toggle on={p.snapPoints} onChange={(v) => s.setPrefs({ snapPoints: v })} />
         </Row>
       </Section>
-      <Section title="Arrow keys" hint="Shift moves by the larger step.">
-        <Row label="Objects">
+      <Section title={t("filum.finestre.arrow_keys")} hint={t("filum.finestre.shift_moves_by_the_larger")}>
+        <Row label={t("filum.finestre.objects")}>
           <span className="dz-inline">
             <Num value={p.nudge} unit="mm" step={0.1} min={0.05} max={20} onChange={(v) => s.setPrefs({ nudge: v })} />
             <span className="stat">Shift</span>
             <Num value={p.nudgeBig} unit="mm" step={0.5} min={0.1} max={100} onChange={(v) => s.setPrefs({ nudgeBig: v })} />
           </span>
         </Row>
-        <Row label="Points">
+        <Row label={t("filum.finestre.points")}>
           <span className="dz-inline">
             <Num value={p.nodeNudge} unit="mm" step={0.05} min={0.01} max={10} onChange={(v) => s.setPrefs({ nodeNudge: v })} />
             <span className="stat">Shift</span>
@@ -157,14 +158,14 @@ function CanvasPrefs() {
           </span>
         </Row>
       </Section>
-      <Section title="Drawing tools" hint="Each tool remembers its settings from the tool bar.">
+      <Section title={t("filum.finestre.drawing_tools")} hint={t("filum.finestre.each_tool_remembers_its_settings")}>
         <button
           className="btn sm"
           onClick={() => {
             for (const k of Object.keys(DEFAULT_TOOL_OPTIONS) as (keyof typeof DEFAULT_TOOL_OPTIONS)[]) s.setToolOptions(k, DEFAULT_TOOL_OPTIONS[k]);
           }}
         >
-          Reset every tool's settings
+          {t("filum.finestre.reset_every_tool_s_settings")}
         </button>
       </Section>
     </>
@@ -179,8 +180,8 @@ function ExportPrefs() {
   const machine = machineById(mid);
   return (
     <>
-      <Section title="Export" hint="The export dialog starts with this format and remembers what you choose there.">
-        <Row label="Format">
+      <Section title={t("filum.finestre.export")} hint={t("filum.finestre.the_export_dialog_starts_with")}>
+        <Row label={t("filum.finestre.format")}>
           <select className="select" value={fmt} onChange={(e) => setFmt(e.target.value)}>
             {["pes", "dst", "jef", "exp", "vp3", "xxx", "pec", "u01", "tbf", "sew", "gcode", "csv", "txt", "col", "edr", "inf", "svg", "filum"].map((f) => (
               <option key={f} value={f}>
@@ -189,19 +190,19 @@ function ExportPrefs() {
             ))}
           </select>
         </Row>
-        <Row label="PES version">
+        <Row label={t("filum.finestre.pes_version")}>
           <Seg
             value={pes}
             onChange={setPes}
             options={[
-              ["1", "v1 · Brother colours", "Most compatible (what Ink/Stitch writes)"],
-              ["6", "v6 · exact threads", "Adds the exact thread list"],
+              ["1", t("filum.finestre.pes_v1_brother_colours"), t("filum.finestre.most_compatible_what_ink_stitch")],
+              ["6", t("filum.finestre.pes_v6_exact_threads"), t("filum.finestre.adds_the_exact_thread_list")],
             ]}
           />
         </Row>
       </Section>
-      <Section title="Machine for new designs" hint="Each design keeps its own machine and hoop (Design ▸ Machine); the export dialog changes the design's.">
-        <Row label="New designs" title="The machine new designs start with (each design keeps its own: Design ▸ Machine)">
+      <Section title={t("filum.finestre.machine_for_new_designs")} hint={t("filum.finestre.each_design_keeps_its_own")}>
+        <Row label={t("filum.finestre.new_designs")} title={t("filum.finestre.the_machine_new_designs_start")}>
           <select
             className="select"
             value={mid}
@@ -214,9 +215,9 @@ function ExportPrefs() {
           </select>
         </Row>
         {machine.frames.length > 0 && (
-          <Row label="Hoop" title="The frame new designs start in">
+          <Row label={t("filum.finestre.hoop")} title={t("filum.finestre.the_frame_new_designs_start")}>
             <select className="select" value={frame} onChange={(e) => setFrame(e.target.value)}>
-              <option value="">Default (100 × 100 mm)</option>
+              <option value="">{t("filum.finestre.default_100_100_mm")}</option>
               {machine.frames.map((f) => (
                 <option key={f.id} value={f.id}>
                   {f.name}
@@ -236,8 +237,8 @@ function ThreadPrefs() {
   const [match, setMatch] = useState(loadMatchOptions);
   return (
     <>
-      <Section title="Matching" hint={MATCH_PRESETS.find((p) => p.id === match.preset)?.hint ?? "Your own settings (Thread colours ▸ matching options)."}>
-        <Row label="Fit threads">
+      <Section title={t("filum.finestre.matching")} hint={MATCH_PRESETS.find((p) => p.id === match.preset)?.hint ?? t("filum.finestre.your_own_settings_thread_colours")}>
+        <Row label={t("filum.finestre.fit_threads")}>
           <select
             className="select"
             value={match.preset}
@@ -254,16 +255,16 @@ function ThreadPrefs() {
                 {p.label}
               </option>
             ))}
-            {match.preset === "custom" && <option value="custom">Custom</option>}
+            {match.preset === "custom" && <option value="custom">{t("filum.finestre.custom")}</option>}
           </select>
         </Row>
       </Section>
-      <Section title="My threads" hint="The spools you own: fit a design to them in Thread colours.">
-        <Row label="Spools">
+      <Section title={t("filum.finestre.my_threads")} hint={t("filum.finestre.the_spools_you_own_fit")}>
+        <Row label={t("filum.finestre.spools")}>
           <span className="dz-inline">
             <b>{mine.length}</b>
             <button className="btn sm" onClick={() => useStore.getState().setDialog("threads")}>
-              Thread colours…
+              {t("filum.finestre.thread_colours")}
             </button>
           </span>
         </Row>
@@ -276,7 +277,7 @@ function DigitizerPrefs() {
   const [done, setDone] = useState(false);
   return (
     <>
-      <Section title="Settings" hint="The digitizer remembers its settings between pictures.">
+      <Section title={t("filum.finestre.settings")} hint={t("filum.finestre.the_digitizer_remembers_its_settings")}>
         <button
           className="btn sm"
           disabled={done}
@@ -286,22 +287,22 @@ function DigitizerPrefs() {
             setDone(true);
           }}
         >
-          {done ? "Back to the defaults" : "Reset digitizer settings"}
+          {done ? t("filum.finestre.back_to_the_defaults") : t("filum.finestre.reset_digitizer_settings")}
         </button>
       </Section>
-      <Section title="On-device AI" hint="Bundled with Filum and run on this computer — nothing is uploaded.">
+      <Section title={t("filum.finestre.on_device_ai")} hint={t("filum.finestre.bundled_with_filum_and_run")}>
         <ul className="st-list">
           <li>
-            <Cpu size={13} /> MobileSAM — select objects in a picture
+            <Cpu size={13} />{t("filum.finestre.mobilesam_select_objects_in_a")}
           </li>
           <li>
-            <Cpu size={13} /> DexiNed — learned edges for line art
+            <Cpu size={13} />{t("filum.finestre.dexined_learned_edges_for_line")}
           </li>
           <li>
-            <Cpu size={13} /> Informative Drawings — a learned line drawing
+            <Cpu size={13} />{t("filum.finestre.informative_drawings_a_learned_line")}
           </li>
           <li>
-            <Cpu size={13} /> Tesseract — text that becomes lettering
+            <Cpu size={13} />{t("filum.finestre.tesseract_text_that_becomes_lettering")}
           </li>
         </ul>
       </Section>
@@ -314,8 +315,8 @@ function FilePrefs() {
   const [cleared, setCleared] = useState(false);
   return (
     <>
-      <Section title="Autosave" hint="Keeps the design in this app's storage while you work, restored at the next start. Use Save for real files.">
-        <Row label="Autosave">
+      <Section title={t("filum.finestre.autosave")} hint={t("filum.finestre.keeps_the_design_in_this")}>
+        <Row label={t("filum.finestre.autosave")}>
           <Toggle on={prefs.autosave} onChange={(v) => useStore.getState().setPrefs({ autosave: v })} />
         </Row>
         <button
@@ -326,12 +327,12 @@ function FilePrefs() {
             setCleared(true);
           }}
         >
-          {cleared ? "Autosave cleared" : "Clear the autosaved design"}
+          {cleared ? t("filum.finestre.autosave_cleared") : t("filum.finestre.clear_the_autosaved_design")}
         </button>
       </Section>
-      <Section title="Reset" hint="Look, hints, snapping and arrow-key steps back to the defaults (designs, threads and My threads stay).">
+      <Section title={t("filum.finestre.reset")} hint={t("filum.finestre.look_hints_snapping_and_arrow")}>
         <button className="btn sm" onClick={() => useStore.getState().setPrefs(DEFAULT_PREFS)}>
-          Reset preferences
+          {t("filum.finestre.reset_preferences")}
         </button>
       </Section>
     </>
@@ -342,16 +343,16 @@ function KeyPrefs() {
   const p = useStore((s) => s.prefs);
   const s = useStore.getState();
   return (
-    <Section title="Shortcuts" hint="Ctrl+K finds any command by name; ? lists every shortcut.">
-      <Row label="Shortcut hints" title="The bar along the bottom shows the keys and clicks of the current tool">
+    <Section title={t("filum.finestre.shortcuts")} hint={t("filum.finestre.ctrl_k_finds_any_command")}>
+      <Row label={t("filum.finestre.shortcut_hints")} title={t("filum.finestre.the_bar_along_the_bottom")}>
         <Toggle on={p.hints} onChange={(v) => s.setPrefs({ hints: v })} />
       </Row>
       <span className="dz-inline">
         <button className="btn sm" onClick={() => s.setDialog("shortcuts")}>
-          All keyboard shortcuts…
+          {t("filum.finestre.all_keyboard_shortcuts")}
         </button>
         <button className="btn sm ghost" onClick={() => s.setDialog("palette")}>
-          Command palette…
+          {t("filum.finestre.command_palette")}
         </button>
       </span>
     </Section>

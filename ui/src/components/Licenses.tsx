@@ -7,6 +7,7 @@ import { ChevronDown, ChevronRight, ExternalLink, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { embroideryIndex, embroideryLicense, type EmbroideryIndex } from "../lib/fonts";
 import { Dialog, ExtLink } from "./ui";
+import { t } from "../nova/i18n/filum";
 
 interface Item {
   name: string;
@@ -82,7 +83,7 @@ function Row({ item, texts, loadText }: { item: Item; texts: Record<string, stri
             </p>
           )}
           {loadText ? (
-            <pre>{lazy ?? "Loading…"}</pre>
+            <pre>{lazy ?? t("filum.finestre.loading")}</pre>
           ) : item.files.length ? (
             item.files.map((f) => (
               <div key={f.file}>
@@ -91,7 +92,7 @@ function Row({ item, texts, loadText }: { item: Item; texts: Record<string, stri
               </div>
             ))
           ) : (
-            <pre>Licensed under {item.license}.</pre>
+            <pre>{t("filum.finestre.licensed_under_license", { license: item.license })}</pre>
           )}
         </div>
       )}
@@ -124,9 +125,9 @@ export function LicensesDialog({ onClose, initialTab = "app" }: { onClose: () =>
   };
   const tabs: [Tab, string][] = [
     ["app", "Filum"],
-    ["embroidery", `Embroidery fonts (${embroidery.length})`],
-    ["fonts", `Fonts (${lists.fonts.length})`],
-    ["ported", "Ported code"],
+    ["embroidery", t("filum.finestre.embroidery_fonts_n", { n: embroidery.length })],
+    ["fonts", t("filum.finestre.fonts_n", { n: lists.fonts.length })],
+    ["ported", t("filum.finestre.ported_code")],
     ["npm", `JavaScript (${lists.npm.length})`],
     ["cargo", `Rust (${lists.cargo.length})`],
   ];
@@ -149,7 +150,7 @@ export function LicensesDialog({ onClose, initialTab = "app" }: { onClose: () =>
   }, [tab, data, embroidery]);
 
   return (
-    <Dialog wide title="Licences" onClose={onClose}>
+    <Dialog wide title={t("filum.finestre.licences")} onClose={onClose}>
       <div className="font-tabs">
         <div className="seg lic-tabs">
           {tabs.map(([id, label]) => (
@@ -161,34 +162,31 @@ export function LicensesDialog({ onClose, initialTab = "app" }: { onClose: () =>
         {tab !== "app" && (
           <label className="ctx-field" style={{ flex: 1, minWidth: 160 }}>
             <Search size={13} />
-            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search" style={{ width: "100%", textAlign: "left" }} />
+            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("filum.finestre.search")} style={{ width: "100%", textAlign: "left" }} />
           </label>
         )}
       </div>
-      {error && <p className="hint warn">Could not load the licence list: {error}</p>}
+      {error && <p className="hint warn">{t("filum.finestre.could_not_load_the_licence", { error })}</p>}
       {tab === "app" ? (
         <div className="lic-app">
           <p>
-            Filum is free software: you can redistribute it and/or modify it under the terms of the <b>GNU General Public License</b> as published
-            by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. It includes algorithms ported
-            from Ink/Stitch (GPL-3.0) and its file library pystitch (MIT); the other tabs list every font, library and crate shipped with the app and their licences.
+            {t("filum.finestre.filum_is_free_software_you")}<b>{t("filum.finestre.gnu_general_public_license")}</b>{t("filum.finestre.as_published_by_the_free")}
           </p>
           <p className="hint">
-            Embroidery fonts come from the Ink/Stitch community collection
-            {fonts?.commit ? ` (${fonts.source} @ ${fonts.commit.slice(0, 7)})` : ""}. Fonts may carry their own terms (most are SIL OFL 1.1) —
-            check a font's licence before selling designs made with it.
-            {data ? ` Licence list generated ${data.generated}.` : ""}
+            {t("filum.finestre.embroidery_fonts_come_from_the")}
+            {fonts?.commit ? ` (${fonts.source} @ ${fonts.commit.slice(0, 7)})` : ""}{t("filum.finestre.fonts_may_carry_their_own")}
+            {data ? t("filum.finestre.licence_list_generated_generated", { generated: data.generated }) : ""}
           </p>
-          <pre className="lic-full">{data ? data.texts[data.app.text] ?? "" : "Loading…"}</pre>
+          <pre className="lic-full">{data ? data.texts[data.app.text] ?? "" : t("filum.finestre.loading")}</pre>
         </div>
       ) : (
         <>
           <p className="hint" style={{ padding: "6px 2px" }}>
-            {tab === "embroidery" && "Every Ink/Stitch embroidery font with the licence file shipped by its author. Fonts marked optional download aren't included with Filum; you can download them in Preferences → Downloads. "}
-            {tab === "fonts" && "Outline fonts bundled for lettering. "}
-            {tab === "ported" && "Projects whose code or data Filum's engine is derived from. "}
-            {tab === "npm" && "JavaScript packages in the app's user interface. "}
-            {tab === "cargo" && "Rust crates compiled into the stitch engine and the desktop app (all platforms). "}
+            {tab === "embroidery" && t("filum.finestre.every_ink_stitch_embroidery_font")}
+            {tab === "fonts" && t("filum.finestre.outline_fonts_bundled_for_lettering")}
+            {tab === "ported" && t("filum.finestre.projects_whose_code_or_data")}
+            {tab === "npm" && t("filum.finestre.javascript_packages_in_the_app")}
+            {tab === "cargo" && t("filum.finestre.rust_crates_compiled_into_the")}
             {summary}
           </p>
           <div className="lic-list">
@@ -207,7 +205,7 @@ export function LicensesDialog({ onClose, initialTab = "app" }: { onClose: () =>
                 }
               />
             ))}
-            {!items.length && <p className="hint">{data || tab === "embroidery" ? "Nothing found." : "Loading…"}</p>}
+            {!items.length && <p className="hint">{data || tab === "embroidery" ? t("filum.finestre.nothing_found") : t("filum.finestre.loading")}</p>}
           </div>
         </>
       )}

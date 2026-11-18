@@ -13,6 +13,7 @@ import type { PlanData } from "../types";
 import { fmtTime } from "./ui";
 import { threadTitle } from "./ThreadPicker";
 import { safeSetItem } from "../lib/storage";
+import { t } from "../nova/i18n/filum";
 
 // ---------------------------------------------------------------------------
 // Playback
@@ -152,13 +153,13 @@ export async function recordVideo() {
   const total = s0.plan?.flags.length ?? 0;
   if (recording) return;
   if (!total || typeof MediaRecorder === "undefined") {
-    s0.toast("Video recording is not supported here", "error");
+    s0.toast(t("filum.finestre.video_recording_is_not_supported"), "error");
     return;
   }
   // WebM where the webview records it, else MP4 (WebKit)
   const mime = ["video/webm;codecs=vp9", "video/webm", "video/mp4"].find((m) => MediaRecorder.isTypeSupported(m));
   if (!mime) {
-    s0.toast("Video recording is not supported here", "error");
+    s0.toast(t("filum.finestre.video_recording_is_not_supported"), "error");
     return;
   }
   const ext = mime.startsWith("video/mp4") ? "mp4" : "webm";
@@ -171,7 +172,7 @@ export async function recordVideo() {
     rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
     const done = new Promise<void>((r) => (rec.onstop = () => r()));
     if (s0.viewMode === "vector") s0.set({ viewMode: "realistic" });
-    s0.toast("Recording the stitch-out…");
+    s0.toast(t("filum.finestre.recording_the_stitch_out"));
     rec.start();
     const s = useStore.getState();
     s.set({ anim: { ...s.anim, index: 0, playing: true } });
@@ -189,7 +190,7 @@ export async function recordVideo() {
     const bytes = new Uint8Array(await new Blob(chunks, { type: mime.split(";")[0] }).arrayBuffer());
     await saveFile(`${s0.doc.name || "design"}-stitchout.${ext}`, bytes, [{ name: ext === "mp4" ? "MP4 video" : "WebM video", extensions: [ext] }]);
   } catch (e) {
-    useStore.getState().toast(`Recording failed: ${(e as Error).message}`, "error");
+    useStore.getState().toast(t("filum.finestre.recording_failed_message", { message: (e as Error).message }), "error");
   } finally {
     // the canvas stops copying its frames whatever happened
     stopCapture();
@@ -245,13 +246,13 @@ const Tracks = memo(function Tracks({ rows, total, gap }: { rows: RowInfo[]; tot
               <i key={`t${t}`} className="so-trim" style={{ left: pct(t - b.start, b.end - b.start) }} />
             ))}
           </div>
-          {b.stops.map((t) => (
-            <span key={`s${t}`} className="so-mark stop" style={{ left: pct(t, total) }} title="The machine stops here">
+          {b.stops.map((th) => (
+            <span key={`s${th}`} className="so-mark stop" style={{ left: pct(th, total) }} title={t("filum.finestre.the_machine_stops_here")}>
               <MachineStop size={11} />
             </span>
           ))}
           {b.ending !== "end" && (
-            <span className={`so-mark ${b.ending === "color" ? "change" : "stop"}`} style={{ left: pct(b.end, total) }} title={b.ending === "color" ? "Trim and change the thread" : "The machine stops"}>
+            <span className={`so-mark ${b.ending === "color" ? "change" : "stop"}`} style={{ left: pct(b.end, total) }} title={b.ending === "color" ? t("filum.finestre.trim_and_change_the_thread") : t("filum.finestre.the_machine_stops")}>
               {b.ending === "color" ? <ColorChange size={11} /> : <MachineStop size={11} />}
             </span>
           )}
@@ -449,37 +450,37 @@ export function StitchOutPanel() {
     <section
       className={`stitchout ${playing ? "playing" : ""} ${phase === "opening" || phase === "closing" ? phase : ""}`}
       onAnimationEnd={(e) => e.target === e.currentTarget && setPhase(phase === "closing" ? "closed" : "open")}
-      style={{ height: Math.min(height, fit), ["--so-label" as string]: `${LABEL_W}px`, ["--so-row" as string]: `${ROW}px` }} aria-label="Stitch-out">
-      <div className="so-grip" onPointerDown={resizeFrom} title="Drag to resize" />
+      style={{ height: Math.min(height, fit), ["--so-label" as string]: `${LABEL_W}px`, ["--so-row" as string]: `${ROW}px` }} aria-label={t("filum.finestre.stitch_out")}>
+      <div className="so-grip" onPointerDown={resizeFrom} title={t("filum.finestre.drag_to_resize")} />
       <div className="so-head">
-        <div className="so-transport" role="group" aria-label="Transport">
-          <button title="To the start (Home)" onClick={() => seek(0)}>
+        <div className="so-transport" role="group" aria-label={t("filum.finestre.transport")}>
+          <button title={t("filum.finestre.to_the_start_home")} onClick={() => seek(0)}>
             <ArrowLeftToLine size={14} />
           </button>
-          <button title="Previous colour block (Shift+←)" onClick={() => stepBlock(-1)}>
+          <button title={t("filum.finestre.previous_colour_block_shift")} onClick={() => stepBlock(-1)}>
             <BlockPrevious size={15} />
           </button>
-          <button className="so-play" title={playing ? "Pause" : "Play"} aria-pressed={playing} onClick={togglePlay}>
+          <button className="so-play" title={playing ? t("filum.finestre.pause") : t("filum.finestre.play")} aria-pressed={playing} onClick={togglePlay}>
             {playing ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" />}
           </button>
-          <button title="Next colour block (Shift+→)" onClick={() => stepBlock(1)}>
+          <button title={t("filum.finestre.next_colour_block_shift")} onClick={() => stepBlock(1)}>
             <BlockNext size={15} />
           </button>
-          <button title="To the end (End)" onClick={() => seek(total)}>
+          <button title={t("filum.finestre.to_the_end_end")} onClick={() => seek(total)}>
             <ArrowRightToLine size={14} />
           </button>
         </div>
         <div className="so-readout">
-          <span className="so-count" title="Stitches sewn so far">
+          <span className="so-count" title={t("filum.finestre.stitches_sewn_so_far")}>
             <b>{sewn.toLocaleString()}</b>
             <span> / {stitches.toLocaleString()}</span>
           </span>
           <span className="so-pct">{Math.round((100 * at) / total)}%</span>
-          <span className="so-clock" title={`Machine time at ${doc.machine.spm} spm, with trims and thread changes`}>
+          <span className="so-clock" title={t("filum.finestre.machine_time_at_spm_spm", { spm: doc.machine.spm })}>
             {fmtTime(tl.secondsAt[at])}
             <span> / {fmtTime(tl.secondsAt[total])}</span>
           </span>
-          {left > 0 && <span className="so-left">{fmtTime(left)} left</span>}
+          {left > 0 && <span className="so-left">{t("filum.finestre.n_left", { n: fmtTime(left) })}</span>}
         </div>
         {block && (
           <span className="so-now" title={block.title}>
@@ -490,18 +491,18 @@ export function StitchOutPanel() {
           </span>
         )}
         <div className="spacer" />
-        <div className="so-zoom" role="group" aria-label="Timeline zoom">
-          <button title="Zoom out (Ctrl+wheel)" disabled={zoom <= 1} onClick={() => zoomTo(zoom / 2)}>
+        <div className="so-zoom" role="group" aria-label={t("filum.finestre.timeline_zoom")}>
+          <button title={t("filum.finestre.zoom_out_ctrl_wheel")} disabled={zoom <= 1} onClick={() => zoomTo(zoom / 2)}>
             <ZoomOut size={13} />
           </button>
-          <button className="so-zoom-v" title="Fit the whole stitch-out" onClick={() => zoomTo(1)}>
-            {zoom === 1 ? "Fit" : `${zoom >= 10 ? Math.round(zoom) : zoom.toFixed(1).replace(/\.0$/, "")}×`}
+          <button className="so-zoom-v" title={t("filum.finestre.fit_the_whole_stitch_out")} onClick={() => zoomTo(1)}>
+            {zoom === 1 ? t("filum.finestre.fit") : `${zoom >= 10 ? Math.round(zoom) : zoom.toFixed(1).replace(/\.0$/, "")}×`}
           </button>
-          <button title="Zoom in (Ctrl+wheel)" disabled={zoom >= MAX_ZOOM} onClick={() => zoomTo(zoom * 2)}>
+          <button title={t("filum.finestre.zoom_in_ctrl_wheel")} disabled={zoom >= MAX_ZOOM} onClick={() => zoomTo(zoom * 2)}>
             <ZoomIn size={13} />
           </button>
         </div>
-        <label className="so-speed" title="Playback speed (stitches per second)">
+        <label className="so-speed" title={t("filum.finestre.playback_speed_stitches_per_second")}>
           <Gauge size={13} />
           <select value={speed} onChange={(e) => set({ anim: { ...useStore.getState().anim, speed: +e.target.value } })}>
             {SPEEDS.map((v) => (
@@ -511,26 +512,26 @@ export function StitchOutPanel() {
             ))}
           </select>
         </label>
-        <button className={`icon-btn so-tog ${following ? "on" : ""}`} title="Follow the needle: keep it in view on the canvas" aria-pressed={following} onClick={() => set({ anim: { ...useStore.getState().anim, follow: !following } })}>
+        <button className={`icon-btn so-tog ${following ? "on" : ""}`} title={t("filum.finestre.follow_the_needle_keep_it")} aria-pressed={following} onClick={() => set({ anim: { ...useStore.getState().anim, follow: !following } })}>
           <FollowNeedle size={15} />
         </button>
-        <button className="icon-btn" title="Record a stitch-out video" onClick={recordVideo}>
+        <button className="icon-btn" title={t("filum.finestre.record_a_stitch_out_video")} onClick={recordVideo}>
           <Video size={15} />
         </button>
-        <button className="icon-btn" title="Close (Esc)" onClick={closePlayer}>
+        <button className="icon-btn" title={t("filum.finestre.close_esc")} onClick={closePlayer}>
           <X size={15} />
         </button>
       </div>
       <div className="so-body" ref={bodyRef} style={{ ["--rows" as string]: rows.length, gridTemplateColumns: `${LABEL_W}px ${trackW}px` }}>
         <div className="so-labels">
           <div className="so-corner">
-            <span title="Colour blocks">{rows.length} blocks</span>
-            <span title="Thread cuts: trims and thread changes">
+            <span title={t("filum.finestre.colour_blocks_2")}>{t("filum.finestre.rows_blocks", { rows: rows.length })}</span>
+            <span title={t("filum.finestre.thread_cuts_trims_and_thread")}>
               <Trim size={11} /> {cuts}
             </span>
           </div>
           {rows.map(({ block: b, color, name, title, seconds, gradient }) => (
-            <button key={b.index} className={`so-label ${b.index === cur ? "on" : ""} ${b.index < cur ? "done" : ""}`} title={`${title}\nClick: go to this block`} onClick={() => seek(b.start)}>
+            <button key={b.index} className={`so-label ${b.index === cur ? "on" : ""} ${b.index < cur ? "done" : ""}`} title={t("filum.finestre.title_click_go_to_this", { title })} onClick={() => seek(b.start)}>
               {gradient && <span className={`so-bracket ${gradient.first ? "first" : ""} ${gradient.last ? "last" : ""}`} aria-hidden />}
               <i className="so-sw" style={{ background: color }} />
               <span className="so-n">{b.index + 1}</span>

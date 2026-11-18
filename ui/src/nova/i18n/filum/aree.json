@@ -60,7 +60,6 @@
         "components/MaterialPanel.tsx",
         "components/CutworkPanel.tsx",
         "components/TartanPanel.tsx",
-        "components/MatchPanel.tsx",
         "components/TransformPanel.tsx",
         "components/ElementInfo.tsx",
         "components/ArrangeTools.tsx",
@@ -72,7 +71,6 @@
         "components/FabricLook.tsx",
         "components/LockPicker.tsx",
         "components/MeanderPicker.tsx",
-        "components/ThreadPicker.tsx",
         "components/RegionEditor.tsx",
         "components/MachineOptions.tsx",
         "components/ui.tsx",
@@ -105,7 +103,7 @@
     },
     "finestre": {
       "descrizione": "Finestre di dialogo (impostazioni, fili, stampa, conversioni, effetti, percorsi, licenze…)",
-      "fatta": false,
+      "fatta": true,
       "file": [
         "components/Dialogs.tsx",
         "components/ExportExtras.tsx",
@@ -120,11 +118,26 @@
         "components/Licenses.tsx",
         "components/DownloadsPanel.tsx",
         "components/StitchOut.tsx",
-        "components/ErrorBoundary.tsx"
+        "components/ErrorBoundary.tsx",
+        "lib/prefs.ts",
+        "lib/convert.ts",
+        "lib/shapeOps.ts",
+        "lib/threadMatch.ts",
+        "lib/convertActions.ts",
+        "components/MatchPanel.tsx",
+        "components/ThreadPicker.tsx"
       ],
       "schermate": [
         "finestra/"
-      ]
+      ],
+      "fuori": [
+        ".chart-grid",
+        ".cs-name",
+        ".lic-full",
+        ".st-sec:has(optgroup) option",
+        ".st-sec:has(optgroup) p.hint:not(:last-child)"
+      ],
+      "nota_fuori": "Fuori dal controllo i.1 di quest'area: i nomi delle cartelle colori e dei loro colori (dati delle marche), il testo integrale delle licenze (testo legale, resta in originale), i nomi delle macchine e dei telai e i loro modelli (lib/machines.ts, area dati; i nomi dei telai finiscono anche nei disegni salvati)."
     },
     "esportazione": {
       "descrizione": "Esportazione e impostazioni della macchina (file toccati anche dagli innesti del modulo a: si traducono dopo)",
@@ -146,9 +159,7 @@
         "lib/arrange.ts",
         "lib/issues.ts",
         "lib/autoRoute.ts",
-        "lib/shapeOps.ts",
         "lib/shapeCheck.ts",
-        "lib/convert.ts",
         "lib/textOps.ts",
         "lib/exportFiles.ts",
         "lib/density.ts",
@@ -158,8 +169,7 @@
         "lib/layerTools.ts",
         "lib/knockdown.ts",
         "lib/gradient.ts",
-        "lib/ramp.ts",
-        "lib/prefs.ts"
+        "lib/ramp.ts"
       ],
       "schermate": []
     },
@@ -169,7 +179,6 @@
       "file": [
         "lib/machines.ts",
         "lib/materials.ts",
-        "lib/threadMatch.ts",
         "lib/digitizePresets.ts",
         "lib/threads.ts",
         "lib/fonts.ts",

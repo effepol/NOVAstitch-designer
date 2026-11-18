@@ -28,6 +28,7 @@ import { defaultStitch, uid } from "./geometry";
 import { withParent } from "./groups";
 import { pruneGroups } from "./layerRows";
 import { connectLines, DEFAULT_CONNECT, type ConnectOptions } from "./connectLines";
+import { t, tn } from "../nova/i18n/filum";
 
 export type ConvertId = "fillToSatin" | "fillToStroke" | "satinToStroke" | "satinToRails" | "zigzagToSatin" | "patternSatin" | "breakApart" | "dedupe" | "connectLines";
 
@@ -87,12 +88,12 @@ export const DEFAULT_CONVERT: ConvertOptions = {
   connectLines: DEFAULT_CONNECT,
 };
 
-export const UNDERLAYS: [UnderlayPreset, string, Partial<SatinParams>, string][] = [
-  ["auto", "Auto", { underlayAuto: true }, "Chosen by the column's width and the fabric"],
-  ["none", "None", { underlayAuto: false, centerWalk: false, contourUnderlay: false, zigzagUnderlay: false }, "No underlay — thin columns"],
-  ["centre", "Centre", { underlayAuto: false, centerWalk: true, contourUnderlay: false, zigzagUnderlay: false }, "Centre walk — narrow columns"],
-  ["edges", "Edges", { underlayAuto: false, centerWalk: false, contourUnderlay: true, zigzagUnderlay: false }, "Contour underlay — crisp edges"],
-  ["full", "Full", { underlayAuto: false, centerWalk: false, contourUnderlay: true, zigzagUnderlay: true }, "Contour + zig-zag — wide columns"],
+export const UNDERLAYS = (): [UnderlayPreset, string, Partial<SatinParams>, string][] => [
+  ["auto", t("filum.finestre.auto"), { underlayAuto: true }, t("filum.finestre.chosen_by_the_column_s")],
+  ["none", t("filum.finestre.none"), { underlayAuto: false, centerWalk: false, contourUnderlay: false, zigzagUnderlay: false }, t("filum.finestre.no_underlay_thin_columns")],
+  ["centre", t("filum.finestre.centre"), { underlayAuto: false, centerWalk: true, contourUnderlay: false, zigzagUnderlay: false }, t("filum.finestre.centre_walk_narrow_columns")],
+  ["edges", t("filum.finestre.edges"), { underlayAuto: false, centerWalk: false, contourUnderlay: true, zigzagUnderlay: false }, t("filum.finestre.contour_underlay_crisp_edges")],
+  ["full", t("filum.finestre.full"), { underlayAuto: false, centerWalk: false, contourUnderlay: true, zigzagUnderlay: true }, t("filum.finestre.contour_zig_zag_wide_columns")],
 ];
 
 // ---------------------------------------------------------------------------
@@ -134,7 +135,6 @@ export function applies(id: ConvertId, sel: DesignObject[]): boolean {
 
 const ring = (pts: Vec2[]): SubPath => fitPath(pts, 0.02, true, 30, 0.4);
 const line = (pts: Vec2[], closed = false): SubPath => fitPath(pts, 0.05, closed, 50, 0.6);
-const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`;
 
 function derived(from: DesignObject, name: string, paths: SubPath[], stitch: StitchParams, group?: string): DesignObject {
   return {
@@ -188,15 +188,15 @@ interface FillToSatinOut {
 export async function planFillToSatin(sel: DesignObject[], o: FillToSatinOptions): Promise<ConvertPlan | string> {
   const fills = sel.filter(isFillObj);
   const rungObjs = sel.filter((x) => !x.text && !fills.includes(x) && openLines(x).length > 0);
-  if (!fills.length) return "Select a fill shape — its outline becomes the satin's edges";
-  if (!rungObjs.length) return "Also select the rungs: lines drawn across the shape that set the stitch direction";
+  if (!fills.length) return t("filum.finestre.conv_select_a_fill_shape");
+  if (!rungObjs.length) return t("filum.finestre.conv_also_select_the_rungs");
   const rungs = rungObjs.flatMap((x) => openLines(x).map((sp) => flattenSubPath(sp, 0.1)));
   const replace: Record<string, DesignObject[]> = {};
   const select: string[] = [];
   let satins = 0;
   let missed = 0;
   const usedAny = new Set<number>();
-  const underlay = UNDERLAYS.find((u) => u[0] === o.underlay)?.[2] ?? {};
+  const underlay = UNDERLAYS().find((u) => u[0] === o.underlay)?.[2] ?? {};
   for (const f of fills) {
     const r = await engine.convertShapes<FillToSatinOut>("fillToSatin", { paths: f.paths.filter((sp) => sp.closed), rungs, skipEndSection: o.skipEndSection });
     if (!r.satins.length) {
@@ -208,7 +208,7 @@ export async function planFillToSatin(sel: DesignObject[], o: FillToSatinOptions
     const made = r.satins.map((s, i) =>
       derived(
         f,
-        r.satins.length > 1 ? `${f.name} satin ${i + 1}` : `${f.name} (satin)`,
+        r.satins.length > 1 ? t("filum.finestre.conv_name_satin_n", { name: f.name, n: i + 1 }) : t("filum.finestre.conv_name_satin", { name: f.name }),
         [railPath(s.rails[0]), railPath(s.rails[1]), ...s.rungs.map((g): SubPath => ({ closed: false, nodes: g.map((p) => ({ p })) }))],
         satinStitch(f, { ...underlay, pullComp: o.pullComp }),
         group,
@@ -219,18 +219,18 @@ export async function planFillToSatin(sel: DesignObject[], o: FillToSatinOptions
     const rest: DesignObject[] = [];
     if (o.keep === "fills" || o.keep === "all") rest.push(f);
     else if (o.keep === "unused" && r.unused.length) {
-      const part = { ...f, id: uid(), name: `${f.name} (not converted)`, paths: r.unused.flatMap((poly) => poly.map((rg) => ring(rg))) };
+      const part = { ...f, id: uid(), name: t("filum.finestre.conv_name_not_converted", { name: f.name }), paths: r.unused.flatMap((poly) => poly.map((rg) => ring(rg))) };
       rest.push(part);
     }
     replace[f.id] = [...rest, ...made];
   }
-  if (!satins) return "No rung crosses a fill outline exactly twice — draw the rungs right across the shape";
+  if (!satins) return t("filum.finestre.conv_no_rung_crosses");
   if (o.keep !== "all") for (const x of rungObjs) replace[x.id] = [];
   const unusedRungs = rungs.length - usedAny.size;
   return {
     replace,
     select,
-    summary: `${plural(satins, "satin")} from ${plural(fills.length - missed, "fill")}${missed ? ` · ${missed} without rungs left as they are` : ""}${unusedRungs ? ` · ${plural(unusedRungs, "rung")} not crossing the outline twice` : ""}`,
+    summary: t("filum.finestre.conv_a_from_b", { a: tn("filum.finestre.conv_n_satin", satins), b: tn("filum.finestre.conv_n_fill", fills.length - missed) }) + (missed ? t("filum.finestre.conv_without_rungs", { n: missed }) : "") + (unusedRungs ? t("filum.finestre.conv_rungs_not_crossing", { rungs: tn("filum.finestre.conv_n_rung", unusedRungs) }) : ""),
   };
 }
 
@@ -243,7 +243,7 @@ interface CentreLineOut {
 /** Ink/Stitch "Fill to stroke": the centre lines of the selected fills (selected lines cut them first). */
 export async function planFillToStroke(sel: DesignObject[], o: FillToStrokeOptions): Promise<ConvertPlan | string> {
   const fills = sel.filter(isFillObj);
-  if (!fills.length) return "Select one or more fill shapes";
+  if (!fills.length) return t("filum.finestre.conv_select_fill_shapes");
   const cutObjs = sel.filter((x) => !x.text && !fills.includes(x) && openLines(x).length > 0);
   const cutLines = cutObjs.flatMap((x) => openLines(x).map((sp) => flattenSubPath(sp, 0.1)));
   const replace: Record<string, DesignObject[]> = {};
@@ -254,7 +254,7 @@ export async function planFillToStroke(sel: DesignObject[], o: FillToStrokeOptio
     if (!lines.length) continue;
     const group = lines.length > 1 ? uid("g") : undefined;
     const made = lines.map((l, i) => {
-      const name = lines.length > 1 ? `${f.name} centre line ${i + 1}` : `${f.name} (centre line)`;
+      const name = lines.length > 1 ? t("filum.finestre.conv_name_centre_line_n", { name: f.name, n: i + 1 }) : t("filum.finestre.conv_name_centre_line", { name: f.name });
       const path = line(l.pts, l.closed);
       if (o.output === "satin") {
         const ws = [...l.widths].sort((a, b) => a - b);
@@ -267,15 +267,15 @@ export async function planFillToStroke(sel: DesignObject[], o: FillToStrokeOptio
     select.push(...made.map((m) => m.id));
     replace[f.id] = o.keepOriginal ? [f, ...made] : made;
   }
-  if (!n) return "No centre line found — lower the dead-end threshold for small shapes";
+  if (!n) return t("filum.finestre.conv_no_centre_line");
   if (!o.keepOriginal) for (const x of cutObjs) replace[x.id] = [];
-  return { replace, select, summary: `${plural(n, "line")}${o.output === "running" && n > 1 ? " · Path → Auto-route joins them into one" : ""}` };
+  return { replace, select, summary: tn("filum.finestre.conv_n_line", n) + (o.output === "running" && n > 1 ? t("filum.finestre.conv_auto_route_joins") : "") };
 }
 
 /** Ink/Stitch "Satin to stroke": a running stitch along the middle of every selected satin. */
 export async function planSatinToStroke(sel: DesignObject[], o: { keepSatin: boolean }): Promise<ConvertPlan | string> {
   const satins = sel.filter(isSatinObj);
-  if (!satins.length) return "Select one or more satin columns";
+  if (!satins.length) return t("filum.finestre.conv_select_satin_columns");
   const replace: Record<string, DesignObject[]> = {};
   const select: string[] = [];
   for (const s of satins) {
@@ -286,18 +286,18 @@ export async function planSatinToStroke(sel: DesignObject[], o: { keepSatin: boo
       if (pts.length < 2) continue;
       paths = [line(pts)];
     }
-    const run = derived(s, `${s.name} (centre run)`, paths, defaultStitch("running"));
+    const run = derived(s, t("filum.finestre.conv_name_centre_run", { name: s.name }), paths, defaultStitch("running"));
     select.push(run.id);
     replace[s.id] = o.keepSatin ? [run, s] : [run];
   }
-  if (!select.length) return "These satins have no usable rails";
-  return { replace, select, summary: `${plural(select.length, "running stitch line")} along the satin centre${o.keepSatin ? " (satins kept)" : ""}` };
+  if (!select.length) return t("filum.finestre.conv_no_usable_rails");
+  return { replace, select, summary: t("filum.finestre.conv_along_satin_centre", { lines: tn("filum.finestre.conv_n_running_line", select.length) }) + (o.keepSatin ? t("filum.finestre.conv_satins_kept") : "") };
 }
 
 /** Ink/Stitch "Stroke to satin": centre-line satins (and lines) as two editable rails with rungs. */
 export async function planSatinToRails(sel: DesignObject[], o: { width: number }): Promise<ConvertPlan | string> {
   const objs = sel.filter((x) => isCentreSatin(x) || isLineObj(x));
-  if (!objs.length) return "Select centre-line satins or lines";
+  if (!objs.length) return t("filum.finestre.conv_select_centre_line_satins");
   const replace: Record<string, DesignObject[]> = {};
   const select: string[] = [];
   for (const x of objs) {
@@ -313,14 +313,14 @@ export async function planSatinToRails(sel: DesignObject[], o: { width: number }
     select.push(...made.map((m) => m.id));
     replace[x.id] = made;
   }
-  if (!select.length) return "Nothing to convert";
-  return { replace, select, summary: `${plural(select.length, "satin")} with editable rails — drag the rails and rungs with the node tool (A)` };
+  if (!select.length) return t("filum.finestre.conv_nothing_to_convert");
+  return { replace, select, summary: t("filum.finestre.conv_with_editable_rails", { satins: tn("filum.finestre.conv_n_satin", select.length) }) };
 }
 
 /** Ink/Stitch "Zig-zag line to satin". */
 export async function planZigzagToSatin(sel: DesignObject[], o: ZigzagOptions): Promise<ConvertPlan | string> {
   const objs = sel.filter((x) => !x.text && openLines(x).some((sp) => sp.nodes.length >= 4));
-  if (!objs.length) return "Select a zig-zag line: a line drawn back and forth between the two edges of the column";
+  if (!objs.length) return t("filum.finestre.conv_select_zigzag_line");
   const replace: Record<string, DesignObject[]> = {};
   const select: string[] = [];
   for (const x of objs) {
@@ -328,20 +328,20 @@ export async function planZigzagToSatin(sel: DesignObject[], o: ZigzagOptions): 
     const made: DesignObject[] = [];
     lines.forEach((sp, i) => {
       const paths = zigzagToSatin(sp.nodes.map((n) => n.p), o);
-      if (paths) made.push(derived(x, lines.length > 1 ? `${x.name} ${i + 1}` : `${x.name} (satin)`, paths, satinStitch(x)));
+      if (paths) made.push(derived(x, lines.length > 1 ? `${x.name} ${i + 1}` : t("filum.finestre.conv_name_satin", { name: x.name }), paths, satinStitch(x)));
     });
     if (!made.length) continue;
     select.push(...made.map((m) => m.id));
     replace[x.id] = made;
   }
-  if (!select.length) return "Too few points for a column";
-  return { replace, select, summary: `${plural(select.length, "satin")} from zig-zag lines` };
+  if (!select.length) return t("filum.finestre.conv_too_few_points");
+  return { replace, select, summary: t("filum.finestre.conv_from_zigzag", { satins: tn("filum.finestre.conv_n_satin", select.length) }) };
 }
 
 /** Ink/Stitch "Stroke to live path effect satin", baked: a patterned satin along every selected line. */
 export async function planPatternSatin(sel: DesignObject[], o: PatternOptions): Promise<ConvertPlan | string> {
   const objs = sel.filter((x) => isLineObj(x) || isCentreSatin(x));
-  if (!objs.length) return "Select lines (running stitch) or centre-line satins";
+  if (!objs.length) return t("filum.finestre.conv_select_lines_or_satins");
   const replace: Record<string, DesignObject[]> = {};
   const select: string[] = [];
   for (const x of objs) {
@@ -355,8 +355,8 @@ export async function planPatternSatin(sel: DesignObject[], o: PatternOptions): 
     select.push(...made.map((m) => m.id));
     replace[x.id] = made;
   }
-  if (!select.length) return "The lines are shorter than one repeat";
-  return { replace, select, summary: `${plural(select.length, "patterned satin")}` };
+  if (!select.length) return t("filum.finestre.conv_lines_shorter_than_repeat");
+  return { replace, select, summary: tn("filum.finestre.conv_n_patterned_satin", select.length) };
 }
 
 type BreakOut = { kind: "valid" } | { kind: "removed" } | { kind: "parts"; parts: { rings: Vec2[][]; source: (number | null)[] }[] };
@@ -365,7 +365,7 @@ type BreakOut = { kind: "valid" } | { kind: "removed" } | { kind: "parts"; parts
 export async function planBreakApart(sel: DesignObject[], o: { method: "simple" | "complex"; minArea: number }): Promise<ConvertPlan | string> {
   // a gradient's, tartan's or blend's layers share one shape: split together they'd fall apart
   const fills = sel.filter((x) => isFillObj(x) && !(x.stitch.type === "fill" && (x.stitch.gradient || x.stitch.tartan || x.stitch.ramp?.group)));
-  if (!fills.length) return sel.some(isFillObj) ? "Gradients, tartans and colour blends can't be broken apart: remove them first" : "Select one or more fill shapes";
+  if (!fills.length) return sel.some(isFillObj) ? t("filum.finestre.conv_cant_break_apart") : t("filum.finestre.conv_select_fill_shapes");
   const replace: Record<string, DesignObject[]> = {};
   const select: string[] = [];
   let valid = 0;
@@ -399,18 +399,18 @@ export async function planBreakApart(sel: DesignObject[], o: { method: "simple" 
     select.push(...made.map((m) => m.id));
     replace[f.id] = made;
   }
-  if (!parts && !removed) return `Nothing to repair: ${valid === 1 ? "the shape is" : "the shapes are"} already one valid outline with holes`;
+  if (!parts && !removed) return tn("filum.finestre.conv_nothing_to_repair", valid);
   return {
     replace,
     select,
-    summary: [parts ? `${plural(parts, "shape")}` : "", removed ? `${removed} too small, removed` : "", valid ? `${valid} already valid` : ""].filter(Boolean).join(" · "),
+    summary: [parts ? tn("filum.finestre.conv_n_shape", parts) : "", removed ? t("filum.finestre.conv_too_small_removed", { n: removed }) : "", valid ? t("filum.finestre.conv_already_valid", { n: valid }) : ""].filter(Boolean).join(" · "),
   };
 }
 
 /** Ink/Stitch "Remove duplicated points". Two-rail satins drop only node pairs, so their rungs stay matched. */
 export async function planDedupe(sel: DesignObject[], o: DedupeOptions): Promise<ConvertPlan | string> {
   const objs = sel.filter((x) => !x.text);
-  if (!objs.length) return "Select one or more shapes";
+  if (!objs.length) return t("filum.finestre.conv_select_shapes");
   const replace: Record<string, DesignObject[]> = {};
   let removed = 0;
   for (const x of objs) {
@@ -433,8 +433,8 @@ export async function planDedupe(sel: DesignObject[], o: DedupeOptions): Promise
     }
     if (paths !== x.paths && paths.some((sp, i) => sp !== x.paths[i])) replace[x.id] = [{ ...x, paths }];
   }
-  if (!removed) return "No duplicated points";
-  return { replace, select: objs.map((x) => x.id), summary: `${plural(removed, "duplicated point")} removed` };
+  if (!removed) return t("filum.finestre.conv_no_duplicated_points");
+  return { replace, select: objs.map((x) => x.id), summary: t("filum.finestre.conv_points_removed", { points: tn("filum.finestre.conv_n_duplicated_point", removed) }) };
 }
 
 /**
@@ -443,7 +443,7 @@ export async function planDedupe(sel: DesignObject[], o: DedupeOptions): Promise
  */
 export function planConnectLines(sel: DesignObject[], o: ConnectOptions): ConvertPlan | string {
   const lines = sel.filter((x) => isLineObj(x) && !x.clone && !x.locked);
-  if (lines.reduce((n, x) => n + openLines(x).length, 0) < 2) return "Select two or more line pieces";
+  if (lines.reduce((n, x) => n + openLines(x).length, 0) < 2) return t("filum.finestre.conv_select_line_pieces");
   // lines of one thread and one stitch are connected together
   const groups = new Map<string, DesignObject[]>();
   for (const x of lines) {
@@ -469,9 +469,9 @@ export function planConnectLines(sel: DesignObject[], o: ConnectOptions): Conver
     for (const x of rest) replace[x.id] = [];
     select.push(first.id);
   }
-  if (!select.length) return "These lines don't meet: nothing to connect (raise “Bridge gaps up to”)";
-  const extra = [bridged ? `${plural(bridged, "gap")} bridged` : "", doubled ? `${plural(doubled, "doubled piece")} left out` : ""].filter(Boolean).join(", ");
-  return { replace, select, summary: `${plural(pieces, "piece")} → ${plural(made, "line")}${extra ? ` · ${extra}` : ""}` };
+  if (!select.length) return t("filum.finestre.conv_lines_dont_meet");
+  const extra = [bridged ? t("filum.finestre.conv_gaps_bridged", { gaps: tn("filum.finestre.conv_n_gap", bridged) }) : "", doubled ? t("filum.finestre.conv_pieces_left_out", { pieces: tn("filum.finestre.conv_n_doubled_piece", doubled) }) : ""].filter(Boolean).join(", ");
+  return { replace, select, summary: t("filum.finestre.conv_pieces_to_lines", { pieces: tn("filum.finestre.conv_n_piece", pieces), lines: tn("filum.finestre.conv_n_line", made) }) + (extra ? ` · ${extra}` : "") };
 }
 
 export function planConversion(id: ConvertId, sel: DesignObject[], opts: ConvertOptions): Promise<ConvertPlan | string> {
