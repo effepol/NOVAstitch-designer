@@ -16,7 +16,7 @@ import { flatten, objectBoundsCached } from "../../lib/geometry";
 import { threadWeightInfo } from "../../lib/materials";
 import { t } from "../core/i18n";
 import type { FabricPreset } from "./preset";
-import { round6 } from "./round";
+import { tidyNumber } from "../format/numbers";
 import "./texts";
 
 /** Measuring tolerances (geometry, not embroidery values). */
@@ -158,7 +158,7 @@ export function fabricIssues(doc: StitchDocument, plan: PlanData | null, preset:
     // denser on purpose.
     if (preset && st.type === "satin") {
       const w = weightOf(doc, o);
-      const limit = round6(Math.round(preset.limits.minSpacingRatio * threadWeightInfo(w as 40).spacing * 1000) / 1000);
+      const limit = tidyNumber(Math.round(preset.limits.minSpacingRatio * threadWeightInfo(w as 40).spacing * 1000) / 1000);
       if (st.spacing < limit)
         add("dense", o, {
           level: "warning",
@@ -184,7 +184,7 @@ export function fabricIssues(doc: StitchDocument, plan: PlanData | null, preset:
       const r = runs[index];
       const close = r ? closestRows(r) : null;
       if (close && close.d < st.rowSpacing - TOL.rows) {
-        const d = round6(Math.round(close.d * 100) / 100);
+        const d = tidyNumber(Math.round(close.d * 100) / 100);
         add("narrowRows", o, {
           level: "warning",
           title: t("e.issue.narrowRows.title"),

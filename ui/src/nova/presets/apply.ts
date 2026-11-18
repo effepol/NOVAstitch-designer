@@ -10,7 +10,7 @@ import { INK_RUNNING, INK_SATIN, INK_TATAMI } from "../../lib/inkDefaults";
 import { calibratedDefaults } from "../../lib/calibration";
 import type { FabricPreset } from "./preset";
 import { presetOf } from "./registry";
-import { round6 } from "./round";
+import { tidyNumber } from "../format/numbers";
 
 type Managed = "satin" | "fill" | "running";
 type Values = Record<string, unknown>;
@@ -60,7 +60,7 @@ export function presetValuesFor(p: FabricPreset | null, s: StitchParams, hoopKin
 }
 
 const hoopKindOf = (doc: StitchDocument) => doc.nova?.hoopKind ?? "flat";
-const num = (v: unknown) => (typeof v === "number" ? round6(v) : v);
+const num = (v: unknown) => (typeof v === "number" ? tidyNumber(v) : v);
 
 /** The value a parameter takes from a preset: the preset's, else Filum's (undefined: left out, the engine's default). */
 function valueFor(p: FabricPreset | null, s: StitchParams, key: string, hoopKind: "flat" | "cap"): unknown {
@@ -162,7 +162,7 @@ export function newObjectDefaults(doc: StitchDocument, calibrated: { satin?: Par
   if (Object.keys(satin).length || calibrated.satin) out.satin = { ...satin, ...calibrated.satin };
   if (Object.keys(fill).length || calibrated.fill) {
     out.fill = { ...fill, ...calibrated.fill };
-    if (p && calibrated.fill?.expand !== undefined) out.fill.expand = round6((fill.expand ?? 0) + calibrated.fill.expand);
+    if (p && calibrated.fill?.expand !== undefined) out.fill.expand = tidyNumber((fill.expand ?? 0) + calibrated.fill.expand);
   }
   if (Object.keys(running).length) out.running = running;
   return out;
