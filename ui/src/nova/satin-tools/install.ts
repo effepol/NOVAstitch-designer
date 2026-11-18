@@ -1,13 +1,14 @@
 // Module m (Satin tools) starts here: module 0 finds this file and calls install() once.
-// For now only the commands: the canvas tools join Filum's through module 0's
-// drawing tool registry when it is in main.
+// The commands, and the two canvas tools through module 0's drawing tool registry.
 
 import { registerSatinToolCommands } from "./commands";
+import { registerSatinTools } from "./tools";
 import "./texts";
 
-/** Module m's commands; returns the function that removes them. */
+/** Module m's commands and tools; returns the function that removes them. */
 export function installSatinTools(): () => void {
-  return registerSatinToolCommands();
+  const offs = [registerSatinToolCommands(), registerSatinTools()];
+  return () => offs.forEach((off) => off());
 }
 
 export function install(): void {
