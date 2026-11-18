@@ -1,0 +1,5 @@
+{
+  "m.satin.name": "Satin",
+  "m.twoRails.oddDropped": "Odd number of clicks: the last point had no pair and was dropped.",
+  "m.twoRails.tooFew": "At least two pairs of points are needed: keep clicking, one point per rail."
+}
