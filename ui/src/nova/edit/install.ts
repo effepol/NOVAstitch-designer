@@ -6,6 +6,7 @@ import { useStore } from "../../store";
 import { registerPatchCommands } from "./commands";
 import { watchOverflow } from "./events";
 import { createFromSelection, PatchPanel } from "./PatchPanel";
+import { installLibrary } from "./installLibrary";
 import "./texts";
 
 /** Commands, the outside-the-hoop check, the panel and the menu item; returns the function that removes them. */
@@ -28,4 +29,5 @@ export function installPatch(): () => void {
 
 export function install(): void {
   installPatch();
+  installLibrary();
 }

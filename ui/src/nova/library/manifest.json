@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    { "id": "rect", "kind": "svg", "file": "shapes/rect.svg", "name": { "it": "Rettangolo", "en": "Rectangle" }, "cornerRadius": true, "license": "CC0-1.0", "author": "NOVAstitch Designer" },
+    { "id": "circle", "kind": "svg", "file": "shapes/circle.svg", "name": { "it": "Cerchio", "en": "Circle" }, "license": "CC0-1.0", "author": "NOVAstitch Designer" },
+    { "id": "oval", "kind": "svg", "file": "shapes/oval.svg", "name": { "it": "Ovale", "en": "Oval" }, "license": "CC0-1.0", "author": "NOVAstitch Designer" },
+    { "id": "shield", "kind": "svg", "file": "shapes/shield.svg", "name": { "it": "Scudo", "en": "Shield" }, "license": "CC0-1.0", "author": "NOVAstitch Designer" },
+    { "id": "hexagon", "kind": "svg", "file": "shapes/hexagon.svg", "name": { "it": "Esagono", "en": "Hexagon" }, "license": "CC0-1.0", "author": "NOVAstitch Designer" }
+  ]
+}
