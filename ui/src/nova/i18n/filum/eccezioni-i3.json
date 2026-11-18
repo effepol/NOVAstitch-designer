@@ -1,0 +1,7 @@
+{
+  "_nota": "Chiavi escluse dal confronto i.3 (l'inglese identico a Filum 0.2.1), per decisione dell'Architetto. cataloghi.test.ts e giro.mjs leggono questo file: nel giro, la scritta di Filum 0.2.1 e quella di oggi diventano lo stesso segnaposto. Ogni altra chiave resta identica a Filum 0.2.1.",
+  "chiavi": {
+    "filum.app.name": "il nome del programma: «NOVAstitch Designer» in italiano e in inglese (Architetto, 13/11)",
+    "filum.finestre.filum_violet": "il colore d'accento di Filum («Filum violet») diventa il rosso di NOVAstitch: «{app} red» / «Rosso {app}» (Architetto, 18/11, contratto modulo 0, «Aspetto rosso e icona NS»)"
+  }
+}

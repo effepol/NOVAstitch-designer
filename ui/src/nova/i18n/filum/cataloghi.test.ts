@@ -63,12 +63,15 @@ const same = Object.keys(en).filter((k) => it[k] === en[k] && words(en[k]) && !a
 check(!same.length, `i.1 nessun testo italiano è rimasto in inglese (${same.slice(0, 20).map((k) => `${k}="${en[k]}"`).join(", ") || "nessuno"})`);
 
 // --- i.3 (statico): l'inglese è quello di Filum 0.2.1 --------------------------
-// Il nome del programma (filum.app.name) è l'unica chiave esclusa; negli altri testi {app} vale il nome di Filum 0.2.1.
+// Escluse solo le chiavi di eccezioni-i3.json (decisioni dell'Architetto: il nome del programma, filum.app.name,
+// e il colore d'accento); negli altri testi {app} vale il nome di Filum 0.2.1.
 const APP = "filum.app.name";
+const eccezioni = Object.keys(read("eccezioni-i3.json").chiavi);
 check(APP in en && APP in origine, "i.3 il nome del programma sta nella chiave filum.app.name");
+check(eccezioni.includes(APP) && eccezioni.every((k) => k in en && k in origine), `i.3 le eccezioni (${eccezioni.join(", ")}) sono chiavi del catalogo e di Filum 0.2.1`);
 const oldName = origine[APP]?.testo ?? "Filum";
-const changed = Object.keys(en).filter((k) => k !== APP && origine[k]?.testo !== en[k].replaceAll("{app}", oldName));
-check(!changed.length, `i.3 ogni testo inglese è identico a Filum 0.2.1, salvo filum.app.name (diversi o senza origine: ${changed.slice(0, 20).join(", ") || "nessuno"})`);
+const changed = Object.keys(en).filter((k) => !eccezioni.includes(k) && origine[k]?.testo !== en[k].replaceAll("{app}", oldName));
+check(!changed.length, `i.3 ogni testo inglese è identico a Filum 0.2.1, salvo le eccezioni (diversi o senza origine: ${changed.slice(0, 20).join(", ") || "nessuno"})`);
 // testi che nominano Filum di proposito (finestra Informazioni): non-tradurre.json, chiavi_con_filum
 const literal = new Set(Object.keys(read("non-tradurre.json").chiavi_con_filum ?? {}));
 const named = Object.keys(en).filter((k) => k !== APP && !literal.has(k) && en[k].includes(oldName));

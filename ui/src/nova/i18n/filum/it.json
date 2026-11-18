@@ -1343,7 +1343,7 @@
   "filum.finestre.filum_includes_only_what_it": "{app} include solo ciò che può condividere con tutti. Alcuni font e cartelle colori hanno licenze che non lo permettono, quindi puoi scaricarli tu qui: leggi la licenza, poi ",
   "filum.finestre.filum_is_free_software_you": "{app} è software libero: puoi redistribuirlo e/o modificarlo secondo i termini della ",
   "filum.finestre.filum_itself_is_free_software": "{app} stesso è software libero con licenza GPL-3.0 o successiva.",
-  "filum.finestre.filum_violet": "Viola {app}",
+  "filum.finestre.filum_violet": "Rosso {app}",
   "filum.finestre.finish_the_path_the_tool": "Finisci il tracciato (lo strumento resta) / finisci / togli l'ultimo punto",
   "filum.finestre.finished_piece_without_the_jump": "Pezzo finito: senza i fili dei salti che tagli e senza l'imbastitura",
   "filum.finestre.fish": "Pesce",
