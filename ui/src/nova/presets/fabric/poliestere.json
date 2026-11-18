@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "poliestere",
+  "rev": 1,
+  "name": {
+    "it": "Poliestere",
+    "en": "Polyester"
+  },
+  "base": "polyester",
+  "elastic": false,
+  "overlap": {
+    "flat": 0.2,
+    "cap": 0.4
+  },
+  "satin": {
+    "pullComp": 0,
+    "contourInset": 0.5
+  },
+  "fill": {
+    "pullComp": 0,
+    "underlay": true,
+    "underlayAngle": 90
+  },
+  "satinContourFrom": 2,
+  "limits": {
+    "minSpacingRatio": 0.75
+  },
+  "info": {
+    "it": "Stabilizzatore: Strappabile; da tagliare per disegni fitti. Topping: Nessuno. Ago: Punta acuta / Microtex 65/9–75/11.",
+    "en": "Stabiliser: Tear-away; cut-away for dense designs. Topping: None. Needle: Sharp / Microtex 65/9–75/11."
+  },
+  "stabilizer": {
+    "type": "tear-away",
+    "weight": "medium"
+  },
+  "topping": "none",
+  "needlePoint": "normal"
+}

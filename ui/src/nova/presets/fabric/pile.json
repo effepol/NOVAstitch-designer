@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "pile",
+  "rev": 1,
+  "name": {
+    "it": "Pile",
+    "en": "Fleece"
+  },
+  "base": "fleece",
+  "elastic": true,
+  "overlap": {
+    "flat": 0.4,
+    "cap": 0.4
+  },
+  "satin": {
+    "pullComp": 0.5,
+    "contourInset": 0.5
+  },
+  "fill": {
+    "pullComp": 0.5,
+    "underlay": true,
+    "underlayAngle": 90
+  },
+  "satinContourFrom": 2,
+  "limits": {
+    "minSpacingRatio": 0.75
+  },
+  "info": {
+    "it": "Stabilizzatore: Da tagliare pesante. Topping: Film idrosolubile o una copertura permanente. Ago: Punta a sfera 75/11. Maglia e tessuti elastici: nel telaio non si stirano; stabilizzatore da tagliare. Tessuto spesso: vite del telaio allentata, oppure telaio a morsetti. Tessuto con pelo: topping idrosolubile sopra, così i punti non affondano.",
+    "en": "Stabiliser: Heavy cut-away. Topping: Water-soluble film or a permanent cover. Needle: Ballpoint 75/11. Knits and stretchy fabrics: do not stretch them in the hoop; use a cut-away stabiliser. Thick fabric: loosen the hoop screw, or use a clamp frame. Pile fabric: water-soluble topping on top, so the stitches do not sink."
+  },
+  "stabilizer": {
+    "type": "cut-away",
+    "weight": "heavy"
+  },
+  "topping": "water-soluble-film",
+  "needlePoint": "ballpoint"
+}

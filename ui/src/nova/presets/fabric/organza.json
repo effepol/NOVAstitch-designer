@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "organza",
+  "rev": 1,
+  "name": {
+    "it": "Organza / Velo",
+    "en": "Organza / Sheer"
+  },
+  "base": "sheer",
+  "elastic": true,
+  "overlap": {
+    "flat": 0.4,
+    "cap": 0.4
+  },
+  "satin": {
+    "pullComp": 0,
+    "contourInset": 0.5
+  },
+  "fill": {
+    "pullComp": 0,
+    "underlay": true,
+    "underlayAngle": 90
+  },
+  "satinContourFrom": 2,
+  "limits": {
+    "minSpacingRatio": 0.75
+  },
+  "info": {
+    "it": "Stabilizzatore: Idrosolubile (fibroso o film). Topping: Film idrosolubile facoltativo. Ago: Punta a sfera / fine 65/9.",
+    "en": "Stabiliser: Wash-away (fibrous or film). Topping: Optional water-soluble film. Needle: Ballpoint / fine 65/9."
+  },
+  "stabilizer": {
+    "type": "wash-away",
+    "weight": "light"
+  },
+  "topping": "none",
+  "needlePoint": "normal"
+}

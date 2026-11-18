@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "denim",
+  "rev": 1,
+  "name": {
+    "it": "Denim",
+    "en": "Denim"
+  },
+  "base": "denim",
+  "elastic": false,
+  "overlap": {
+    "flat": 0.2,
+    "cap": 0.4
+  },
+  "satin": {
+    "pullComp": 0,
+    "contourInset": 0.5
+  },
+  "fill": {
+    "pullComp": 0,
+    "underlay": true,
+    "underlayAngle": 90
+  },
+  "satinContourFrom": 2,
+  "limits": {
+    "minSpacingRatio": 0.75
+  },
+  "info": {
+    "it": "Stabilizzatore: Strappabile (Madeira, Floriani) o da tagliare medio (OESD). Topping: Nessuno. Ago: Punta acuta 80/12–90/14. Tessuto spesso: vite del telaio allentata, oppure telaio a morsetti.",
+    "en": "Stabiliser: Tear-away (Madeira, Floriani) or medium cut-away (OESD). Topping: None. Needle: Sharp 80/12–90/14. Thick fabric: loosen the hoop screw, or use a clamp frame."
+  },
+  "stabilizer": {
+    "type": "tear-away",
+    "weight": "medium"
+  },
+  "topping": "none",
+  "needlePoint": "normal"
+}
