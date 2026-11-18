@@ -20,8 +20,8 @@ export interface Prefs {
   snapPoints: boolean;
 }
 
-/** The app colour (the icon's violet). */
-export const APP_COLOR = "#7c3aed";
+/** The app colour: NOVAstitch Designer's red (the icon's background, 18/11). */
+export const APP_COLOR = "#CC1219";
 
 export const DEFAULT_PREFS: Prefs = {
   accent: APP_COLOR,
@@ -71,24 +71,38 @@ const mix = (a: string, b: string, t: number) => {
   return hex(x.map((v, i) => v + (y[i] - v) * t));
 };
 
+/** The red accent's own text colours, as styles.css has them (contract, «Aspetto rosso», 18/11). */
+const APP_TEXT = { light: "#B30F16", dark: "#FF7A7F" };
+
 /**
- * The interface colours from one accent: buttons, highlights and the canvas
- * selection (plain hex — the canvas appends alpha to it).
+ * The interface colours from one accent: buttons, highlights and accent text.
+ * The canvas selection does not follow the accent any more (it is a fixed blue
+ * in styles.css): with a red accent it would vanish on red threads.
  */
+export function accentTokens(accent: string, theme: "light" | "dark"): Record<string, string> {
+  const [r, g, b] = rgb(accent);
+  const own = accent.toLowerCase() === APP_COLOR.toLowerCase();
+  if (theme === "dark")
+    return {
+      "--accent": mix(accent, "#ffffff", 0.12),
+      "--accent-hover": accent,
+      "--accent-soft": `rgba(${r}, ${g}, ${b}, 0.2)`,
+      "--accent-text": own ? APP_TEXT.dark : mix(accent, "#ffffff", 0.45),
+      "--accent-fg": "#ffffff",
+    };
+  return {
+    "--accent": accent,
+    "--accent-hover": mix(accent, "#000000", 0.14),
+    "--accent-soft": `rgba(${r}, ${g}, ${b}, 0.1)`,
+    "--accent-text": own ? APP_TEXT.light : mix(accent, "#000000", 0.12),
+    "--accent-fg": "#ffffff",
+  };
+}
+
+/** Apply the accent's colours to the interface. */
 export function applyAccent(accent: string, theme: "light" | "dark") {
   const s = document.documentElement.style;
-  const [r, g, b] = rgb(accent);
-  if (theme === "dark") {
-    const a = mix(accent, "#ffffff", 0.12);
-    s.setProperty("--accent", a);
-    s.setProperty("--accent-hover", accent);
-    s.setProperty("--accent-soft", `rgba(${r}, ${g}, ${b}, 0.2)`);
-    s.setProperty("--select", mix(accent, "#ffffff", 0.3));
-  } else {
-    s.setProperty("--accent", accent);
-    s.setProperty("--accent-hover", mix(accent, "#000000", 0.14));
-    s.setProperty("--accent-soft", `rgba(${r}, ${g}, ${b}, 0.1)`);
-    s.setProperty("--select", accent);
-  }
-  s.setProperty("--accent-fg", "#ffffff");
+  for (const [k, v] of Object.entries(accentTokens(accent, theme))) s.setProperty(k, v);
+  // an older session may have set the selection: it is the stylesheet's fixed blue now
+  s.removeProperty("--select");
 }

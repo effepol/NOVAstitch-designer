@@ -58,7 +58,7 @@ export function MenuBar() {
 
   return (
     <div className={`menubar ${isTauri ? "titlebar" : ""} ${focused ? "" : "inactive"}`} ref={ref} data-tauri-drag-region>
-      <img className="app-mark" src="/icon.png" alt="" draggable={false} data-tauri-drag-region />
+      <img className="app-mark" src="/icon-small.png" alt="" draggable={false} data-tauri-drag-region />
       {names.map((name) => (
         <button
           key={name}
