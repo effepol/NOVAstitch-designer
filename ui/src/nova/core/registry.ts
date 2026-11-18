@@ -2,7 +2,8 @@
 // panels, canvas layers and bar buttons on Filum through these, without
 // touching Filum's files. Texts are t() keys.
 
-import { useSyncExternalStore, type ReactNode } from "react";
+import { useSyncExternalStore, type ComponentType, type ReactNode } from "react";
+import type { Vec2 } from "../../types";
 
 interface Entry {
   /** "<module>.<name>", unique in its registry. */
@@ -88,6 +89,40 @@ function registry<T extends Entry>(kind: string) {
   };
 }
 
+/** A pointer event on the canvas for a registered drawing tool: the point in mm, the button (0 left, 2 right). */
+export interface ToolPointerEvent {
+  kind: "down" | "move" | "up";
+  p: Vec2;
+  button: 0 | 2;
+  shift: boolean;
+  alt: boolean;
+  ctrl: boolean;
+  /** Canvas px per mm: tolerances in pixels divide by it. */
+  scale: number;
+}
+
+/** A drawing tool of a module, in Filum's tool rail (Architect, 18/11). Its id is "<module>.<name>". */
+export interface DrawingToolEntry extends Entry {
+  /** t() key of its name (the rail's tooltip). */
+  label: string;
+  icon: ComponentType<{ size?: number }>;
+  /** CSS cursor on the canvas (default: crosshair). */
+  cursor?: string;
+  /** Module c's cursor cross applies to this tool (default true). */
+  crosshair?: boolean;
+  /** Pointer events on the canvas, left and right button (the right one opens no menu). Middle button and Space still pan. */
+  onPointer(e: ToolPointerEvent): void;
+  /** Enter, Escape or Backspace while the tool is active; true = used (Filum does nothing with it). */
+  onKey?(key: "Enter" | "Escape" | "Backspace"): boolean;
+  /** What it is drawing, over the design, in mm (like a canvas layer). */
+  drawPreview?(ctx: CanvasRenderingContext2D, info: LayerInfo): void;
+  /** The tool was picked / left (another tool, or Esc in Filum): drop a half-drawn shape on leaving. */
+  onActivate?(): void;
+  onDeactivate?(): void;
+  /** The last point placed, for module c's cross ("the previous point"); null when none. */
+  lastPoint?(): Vec2 | null;
+}
+
 const menus = registry<MenuItemEntry>("Menu item");
 const panelReg = registry<PanelEntry>("Panel");
 const layers = registry<CanvasLayerEntry>("Canvas layer");
@@ -103,10 +138,77 @@ export const panels = panelReg.list;
 export const canvasLayers = layers.list;
 export const toolbarButtons = buttons.list;
 
-/** Draw the registered layers of one level (the canvas calls this); a layer that fails is skipped. */
+const tools = registry<DrawingToolEntry>("Drawing tool");
+/** Register a drawing tool; returns the function that removes it. */
+export const registerDrawingTool = tools.add;
+export const drawingTools = tools.list;
+/** The registered tool with this id (undefined for Filum's own tools). */
+export const drawingTool = (id: string): DrawingToolEntry | undefined => tools.list().find((x) => x.id === id);
+
+let activeTool: string | null = null;
+
+/** The canvas tells the registry which tool is picked: the old registered tool is left, the new one picked. */
+export function activateDrawingTool(id: string): void {
+  if (id === activeTool) return;
+  const before = activeTool ? drawingTool(activeTool) : undefined;
+  activeTool = id;
+  try {
+    before?.onDeactivate?.();
+    drawingTool(id)?.onActivate?.();
+  } catch (e) {
+    console.error(`nova: drawing tool "${id}" failed to switch`, e);
+  }
+}
+
+/** A pointer event for the tool `id`: true if it is a registered tool and got it. */
+export function toolPointer(id: string, e: ToolPointerEvent): boolean {
+  const tool = drawingTool(id);
+  if (!tool) return false;
+  try {
+    tool.onPointer(e);
+  } catch (err) {
+    console.error(`nova: drawing tool "${id}" failed`, err);
+  }
+  return true;
+}
+
+/** A key for the tool `id`: true if it is a registered tool and used it. */
+export function toolKey(id: string, key: "Enter" | "Escape" | "Backspace"): boolean {
+  const tool = drawingTool(id);
+  if (!tool?.onKey) return false;
+  try {
+    return tool.onKey(key);
+  } catch (err) {
+    console.error(`nova: drawing tool "${id}" failed`, err);
+    return false;
+  }
+}
+
+/**
+ * Where module c hooks its cursor cross: for the tool `id`, whether it is a
+ * registered drawing tool, whether it takes the cross, and the previous point.
+ */
+export function drawingCursor(id: string): { registered: boolean; crosshair: boolean; last: Vec2 | null } {
+  const tool = drawingTool(id);
+  if (!tool) return { registered: false, crosshair: false, last: null };
+  let last: Vec2 | null = null;
+  try {
+    last = tool.lastPoint?.() ?? null;
+  } catch {
+    last = null;
+  }
+  return { registered: true, crosshair: tool.crosshair !== false, last };
+}
+
+/** Draw the registered layers of one level (the canvas calls this); a layer that fails is skipped.
+ * Over the design, the active drawing tool's preview comes last. */
 export function drawCanvasLayers(ctx: CanvasRenderingContext2D, info: LayerInfo, z: "under" | "over" = "over"): void {
-  for (const l of layers.list()) {
-    if ((l.z ?? "over") !== z) continue;
+  const tool = z === "over" && activeTool ? drawingTool(activeTool) : undefined;
+  const all: { id: string; draw: (ctx: CanvasRenderingContext2D, info: LayerInfo) => void }[] = [
+    ...layers.list().filter((l) => (l.z ?? "over") === z),
+    ...(tool?.drawPreview ? [{ id: tool.id, draw: tool.drawPreview }] : []),
+  ];
+  for (const l of all) {
     ctx.save?.();
     try {
       l.draw(ctx, info);

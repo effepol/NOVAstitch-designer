@@ -102,6 +102,18 @@ import { transformable } from "../lib/textSettle";
 import { loadFont } from "../lib/fonts";
 import { onCanvasRedraw } from "../nova/core/registry";
 import { t, tn } from "../nova/i18n/filum";
+import { activateDrawingTool, drawingTool, toolKey, toolPointer, type ToolPointerEvent } from "../nova/core/registry";
+
+/** NOVAstitch: a canvas pointer event, as a registered drawing tool receives it (mm, left or right button). */
+const novaPointer = (kind: ToolPointerEvent["kind"], e: React.PointerEvent, p: Vec2, scale: number): ToolPointerEvent => ({
+  kind,
+  p,
+  button: e.button === 2 || (kind === "move" && (e.buttons & 2) !== 0) ? 2 : 0,
+  shift: e.shiftKey,
+  alt: e.altKey,
+  ctrl: e.ctrlKey || e.metaKey,
+  scale,
+});
 
 /**
  * The points a node-tool box picks on the selected paths: those inside it,
@@ -341,6 +353,8 @@ export function Canvas() {
   const dragRef = useRef<Drag | null>(null);
   /** A right-button press: a click opens the context menu, a drag pans. */
   const rightRef = useRef<{ x: number; y: number; moved: boolean } | null>(null);
+  /** NOVAstitch: a registered drawing tool got the button press (the release goes to it too). */
+  const novaDownRef = useRef(false);
   const penRef = useRef<PenDraft | null>(null);
   const penHoverRef = useRef<PenHover>({ kind: "none" });
   const fhRef = useRef<FreehandStroke | null>(null);
@@ -646,6 +660,8 @@ export function Canvas() {
       if (s.theme !== p.theme || s.prefs.accent !== p.prefs.accent) themeRef.current = null;
       // shape builder: the regions follow the selection and the design
       if (s.tool === "builder" && (s.selection !== p.selection || s.doc !== p.doc || s.tool !== p.tool)) refreshRegions();
+      // NOVAstitch: the registered drawing tool left or picked is told
+      if (s.tool !== p.tool) activateDrawingTool(s.tool);
       if (s.tool !== p.tool) {
         penRef.current = null;
         penHoverRef.current = { kind: "none" };
@@ -1254,6 +1270,14 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
       }
       const st = useStore.getState();
       if (st.dialog || document.querySelector(".backdrop")) return;
+      // NOVAstitch: Enter, Esc and Backspace go to a registered drawing tool first
+      if (drawingTool(st.tool) && (e.key === "Enter" || e.key === "Escape" || e.key === "Backspace" || e.key === "Delete")) {
+        if (toolKey(st.tool, e.key === "Delete" ? "Backspace" : e.key)) {
+          e.preventDefault();
+          draw();
+        } else if (e.key === "Escape") st.setTool("select");
+        return;
+      }
       if (st.tool === "satin" && (e.key === "[" || e.key === "]")) {
         setSatinWidth(st.toolOptions.satin.width + (e.key === "]" ? 1 : -1) * (e.shiftKey ? 0.5 : 0.1));
         e.preventDefault();
@@ -1306,6 +1330,12 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
     }
     const p = toMm(e);
     const tol = 6 / s.view.scale;
+    // NOVAstitch: a registered drawing tool gets the left and right buttons (middle button and Space still pan)
+    if ((e.button === 0 || e.button === 2) && !spaceRef.current && toolPointer(s.tool, novaPointer("down", e, p, s.view.scale))) {
+      novaDownRef.current = true;
+      draw();
+      return;
+    }
     if (e.button === 2) rightRef.current = { x: e.clientX, y: e.clientY, moved: false };
     if (e.button === 1 || e.button === 2 || spaceRef.current || s.tool === "pan") {
       dragRef.current = { kind: "pan", sx: e.clientX, sy: e.clientY, ox: s.view.ox, oy: s.view.oy };
@@ -1658,6 +1688,12 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
     const p = toMm(e);
     if (s.showDensity) setDensityHover(p);
     const d = dragRef.current;
+    // NOVAstitch: a registered drawing tool follows the pointer (not while panning)
+    if (!d && toolPointer(s.tool, novaPointer("move", e, p, s.view.scale))) {
+      if (canvasRef.current) canvasRef.current.style.cursor = drawingTool(s.tool)?.cursor ?? "crosshair";
+      draw();
+      return;
+    }
     if (!d && s.refEdit) {
       const r = s.doc.references?.find((x) => x.id === s.refEdit);
       const z = r ? refZone(r, p) : null;
@@ -2272,6 +2308,13 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
 
   const onPointerUp = (e: React.PointerEvent) => {
     const s = useStore.getState();
+    // NOVAstitch: the button released, for a registered drawing tool that got the press
+    if (novaDownRef.current) {
+      novaDownRef.current = false;
+      toolPointer(s.tool, novaPointer("up", e, toMm(e), s.view.scale));
+      draw();
+      return;
+    }
     const d = dragRef.current;
     dragRef.current = null;
     // the drag's transform is done: the plan follows the document again
@@ -2648,6 +2691,8 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         onWheel={onWheel}
         onContextMenu={(e) => {
           e.preventDefault();
+          // NOVAstitch: the right button belongs to a registered drawing tool: no menu
+          if (drawingTool(useStore.getState().tool)) return void (rightRef.current = null);
           // a right-click (not a right-drag, which pans) opens the menu of what is under it
           const r = rightRef.current;
           rightRef.current = null;

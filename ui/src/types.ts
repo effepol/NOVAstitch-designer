@@ -1017,7 +1017,9 @@ export type Tool =
   | "cut"
   | "gradient"
   | "builder"
-  | "guides";
+  | "guides"
+  // NOVAstitch: a drawing tool a module registered (nova/core/registry), "<module>.<name>"
+  | `${string}.${string}`;
 
 /** A user-drawn stitch pattern: lines add needle points where stitches cross them, shapes leave the points inside out. */
 export interface StitchPattern {
