@@ -1,5 +1,6 @@
-// Module m with Filum's engine: the two-rail satin is sewn by the engine
-// between its rails, stitches across the column.
+// Module m with Filum's engine: the satins made by the two tools are sewn by
+// the engine as two-rail satins — stitches across the rails at the angle of
+// the rungs, inside the shape.
 
 import { check, done } from "../core/testkit";
 import { readFileSync } from "node:fs";
@@ -7,6 +8,7 @@ import path from "node:path";
 import { initSync, StitchEngine } from "../../wasm/pkg/filum_wasm";
 import { emptyDoc } from "../../store";
 import type { DesignObject, SatinParams, StitchDocument, SubPath, Vec2 } from "../../types";
+import { planSplit, type Line } from "./split";
 import { satinFromClicks } from "./twoRails";
 
 initSync({ module: readFileSync(path.join(process.cwd(), "src", "wasm", "pkg", "filum_wasm_bg.wasm")) });
@@ -49,6 +51,11 @@ const bare = (o: DesignObject): DesignObject =>
     ? { ...o, stitch: { ...o.stitch, centerWalk: false, contourUnderlay: false, zigzagUnderlay: false, underlayAuto: false, pullComp: 0, pullCompPct: 0, maxStitchLength: 50 } as DesignObject["stitch"] & SatinParams }
     : o;
 
+const angleOf = (a: Vec2, b: Vec2) => {
+  const x = (Math.atan2(b[1] - a[1], b[0] - a[0]) * 180) / Math.PI;
+  return ((x % 180) + 180) % 180;
+};
+const diff = (x: number, y: number) => Math.min(Math.abs(x - y), 180 - Math.abs(x - y));
 function inside(rings: Vec2[][], q: Vec2): boolean {
   let c = false;
   for (const r of rings)
@@ -80,6 +87,57 @@ function segments(p: Plan, k: number): [Vec2, Vec2][] {
   }
   return out;
 }
+
+// «Dividi e dirigi» on the A: the stitches of each part follow its line
+const DIRS: Line[] = [
+  [
+    [6, 11],
+    [6, 14],
+  ],
+  [
+    [0.5, 2],
+    [3, 2],
+  ],
+  [
+    [11.5, 2],
+    [9, 2],
+  ],
+];
+const split = planSplit(base, {
+  id: "A",
+  cuts: [
+    [
+      [-1, 7],
+      [13, 7],
+    ],
+    [
+      [6, -1],
+      [6, 6],
+    ],
+  ],
+  directions: DIRS,
+})!;
+const d = { ...split.doc, objects: split.doc.objects.map(bare) };
+const p = plan(d);
+check(p.coords.length > 100, `the engine sews the three satins (${p.coords.length / 2} stitches)`);
+d.objects.forEach((o, k) => {
+  const segs = segments(p, k);
+  // the part's own line: the one inside it
+  const want = DIRS.map((l) => angleOf(l[0], l[1])).find((_, i) => {
+    const m: Vec2 = [(DIRS[i][0][0] + DIRS[i][1][0]) / 2, (DIRS[i][0][1] + DIRS[i][1][1]) / 2];
+    return inside([[...o.paths[0].nodes.map((n) => n.p), ...o.paths[1].nodes.map((n) => n.p).reverse()]], m);
+  });
+  // a satin zig-zags: of two stitches in a row one lies on a rung, the other leans to step on
+  // (stitches under 0.5 mm, at a pointed end, have no direction to speak of)
+  const dev = segs.map(([a, b]) => (Math.hypot(b[0] - a[0], b[1] - a[1]) < 0.5 ? 0 : diff(angleOf(a, b), want ?? 0)));
+  let worst = 0;
+  for (let i = 0; i + 1 < dev.length; i++) worst = Math.max(worst, Math.min(dev[i], dev[i + 1]));
+  check(want !== undefined && segs.length > 20 && worst < 0.5, `${o.name}: ${segs.length} stitches; of every two in a row one is at the line's ${want}° (worst ${worst.toFixed(3)}°)`);
+});
+const pts: Vec2[] = [];
+for (let i = 0; i < p.objects.length; i++) if (p.flags[i] === 0) pts.push([p.coords[2 * i], p.coords[2 * i + 1]]);
+const out = pts.filter((q) => !inside([A_OUT, A_HOLE], q) && !nearEdge([A_OUT, A_HOLE], q, 0.15));
+check(pts.length > 100 && out.length === 0, `every needle point is inside the A (${out.length} outside)`);
 
 // «Satin a due binari»: a column sewn between the clicked rails
 const two = satinFromClicks({ ...emptyDoc(), threads: base.threads }, {
