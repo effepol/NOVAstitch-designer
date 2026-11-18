@@ -1378,6 +1378,22 @@ pub struct Object {
     /// object's colour when a lettering is sewn colour by colour.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub color_sort_index: Option<u32>,
+    /// How the needle goes on to the next object, set by hand (NOVAstitch,
+    /// contract «b, parte 2»); absent: as Filum decides (the trim distance).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub link: Option<ObjectLink>,
+}
+
+/// The connection to the next object, chosen by hand. A colour change after
+/// the object, a trim or a stop set on it win over it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
+#[serde(rename_all = "camelCase")]
+pub enum ObjectLink {
+    /// Sewn through, whatever the distance: running stitches of 2.5 mm, no locks.
+    Join,
+    /// No trim: locked, a jump to the next object, locked again.
+    Jump,
 }
 
 /// An object's own lock stitches; `None` fields: the machine's.

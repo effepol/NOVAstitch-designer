@@ -1662,6 +1662,17 @@
         "id": {
           "type": "string"
         },
+        "link": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ObjectLink"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "How the needle goes on to the next object, set by hand (NOVAstitch,\ncontract «b, parte 2»); absent: as Filum decides (the trim distance)."
+        },
         "lock": {
           "anyOf": [
             {
@@ -1819,6 +1830,21 @@
         "paths"
       ],
       "type": "object"
+    },
+    "ObjectLink": {
+      "description": "The connection to the next object, chosen by hand. A colour change after\nthe object, a trim or a stop set on it win over it.",
+      "oneOf": [
+        {
+          "const": "join",
+          "description": "Sewn through, whatever the distance: running stitches of 2.5 mm, no locks.",
+          "type": "string"
+        },
+        {
+          "const": "jump",
+          "description": "No trim: locked, a jump to the next object, locked again.",
+          "type": "string"
+        }
+      ]
     },
     "RailReverse": {
       "description": "Which satin rail to reverse (Ink/Stitch `reverse_rails`).",
