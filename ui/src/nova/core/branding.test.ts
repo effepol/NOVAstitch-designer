@@ -35,7 +35,7 @@ check(read("LICENSE").includes("GNU GENERAL PUBLIC LICENSE") && read("LICENSE").
 const tauri = JSON.parse(read("src-tauri/tauri.conf.json"));
 check(tauri.productName === NAME && tauri.app.windows[0].title === NAME, "the app and its window are called NOVAstitch Designer");
 // 0.14: an identifier of its own (it decides the data folder), the company's domain (13/11)
-const ID = "it.poletticentrocucito.novastitch-designer";
+const ID = "app.novastitch.designer";
 check(tauri.identifier === ID, `0.14 the identifier is ${ID} (got ${tauri.identifier})`);
 const assoc = tauri.bundle.fileAssociations as { ext: string[]; exportedType?: { identifier: string } }[];
 const nsd = assoc.find((a) => a.ext.includes("nsd"));
