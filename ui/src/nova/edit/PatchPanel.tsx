@@ -12,6 +12,7 @@ import { useStore } from "../../store";
 import type { PatchGroup, StitchDocument, Vec2 } from "../../types";
 import { colorChanges, GROUPINGS, ORDERS, type ColorGrouping } from "./patch";
 import { getDraft, onDraft, setDraft } from "./draft";
+import { LibraryPanel } from "./LibraryPanel";
 import "./texts";
 
 /** Create a patch from the selection with the prepared settings; a toast says why when it cannot. */
@@ -108,6 +109,13 @@ export function PatchPanel() {
           </div>
         </div>
       )}
+      <p className="hint">
+        <b>{t("f.library.title")}</b>
+      </p>
+      <LibraryPanel />
+      <p className="hint">
+        <b>{t("f.patch.gridTitle")}</b>
+      </p>
       <p className="hint">{t("f.patch.hint")}</p>
       <Row label={t("f.patch.rows")}>
         <span data-nova-anchor="f.patch.rows">
