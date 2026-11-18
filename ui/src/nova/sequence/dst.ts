@@ -74,6 +74,7 @@ export function planOfDoc(doc: StitchDocument): { flags: Uint8Array; objects: Ui
 /** The whole plan as the app gets it (coordinates, flags, objects) and its PlanStats. */
 export function fullPlan(doc: StitchDocument): PlanData {
   const p = eng().plan(JSON.stringify(doc)) as { coords: Float32Array; flags: Uint8Array; objects: Uint32Array; meta: string };
-  const meta = JSON.parse(p.meta) as { threads: PlanData["threads"]; stats: PlanData["stats"] };
-  return { coords: p.coords, flags: p.flags, objects: p.objects, threads: meta.threads, stats: meta.stats };
+  const meta = JSON.parse(p.meta) as { threads: PlanData["threads"]; stats: PlanData["stats"]; links?: PlanData["links"] };
+  // as ui/src/engine/worker.ts hands it to the app
+  return { coords: p.coords, flags: p.flags, objects: p.objects, threads: meta.threads, stats: meta.stats, links: meta.links ?? [] };
 }

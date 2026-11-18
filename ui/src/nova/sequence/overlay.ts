@@ -48,12 +48,17 @@ export interface Connection {
 }
 
 /** The object's link to the next one (module 0's field; absent = Filum decides). */
-export const linkOf = (o: DesignObject | undefined): "join" | "jump" | undefined => (o as (DesignObject & { link?: "join" | "jump" }) | undefined)?.link;
+export const linkOf = (o: DesignObject | undefined): "join" | "jump" | undefined => o?.link;
 
-/** The connections of a plan: every trim, and the jump or sewn travel between two objects. */
-export function connections(doc: StitchDocument, plan: Pick<PlanData, "coords" | "flags" | "objects">): Connection[] {
+/**
+ * The connections of a plan. Every trim from the plan's records (so the red lines
+ * are as many as PlanStats.trims); a jump or sewn connection between two objects
+ * from the plan's links (module 0), or, in a plan without them, from its records.
+ */
+export function connections(doc: StitchDocument, plan: Pick<PlanData, "coords" | "flags" | "objects" | "links">): Connection[] {
   const out: Connection[] = [];
   const { coords, flags, objects } = plan;
+  const links = plan.links;
   let prev = -1;
   let trims = 0;
   let jumped = false;
@@ -73,13 +78,18 @@ export function connections(doc: StitchDocument, plan: Pick<PlanData, "coords" |
     }
     if (prev >= 0) {
       for (let k = 0; k < trims; k++) push("trim", at(i));
-      if (!trims && objects[i] !== objects[prev]) push(jumped ? "jump" : "join", at(i));
+      if (!trims && !links && objects[i] !== objects[prev]) push(jumped ? "jump" : "join", at(i));
     }
     trims = 0;
     jumped = false;
     prev = i;
   }
   if (prev >= 0) for (let k = 0; k < trims; k++) push("trim", null);
+  // the engine's own account of each connection between two objects: jumps and sewn ones
+  for (const l of links ?? []) {
+    if (l.kind !== "jump" && l.kind !== "sew") continue;
+    out.push({ kind: l.kind === "sew" ? "join" : "jump", from: l.start, to: l.end, objId: doc.objects[l.from]?.id, manual: l.manual });
+  }
   return out;
 }
 

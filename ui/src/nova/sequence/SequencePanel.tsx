@@ -5,16 +5,18 @@
 // dragging a row reorders on the drop, with b.reorder.
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent } from "react";
-import { GripVertical, MapPin, MapPinOff, Type } from "lucide-react";
-import { LockStitch, MachineStop, Trim } from "../../icons/stitch";
+import { GripVertical, MapPin, MapPinOff, TriangleAlert, Type } from "lucide-react";
+import { Jump, LockStitch, MachineStop, StitchRunning, Trim } from "../../icons/stitch";
+import { Menu } from "../../components/MenuBar";
+import type { MenuItem } from "../../components/menuModel";
 import { planOf, useStore } from "../../store";
 import type { StitchDocument } from "../../types";
 import { runCommand } from "../core/commands";
 import { currentMode } from "../core/mode";
 import { t, useLanguage } from "../core/i18n";
-import { withTie, tiesOf } from "./commands";
+import { LINK_CHOICES, linkChoice, withTie, tiesOf, type LinkChoice } from "./commands";
 import { focusRow } from "./events";
-import { dropTarget, rowStitches, sequenceRows, stitchesPerObject, type SequenceRow } from "./rows";
+import { dropTarget, rowStitches, sequenceRows, stitchesPerObject, uncoveredJoins, type SequenceRow } from "./rows";
 import "./texts";
 
 const COLUMNS: CSSProperties = { gridTemplateColumns: "12px 18px 10px minmax(0, 1fr) auto auto 18px 18px 18px 18px" };
@@ -31,13 +33,37 @@ export function SequencePanel() {
   const last = useRef<Map<string, number> | null>(null);
   const plan = planOf.get(doc);
   const counts = useMemo(() => (plan ? (last.current = stitchesPerObject(doc, plan)) : last.current), [doc, plan]);
-  return <SequenceView doc={doc} selection={selection} counts={counts} assisted={currentMode() === "assisted"} />;
+  const assisted = currentMode() === "assisted";
+  // Studio: a sewn connection chosen by hand that stays uncovered warns on its object
+  const warnings = useMemo(() => uncoveredJoins(doc, plan, assisted), [doc, plan, assisted]);
+  return <SequenceView doc={doc} selection={selection} counts={counts} assisted={assisted} warnings={warnings} />;
+}
+
+const LINK_ICON = { trim: Trim, jump: Jump, join: StitchRunning, auto: Trim };
+
+/** The menu of the connection after an object: trim, jump, sewn through, automatic; the one in force checked. */
+export function linkMenu(id: string, now: LinkChoice): MenuItem[] {
+  return LINK_CHOICES.map((c) => ({ label: t(`b.link.${c}`), checked: c === now, nova: "b", run: () => runCommand("b.setLink", { id, link: c }) }));
 }
 
 /** The list itself, from what it shows (no store hooks: the tests draw it in Node). */
-export function SequenceView({ doc, selection, counts, assisted }: { doc: StitchDocument; selection: string[]; counts: Map<string, number> | null; assisted: boolean }) {
+export function SequenceView({
+  doc,
+  selection,
+  counts,
+  assisted,
+  warnings,
+}: {
+  doc: StitchDocument;
+  selection: string[];
+  counts: Map<string, number> | null;
+  assisted: boolean;
+  /** Objects whose sewn connection to the next stays uncovered (Studio). */
+  warnings?: Set<string>;
+}) {
   const rows = useMemo(() => sequenceRows(doc), [doc]);
   const [drag, setDrag] = useState<Drop | null>(null);
+  const [menu, setMenu] = useState<{ x: number; y: number; items: MenuItem[] } | null>(null);
   const colors = new Map(doc.threads.map((th) => [th.id, th.color]));
   const selected = new Set(selection);
 
@@ -66,6 +92,7 @@ export function SequenceView({ doc, selection, counts, assisted }: { doc: Stitch
       if (target) runCommand("b.reorder", target);
     },
     end: () => setDrag(null),
+    linkMenu: (r: SequenceRow, x: number, y: number) => setMenu({ x, y, items: linkMenu(r.last.id, linkChoice(r.last)) }),
   };
 
   return (
@@ -81,9 +108,11 @@ export function SequenceView({ doc, selection, counts, assisted }: { doc: Stitch
           assisted={assisted}
           drop={drag?.over === r.key ? drag.at : null}
           dragging={drag?.key === r.key}
+          warn={!!warnings?.has(r.last.id)}
           h={handlers}
         />
       ))}
+      {menu && <Menu items={menu.items} x={menu.x} y={menu.y} onClose={() => setMenu(null)} />}
     </div>
   );
 }
@@ -93,6 +122,7 @@ interface Handlers {
   over: (key: string, e: DragEvent) => void;
   drop: (key: string, e: DragEvent) => void;
   end: () => void;
+  linkMenu: (r: SequenceRow, x: number, y: number) => void;
 }
 
 const stop = (e: { stopPropagation(): void }) => e.stopPropagation();
@@ -106,6 +136,7 @@ function Row({
   assisted,
   drop,
   dragging,
+  warn,
   h,
 }: {
   r: SequenceRow;
@@ -116,6 +147,7 @@ function Row({
   assisted: boolean;
   drop: "above" | "below" | null;
   dragging: boolean;
+  warn: boolean;
   h: Handlers;
 }) {
   const name = r.text ? (r.first.text?.content?.split("\n")[0] ?? r.first.name) : r.first.name;
@@ -163,6 +195,11 @@ function Row({
       <span className="idx">{i + 1}</span>
       <span style={{ width: 10, height: 10, borderRadius: "50%", background: color, boxShadow: "0 0 0 1px var(--border)" }} />
       <span className="lname" title={name}>
+        {warn && (
+          <span data-nova-anchor="b.joinWarning" title={t("b.join.visible")} aria-label={t("b.join.visible")} style={{ color: "var(--warning-text)", marginRight: 4 }}>
+            <TriangleAlert size={11} style={{ verticalAlign: -1 }} />
+          </span>
+        )}
         {r.text && <Type size={11} style={{ verticalAlign: -1, marginRight: 4, opacity: 0.7 }} aria-label={t("b.lettering")} />}
         {name}
       </span>
@@ -205,17 +242,38 @@ function Row({
       >
         <LockStitch size={14} />
       </button>
-      <button
-        className={`mini ${r.trimAfter ? "" : "mixed"}`}
-        style={r.trimAfter ? on : undefined}
-        data-nova-anchor="b.trim"
-        aria-pressed={r.trimAfter}
-        title={t(r.trimAfter ? "b.trim.on" : "b.trim.off")}
-        aria-label={t(r.trimAfter ? "b.trim.on" : "b.trim.off")}
-        onClick={(e) => (stop(e), runCommand("b.setTrimAfter", { id: r.last.id, value: !r.trimAfter }))}
-      >
-        <Trim size={14} />
-      </button>
+      {assisted ? (
+        <button
+          className={`mini ${r.trimAfter ? "" : "mixed"}`}
+          style={r.trimAfter ? on : undefined}
+          data-nova-anchor="b.trim"
+          aria-pressed={r.trimAfter}
+          title={t(r.trimAfter ? "b.trim.on" : "b.trim.off")}
+          aria-label={t(r.trimAfter ? "b.trim.on" : "b.trim.off")}
+          onClick={(e) => (stop(e), runCommand("b.setTrimAfter", { id: r.last.id, value: !r.trimAfter }))}
+        >
+          <Trim size={14} />
+        </button>
+      ) : (
+        (() => {
+          // Studio: the connection after the row, chosen in a menu
+          const now = linkChoice(r.last);
+          const Icon = LINK_ICON[now];
+          return (
+            <button
+              className={`mini ${now === "auto" ? "mixed" : ""}`}
+              style={now === "auto" ? undefined : on}
+              data-nova-anchor="b.trim"
+              aria-haspopup="menu"
+              title={t(`b.link.now.${now}`)}
+              aria-label={t(`b.link.now.${now}`)}
+              onClick={(e) => (stop(e), h.linkMenu(r, e.clientX, e.clientY))}
+            >
+              <Icon size={14} />
+            </button>
+          );
+        })()
+      )}
       <button
         className={`mini ${r.stopAfter ? "" : "mixed"}`}
         style={r.stopAfter ? on : undefined}

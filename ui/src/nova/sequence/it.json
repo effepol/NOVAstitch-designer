@@ -20,5 +20,14 @@
   "b.view.startEnd": "Partenza e arrivo",
   "b.view.startEnd.title": "Mostra su ogni oggetto i segni di partenza (S) e arrivo (E) con il numero d'ordine di cucitura",
   "b.view.links": "Collegamenti",
-  "b.view.links.title": "Mostra i collegamenti fra un oggetto e il successivo: rosso rasafilo, blu salto, verde cucitura; tenue se l'ha scelto il programma"
+  "b.view.links.title": "Mostra i collegamenti fra un oggetto e il successivo: rosso rasafilo, blu salto, verde cucitura; tenue se l'ha scelto il programma",
+  "b.link.trim": "Rasafilo",
+  "b.link.jump": "Salto",
+  "b.link.join": "Cucitura",
+  "b.link.auto": "Automatico",
+  "b.link.now.trim": "Dopo: rasafilo (clic per cambiare il collegamento)",
+  "b.link.now.jump": "Dopo: salto (clic per cambiare il collegamento)",
+  "b.link.now.join": "Dopo: cucitura fino al successivo (clic per cambiare il collegamento)",
+  "b.link.now.auto": "Dopo: lo decide il programma (clic per cambiare il collegamento)",
+  "b.join.visible": "La cucitura verso l'oggetto successivo resta scoperta"
 }

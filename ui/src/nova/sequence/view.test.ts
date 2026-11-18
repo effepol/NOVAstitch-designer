@@ -106,7 +106,7 @@ const settle = () => new Promise((r) => setTimeout(r, 0));
   {
     const d = abc(true, [square("A"), square("B", { trimAfter: true }), square("C")]);
     const list = connections(d, fullPlan(d));
-    const kinds = list.map((c) => `${c.kind}${c.manual ? "!" : ""}:${c.objId ?? "-"}`).join(" ");
+    const kinds = list.map((c) => `${c.kind}${c.manual ? "!" : ""}:${c.objId ?? "-"}`).sort().join(" ");
     check(kinds === "join:A trim!:B trim:C", `b.10 A→B sewn (green), B→C the trim asked on B (full), the design's last trim (faint) (${kinds})`);
   }
   // a jump between two objects is blue (a plan made by hand: stitch, jump, stitch)

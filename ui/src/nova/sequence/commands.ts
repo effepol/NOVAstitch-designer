@@ -119,6 +119,30 @@ export const setStart = (doc: StitchDocument, p: { id: string; point: Vec2 | nul
 /** Where the object ends sewing; null = automatic. */
 export const setEnd = (doc: StitchDocument, p: { id: string; point: Vec2 | null }) => setPoint(doc, p.id, "end", p.point);
 
+/** What follows an object: a trim, a jump, sewn through to the next, or as the program decides. */
+export type LinkChoice = "trim" | "jump" | "join" | "auto";
+export const LINK_CHOICES: LinkChoice[] = ["trim", "jump", "join", "auto"];
+
+/** The choice in force on an object (trim after wins, as in the engine). */
+export const linkChoice = (o: DesignObject): LinkChoice => (o.trimAfter ? "trim" : (o.link ?? "auto"));
+
+/**
+ * The connection after an object (contract «b, parte 2»): trim = trimAfter; jump / join =
+ * the object's link (module 0's field); auto = neither, the program decides with the trim
+ * distance. In Assisted the program decides: no change.
+ */
+export function setLink(doc: StitchDocument, p: { id: string; link: LinkChoice }): StitchDocument {
+  if (currentMode() === "assisted" || !LINK_CHOICES.includes(p.link)) return doc;
+  return patchObject(doc, p.id, (o) => {
+    const want = p.link === "trim" || p.link === "auto" ? undefined : p.link;
+    if (o.trimAfter === (p.link === "trim") && o.link === want) return o;
+    const base = without(o, "link");
+    if (p.link === "trim") return { ...base, trimAfter: true };
+    if (p.link === "auto") return { ...base, trimAfter: false };
+    return { ...base, trimAfter: false, link: p.link };
+  });
+}
+
 // ---- registration ----
 
 export const COMMANDS: Command<never>[] = [
@@ -127,6 +151,7 @@ export const COMMANDS: Command<never>[] = [
   { id: "b.setLock", label: { it: "Forma della fermatura", en: "Lock stitch shape" }, apply: setLock },
   { id: "b.setTrimAfter", label: { it: "Rasafilo dopo", en: "Trim after" }, apply: setTrimAfter },
   { id: "b.setStopAfter", label: { it: "Stop dopo", en: "Stop after" }, apply: setStopAfter },
+  { id: "b.setLink", label: { it: "Collegamento al successivo", en: "Connection to the next" }, apply: setLink },
   { id: "b.setStart", label: { it: "Partenza", en: "Start point" }, apply: setStart },
   { id: "b.setEnd", label: { it: "Arrivo", en: "End point" }, apply: setEnd },
 ] as unknown as Command<never>[];
