@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "pique",
-  "rev": 1,
+  "rev": 2,
   "name": {
     "it": "Piqué / Polo",
     "en": "Piqué / Polo"
@@ -26,8 +26,8 @@
     "minSpacingRatio": 0.75
   },
   "info": {
-    "it": "Stabilizzatore: Rete leggera da tagliare. Topping: Film idrosolubile (tiene i punti sopra la trama). Ago: Punta a sfera 70/10–75/11. Maglia e tessuti elastici: nel telaio non si stirano; stabilizzatore da tagliare.",
-    "en": "Stabiliser: Light cut-away mesh. Topping: Water-soluble film (keeps stitches above the texture). Needle: Ballpoint 70/10–75/11. Knits and stretchy fabrics: do not stretch them in the hoop; use a cut-away stabiliser."
+    "it": "Stabilizzatore: Rete leggera da tagliare. Topping: Nessuno. Ago: Punta a sfera 70/10–75/11. Maglia e tessuti elastici: nel telaio non si stirano; stabilizzatore da tagliare.",
+    "en": "Stabiliser: Light cut-away mesh. Topping: None. Needle: Ballpoint 70/10–75/11. Knits and stretchy fabrics: do not stretch them in the hoop; use a cut-away stabiliser."
   },
   "stabilizer": {
     "type": "cut-away",
