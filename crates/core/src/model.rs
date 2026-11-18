@@ -429,6 +429,9 @@ pub struct SatinParams {
     /// Ink/Stitch `center_walk_underlay_repeats` / `_position`.
     pub center_walk_repeats: u32,
     pub center_walk_position: f64,
+    /// Contour underlay passes: each pass runs the first side forward and the
+    /// second back (NOVAstitch, 18/11). A file without it reads 1.
+    pub contour_underlay_repeats: u32,
     /// Stitch length of the centre-walk and contour underlay (mm).
     pub underlay_stitch_length: f64,
     /// Contour / zig-zag underlay inset as a share of the column width, each
@@ -501,6 +504,7 @@ impl Default for SatinParams {
             underlay_auto: false,
             center_walk_repeats: 2,
             center_walk_position: 0.5,
+            contour_underlay_repeats: 1,
             underlay_stitch_length: 2.5,
             contour_inset_pct: 0.0,
             zigzag_inset_pct: 0.0,
@@ -1568,6 +1572,10 @@ pub struct FabricProfile {
     /// A knockdown (laydown) layer is sewn under the design: it is the
     /// underlay, so auto underlay keeps to edge runs.
     pub knockdown: bool,
+    /// A knit (knit, piqué, fleece): the automatic satin underlay runs the
+    /// contour twice on columns wider than 2 mm (NOVAstitch, 18/11; Punch pp. 118–122).
+    #[serde(default)]
+    pub knit: bool,
 }
 
 impl Fabric {
@@ -1582,6 +1590,7 @@ impl Fabric {
             stretch: matches!(self, Fabric::Knit | Fabric::Fleece | Fabric::Towel | Fabric::Pique | Fabric::Sheer),
             delicate: matches!(self, Fabric::Silk | Fabric::Leather),
             knockdown: false,
+            knit: matches!(self, Fabric::Knit | Fabric::Pique | Fabric::Fleece),
         };
         match self {
             Fabric::Cotton => p(1.0, false, 1.0),

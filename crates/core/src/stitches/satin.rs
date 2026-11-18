@@ -597,7 +597,7 @@ fn push(run: &mut Run, p: Point, f: u8) {
     run.push((p, f));
 }
 
-fn underlay(geo: &SatinGeometry, p: &SatinParams, which: super::underlay::SatinUnderlay, run: &mut Run, density: f64) {
+fn underlay(geo: &SatinGeometry, p: &SatinParams, which: super::underlay::SatinUnderlay, contour_passes: u32, run: &mut Run, density: f64) {
     let u = flags::UNDERLAY;
     let len = p.underlay_stitch_length.clamp(0.5, 8.0);
     let sr = p.second_rail.unwrap_or_default();
@@ -625,11 +625,15 @@ fn underlay(geo: &SatinGeometry, p: &SatinParams, which: super::underlay::SatinU
         let pairs = plot_pairs(geo, 0.5, off, None);
         let left: Vec<Point> = pairs.iter().map(|x| x.0).collect();
         let right: Vec<Point> = pairs.iter().rev().map(|x| x.1).collect();
-        for q in running_stitch(&left, len, 0.1) {
-            push(run, q, u);
-        }
-        for q in running_stitch(&right, len, 0.1) {
-            push(run, q, u);
+        let (left, right) = (running_stitch(&left, len, 0.1), running_stitch(&right, len, 0.1));
+        // each pass: the first side forward, the second back (NOVAstitch: repeatable)
+        for _ in 0..contour_passes.max(1) {
+            for q in &left {
+                push(run, *q, u);
+            }
+            for q in &right {
+                push(run, *q, u);
+            }
         }
         if let Some(f) = left.first() {
             push(run, *f, u);
@@ -671,21 +675,22 @@ pub fn satin_on(paths: &[SubPath], p: &SatinParams, fabric: &crate::model::Fabri
     let Some(geo) = satin_geometry(paths, p) else { return vec![] };
     let mut run: Run = Vec::new();
     // auto underlay: by the column's mean width
-    let which = if p.underlay_auto {
+    let w = if p.underlay_auto {
         let pairs = plot_points_on_rails(&geo, 1.0, 0.0, 0.0);
-        let w = pairs.iter().map(|(a, b)| a.dist(*b)).sum::<f64>() / pairs.len().max(1) as f64;
-        super::underlay::satin_underlay(w, p, fabric)
+        pairs.iter().map(|(a, b)| a.dist(*b)).sum::<f64>() / pairs.len().max(1) as f64
     } else {
-        super::underlay::satin_underlay(0.0, p, fabric)
+        0.0
     };
+    let which = super::underlay::satin_underlay(w, p, fabric);
+    let passes = super::underlay::satin_contour_passes(w, p, fabric);
     // an odd centre walk ends at the far end: the cover runs back from there
     let back = which.center && p.center_walk_repeats.max(1) % 2 == 1;
     if back {
         // the other underlays first (they return to the start), the walk last
-        underlay(&geo, p, super::underlay::SatinUnderlay { center: false, ..which }, &mut run, density);
-        underlay(&geo, p, super::underlay::SatinUnderlay { center: true, contour: false, zigzag: false }, &mut run, density);
+        underlay(&geo, p, super::underlay::SatinUnderlay { center: false, ..which }, passes, &mut run, density);
+        underlay(&geo, p, super::underlay::SatinUnderlay { center: true, contour: false, zigzag: false }, passes, &mut run, density);
     } else {
-        underlay(&geo, p, which, &mut run, density);
+        underlay(&geo, p, which, passes, &mut run, density);
     }
     let mut top = top_layer(&geo, p, extra_pull, density);
     // Ink/Stitch plots the cover from the start and sews it backwards
@@ -913,6 +918,48 @@ mod underlay_detail_tests {
         let off = ul(&SatinParams { center_walk_position: 0.9, ..base.clone() });
         let y = off.iter().map(|q| q.y).sum::<f64>() / off.len() as f64;
         assert!(y.abs() > 1.2, "{y}");
+    }
+}
+
+#[cfg(test)]
+mod contour_repeat_tests {
+    use super::*;
+    use crate::model::Fabric;
+
+    /// A column between rails y = 0 and y = `w`, 30 mm long.
+    fn column(w: f64) -> Vec<SubPath> {
+        let rail = |y: f64| SubPath { closed: false, nodes: vec![crate::model::Node::corner(0.0, y), crate::model::Node::corner(30.0, y)] };
+        vec![rail(0.0), rail(w)]
+    }
+    /// How many times the contour underlay runs along the first rail: crossings of x = 15
+    /// at the contour inset (0.4 mm in), told apart from the zig-zag underlay (0.6 mm in).
+    fn contour_passes(w: f64, p: &SatinParams, fabric: Fabric) -> usize {
+        let run: Vec<(Point, u8)> = satin_on(&column(w), p, &fabric.profile()).into_iter().flatten().collect();
+        let ul: Vec<Point> = run.iter().filter(|x| x.1 & flags::UNDERLAY != 0).map(|x| x.0).collect();
+        ul.windows(2).filter(|s| (s[0].y - p.contour_inset).abs() < 0.05 && (s[1].y - p.contour_inset).abs() < 0.05 && (s[0].x - 15.0) * (s[1].x - 15.0) <= 0.0).count()
+    }
+
+    #[test]
+    fn a_file_without_the_field_reads_one_pass() {
+        let p: SatinParams = serde_json::from_str(r#"{"width": 3.0}"#).unwrap();
+        assert_eq!(p.contour_underlay_repeats, 1);
+        assert_eq!(SatinParams::default().contour_underlay_repeats, 1);
+    }
+
+    #[test]
+    fn contour_repeats_by_hand() {
+        let p = SatinParams { center_walk: false, contour_underlay: true, ..Default::default() };
+        assert_eq!(contour_passes(3.0, &p, Fabric::Cotton), 1);
+        assert_eq!(contour_passes(3.0, &SatinParams { contour_underlay_repeats: 2, ..p.clone() }, Fabric::Cotton), 2);
+        assert_eq!(contour_passes(3.0, &SatinParams { contour_underlay_repeats: 3, ..p.clone() }, Fabric::Cotton), 3);
+    }
+
+    #[test]
+    fn auto_underlay_on_knit_doubles_the_contour() {
+        let p = SatinParams { underlay_auto: true, ..Default::default() };
+        assert_eq!(contour_passes(3.0, &p, Fabric::Knit), 2, "3 mm on knit: two contour passes");
+        assert_eq!(contour_passes(3.0, &p, Fabric::Cotton), 1, "3 mm on cotton: one");
+        assert!(contour_passes(1.5, &p, Fabric::Knit) < 2, "1.5 mm on knit: no double contour");
     }
 }
 

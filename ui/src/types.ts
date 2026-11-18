@@ -106,6 +106,8 @@ export interface SatinParams {
   /** Centre walk passes (2 = there and back) and position across the column (0..1). */
   centerWalkRepeats?: number;
   centerWalkPosition?: number;
+  /** Contour underlay passes, each the first side forward and the second back (NOVAstitch; absent = 1). */
+  contourUnderlayRepeats?: number;
   /** Centre-walk and contour underlay stitch length (mm). */
   underlayStitchLength?: number;
   /** Underlay insets as a share of the column width, each side (0..1). */

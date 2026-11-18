@@ -2211,6 +2211,13 @@
           "default": false,
           "type": "boolean"
         },
+        "contourUnderlayRepeats": {
+          "default": 1,
+          "description": "Contour underlay passes: each pass runs the first side forward and the\nsecond back (NOVAstitch, 18/11). A file without it reads 1.",
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
         "guides": {
           "description": "Direction guides: lines across the column that set the stitch angle\nthere (Ink/Stitch rungs); between two guides the angle turns evenly.\nKept apart from the paths so editing the outline keeps them.",
           "items": {

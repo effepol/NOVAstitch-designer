@@ -128,6 +128,22 @@ pub fn satin_underlay(w: f64, p: &SatinParams, fabric: &FabricProfile) -> SatinU
     }
 }
 
+/// How many times the contour underlay of a satin column of (mean) width `w`
+/// runs: as set by hand, or by the automatic rule — twice on knits (knit,
+/// piqué, fleece) for columns wider than 2 mm, once otherwise (NOVAstitch,
+/// 18/11; Punch pp. 118–122). The zig-zag underlay, there and back, is already
+/// the book's double zig-zag and stays as it is.
+pub fn satin_contour_passes(w: f64, p: &SatinParams, fabric: &FabricProfile) -> u32 {
+    if !p.underlay_auto {
+        return p.contour_underlay_repeats.max(1);
+    }
+    if fabric.knit && w > 2.0 {
+        2
+    } else {
+        1
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -173,5 +189,27 @@ mod tests {
         assert_eq!(u(6.0), SatinUnderlay { center: false, contour: true, zigzag: true });
         // stretchy fabric: zig-zag from 3 mm
         assert!(satin_underlay(3.5, &p, &Fabric::Fleece.profile()).zigzag);
+    }
+
+    /// NOVAstitch (18/11, Punch pp. 118–122): on knits (knit, piqué, fleece)
+    /// a satin column wider than 2 mm gets its contour underlay twice.
+    #[test]
+    fn auto_contour_twice_on_knits() {
+        let p = SatinParams { underlay_auto: true, ..Default::default() };
+        let passes = |w: f64, f: Fabric| {
+            let fab = f.profile();
+            let u = satin_underlay(w, &p, &fab);
+            if u.contour { satin_contour_passes(w, &p, &fab) } else { 0 }
+        };
+        assert_eq!(passes(3.0, Fabric::Knit), 2, "3 mm on knit: two contour passes");
+        assert_eq!(passes(3.0, Fabric::Pique), 2, "piqué is a knit");
+        assert_eq!(passes(3.0, Fabric::Fleece), 2, "fleece is a knit");
+        assert_eq!(passes(3.0, Fabric::Cotton), 1, "3 mm on cotton: one");
+        assert_eq!(passes(3.0, Fabric::Towel), 1, "towels are stretchy, not knits");
+        assert!(passes(1.5, Fabric::Knit) < 2, "1.5 mm on knit: no double contour");
+        // by hand: as many as set (a file without the field: 1)
+        let manual = SatinParams { contour_underlay: true, contour_underlay_repeats: 3, ..Default::default() };
+        assert_eq!(satin_contour_passes(3.0, &manual, &Fabric::Knit.profile()), 3);
+        assert_eq!(satin_contour_passes(3.0, &SatinParams { contour_underlay: true, ..Default::default() }, &Fabric::Knit.profile()), 1);
     }
 }
