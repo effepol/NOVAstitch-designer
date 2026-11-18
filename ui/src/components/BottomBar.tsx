@@ -9,6 +9,7 @@ import { threadTitle } from "./ThreadPicker";
 import { oneToOneScale, toolbarButtons, useRegistry } from "../nova/core/registry";
 import { useLanguage } from "../nova/core/i18n";
 import { t } from "../nova/i18n/filum";
+import { t as coreT } from "../nova/core/i18n";
 
 export function BottomBar() {
   // NOVAstitch: registered buttons and their texts follow registrations and the language
@@ -100,7 +101,7 @@ export function BottomBar() {
           data-nova={z === 2 || z === 4 ? "core" : undefined}
           className="btn sm ghost bb-zoom"
           style={Math.abs(view.scale / actual - z) < 0.02 ? { color: "var(--accent-text)", fontWeight: "var(--fw-semibold)" } : undefined}
-          title={z === 1 ? t("filum.barre.zoom_1_actual_size") : t("filum.barre.zoom_z", { z })}
+          title={z === 1 ? t("filum.barre.zoom_1_actual_size") : z === 2 || z === 4 ? coreT("core.zoom.title", { z }) : t("filum.barre.zoom_z", { z })}
           onClick={() => fit(z)}
         >
           {z}×

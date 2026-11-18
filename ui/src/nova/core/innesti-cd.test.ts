@@ -25,6 +25,7 @@ offScale();
 const bar = read("components/BottomBar.tsx");
 check(/const zooms = \[0\.5, 1, 2, 4, 6\]/.test(bar), "the zoom buttons: 0.5×, 1×, 2×, 4×, 6× (no 3×; «fit» stays before them)");
 check(/data-nova=\{z === 2 \|\| z === 4 \? "core" : undefined\}/.test(bar), "the new 2× and 4× are marked data-nova=\"core\"");
+check(/z === 2 \|\| z === 4 \? coreT\("core\.zoom\.title", \{ z \}\)/.test(bar), "the 2× and 4× titles are module 0's own texts (marked elements carry no Filum text: i.3, i.1)");
 check(/oneToOneScale\(\)/.test(bar) && /oneToOneScale\(\)/.test(read("canvas/Canvas.tsx")) && /oneToOneScale\(\)/.test(read("nova/core/bridge.ts")), "the bar, the canvas zoom and view.changed take 1× from oneToOneScale()");
 
 // ---- 2) the cursor cross: pointer and last point in mm, for Filum's tools and the registered ones
