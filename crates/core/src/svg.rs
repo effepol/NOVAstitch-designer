@@ -1064,6 +1064,8 @@ fn ink_satin(ink: &Ink) -> SatinParams {
         zigzag_underlay_inset: zigzag.0,
         underlay_auto: false,
         center_walk_repeats: ink.u("center_walk_underlay_repeats", 2).max(1),
+        // Ink/Stitch has no repeated contour underlay (NOVAstitch's own field)
+        contour_underlay_repeats: 1,
         center_walk_position: ink.f("center_walk_underlay_position", 50.0) / 100.0,
         underlay_stitch_length: ink.f("contour_underlay_stitch_length_mm", ink.f("center_walk_underlay_stitch_length_mm", 3.0)),
         contour_inset_pct: contour_pct.0 / 100.0,
