@@ -82,6 +82,7 @@ pub fn pattern_to_plan(p: &fmts::Pattern) -> StitchPlan {
             })
             .collect(),
         basting: None,
+        links: Vec::new(),
     }
 }
 
@@ -138,6 +139,7 @@ pub fn plan_to_document(plan: &StitchPlan, name: &str) -> Document {
             end: None,
             lock: None,
             color_sort_index: None,
+            link: None,
         });
     };
     for s in &plan.stitches {
@@ -358,6 +360,7 @@ mod origin_tests {
             end: None,
             lock: None,
             color_sort_index: None,
+            link: None,
         }];
         let mut e = Engine::new();
         let one = export_plan(&doc, &mut e, &ExportOptions::default());

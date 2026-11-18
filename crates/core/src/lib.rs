@@ -34,4 +34,4 @@ pub mod vision;
 
 pub use assemble::Engine;
 pub use model::*;
-pub use plan::{flags, PlanStats, Stitch, StitchPlan};
+pub use plan::{flags, Connection, ConnectionKind, PlanStats, Stitch, StitchPlan};
