@@ -38,5 +38,13 @@ Per cambiarne una basta scrivere la scelta nella colonna «Decisione»: la PR su
 | buffer / inset (Rebuild shapes) | spessore / rientro | buffer / inset | filum.digitalizza.buffer, filum.digitalizza.inset | |
 | letter counters | occhielli delle lettere | contrograffi | filum.digitalizza.the_background_colour_left_out e vicine | |
 | left out (hidden stitching) | tralasciato | omesso, escluso | filum.digitalizza.left_out e vicine | |
+| nomi dei tasti (Del, Enter, Space, Shift, Home, End) | Canc, Invio, Spazio; Shift, Home, End lasciati in inglese | Maiusc, Inizio, Fine (come sulle tastiere italiane) | filum.barre.tasto.*, filum.menu.key_del | |
+| LMB / RMB / MMB (tasti del mouse) | Tasto sinistro / destro / centrale | clic sinistro… | filum.barre.tasto.lmb e vicine | |
+| redwork | Redwork (lasciato in inglese) | — | filum.barre.redwork | |
+| mesh (gradient mesh) | maglia, maglia di sfumatura | mesh, griglia | filum.pannelli.sfumatura.mesh, filum.barre.click_a_closed_shape_to | |
+| stitch-out (player, video) | cucitura (riproduttore della cucitura) | esecuzione del ricamo | filum.barre.close_the_stitch_out_player e vicine | |
+| shape builder | costruttore di forme | generatore di forme | filum.barre.shape_builder | |
+| smart guides | guide intelligenti | guide dinamiche | filum.barre.no_smart_guides | |
+| nudge | sposta di poco | sposta a scatti | filum.barre.nudge | |
 
 Le righe si aggiungono a ogni PR di traduzione, area per area.

@@ -1,5 +1,5 @@
 {
-  "_nota": "Modulo i: le aree della traduzione di Filum. Ogni file di Filum con testi visibili sta in una sola area; 'schermate' sono i prefissi delle schermate del giro (giro.mjs) che l'area controlla (vince il prefisso più lungo). 'fatta': true quando la PR dell'area è entrata: da quel momento il linter (check-texts.mjs) e il giro la controllano in italiano.",
+  "_nota": "Modulo i: le aree della traduzione di Filum. Ogni file di Filum con testi visibili sta in una sola area; 'schermate' sono i prefissi delle schermate del giro (giro.mjs) che l'area controlla (vince il prefisso più lungo). 'fatta': true quando la PR dell'area è entrata: da quel momento il linter (check-texts.mjs) e il giro la controllano in italiano. 'fuori' sono parti dello schermo (selettori CSS) che appartengono ad altre aree: il controllo i.1 dell'area non le conta.",
   "aree": {
     "esempio": {
       "descrizione": "Disegno d'esempio del primo avvio (nomi del disegno, degli oggetti, dei fili)",
@@ -25,7 +25,7 @@
     },
     "barre": {
       "descrizione": "Barre, strumenti, tela, barra in basso",
-      "fatta": false,
+      "fatta": true,
       "file": [
         "App.tsx",
         "main.tsx",
@@ -42,6 +42,10 @@
       "schermate": [
         "avvio",
         "strumento/"
+      ],
+      "fuori": [
+        ".side-panel",
+        "optgroup:not([data-nova]) > option"
       ]
     },
     "pannelli": {
@@ -171,7 +175,8 @@
         "lib/fonts.ts",
         "lib/calibration.ts"
       ],
-      "schermate": []
+      "schermate": [],
+      "nota": "I nomi dei telai preimpostati (lib/hoops.ts) compaiono nei selettori dei telai delle barre: li controlla quest'area, non «barre» (che li ha nel suo «fuori»)."
     }
   }
 }

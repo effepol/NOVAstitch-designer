@@ -25,6 +25,7 @@ import { StatusHints } from "./components/StatusHints";
 import type { Tool } from "./types";
 import { compoundSelection, joinSelection, releaseSelection } from "./lib/pathActions";
 import { averageSelectedNodes } from "./lib/nodeActions";
+import { t } from "./nova/i18n/filum";
 
 const TOOL_KEYS: Record<string, Tool> = {
   v: "select",
@@ -129,7 +130,7 @@ function useShortcuts() {
         if (s.tool === "gradient" && s.gradNodes.length) {
           const sg = selectedGradient();
           if (sg && is2D(sg.params.kind)) {
-            if (!removeNodes(sg.group, s.gradNodes)) s.toast(sg.params.kind === "mesh" ? "The mesh border stays — select an inner node" : "A gradient keeps at least one colour point");
+            if (!removeNodes(sg.group, s.gradNodes)) s.toast(sg.params.kind === "mesh" ? t("filum.barre.the_mesh_border_stays_select") : t("filum.barre.a_gradient_keeps_at_least"));
             return;
           }
         }
@@ -182,20 +183,20 @@ function ViewModes() {
   const set = useStore((s) => s.setViewMode);
   const finished = useStore((s) => s.finished);
   return (
-    <div className="viewmodes" role="group" aria-label="View mode">
-      <button className={`icon-btn ${mode === "vector" ? "on" : ""}`} title="Vector view (1)" onClick={() => set("vector")}>
+    <div className="viewmodes" role="group" aria-label={t("filum.barre.view_mode")}>
+      <button className={`icon-btn ${mode === "vector" ? "on" : ""}`} title={t("filum.barre.vector_view_1")} onClick={() => set("vector")}>
         <Spline size={15} />
       </button>
-      <button className={`icon-btn ${mode === "stitch" ? "on" : ""}`} title="Stitch view (2)" onClick={() => set("stitch")}>
+      <button className={`icon-btn ${mode === "stitch" ? "on" : ""}`} title={t("filum.barre.stitch_view_2")} onClick={() => set("stitch")}>
         <StitchRunning size={15} />
       </button>
-      <button className={`icon-btn ${mode === "realistic" ? "on" : ""}`} title="Realistic view (3)" onClick={() => set("realistic")}>
+      <button className={`icon-btn ${mode === "realistic" ? "on" : ""}`} title={t("filum.barre.realistic_view_3")} onClick={() => set("realistic")}>
         <Box size={15} />
       </button>
       <span className="vsep" />
       <button
         className={`icon-btn ${finished ? "on" : ""}`}
-        title="Finished piece (4): the jump threads you snip by hand and the basting left out"
+        title={t("filum.barre.finished_piece_4_the_jump")}
         aria-pressed={finished}
         disabled={mode === "vector"}
         onClick={() => useStore.getState().set({ finished: !finished })}
@@ -212,24 +213,24 @@ function EmptyHint() {
   if (n) return null;
   return (
     <div className="empty-hint">
-      <div style={{ fontSize: "var(--fs-xl)", fontWeight: "var(--fw-semibold)", color: "var(--text)" }}>Start a design</div>
-      <div>Draw with the tools on the left, or drop an SVG, image or embroidery file here.</div>
+      <div style={{ fontSize: "var(--fs-xl)", fontWeight: "var(--fw-semibold)", color: "var(--text)" }}>{t("filum.barre.start_a_design")}</div>
+      <div>{t("filum.barre.draw_with_the_tools_on")}</div>
       <div className="cards">
         <button className="card" onClick={() => setDialog("digitize")}>
           <Digitize size={18} />
-          <b>Auto-digitize</b>Turn a logo or picture into stitches.
+          <b>{t("filum.barre.auto_digitize")}</b>{t("filum.barre.turn_a_logo_or_picture")}
         </button>
         <button className="card" onClick={importFile}>
           <Upload size={18} />
-          <b>Import</b>Ink/Stitch SVG, PES, DST, JEF, EXP, VP3…
+          <b>{t("filum.barre.import")}</b>{t("filum.barre.ink_stitch_svg_pes_dst")}
         </button>
         <button className="card" onClick={() => useStore.getState().setTool("text")}>
           <Type size={18} />
-          <b>Lettering</b>Click to type: stitched embroidery fonts, TTF/OTF, arcs.
+          <b>{t("filum.barre.lettering")}</b>{t("filum.barre.click_to_type_stitched_embroidery")}
         </button>
         <button className="card" onClick={loadSample}>
           <Mountain size={18} />
-          <b>Sample</b>Open the mountain badge demo.
+          <b>{t("filum.barre.sample")}</b>{t("filum.barre.open_the_mountain_badge_demo")}
         </button>
       </div>
     </div>
@@ -239,11 +240,11 @@ function EmptyHint() {
 function PlanningIndicator() {
   const planning = useStore((s) => s.planning);
   const err = useStore((s) => s.planError);
-  if (err) return <div className="planning" style={{ color: "var(--accent)" }}>Engine: {err}</div>;
+  if (err) return <div className="planning" style={{ color: "var(--accent)" }}>{t("filum.barre.engine_err", { err })}</div>;
   if (!planning) return null;
   return (
     <div className="planning">
-      <span className="dot-pulse" /> generating stitches…
+      <span className="dot-pulse" />{t("filum.barre.generating_stitches")}
     </div>
   );
 }

@@ -38,6 +38,7 @@ import { useStore } from "../store";
 import type { DitherMethod, GradientKind, GradientParams, DesignObject } from "../types";
 import { ThreadPicker } from "./ThreadPicker";
 import { Num, Row, Section, Slider } from "./ui";
+import { t } from "../nova/i18n/filum";
 
 /** Paint a dithered preview of the gradient into a canvas. */
 function paintDither(c: HTMLCanvasElement | null, g: Pick<GradientParams, "stops" | "curve" | "steps" | "dither">, colors: string[], cols: number, rows: number) {
@@ -324,20 +325,21 @@ const ICON: Record<GradientKind, ReactNode> = {
   ),
 };
 
-export const KINDS: [GradientKind, string, string][] = [
-  ["linear", "Linear", "Straight from start to end"],
-  ["reflected", "Reflect", "Mirrored around the start"],
-  ["radial", "Radial", "Circles around the start"],
-  ["conic", "Conic", "Sweeps around the start"],
-  ["mesh", "Mesh", "Gradient mesh: a grid of colour nodes blended smoothly — click inside to add mesh lines, drag nodes to warp"],
-  ["freeform", "Points", "Freeform colour points, each with its own spread — click the shape to add points"],
+// NOVAstitch (modulo i): etichette e suggerimenti dal catalogo, letti quando si mostrano
+export const KINDS = (): [GradientKind, string, string][] => [
+  ["linear", t("filum.pannelli.sfumatura.linear"), t("filum.pannelli.sfumatura.linear_hint")],
+  ["reflected", t("filum.pannelli.sfumatura.reflected"), t("filum.pannelli.sfumatura.reflected_hint")],
+  ["radial", t("filum.pannelli.sfumatura.radial"), t("filum.pannelli.sfumatura.radial_hint")],
+  ["conic", t("filum.pannelli.sfumatura.conic"), t("filum.pannelli.sfumatura.conic_hint")],
+  ["mesh", t("filum.pannelli.sfumatura.mesh"), t("filum.pannelli.sfumatura.mesh_hint")],
+  ["freeform", t("filum.pannelli.sfumatura.freeform"), t("filum.pannelli.sfumatura.freeform_hint")],
 ];
 
 /** Gradient type picker with small previews. */
 export function KindPicker({ value, onChange, compact }: { value: GradientKind; onChange: (k: GradientKind) => void; compact?: boolean }) {
   return (
     <div className={`grad-kinds ${compact ? "compact" : ""}`}>
-      {KINDS.map(([id, label, title]) => (
+      {KINDS().map(([id, label, title]) => (
         <button key={id} title={title} className={value === id ? "on" : ""} onClick={() => onChange(id)}>
           {ICON[id]}
           {!compact && <span>{label}</span>}

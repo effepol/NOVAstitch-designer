@@ -1,0 +1,12 @@
+{
+  "b.panel": "Il pannello Sequenza / The Sequence panel",
+  "b.row": "Una riga della sequenza / A row of the sequence",
+  "b.grip": "La maniglia per trascinare una riga / The handle to drag a row",
+  "b.stitches": "Il conteggio dei punti di una riga / A row's stitch count",
+  "b.tieStart": "L'icona della fermatura d'inizio / The start lock stitch icon",
+  "b.tieEnd": "L'icona della fermatura di fine / The end lock stitch icon",
+  "b.trim": "L'icona del rasafilo dopo / The trim after icon",
+  "b.stop": "L'icona dello stop dopo / The stop after icon",
+  "b.startAuto": "Il ritorno ad automatico della partenza / Start point back to automatic",
+  "b.endAuto": "Il ritorno ad automatico dell'arrivo / End point back to automatic"
+}

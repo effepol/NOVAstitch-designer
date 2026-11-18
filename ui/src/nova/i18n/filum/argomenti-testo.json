@@ -1,5 +1,5 @@
 {
-  "_nota": "Testi visibili che il linter (check-texts.mjs) non riconosce da solo, file per file: 'funzioni' sono funzioni proprie del file con testi fra gli argomenti posizionali (indici da 0), 'proprietà' sono campi propri del file che contengono testo.",
+  "_nota": "Testi visibili che il linter (check-texts.mjs) non riconosce da solo, file per file: 'funzioni' sono funzioni proprie del file con testi fra gli argomenti posizionali (indici da 0), 'proprietà' sono campi propri del file che contengono testo. 'identificatori' sono stringhe che in quel file sono nomi interni (per esempio i tasti della barra dei suggerimenti), tradotte solo dove si mostrano.",
   "file": {
     "components/menuModel.ts": {
       "funzioni": {
@@ -28,6 +28,53 @@
         "backing",
         "topping",
         "needle"
+      ]
+    },
+    "components/StatusHints.tsx": {
+      "identificatori": [
+        "Arrows",
+        "Backspace",
+        "DblClick",
+        "Del",
+        "Double-click",
+        "Drag",
+        "End",
+        "Enter",
+        "Home",
+        "Space",
+        "Type",
+        "Wheel",
+        "LMB",
+        "RMB",
+        "MMB",
+        "across",
+        "across a fill",
+        "across regions",
+        "back to the start",
+        "corner",
+        "corner widget",
+        "dot",
+        "empty",
+        "end",
+        "first point",
+        "guide",
+        "handle",
+        "handles",
+        "knob",
+        "lettering",
+        "line",
+        "other",
+        "outside corner",
+        "path",
+        "path end",
+        "picture",
+        "point",
+        "region",
+        "ring",
+        "shape",
+        "side",
+        "stop",
+        "timeline"
       ]
     }
   }

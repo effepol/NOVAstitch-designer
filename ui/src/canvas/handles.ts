@@ -5,6 +5,7 @@
 import { flatten, normAngle, objectBoundsCached } from "../lib/geometry";
 import type { DesignObject, PlanData, Vec2 } from "../types";
 import { FLAG } from "../types";
+import { t } from "../nova/i18n/filum";
 
 export type HandleKind = "angle" | "spacing" | "center" | "width-l" | "width-r" | "reverse" | "start" | "end" | "text-arc" | "text-spacing" | "guide" | "ripple";
 
@@ -188,7 +189,7 @@ export function dragHandle(o: DesignObject, h: Handle, p: Vec2, scale: number, s
       let deg = (-Math.atan2(p[1] - a[1], p[0] - a[0]) * 180) / Math.PI;
       deg = snap ? Math.round(deg / 15) * 15 : Math.round(deg);
       const angle = normAngle(deg);
-      return { object: { ...o, stitch: { ...st, angle } }, label: `Angle ${angle}°` };
+      return { object: { ...o, stitch: { ...st, angle } }, label: t("filum.barre.angle_angle", { angle }) };
     }
     case "spacing": {
       if (st.type !== "fill") break;
@@ -198,14 +199,14 @@ export function dragHandle(o: DesignObject, h: Handle, p: Vec2, scale: number, s
       const max = st.method === "stipple" || st.method === "hilbert" ? 4 : 2;
       let s = Math.min(max, Math.max(0.1, pxToSpacing(px)));
       s = snap ? Math.round(s * 20) / 20 : r2(s);
-      return { object: { ...o, stitch: { ...st, rowSpacing: s } }, label: `Spacing ${s.toFixed(2)} mm` };
+      return { object: { ...o, stitch: { ...st, rowSpacing: s } }, label: t("filum.barre.spacing_v1_mm", { v1: s.toFixed(2) }) };
     }
     case "center": {
       if (st.type !== "fill") break;
       const b = objectBoundsCached(o)!;
       const cx = Math.min(1, Math.max(0, (p[0] - b.x) / (b.w || 1)));
       const cy = Math.min(1, Math.max(0, (p[1] - b.y) / (b.h || 1)));
-      return { object: { ...o, stitch: { ...st, center: [r2(cx), r2(cy)] } }, label: `Centre ${Math.round(cx * 100)}% · ${Math.round(cy * 100)}%` };
+      return { object: { ...o, stitch: { ...st, center: [r2(cx), r2(cy)] } }, label: t("filum.barre.centre_v1_v2", { v1: Math.round(cx * 100), v2: Math.round(cy * 100) }) };
     }
     case "width-l":
     case "width-r": {
@@ -215,7 +216,7 @@ export function dragHandle(o: DesignObject, h: Handle, p: Vec2, scale: number, s
       let w = 2 * Math.abs((p[0] - a[0]) * d[0] + (p[1] - a[1]) * d[1]);
       w = Math.min(15, Math.max(0.3, w));
       w = snap ? Math.round(w * 2) / 2 : r2(w, 20);
-      return { object: { ...o, stitch: { ...st, width: w } }, label: `Width ${w.toFixed(2)} mm` };
+      return { object: { ...o, stitch: { ...st, width: w } }, label: t("filum.barre.width_v1_mm", { v1: w.toFixed(2) }) };
     }
     case "guide": {
       const line = st.type === "fill" ? st.guide : st.type === "running" && st.ripple?.guide?.length === 1 ? st.ripple.guide[0] : undefined;
@@ -248,12 +249,12 @@ export function dragHandle(o: DesignObject, h: Handle, p: Vec2, scale: number, s
     }
     case "ripple": {
       if (st.type !== "running" || !st.ripple) break;
-      return { object: { ...o, stitch: { ...st, ripple: { ...st.ripple, target: [r2(p[0]), r2(p[1])] } } }, label: "Ripple centre" };
+      return { object: { ...o, stitch: { ...st, ripple: { ...st.ripple, target: [r2(p[0]), r2(p[1])] } } }, label: t("filum.barre.ripple_centre") };
     }
     case "start":
-      return { object: { ...o, start: [r2(p[0]), r2(p[1])] }, label: "Start point" };
+      return { object: { ...o, start: [r2(p[0]), r2(p[1])] }, label: t("filum.barre.start_point") };
     case "end":
-      return { object: { ...o, end: [r2(p[0]), r2(p[1])] }, label: "End point" };
+      return { object: { ...o, end: [r2(p[0]), r2(p[1])] }, label: t("filum.barre.end_point") };
     case "reverse":
       break;
   }

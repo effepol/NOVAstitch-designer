@@ -7,6 +7,7 @@ import { pending } from "../lib/actions";
 import { fitReferenceToHoop, referenceBytes, removeReference, updateReference } from "../lib/references";
 import { useStore } from "../store";
 import { Grip, Num, useMovable } from "./ui";
+import { t } from "../nova/i18n/filum";
 
 export function ReferenceBar({ id }: { id: string }) {
   const r = useStore((s) => s.doc.references?.find((x) => x.id === id));
@@ -23,7 +24,7 @@ export function ReferenceBar({ id }: { id: string }) {
       <span className="ref-name" title={r.name}>
         {r.name}
       </span>
-      <label className="ref-field" title="Opacity">
+      <label className="ref-field" title={t("filum.barre.opacity")}>
         <input
           type="range"
           min={5}
@@ -41,22 +42,22 @@ export function ReferenceBar({ id }: { id: string }) {
         />
         <span className="stat">{Math.round(r.opacity * 100)} %</span>
       </label>
-      <div className="seg" role="group" aria-label="Placement">
-        <button className={r.placement === "behind" ? "on" : ""} onClick={() => set({ placement: "behind" })} title="Behind the stitches">
-          Behind
+      <div className="seg" role="group" aria-label={t("filum.barre.placement")}>
+        <button className={r.placement === "behind" ? "on" : ""} onClick={() => set({ placement: "behind" })} title={t("filum.barre.behind_the_stitches")}>
+          {t("filum.barre.behind")}
         </button>
-        <button className={r.placement === "over" ? "on" : ""} onClick={() => set({ placement: "over" })} title="Over the stitches, like tracing paper">
-          Over
+        <button className={r.placement === "over" ? "on" : ""} onClick={() => set({ placement: "over" })} title={t("filum.barre.over_the_stitches_like_tracing")}>
+          {t("filum.barre.over")}
         </button>
       </div>
-      <button className={`icon-btn ${r.grayscale ? "on" : ""}`} onClick={() => set({ grayscale: !r.grayscale })} title="Grey: thread colours stand out against it">
+      <button className={`icon-btn ${r.grayscale ? "on" : ""}`} onClick={() => set({ grayscale: !r.grayscale })} title={t("filum.barre.grey_thread_colours_stand_out")}>
         <span className="ref-grey" />
       </button>
-      <button className={`icon-btn ${r.flip ? "on" : ""}`} onClick={() => set({ flip: !r.flip })} title="Mirror">
+      <button className={`icon-btn ${r.flip ? "on" : ""}`} onClick={() => set({ flip: !r.flip })} title={t("filum.barre.mirror")}>
         <FlipHorizontal2 size={15} />
       </button>
       <div className="vsep" />
-      <label className="ref-field" title="Width (keeps the proportions)">
+      <label className="ref-field" title={t("filum.barre.width_keeps_the_proportions")}>
         W
         <Num
           value={r.width}
@@ -67,7 +68,7 @@ export function ReferenceBar({ id }: { id: string }) {
           onChange={(w) => set({ width: w, height: w / aspect, x: r.x + (r.width - w) / 2, y: r.y + (r.height - w / aspect) / 2 })}
         />
       </label>
-      <label className="ref-field" title="Height (keeps the proportions)">
+      <label className="ref-field" title={t("filum.barre.height_keeps_the_proportions")}>
         H
         <Num
           value={r.height}
@@ -78,16 +79,16 @@ export function ReferenceBar({ id }: { id: string }) {
           onChange={(h) => set({ height: h, width: h * aspect, x: r.x + (r.width - h * aspect) / 2, y: r.y + (r.height - h) / 2 })}
         />
       </label>
-      <button className="icon-btn" onClick={() => fitReferenceToHoop(id)} title="Fit the hoop">
+      <button className="icon-btn" onClick={() => fitReferenceToHoop(id)} title={t("filum.barre.fit_the_hoop")}>
         <Maximize size={15} />
       </button>
-      <button className="icon-btn" onClick={() => set({ rotation: 0 })} disabled={!r.rotation} title={`Straighten (${r.rotation}°)`}>
+      <button className="icon-btn" onClick={() => set({ rotation: 0 })} disabled={!r.rotation} title={t("filum.barre.straighten_rotation", { rotation: r.rotation })}>
         <RotateCcw size={15} />
       </button>
       <div className="vsep" />
       <button
         className="icon-btn"
-        title="Auto-digitize this picture"
+        title={t("filum.barre.auto_digitize_this_picture")}
         onClick={async () => {
           pending.image = await referenceBytes(r);
           useStore.getState().set({ refEdit: null });
@@ -98,7 +99,7 @@ export function ReferenceBar({ id }: { id: string }) {
       </button>
       <button
         className="icon-btn"
-        title="Lock: the picture stays put (unlock it in Layers ▸ References)"
+        title={t("filum.barre.lock_the_picture_stays_put")}
         onClick={() => {
           set({ locked: true });
           done();
@@ -106,11 +107,11 @@ export function ReferenceBar({ id }: { id: string }) {
       >
         <Lock size={15} />
       </button>
-      <button className="icon-btn" title="Remove the picture (Del)" onClick={() => removeReference(id)}>
+      <button className="icon-btn" title={t("filum.barre.remove_the_picture_del")} onClick={() => removeReference(id)}>
         <Trash2 size={15} />
       </button>
-      <button className="btn sm primary" onClick={done} title="Done (Enter)">
-        <Check size={14} /> Done
+      <button className="btn sm primary" onClick={done} title={t("filum.barre.done_enter")}>
+        <Check size={14} />{t("filum.barre.done_2")}
       </button>
     </div>
   );

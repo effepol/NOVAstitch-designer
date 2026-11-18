@@ -5,13 +5,14 @@ import { Sparkles, Trash2 } from "lucide-react";
 import { StitchAngle } from "../icons/stitch";
 import { autoGuides, guidesOf, selectedSatin, setGuides } from "../lib/satinGuides";
 import { useStore } from "../store";
+import { t } from "../nova/i18n/filum";
 
 export function GuideActions({ compact = false }: { compact?: boolean }) {
   // re-render with the document
   useStore((s) => s.doc);
   const tool = useStore((s) => s.tool);
   const o = selectedSatin();
-  if (!o) return <span className="stat">{compact ? "Choose a satin column" : ""}</span>;
+  if (!o) return <span className="stat">{compact ? t("filum.pannelli.choose_a_satin_column") : ""}</span>;
   const n = guidesOf(o).length;
   const auto = () => {
     const g = autoGuides(o);

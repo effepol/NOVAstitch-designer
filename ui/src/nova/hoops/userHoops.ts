@@ -7,6 +7,7 @@
 import type { HoopShape } from "../../types";
 import type { PrefsStore } from "../core/prefs";
 import { emit } from "../core/events";
+import { tidyStringify } from "../format/numbers";
 
 export interface UserHoop {
   id: string;
@@ -70,7 +71,7 @@ export async function openUserHoops(store: PrefsStore): Promise<UserHoops> {
 
   const save = async (next: UserHoop[]) => {
     const tmp = `${USER_HOOPS_FILE}.tmp`;
-    await store.write(tmp, `${JSON.stringify({ schemaVersion: USER_HOOPS_SCHEMA, hoops: next }, null, 2)}\n`);
+    await store.write(tmp, `${tidyStringify({ schemaVersion: USER_HOOPS_SCHEMA, hoops: next }, 2)}\n`);
     try {
       await store.rename(tmp, USER_HOOPS_FILE);
     } catch (e) {

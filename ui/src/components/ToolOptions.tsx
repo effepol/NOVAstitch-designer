@@ -13,6 +13,7 @@ import { is2D, selectedGradient } from "../lib/gradient";
 import { GradientBarCompact, KindPicker, RowStylePicker } from "./GradientPanel";
 import { Num } from "./ui";
 import { GuideActions } from "./SatinGuides";
+import { t, tn } from "../nova/i18n/filum";
 
 type DrawTool = "pen" | "freehand" | "satin";
 
@@ -36,33 +37,33 @@ export function ToolOptionsBar({ tool }: { tool: DrawTool }) {
       <div className="contextbar">
         <span className="obj-name">
           <PenTool size={14} />
-          <span>Pen</span>
+          <span>{t("filum.barre.pen")}</span>
         </span>
         <Seg
-          label="Stitch"
+          label={t("filum.barre.stitch")}
           value={opts.pen.stitch}
           options={[
-            ["running", "Run", "Single running stitch"],
-            ["triple", "Triple", "Triple (bean) stitch: bold outlines"],
+            ["running", t("filum.barre.run"), t("filum.barre.single_running_stitch")],
+            ["triple", t("filum.barre.triple"), t("filum.barre.triple_bean_stitch_bold_outlines")],
           ]}
           onChange={(v) => set("pen", { stitch: v })}
         />
-        <label className="ctx-field" title="Stitch length">
+        <label className="ctx-field" title={t("filum.barre.stitch_length")}>
           <StitchLength size={13} />
-          <span className="sr-only">Stitch length</span>
+          <span className="sr-only">{t("filum.barre.stitch_length")}</span>
           <Num value={opts.pen.length} unit="mm" step={0.1} min={0.5} max={8} onChange={(v) => set("pen", { length: v })} />
         </label>
-        <span className="ctx-label">Closed shapes</span>
+        <span className="ctx-label">{t("filum.barre.closed_shapes")}</span>
         <Seg
-          label="Closed shapes"
+          label={t("filum.barre.closed_shapes")}
           value={opts.pen.closed}
           options={[
-            ["run", "Outline", "A closed path stays a running-stitch outline"],
-            ["fill", "Fill", "A closed path becomes a filled area"],
+            ["run", t("filum.barre.outline"), t("filum.barre.a_closed_path_stays_a")],
+            ["fill", t("filum.barre.fill"), t("filum.barre.a_closed_path_becomes_a")],
           ]}
           onChange={(v) => set("pen", { closed: v })}
         />
-        <span className="ctx-help">Drag for curves · Alt breaks handles · Space moves the point · points snap to existing points (Ctrl: off) · ending on another path's end joins them · Alt-click a point to delete</span>
+        <span className="ctx-help">{t("filum.barre.drag_for_curves_alt_breaks")}</span>
       </div>
     );
   if (tool === "freehand")
@@ -70,27 +71,27 @@ export function ToolOptionsBar({ tool }: { tool: DrawTool }) {
       <div className="contextbar">
         <span className="obj-name">
           <PenLine size={14} />
-          <span>Freehand</span>
+          <span>{t("filum.barre.freehand")}</span>
         </span>
         <Seg
-          label="Output"
+          label={t("filum.barre.output")}
           value={opts.freehand.output}
           options={[
-            ["running", "Run"],
-            ["triple", "Triple"],
-            ["satin", "Satin", "A satin column along the stroke"],
+            ["running", t("filum.barre.run")],
+            ["triple", t("filum.barre.triple")],
+            ["satin", "Satin", t("filum.barre.a_satin_column_along_the")],
           ]}
           onChange={(v) => set("freehand", { output: v })}
         />
         {opts.freehand.output === "satin" && (
-          <label className="ctx-field" title="Column width">
+          <label className="ctx-field" title={t("filum.barre.column_width")}>
             <MoveHorizontal size={13} />
-            <span className="sr-only">Column width</span>
+            <span className="sr-only">{t("filum.barre.column_width")}</span>
             <Num value={opts.freehand.width} unit="mm" step={0.1} min={0.5} max={12} onChange={(v) => set("freehand", { width: v })} />
           </label>
         )}
-        <label className="ctx-field ctx-slider" title="Stabiliser: the line trails the pointer and is fitted with smooth curves">
-          Smoothing
+        <label className="ctx-field ctx-slider" title={t("filum.barre.stabiliser_the_line_trails_the")}>
+          {t("filum.barre.smoothing")}
           <input
             type="range"
             min={0}
@@ -101,40 +102,40 @@ export function ToolOptionsBar({ tool }: { tool: DrawTool }) {
           />
           <span className="ctx-val">{Math.round(opts.freehand.smoothing * 100)}%</span>
         </label>
-        <label className="ctx-field" title="Curve fitting: turns sharper than this stay corners">
-          Corners
+        <label className="ctx-field" title={t("filum.barre.curve_fitting_turns_sharper_than")}>
+          {t("filum.barre.corners")}
           <Num value={opts.freehand.corners ?? 65} unit="°" step={5} min={10} max={170} digits={0} onChange={(v) => set("freehand", { corners: v })} />
         </label>
-        <label className="ctx-field" title="Curve fitting: straight runs of the stroke become straight lines">
+        <label className="ctx-field" title={t("filum.barre.curve_fitting_straight_runs_of")}>
           <input type="checkbox" checked={opts.freehand.lines ?? true} onChange={(e) => set("freehand", { lines: e.target.checked })} />
-          Lines
+          {t("filum.barre.lines")}
         </label>
-        <span className="ctx-label">Loops</span>
+        <span className="ctx-label">{t("filum.barre.loops")}</span>
         <Seg
-          label="Closed loops"
+          label={t("filum.barre.closed_loops")}
           value={opts.freehand.closed}
           options={[
-            ["run", "Outline"],
-            ["fill", "Fill", "A stroke that ends at its start becomes a filled area"],
+            ["run", t("filum.barre.outline")],
+            ["fill", t("filum.barre.fill"), t("filum.barre.a_stroke_that_ends_at")],
           ]}
           onChange={(v) => set("freehand", { closed: v })}
         />
-        <span className="ctx-help">The result is a clean Bézier path — edit it with the node tool (A)</span>
+        <span className="ctx-help">{t("filum.barre.the_result_is_a_clean")}</span>
       </div>
     );
   return (
     <div className="contextbar">
       <span className="obj-name">
         <StitchSatin size={14} />
-        <span>Satin column</span>
+        <span>{t("filum.barre.satin_column")}</span>
       </span>
-      <label className="ctx-field" title="Width of the next point (scroll or [ ])">
+      <label className="ctx-field" title={t("filum.barre.width_of_the_next_point")}>
         <MoveHorizontal size={13} />
-        <span className="sr-only">Width of the next point (scroll or [ ])</span>
+        <span className="sr-only">{t("filum.barre.width_of_the_next_point")}</span>
         <Num value={opts.satin.width} unit="mm" step={0.1} min={0.3} max={15} onChange={(v) => set("satin", { width: v })} />
       </label>
       <span className="ctx-help">
-        Drag for curves · scroll over a point to change its width · click a segment to add a point · Alt-click to delete · click the first point to close
+        {t("filum.barre.drag_for_curves_scroll_over")}
       </span>
     </div>
   );
@@ -151,12 +152,12 @@ export function GradientToolBar() {
   const gmode = useStore((s) => s.toolOptions.gradient.mode) ?? "colour";
   const ramped = selectedRamp();
   const modeSeg = (
-    <div className="seg" role="group" aria-label="Gradient type">
+    <div className="seg" role="group" aria-label={t("filum.barre.gradient_type")}>
       {(
         [
-          ["colour", "Colour", "Multi-colour gradients with dithering (linear, radial, mesh, points)"],
-          ["density", "Density", "Gradient fill: one colour, dense rows opening up along the drag"],
-          ["blend", "Blend", "Colour blending: this colour fades out while a second fades in"],
+          ["colour", t("filum.barre.colour"), t("filum.barre.multi_colour_gradients_with_dithering")],
+          ["density", t("filum.barre.density"), t("filum.barre.gradient_fill_one_colour_dense")],
+          ["blend", t("filum.barre.blend"), t("filum.barre.colour_blending_this_colour_fades")],
         ] as const
       ).map(([id, label, title]) => (
         <button key={id} title={title} className={gmode === id ? "on" : ""} onClick={() => setOpts("gradient", { mode: id })}>
@@ -176,7 +177,7 @@ export function GradientToolBar() {
     <div className="contextbar">
       <span className="obj-name">
         <GradientTool size={14} />
-        <span>Gradient</span>
+        <span>{t("filum.barre.gradient")}</span>
       </span>
       {modeSeg}
       {sg ? (
@@ -186,14 +187,14 @@ export function GradientToolBar() {
         </>
       ) : (
         <>
-          <span className="ctx-label">New</span>
+          <span className="ctx-label">{t("filum.barre.new")}</span>
           <KindPicker value={mode} compact onChange={(k) => setOpts("gradient", { kind: k })} />
           <span className="ctx-help">
             {is2D(mode)
               ? mode === "mesh"
-                ? "Click a closed shape: a gradient mesh with a new colour node where you click"
-                : "Click a closed shape: freeform colour points, the new colour where you click"
-              : "Select a closed shape, then drag across it to set the direction (Shift: 45° steps)"}
+                ? t("filum.barre.click_a_closed_shape_a")
+                : t("filum.barre.click_a_closed_shape_freeform")
+              : t("filum.barre.select_a_closed_shape_then")}
           </span>
         </>
       )}
@@ -210,14 +211,14 @@ export function ShapeToolBar() {
     <div className="contextbar">
       <span className="obj-name">
         <Square size={14} />
-        <span>Shape</span>
+        <span>{t("filum.barre.shape")}</span>
       </span>
       <div className="seg">
         {(
           [
-            ["rect", "Rectangle", <Square key="r" size={14} />],
-            ["polygon", "Polygon", <Hexagon key="p" size={14} />],
-            ["star", "Star", <Star key="s" size={14} />],
+            ["rect", t("filum.barre.rectangle"), <Square key="r" size={14} />],
+            ["polygon", t("filum.barre.polygon"), <Hexagon key="p" size={14} />],
+            ["star", t("filum.barre.star"), <Star key="s" size={14} />],
           ] as const
         ).map(([k, label, icon]) => (
           <button key={k} title={label} className={o.kind === k ? "on" : ""} onClick={() => up({ kind: k })}>
@@ -226,22 +227,22 @@ export function ShapeToolBar() {
         ))}
       </div>
       {o.kind !== "rect" && (
-        <label className="ctx-field" title={o.kind === "star" ? "Points" : "Sides"}>
-          {o.kind === "star" ? "points" : "sides"}
+        <label className="ctx-field" title={o.kind === "star" ? t("filum.barre.points") : t("filum.barre.sides")}>
+          {o.kind === "star" ? t("filum.barre.points_2") : t("filum.barre.sides_2")}
           <Num value={o.sides} min={3} max={40} step={1} digits={0} onChange={(v) => up({ sides: Math.round(v) })} />
         </label>
       )}
       {o.kind === "star" && (
-        <label className="ctx-field" title="Inner radius (share of the outer radius)">
-          inner
+        <label className="ctx-field" title={t("filum.barre.inner_radius_share_of_the")}>
+          {t("filum.barre.inner")}
           <Num value={Math.round(o.inner * 100)} min={5} max={95} step={5} digits={0} unit="%" onChange={(v) => up({ inner: v / 100 })} />
         </label>
       )}
-      <label className="ctx-field" title="Corner radius (0 = sharp)">
-        corners
+      <label className="ctx-field" title={t("filum.barre.corner_radius_0_sharp")}>
+        {t("filum.barre.corners_2")}
         <Num value={o.radius} min={0} max={50} step={0.5} unit="mm" onChange={(v) => up({ radius: Math.max(0, v) })} />
       </label>
-      <span className="ctx-help">Drag to draw · Shift: square / regular · round corners later with the node tool's corner widgets or Path ▸ Round corners</span>
+      <span className="ctx-help">{t("filum.barre.drag_to_draw_shift_square")}</span>
     </div>
   );
 }
@@ -299,50 +300,50 @@ export function NodeToolBar() {
     <div className="contextbar">
       <span className="obj-name">
         <Spline size={14} />
-        <span>{n ? `${n} point${n > 1 ? "s" : ""}` : selection.length ? "Points" : "Edit nodes"}</span>
+        <span>{n ? tn("filum.barre.n_points", n) : selection.length ? t("filum.barre.points") : t("filum.barre.edit_nodes")}</span>
       </span>
       <div className="vsep" />
-      <B title="Corner: no handles (Shift+C)" onClick={() => nodeType("corner")}>
+      <B title={t("filum.barre.corner_no_handles_shift_c")} onClick={() => nodeType("corner")}>
         <NodeIcon kind="corner" />
       </B>
-      <B title="Smooth: handles in line (Shift+S)" onClick={() => nodeType("smooth")}>
+      <B title={t("filum.barre.smooth_handles_in_line_shift")} onClick={() => nodeType("smooth")}>
         <NodeIcon kind="smooth" />
       </B>
-      <B title="Symmetric: handles in line and of equal length (Shift+Y)" onClick={() => nodeType("symmetric")}>
+      <B title={t("filum.barre.symmetric_handles_in_line_and")} onClick={() => nodeType("symmetric")}>
         <NodeIcon kind="symmetric" />
       </B>
       <div className="vsep" />
-      <B title="Straight segments between the selected points (Shift+L)" onClick={() => segmentType("line")}>
+      <B title={t("filum.barre.straight_segments_between_the_selected")} onClick={() => segmentType("line")}>
         <NodeIcon kind="line" />
       </B>
-      <B title="Curved segments between the selected points (Shift+U)" onClick={() => segmentType("curve")}>
+      <B title={t("filum.barre.curved_segments_between_the_selected")} onClick={() => segmentType("curve")}>
         <NodeIcon kind="curve" />
       </B>
       <div className="vsep" />
-      <B title="Break the path at the selected points (Shift+B)" onClick={breakNodes}>
+      <B title={t("filum.barre.break_the_path_at_the")} onClick={breakNodes}>
         <Scissors size={15} />
       </B>
-      <B title="Join two selected end points (Shift+J)" onClick={joinSelected} disabled={n !== 2}>
+      <B title={t("filum.barre.join_two_selected_end_points")} onClick={joinSelected} disabled={n !== 2}>
         <Link2 size={15} />
       </B>
-      <B title="Close the path / open it at the selected point" onClick={toggleClosedSelected}>
+      <B title={t("filum.barre.close_the_path_open_it")} onClick={toggleClosedSelected}>
         <CircleDashed size={15} />
       </B>
       <div className="vsep" />
-      <B title="Align the selected points horizontally" onClick={() => alignSelected("h")} disabled={n < 2}>
+      <B title={t("filum.barre.align_the_selected_points_horizontally")} onClick={() => alignSelected("h")} disabled={n < 2}>
         <AlignVerticalJustifyCenter size={15} />
       </B>
-      <B title="Align the selected points vertically" onClick={() => alignSelected("v")} disabled={n < 2}>
+      <B title={t("filum.barre.align_the_selected_points_vertically")} onClick={() => alignSelected("v")} disabled={n < 2}>
         <AlignHorizontalJustifyCenter size={15} />
       </B>
       <div className="vsep" />
-      <B title="Delete, keeping the shape (Del) · Shift+Del: plain delete" onClick={() => deleteNodes(true)}>
+      <B title={t("filum.barre.delete_keeping_the_shape_del")} onClick={() => deleteNodes(true)}>
         <Trash2 size={15} />
       </B>
       <span className="ctx-help">
         {n
-          ? "Drag to move · arrows nudge 0.1 mm (Shift 1 mm) · Shift-drag: straight · points snap to other points (Ctrl: off)"
-          : "Click or drag a box to select points · Shift adds · Ctrl+A all · click a path to add a point · Alt-click deletes"}
+          ? t("filum.barre.drag_to_move_arrows_nudge")
+          : t("filum.barre.click_or_drag_a_box")}
       </span>
     </div>
   );
@@ -369,12 +370,12 @@ function RampToolBar({ modeSeg }: { modeSeg: React.ReactNode }) {
     <div className="contextbar">
       <span className="obj-name">
         <GradientTool size={14} />
-        <span>Gradient</span>
+        <span>{t("filum.barre.gradient")}</span>
       </span>
       {modeSeg}
       <div className="vsep" />
-      <label className="ctx-field" title="How the density changes along the drag">
-        Profile
+      <label className="ctx-field" title={t("filum.barre.how_the_density_changes_along")}>
+        {t("filum.barre.profile")}
         <select className="select" value={profile} onChange={(e) => change({ profile: e.target.value as typeof profile })}>
           {RAMP_PROFILES.map((p) => (
             <option key={p.id} value={p.id} title={p.hint}>
@@ -383,26 +384,26 @@ function RampToolBar({ modeSeg }: { modeSeg: React.ReactNode }) {
           ))}
         </select>
       </label>
-      <label className="ctx-field" title="Row spacing where the fill is densest">
-        Dense
+      <label className="ctx-field" title={t("filum.barre.row_spacing_where_the_fill")}>
+        {t("filum.barre.dense")}
         <Num value={dense} unit="mm" step={0.05} min={0.1} max={2} onChange={(v) => change({ dense: v })} />
       </label>
-      <label className="ctx-field" title="Row spacing where the fill is most open">
-        Open
+      <label className="ctx-field" title={t("filum.barre.row_spacing_where_the_fill_2")}>
+        {t("filum.barre.open")}
         <Num value={sparse} unit="mm" step={0.1} min={0.3} max={8} onChange={(v) => change({ sparse: v })} />
       </label>
       {o && <RowStylePicker objects={members} />}
       {o && (
-        <button className="btn sm ghost" title="Back to a plain fill (a blend keeps its first colour)" onClick={() => removeRamp(o.id)}>
-          <Trash2 size={13} /> Remove
+        <button className="btn sm ghost" title={t("filum.barre.back_to_a_plain_fill")} onClick={() => removeRamp(o.id)}>
+          <Trash2 size={13} />{t("filum.barre.remove")}
         </button>
       )}
       <span className="ctx-help">
         {o
-          ? `${members.length > 1 ? "Colour blend" : "Density gradient"} · drag the dot (dense) or the ring (open) · drag across the shape again for a new direction`
+          ? `${members.length > 1 ? t("filum.barre.colour_blend") : t("filum.barre.density_gradient")}${t("filum.barre.gradient_drag_hint")}`
           : opts.mode === "blend"
-            ? "Drag across a fill: its colour fades out, the next colour (the active one) fades in"
-            : "Drag across a fill: dense where you start, open where you end · Shift: 45° steps"}
+            ? t("filum.barre.drag_across_a_fill_its")
+            : t("filum.barre.drag_across_a_fill_dense")}
       </span>
     </div>
   );
@@ -431,10 +432,10 @@ export function GuidesToolBar() {
   return (
     <div className="contextbar">
       <span className="ctx-title">
-        <StitchAngle size={13} /> Stitch direction
+        <StitchAngle size={13} />{t("filum.barre.stitch_direction")}
       </span>
       <GuideActions compact />
-      <span className="ctx-help">Drag across a satin to guide its stitch angle · drag an end to turn it · Alt-click to delete · Shift: 15° steps</span>
+      <span className="ctx-help">{t("filum.barre.drag_across_a_satin_to")}</span>
     </div>
   );
 }
@@ -447,27 +448,27 @@ export function BuilderToolBar() {
   const set = useStore((s) => s.setToolOptions);
   const n = builderTargets().length;
   const ops: [Parameters<typeof combineShapes>[0], string][] = [
-    ["unite", "Unite: one shape of all"],
-    ["minusFront", "Minus front: the bottom shape minus the others"],
-    ["intersect", "Intersect: only where all overlap"],
-    ["exclude", "Exclude: where an odd number overlap"],
+    ["unite", t("filum.barre.unite_one_shape_of_all")],
+    ["minusFront", t("filum.barre.minus_front_the_bottom_shape")],
+    ["intersect", t("filum.barre.intersect_only_where_all_overlap")],
+    ["exclude", t("filum.barre.exclude_where_an_odd_number")],
   ];
   return (
     <div className="contextbar">
       <span className="obj-name">
         <Combine size={14} />
-        <span>{n ? `Shape builder · ${n} shape${n > 1 ? "s" : ""}` : "Shape builder"}</span>
+        <span>{n ? tn("filum.barre.shape_builder_n", n) : t("filum.barre.shape_builder")}</span>
       </span>
-      <div className="seg" role="group" aria-label="Drag across regions to">
-        <button className={mode === "merge" ? "on" : ""} title="Drag across regions to merge them into one shape" onClick={() => set("builder", { mode: "merge" })}>
-          Merge
+      <div className="seg" role="group" aria-label={t("filum.barre.drag_across_regions_to")}>
+        <button className={mode === "merge" ? "on" : ""} title={t("filum.barre.drag_across_regions_to_merge")} onClick={() => set("builder", { mode: "merge" })}>
+          {t("filum.barre.merge")}
         </button>
-        <button className={mode === "delete" ? "on" : ""} title="Drag across regions to delete them (or hold Alt)" onClick={() => set("builder", { mode: "delete" })}>
-          Delete
+        <button className={mode === "delete" ? "on" : ""} title={t("filum.barre.drag_across_regions_to_delete")} onClick={() => set("builder", { mode: "delete" })}>
+          {t("filum.barre.delete")}
         </button>
       </div>
       <div className="vsep" />
-      <button className="icon-btn" title="Divide: every overlap region becomes its own shape" disabled={n < 1} onClick={() => void divideSelection()}>
+      <button className="icon-btn" title={t("filum.barre.divide_every_overlap_region_becomes")} disabled={n < 1} onClick={() => void divideSelection()}>
         <BoolIcon op="divide" />
       </button>
       {ops.map(([op, title]) => (
@@ -477,8 +478,8 @@ export function BuilderToolBar() {
       ))}
       <span className="ctx-help">
         {n
-          ? "Drag across regions to merge them · Alt-drag deletes · click one region to make it its own shape · Shift-click adds shapes"
-          : "Click a fill, Shift-click the fills overlapping it — the regions appear"}
+          ? t("filum.barre.drag_across_regions_to_merge_2")
+          : t("filum.barre.click_a_fill_shift_click")}
       </span>
     </div>
   );

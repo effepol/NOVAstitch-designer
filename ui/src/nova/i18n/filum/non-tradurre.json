@@ -35,7 +35,14 @@
     "Logo": "si dice così anche in italiano",
     "Piqué / Polo": "nomi del tessuto, uguali in italiano",
     "Fine": "aggettivo (dettaglio fine), uguale in italiano",
-    "Satin": "tipo di punto, si dice così anche in italiano (glossario)"
+    "Satin": "tipo di punto, si dice così anche in italiano (glossario)",
+    "Δ": "simbolo della differenza (spostamento)",
+    "Redwork": "tecnica di ricamo, si dice così anche in italiano (glossario)",
+    "Backspace": "nome del tasto",
+    "Home": "nome del tasto",
+    "End": "nome del tasto",
+    "Video": "uguale in italiano",
+    "Zoom": "uguale in italiano"
   },
   "chiavi_con_filum": {
     "filum.menu.about_filum": "la voce apre la finestra Informazioni, che parla di Filum e non usa {app} (decisione dell'Architetto, 13/11)"

@@ -7,7 +7,8 @@ import { fmtTime } from "./ui";
 import { STITCH_COLORS, colorSequence, threadUsage } from "../lib/threads";
 import { threadTitle } from "./ThreadPicker";
 import { toolbarButtons, useRegistry } from "../nova/core/registry";
-import { t, useLanguage } from "../nova/core/i18n";
+import { useLanguage } from "../nova/core/i18n";
+import { t } from "../nova/i18n/filum";
 
 export function BottomBar() {
   // NOVAstitch: registered buttons and their texts follow registrations and the language
@@ -43,18 +44,18 @@ export function BottomBar() {
   return (
     <div className="bottombar">
       <div className="swatches">
-        {sewOrder.map(({ t, n }, i) => {
-          const u = usage.get(t.id);
+        {sewOrder.map(({ t: th, n }, i) => {
+          const u = usage.get(th.id);
           return (
             <button
-              key={t.id}
-              title={`${i + 1}. ${threadTitle(t)}${u && u.stitches ? `\n${u.stitches.toLocaleString()} stitches · ${u.metres.toFixed(1)} m${n > 1 ? ` · sewn in ${n} blocks` : ""}` : ""}\nClick: select its objects${colorFocus ? " and show only this colour" : ""} · double-click: thread colours`}
-              className={`${activeThread === t.id ? "active" : ""} ${colorFocus && activeThread !== t.id ? "dim" : ""}`}
-              style={{ background: t.color }}
+              key={th.id}
+              title={`${i + 1}. ${threadTitle(th)}${u && u.stitches ? `${t("filum.barre.thread_stats", { stitches: u.stitches.toLocaleString(), metres: u.metres.toFixed(1) })}${n > 1 ? t("filum.barre.sewn_in_n_blocks", { n }) : ""}` : ""}${t("filum.barre.thread_click")}${colorFocus ? t("filum.barre.and_show_only_this_colour") : ""}${t("filum.barre.thread_double_click")}`}
+              className={`${activeThread === th.id ? "active" : ""} ${colorFocus && activeThread !== th.id ? "dim" : ""}`}
+              style={{ background: th.color }}
               onClick={() => {
                 const s = useStore.getState();
-                s.select(s.doc.objects.filter((o) => o.thread === t.id).map((o) => o.id));
-                s.set({ activeThread: t.id });
+                s.select(s.doc.objects.filter((o) => o.thread === th.id).map((o) => o.id));
+                s.set({ activeThread: th.id });
               }}
               onDoubleClick={() => useStore.getState().setDialog("threads")}
             >
@@ -67,28 +68,28 @@ export function BottomBar() {
         <button
           className={`icon-btn ${colorFocus ? "on" : ""}`}
           style={{ border: 0, width: 24 }}
-          title="Show only the active colour (dim the others)"
+          title={t("filum.barre.show_only_the_active_colour")}
           disabled={!activeThread}
           onClick={() => set({ colorFocus: !colorFocus })}
         >
           <Focus size={15} />
         </button>
-        <select className="select stitch-colors" value={stitchColors} title="Colour the stitches by" onChange={(e) => set({ stitchColors: e.target.value as typeof stitchColors })}>
+        <select className="select stitch-colors" value={stitchColors} title={t("filum.barre.colour_the_stitches_by")} onChange={(e) => set({ stitchColors: e.target.value as typeof stitchColors })}>
           {STITCH_COLORS.map((c) => (
             <option key={c.id} value={c.id} title={c.title}>
               {c.label}
             </option>
           ))}
         </select>
-        <button className="icon-btn" style={{ border: 0, width: 24 }} title="Thread colours…" onClick={() => useStore.getState().setDialog("threads")}>
+        <button className="icon-btn" style={{ border: 0, width: 24 }} title={t("filum.barre.thread_colours_2")} onClick={() => useStore.getState().setDialog("threads")}>
           <Spool size={15} />
         </button>
       </div>
       <div className="vsep" />
-      <button className="btn sm" title="Fit design (Shift+0)" onClick={() => fit("design")}>
-        Fit
+      <button className="btn sm" title={t("filum.barre.fit_design_shift_0")} onClick={() => fit("design")}>
+        {t("filum.barre.fit")}
       </button>
-      <button className="icon-btn" title="Fit hoop (0)" onClick={() => fit("hoop")}>
+      <button className="icon-btn" title={t("filum.barre.fit_hoop_0")} onClick={() => fit("hoop")}>
         <Hoop size={15} />
       </button>
       {zooms.map((z) => (
@@ -96,7 +97,7 @@ export function BottomBar() {
           key={z}
           className="btn sm ghost bb-zoom"
           style={Math.abs(view.scale / actual - z) < 0.02 ? { color: "var(--accent-text)", fontWeight: "var(--fw-semibold)" } : undefined}
-          title={z === 1 ? "Zoom 1× (actual size)" : `Zoom ${z}×`}
+          title={z === 1 ? t("filum.barre.zoom_1_actual_size") : t("filum.barre.zoom_z", { z })}
           onClick={() => fit(z)}
         >
           {z}×
@@ -110,20 +111,20 @@ export function BottomBar() {
       ))}
       <div className="vsep" />
       <span className="stat">
-        {(stats?.stitches ?? 0).toLocaleString()} stitches
-        {stats && <span className="bb-more">{` · ${stats.width.toFixed(0)}×${stats.height.toFixed(0)} mm · ${fmtTime(stats.seconds)}`}</span>}
+        {(stats?.stitches ?? 0).toLocaleString()}{t("filum.barre.stitches")}
+        {stats && <span className="bb-more">{t("filum.barre.v1_v2_mm_v3", { v1: stats.width.toFixed(0), v2: stats.height.toFixed(0), v3: fmtTime(stats.seconds) })}</span>}
       </span>
       <div className="spacer" />
       <button
         className={`btn sm ${playerOpen ? "primary" : ""}`}
         disabled={!total}
         onClick={() => (playerOpen ? closePlayer() : play())}
-        title={playerOpen ? "Close the stitch-out player (Esc)" : "Animate the stitch-out, with a timeline of the colour blocks"}
+        title={playerOpen ? t("filum.barre.close_the_stitch_out_player") : t("filum.barre.animate_the_stitch_out_with")}
       >
-        <StitchOut size={14} /> <span className="bb-label">Animate</span>
+        <StitchOut size={14} /> <span className="bb-label">{t("filum.barre.animate")}</span>
       </button>
-      <button className="btn sm" onClick={recordVideo} disabled={!total} title="Record a stitch-out video">
-        <Video size={14} /> <span className="bb-label">Video</span>
+      <button className="btn sm" onClick={recordVideo} disabled={!total} title={t("filum.barre.record_a_stitch_out_video")}>
+        <Video size={14} /> <span className="bb-label">{t("filum.barre.video")}</span>
       </button>
     </div>
   );

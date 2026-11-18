@@ -101,6 +101,7 @@ import { freshCopies } from "../lib/copies";
 import { transformable } from "../lib/textSettle";
 import { loadFont } from "../lib/fonts";
 import { onCanvasRedraw } from "../nova/core/registry";
+import { t, tn } from "../nova/i18n/filum";
 
 /**
  * The points a node-tool box picks on the selected paths: those inside it,
@@ -832,7 +833,7 @@ export function Canvas() {
       const keep = ids.filter((id) => !upd.has(id) || upd.get(id)!.length);
       s.select(merged ? [...keep, merged.id] : keep);
     } catch (err) {
-      s.toast(`Shape builder: ${(err as Error).message}`, "error");
+      s.toast(t("filum.barre.shape_builder_message", { message: (err as Error).message }), "error");
     }
   };
 
@@ -935,7 +936,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
     if (!joined) return;
     s.setDoc(doc, { history: false });
     s.select([id]);
-    s.toast(`Joined to ${doc.objects.find((x) => x.id === id)?.name ?? "the path"}`, "success");
+    s.toast(t("filum.barre.joined_to", { name: doc.objects.find((x) => x.id === id)?.name ?? t("filum.barre.the_path") }), "success");
   };
 
   const finishPen = (closed: boolean) => {
@@ -1038,7 +1039,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
     const hit = nodeHit(g, p, tol);
     if (hit != null) {
       if (e.altKey) {
-        if (!removeNodes(sg.group, [hit])) s.toast(g.kind === "mesh" ? "The mesh border stays — Alt-click an inner node to remove its lines" : "A gradient keeps at least one colour point");
+        if (!removeNodes(sg.group, [hit])) s.toast(g.kind === "mesh" ? t("filum.barre.the_mesh_border_stays_alt") : t("filum.barre.a_gradient_keeps_at_least"));
         draw();
         return true;
       }
@@ -1130,7 +1131,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         const w = cont.o.stitch.type === "satin" ? cont.o.stitch.width : d.width;
         d.widths = d.nodes.map(() => w);
         d.replaces = cont.o.id;
-        s.toast("Continuing the path — Enter to finish", "info");
+        s.toast(t("filum.barre.continuing_the_path_enter_to"), "info");
         draw();
         return;
       }
@@ -1234,7 +1235,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
     useStore.getState().setToolOptions("satin", { width: v });
     if (penRef.current) penRef.current.width = v;
     const at2 = at ?? penRef.current?.cursor ?? penRef.current?.nodes.at(-1)?.p;
-    if (at2) iRef.current.tooltip = { p: at2, text: `Width ${v.toFixed(2)} mm · scroll or [ ] to change` };
+    if (at2) iRef.current.tooltip = { p: at2, text: t("filum.barre.width_v1_mm_scroll_or", { v1: v.toFixed(2) }) };
     draw();
   };
 
@@ -1354,7 +1355,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
           return;
         }
         s.select(h ? unitIds(s.doc, h) : []);
-        if (h) s.toast("Direction guides are for satin columns");
+        if (h) s.toast(t("filum.barre.direction_guides_are_for_satin"));
         return;
       }
       case "select": {
@@ -1451,9 +1452,9 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
             // locked objects stay put; an Alt-drag copy takes them along
             // a lettering with locked letters stays in place with them
             orig: (() => {
-              const t = transformable(s.doc.objects.filter((o) => ids.includes(o.id)), s.doc.objects);
-              if (t.held) s.toast("A lettering with locked letters stays in place: unlock it in Layers to move it");
-              return t.objects;
+              const tf = transformable(s.doc.objects.filter((o) => ids.includes(o.id)), s.doc.objects);
+              if (tf.held) s.toast(t("filum.barre.a_lettering_with_locked_letters"));
+              return tf.objects;
             })(),
             all: s.doc.objects.filter((o) => ids.includes(o.id)),
             moved: false,
@@ -1484,7 +1485,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
                     // Alt-click: delete the point (both rails of a satin)
                     const next = deleteFromObject(o, si, ni);
                     if (next) s.commit((doc) => syncGradientGeometry({ ...doc, objects: doc.objects.map((x) => (x.id === o.id ? next : x)) }, next));
-                    else s.toast("A path needs at least two points");
+                    else s.toast(t("filum.barre.a_path_needs_at_least"));
                     s.set({ nodeSel: [] });
                     return;
                   }
@@ -1518,7 +1519,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         if (cw) {
           if (e.altKey) {
             cornerStyle = cornerStyle === "round" ? "inverted" : cornerStyle === "inverted" ? "chamfer" : "round";
-            s.toast(`Corner style: ${cornerStyle === "round" ? "round" : cornerStyle === "inverted" ? "inverted round" : "chamfer"}`);
+            s.toast(t("filum.barre.corner_style", { style: cornerStyle === "round" ? t("filum.barre.round") : cornerStyle === "inverted" ? t("filum.barre.inverted_round") : t("filum.barre.chamfer") }));
             return;
           }
           s.checkpoint();
@@ -1584,7 +1585,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
           const target = h && h.paths.some((sp) => sp.closed) && !(h.stitch.type === "fill" && h.stitch.gradient) ? h : null;
           if (!target) {
             s.select(h ? unitIds(s.doc, h) : []);
-            if (!h) s.toast(mode === "mesh" ? "Click a closed shape to add a gradient mesh" : "Click a closed shape to add colour points");
+            if (!h) s.toast(mode === "mesh" ? t("filum.barre.click_a_closed_shape_to") : t("filum.barre.click_a_closed_shape_to_2"));
             draw();
             return;
           }
@@ -1646,7 +1647,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
             st.setTool("select");
             st.set({ editingText: g });
           })
-          .catch((err) => s.toast(`Lettering: ${(err as Error).message}`, "error"));
+          .catch((err) => s.toast(t("filum.barre.lettering_message", { message: (err as Error).message }), "error"));
         return;
       }
     }
@@ -1661,7 +1662,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
       const r = s.doc.references?.find((x) => x.id === s.refEdit);
       const z = r ? refZone(r, p) : null;
       if (canvasRef.current) canvasRef.current.style.cursor = !z ? "default" : z.mode === "move" ? "move" : z.mode === "rotate" ? ROTATE_CURSOR : z.corner % 2 === 0 ? "nwse-resize" : "nesw-resize";
-      iRef.current.tooltip = z ? null : { p, text: "Click outside or press Enter when done" };
+      iRef.current.tooltip = z ? null : { p, text: t("filum.barre.click_outside_or_press_enter") };
       draw();
       return;
     }
@@ -1704,13 +1705,13 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         const cw = cornerWidgetHit(p, 7 / s.view.scale);
         if (cw) {
           iRef.current.insertAt = null;
-          iRef.current.tooltip = { p, text: `Drag to round this corner (${cornerStyle}) · Shift-drag: all corners · Alt-click: corner style` };
+          iRef.current.tooltip = { p, text: t("filum.barre.drag_to_round_this_corner", { cornerStyle }) };
           draw();
           return;
         }
         const ins = nodeInsertTarget(p, 8 / s.view.scale);
         iRef.current.insertAt = ins?.p ?? null;
-        iRef.current.tooltip = ins ? { p, text: "Drag to bend the curve · click to add a point · Alt-click a point to delete · double-click: smooth ↔ corner" } : null;
+        iRef.current.tooltip = ins ? { p, text: t("filum.barre.drag_to_bend_the_curve") } : null;
         if (canvasRef.current) canvasRef.current.style.cursor = ins ? "copy" : "";
         draw();
         return;
@@ -1732,11 +1733,11 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
           draw();
         }
         if (canvasRef.current) canvasRef.current.style.cursor = f != null ? (e.altKey || s.toolOptions.builder.mode === "delete" ? "not-allowed" : "copy") : "";
-        iRef.current.tooltip = builderRef.current.regions ? null : { p, text: "Select overlapping fills (Shift-click to add), then drag across regions to merge them" };
+        iRef.current.tooltip = builderRef.current.regions ? null : { p, text: t("filum.barre.select_overlapping_fills_shift_click") };
         return;
       }
       if (s.tool === "freehand" && !fhRef.current) {
-        iRef.current.tooltip = { p, text: "Draw · the line trails the pointer for smooth curves · end at the start to close" };
+        iRef.current.tooltip = { p, text: t("filum.barre.draw_the_line_trails_the") };
         draw();
         return;
       }
@@ -1744,7 +1745,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         const hit = pick(p);
         const np = hit && isPathObject(hit) ? nearestOnPaths(hit, p) : null;
         iRef.current.cutPoint = np && np.d < 10 / s.view.scale ? np.p : null;
-        iRef.current.tooltip = { p, text: iRef.current.cutPoint ? "Click to cut here" : "Click a line to split it · drag across a fill to cut it" };
+        iRef.current.tooltip = { p, text: iRef.current.cutPoint ? t("filum.barre.click_to_cut_here") : t("filum.barre.click_a_line_to_split") };
         draw();
         return;
       }
@@ -1795,7 +1796,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         if (snap) dv = [snap[0] - d.anchor[0], snap[1] - d.anchor[1]];
         overlayRef.current.snap = snap;
         s.liveUpdate(() => syncAll(d.orig, moveNodes(d.orig, d.sel, dv)));
-        iRef.current.tooltip = { p, text: `${d.sel.length > 1 ? `${d.sel.length} points · ` : ""}Δ ${dv[0].toFixed(1)}, ${dv[1].toFixed(1)} mm${snap ? " · snapped" : " · Shift: straight · Ctrl: no snapping"}` };
+        iRef.current.tooltip = { p, text: `${d.sel.length > 1 ? t("filum.barre.length_points", { length: d.sel.length }) : ""}Δ ${dv[0].toFixed(1)}, ${dv[1].toFixed(1)} mm${snap ? t("filum.barre.snapped") : t("filum.barre.shift_straight_ctrl_no_snapping")}` };
         draw();
         return;
       }
@@ -1826,7 +1827,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
       case "rampend": {
         d.moved = true;
         updateRamp(d.id, { [d.which]: p }, true);
-        iRef.current.tooltip = { p, text: d.which === "from" ? "Dense end" : "Open end" };
+        iRef.current.tooltip = { p, text: d.which === "from" ? t("filum.barre.dense_end") : t("filum.barre.open_end") };
         draw();
         return;
       }
@@ -1860,7 +1861,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
           if (e.shiftKey) a = Math.round(a / 15) * 15;
           a = ((a % 360) + 540) % 360 - 180;
           patch = { rotation: Math.round(a * 10) / 10 };
-          iRef.current.tooltip = { p, text: `${patch.rotation}° · Shift: 15° steps` };
+          iRef.current.tooltip = { p, text: t("filum.barre.rotation_shift_15_steps", { rotation: String(patch.rotation) }) };
         } else {
           // the opposite corner stays put; Shift: free aspect ratio
           const sx = d.corner === 1 || d.corner === 2 ? 1 : -1;
@@ -1876,7 +1877,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
           }
           const c = toWorld(o, [opp[0] + (sx * w) / 2, opp[1] + (sy * h) / 2]);
           patch = { width: w, height: h, x: c[0] - w / 2, y: c[1] - h / 2 };
-          iRef.current.tooltip = { p, text: `${w.toFixed(1)} × ${h.toFixed(1)} mm · Shift: free aspect` };
+          iRef.current.tooltip = { p, text: t("filum.barre.v1_v2_mm_shift_free", { v1: w.toFixed(1), v2: h.toFixed(1) }) };
         }
         s.liveUpdate((doc) => ({ ...doc, references: (doc.references ?? []).map((x) => (x.id === o.id ? { ...x, ...patch } : x)) }));
         draw();
@@ -1922,7 +1923,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
             iRef.current.guides = snap.guides;
           }
         }
-        iRef.current.tooltip = { p, text: `${dx >= 0 ? "+" : ""}${dx.toFixed(1)}, ${dy >= 0 ? "+" : ""}${dy.toFixed(1)} mm${e.altKey ? " · copy" : ""}` };
+        iRef.current.tooltip = { p, text: `${dx >= 0 ? "+" : ""}${dx.toFixed(1)}, ${dy >= 0 ? "+" : ""}${dy.toFixed(1)} mm${e.altKey ? t("filum.barre.copy") : ""}` };
         const m = translateMat(dx, dy);
         const moved = new Map(d.orig.map((o) => [o.id, transformObject(o, m)]));
         s.liveTransform({ ids: d.orig.map((o) => o.id), m }, (doc) => ({ ...doc, objects: doc.objects.map((o) => moved.get(o.id) ?? o) }));
@@ -1977,7 +1978,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         s.liveTransform({ ids: d.orig.map((o) => o.id), m }, (doc) => ({ ...doc, objects: doc.objects.map((o) => next.get(o.id) ?? o) }));
         iRef.current.tooltip = {
           p,
-          text: `${(b.w * Math.abs(sx)).toFixed(1)} × ${(b.h * Math.abs(sy)).toFixed(1)} mm · ${Math.round(Math.abs(sx) * 100)} % × ${Math.round(Math.abs(sy) * 100)} %`,
+          text: t("filum.barre.v1_v2_mm_v3_v4", { v1: (b.w * Math.abs(sx)).toFixed(1), v2: (b.h * Math.abs(sy)).toFixed(1), v3: Math.round(Math.abs(sx) * 100), v4: Math.round(Math.abs(sy) * 100) }),
         };
         return;
       }
@@ -2009,7 +2010,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         const m = horiz ? skewAbout(k, 0, ax, ay) : skewAbout(0, k, ax, ay);
         const next = new Map(d.orig.map((o) => [o.id, xform(o, m)]));
         s.liveTransform({ ids: d.orig.map((o) => o.id), m }, (doc) => ({ ...doc, objects: doc.objects.map((o) => next.get(o.id) ?? o) }));
-        iRef.current.tooltip = { p, text: `Skew ${deg.toFixed(1)}°` };
+        iRef.current.tooltip = { p, text: t("filum.barre.skew_v1", { v1: deg.toFixed(1) }) };
         return;
       }
       case "pivot": {
@@ -2022,7 +2023,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
           if (near) q = near;
         }
         pivotRef.current = { key: d.key, p: q };
-        iRef.current.tooltip = { p, text: "Pivot for rotating and scaling · Alt-double-click to reset" };
+        iRef.current.tooltip = { p, text: t("filum.barre.pivot_for_rotating_and_scaling") };
         draw();
         return;
       }
@@ -2031,7 +2032,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         if (e.shiftKey) b2 = constrainAngle(d.a, p, 45);
         iRef.current.gradDraft = { a: d.a, b: b2 };
         const len = dist(d.a, b2);
-        iRef.current.tooltip = { p, text: d.target ? `Gradient ${len.toFixed(1)} mm · Shift: 45° steps` : "Select or start on a closed shape" };
+        iRef.current.tooltip = { p, text: d.target ? t("filum.barre.gradient_v1_mm_shift_45", { v1: len.toFixed(1) }) : t("filum.barre.select_or_start_on_a") };
         draw();
         return;
       }
@@ -2068,7 +2069,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         if (!sg || !q) return;
         const spread = Math.max(0.5, dist(q.p, p));
         updateGradient(d.group, { points: sg.params.points!.map((x, i) => (i === d.idx ? { ...x, spread } : x)) }, true);
-        iRef.current.tooltip = { p, text: "Spread " + spread.toFixed(1) + " mm" };
+        iRef.current.tooltip = { p, text: t("filum.barre.spread") + spread.toFixed(1) + " mm" };
         draw();
         return;
       }
@@ -2094,7 +2095,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         });
         const o = { ...d.orig, paths };
         s.liveUpdate((doc) => syncGradientGeometry({ ...doc, objects: doc.objects.map((x) => (x.id === o.id ? o : x)) }, o));
-        iRef.current.tooltip = { p, text: `${d.all ? "All corners" : "Corner"} ${r.toFixed(1)} mm · ${cornerStyle}${d.all ? "" : " · Shift: all corners"} · Alt-click a widget: style` };
+        iRef.current.tooltip = { p, text: `${d.all ? t("filum.barre.all_corners") : t("filum.barre.corner")} ${r.toFixed(1)} mm · ${cornerStyle === "round" ? t("filum.barre.round") : cornerStyle === "inverted" ? t("filum.barre.inverted") : cornerStyle === "chamfer" ? t("filum.barre.chamfer") : cornerStyle}${d.all ? "" : t("filum.barre.shift_all_corners")}${t("filum.barre.alt_click_a_widget_style")}` };
         draw();
         return;
       }
@@ -2298,7 +2299,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
       if (d.group) updateGradient(d.group, { from: draft.a, to: draft.b });
       else if (d.target) {
         makeGradient(d.target, draft.a, draft.b); // says why when it can't
-      } else s.toast("Select a closed shape, then drag across it");
+      } else s.toast(t("filum.barre.select_a_closed_shape_then_2"));
       draw();
       return;
     }
@@ -2335,7 +2336,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
       if (!draft || dist(draft.a, draft.b) * s.view.scale < 6) {
         const h = pick(toMm(e));
         s.select(h ? unitIds(s.doc, h) : []);
-      } else if (!d.target) s.toast("Select a closed shape (or start the drag on one)");
+      } else if (!d.target) s.toast(t("filum.barre.select_a_closed_shape_or"));
       else {
         const err = applyRamp(d.target, draft.a, draft.b, d.mode);
         if (err) s.toast(err, "error");
@@ -2471,9 +2472,9 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
           const { doc, n, left } = cutFills(s.doc, targets, d.a, p);
           if (n) {
             s.setDoc(doc, { keepSelection: false });
-            s.toast(`Cut ${n} fill${n > 1 ? "s" : ""} in two`, "success");
+            s.toast(tn("filum.barre.cut_fills_in_two", n), "success");
           }
-          if (left) s.toast(`${left} gradient${left > 1 ? "s, tartans or blends" : ", tartan or blend"} left whole: a layer is locked or hidden`, "error");
+          if (left) s.toast(tn("filum.barre.gradients_left_whole", left), "error");
         } else {
           const hit = pick(p);
           if (hit && isPathObject(hit)) {
@@ -2482,7 +2483,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
             if (parts) {
               replaceObjects(hit, parts);
               s.select(parts.map((x) => x.id));
-              s.toast(parts.length > 1 ? "Split into two objects" : "Opened the closed path at this point", "success");
+              s.toast(parts.length > 1 ? t("filum.barre.split_into_two_objects") : t("filum.barre.opened_the_closed_path_at"), "success");
             }
           }
         }
@@ -2664,8 +2665,8 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         <div className="drop-choice">
           {(
             [
-              ["reference", <ImagePlus key="i" size={26} />, "Reference picture", "Trace over it with the pen and node tools — never stitched"],
-              ["digitize", <Digitize key="w" size={26} />, "Auto-digitize", "Turn the picture into stitches"],
+              ["reference", <ImagePlus key="i" size={26} />, t("filum.barre.reference_picture"), t("filum.barre.trace_over_it_with_the")],
+              ["digitize", <Digitize key="w" size={26} />, t("filum.barre.auto_digitize"), t("filum.barre.turn_the_picture_into_stitches")],
             ] as const
           ).map(([id, icon, title, hint]) => (
             <div

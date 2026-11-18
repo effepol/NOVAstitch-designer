@@ -89,11 +89,14 @@ function moduleCatalogs() {
 /** Una voce di catalogo come confronto: cifre → #, un segnaposto {nome} vale qualunque testo. */
 const pattern = (text) => new RegExp("^" + norm(text).split(/\{\w+\}/).map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join(".+") + "$");
 
+/** Le parti dello schermo che appartengono ad altre aree, per qualche area (aree.json, «fuori»). */
+const FUORI = Object.values(JSON.parse(readFileSync(path.join(here, "aree.json"), "utf8")).aree).flatMap((a) => a.fuori ?? []).join(", ") || null;
+
 /** Dove stanno le finestre: le finestre di Filum, la ricerca comandi, gli sfondi a schermo intero. */
 const DIALOG = ".dialog, [role=dialog], .backdrop";
 const json = (f) => JSON.parse(readFileSync(path.join(here, f), "utf8"));
 /** Scritte uguali in ogni lingua: tasti delle scorciatoie (Ctrl+⇧S, B) e sigle tutte maiuscole (PES, U#). */
-const KEYS = /^(?:(?:Ctrl|Alt|Shift|⇧|⌘|⌥)\+?)*(?:[A-Z#,.\\/[\]=+-]|F#|Esc|Enter|Tab|Space|Home|End)$/;
+const KEYS = /^(?:(?:Ctrl|Alt|Shift|⇧|⌘|⌥)\+?)*(?:[A-Z#,.\\/[\]=+-]|F#|Esc|Enter|Tab|Space|Home|End|Ctrl|Alt|Shift)$/;
 const SIGLA = /^[A-Z][A-Z0-9#]+$/;
 const norm = (s) => s.replace(/\d+(?:[.,  ]\d+)*/g, "#");
 
@@ -104,15 +107,20 @@ const norm = (s) => s.replace(/\d+(?:[.,  ]\d+)*/g, "#");
  * dentro un elemento con data-nova (interfaccia dei moduli), «testi» tutte le altre.
  * null se `root` non c'è.
  */
-function collectTexts(root) {
+function collectTexts([root, fuori]) {
   const out = new Set();
+  /** Le scritte non marcate fuori dalle parti che appartengono ad altre aree (aree.json, «fuori»). */
+  const outside = new Set();
   const marked = new Map();
   const add = (s, el) => {
     const v = (s ?? "").replace(/\s+/g, " ").trim();
     if (!v || !/\p{L}/u.test(v)) return;
     const owner = el?.closest("[data-nova]")?.getAttribute("data-nova");
     if (owner) marked.set(v, owner);
-    else out.add(v);
+    else {
+      out.add(v);
+      if (!fuori || !el?.closest(fuori)) outside.add(v);
+    }
   };
   const seen = (el) => el.checkVisibility({ visibilityProperty: true });
   const roots = root === "body" ? [document.body] : [...document.querySelectorAll(root)].filter(seen);
@@ -140,7 +148,7 @@ function collectTexts(root) {
     for (const i of all("input[type=button],input[type=submit]")) if (seen(i)) add(i.value, i);
   }
   if (root === "body") add(document.title, null);
-  return { testi: [...out], marcati: [...marked] };
+  return { testi: [...out], marcati: [...marked], fuori: [...outside] };
 }
 
 // --- il giro -----------------------------------------------------------------
@@ -180,6 +188,8 @@ async function tour(browser, url, locale, shots) {
   const screens = {};
   /** Scritte degli elementi marcati (data-nova), schermata per schermata. */
   const marked = {};
+  /** Scritte non marcate fuori dalle parti di altre aree, schermata per schermata. */
+  const outsideOf = {};
   const missing = [];
   let n = 0;
 
@@ -220,10 +230,10 @@ async function tour(browser, url, locale, shots) {
   const record = async (id, root = "body") => {
     if (root !== ".menu") await openSections(root);
     // i calcoli in corso («Working…») cambiano le scritte: si aspetta che restino ferme
-    let texts = await page.evaluate(collectTexts, root);
+    let texts = await page.evaluate(collectTexts, [root, FUORI]);
     for (let i = 0; i < 40; i++) {
       await settle(250);
-      const again = await page.evaluate(collectTexts, root);
+      const again = await page.evaluate(collectTexts, [root, FUORI]);
       const same = JSON.stringify(again) === JSON.stringify(texts);
       texts = again;
       const all = texts ? [...texts.testi, ...texts.marcati.map(([t]) => t)] : [];
@@ -233,6 +243,7 @@ async function tour(browser, url, locale, shots) {
     screens[id] = [...new Set((texts?.testi ?? []).map(norm))].sort();
     // [scritta, modulo che ha marcato l'elemento]
     marked[id] = (texts?.marcati ?? []).map(([t, m]) => [norm(t), m]).sort();
+    outsideOf[id] = [...new Set((texts?.fuori ?? []).map(norm))].sort();
     if (shots) await page.screenshot({ path: path.join(shots, `${String(++n).padStart(3, "0")}.png`) }).catch(() => {});
     if (shots) screens[id + "\u0000shot"] = n;
   };
@@ -376,7 +387,7 @@ async function tour(browser, url, locale, shots) {
   await reset();
 
   await context.close();
-  return { lang, screens, marked, errors, missing, sample };
+  return { lang, screens, marked, outsideOf, errors, missing, sample };
 }
 
 // --- confronti ---------------------------------------------------------------
@@ -472,13 +483,17 @@ try {
     else console.log("ok   i.4 sistema in italiano, primo avvio → lingua italiana");
     const sampleDone = allAreas || aree.esempio?.fatta;
     const itBad = {};
-    for (const [id, texts] of Object.entries(textsOf(it.screens))) {
+    for (const [id, all] of Object.entries(textsOf(it.screens))) {
       if (id.startsWith("modulo/") || aParte(id) || !done(id) || !ref[id]) continue;
+      // un'area con «fuori» (aree.json) non conta le parti dello schermo delle altre aree
+      const texts = aree[areaOf(id)]?.fuori?.length ? it.outsideOf[id] : all;
       const english = new Set(ref[id]);
       // uguali in ogni lingua: sigle e nomi di non-tradurre.json, anche con numeri o con i puntini di un menu («# mm», «Zig-zag…»)
       const same = (s) => {
         const bare = s.replace(/…$/, "").replace(/#/g, "").replace(/\s+/g, " ").trim();
-        return allowed.has(s) || allowed.has(bare) || !/\p{L}/u.test(bare) || SIGLA.test(s);
+        // …o fatte solo di parole di non-tradurre.json con numeri e segni («Zoom #×», «· #×# mm · #:#»)
+        const words = s.match(/\p{L}+/gu) ?? [];
+        return allowed.has(s) || allowed.has(bare) || !/\p{L}/u.test(bare) || SIGLA.test(s) || words.every((w) => allowed.has(w));
       };
       const left = texts.filter((s) => english.has(s) && !same(s) && !KEYS.test(s));
       if (left.length) itBad[id] = left;

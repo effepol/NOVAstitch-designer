@@ -66,6 +66,8 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
   const rel = path.relative(SRC, path.resolve(fileName)).split(path.sep).join("/");
   const argsOf = textArgs[rel]?.funzioni ?? {};
   const propsOf = new Set(textArgs[rel]?.["proprietà"] ?? []);
+  // stringhe che in questo file sono nomi interni (tasti, chiavi), tradotti solo dove si mostrano
+  const ids = new Set(textArgs[rel]?.identificatori ?? []);
   const sf = ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, fileName.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
   const lines = source.split("\n");
   const exempt = (node) => {
@@ -74,7 +76,7 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
   };
   const hits = [];
   const report = (node, text, why) => {
-    if (exempt(node)) return;
+    if (exempt(node) || ids.has(text)) return;
     hits.push({ line: sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1, text, why, node, sf });
   };
 
@@ -87,7 +89,9 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
       if (v) report(e, v, why);
     } else if (ts.isTemplateExpression(e)) {
       const parts = [e.head.text, ...e.templateSpans.map((s) => s.literal.text)].join(" ");
-      const v = visibleText(parts, allowed);
+      // parti fisse fatte solo di unità e sigle consentite («Δ ${x}, ${y} mm»): niente da tradurre
+      const words = parts.match(/\p{L}+/gu) ?? [];
+      const v = words.every((w) => allowed.has(w)) ? null : visibleText(parts, allowed);
       if (v) report(e, v, why);
       for (const s of e.templateSpans) strings(s.expression, why);
     } else if (ts.isConditionalExpression(e)) {
