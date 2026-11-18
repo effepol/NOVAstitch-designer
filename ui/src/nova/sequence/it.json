@@ -16,5 +16,9 @@
   "b.stop.on": "Stop dopo: sì (clic per toglierlo)",
   "b.stop.off": "Stop dopo: no (clic per metterlo)",
   "b.start.auto": "Partenza scelta a mano: clic per tornare ad automatica",
-  "b.end.auto": "Arrivo scelto a mano: clic per tornare ad automatico"
+  "b.end.auto": "Arrivo scelto a mano: clic per tornare ad automatico",
+  "b.view.startEnd": "Partenza e arrivo",
+  "b.view.startEnd.title": "Mostra su ogni oggetto i segni di partenza (S) e arrivo (E) con il numero d'ordine di cucitura",
+  "b.view.links": "Collegamenti",
+  "b.view.links.title": "Mostra i collegamenti fra un oggetto e il successivo: rosso rasafilo, blu salto, verde cucitura; tenue se l'ha scelto il programma"
 }

@@ -4,7 +4,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { initSync, StitchEngine } from "../../wasm/pkg/filum_wasm.js";
-import type { StitchDocument } from "../../types";
+import type { PlanData, StitchDocument } from "../../types";
 
 let engine: StitchEngine | null = null;
 function eng(): StitchEngine {
@@ -69,4 +69,11 @@ export function exportDst(doc: StitchDocument): DstRecord[] {
 export function planOfDoc(doc: StitchDocument): { flags: Uint8Array; objects: Uint32Array } {
   const p = eng().plan(JSON.stringify(doc)) as { flags: Uint8Array; objects: Uint32Array };
   return { flags: p.flags, objects: p.objects };
+}
+
+/** The whole plan as the app gets it (coordinates, flags, objects) and its PlanStats. */
+export function fullPlan(doc: StitchDocument): PlanData {
+  const p = eng().plan(JSON.stringify(doc)) as { coords: Float32Array; flags: Uint8Array; objects: Uint32Array; meta: string };
+  const meta = JSON.parse(p.meta) as { threads: PlanData["threads"]; stats: PlanData["stats"] };
+  return { coords: p.coords, flags: p.flags, objects: p.objects, threads: meta.threads, stats: meta.stats };
 }

@@ -4,7 +4,7 @@
 // count from the plan. Every change goes through a command (one undo step);
 // dragging a row reorders on the drop, with b.reorder.
 
-import { useMemo, useRef, useState, type CSSProperties, type DragEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent } from "react";
 import { GripVertical, MapPin, MapPinOff, Type } from "lucide-react";
 import { LockStitch, MachineStop, Trim } from "../../icons/stitch";
 import { planOf, useStore } from "../../store";
@@ -119,6 +119,11 @@ function Row({
   h: Handlers;
 }) {
   const name = r.text ? (r.first.text?.content?.split("\n")[0] ?? r.first.name) : r.first.name;
+  // an object selected on the design: its row lights up and comes into view
+  const el = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (sel) el.current?.scrollIntoView?.({ block: "nearest" });
+  }, [sel]);
   const focus = () => {
     useStore.getState().select(r.ids);
     focusRow(r.key);
@@ -131,6 +136,7 @@ function Row({
   const tieTitle = (end: "start" | "end", lit: boolean) => (assisted ? t("b.tie.assisted") : t(`b.tie${end === "start" ? "Start" : "End"}.${lit ? "on" : "off"}`));
   return (
     <div
+      ref={el}
       role="listitem"
       className={`layer ${sel ? "sel" : ""} ${drop ? `drop-${drop}` : ""}`}
       style={dragging ? { ...COLUMNS, opacity: 0.5 } : COLUMNS}
