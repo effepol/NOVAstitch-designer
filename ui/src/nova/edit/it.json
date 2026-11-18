@@ -22,5 +22,17 @@
   "f.patch.time": "circa {min} min",
   "f.patch.center": "Centra nel telaio",
   "f.patch.outside": "La griglia di toppe esce dal telaio di {x} mm in orizzontale e {y} mm in verticale. Vuoi centrarla?",
-  "f.patch.dismiss": "Lascia così"
+  "f.patch.dismiss": "Lascia così",
+  "f.library.title": "Forme base",
+  "f.library.menu": "Inserisci forma dalla libreria",
+  "f.library.shape": "Forma",
+  "f.library.width": "Larghezza",
+  "f.library.height": "Altezza",
+  "f.library.cornerRadius": "Raggio degli angoli",
+  "f.library.border": "Bordo a satin",
+  "f.library.borderHint": "Con bordo 0 la forma si inserisce senza bordo.",
+  "f.library.insert": "Inserisci nel telaio",
+  "f.library.licence": "Licenza {licence} · {author}",
+  "f.library.borderName": "{name} · bordo",
+  "f.patch.gridTitle": "Griglia di toppe"
 }

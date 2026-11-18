@@ -6,5 +6,10 @@
   "f.patch.order": "Order of the pieces (row by row or serpentine)",
   "f.patch.grouping": "Colour grouping (by colour or by copy)",
   "f.patch.create": "Create the patch from the selection",
-  "f.patch.center": "Centre the patch in the hoop"
+  "f.patch.center": "Centre the patch in the hoop",
+  "f.library.panel": "The Library panel",
+  "f.library.shape": "Choice of the base shape",
+  "f.library.size": "Size of the shape",
+  "f.library.border": "Width of the satin border",
+  "f.library.insert": "Insert the shape in the hoop"
 }

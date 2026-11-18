@@ -208,6 +208,9 @@ setFabricDefaults(() => newObjectDefaults(st().doc));
       !("spacing" in (p.satin ?? {})) && !("rowSpacing" in (p.fill ?? {}));
     check(ok, `${p.id}: overlap ${p.overlap.flat}/${p.overlap.cap}, pull ${p.fill?.pullComp}, topping ${p.topping}, needle ${p.needlePoint}, stabiliser ${p.stabilizer.type} ${p.stabilizer.weight}`);
   }
+  // the info sheet says the same topping as the structured field (Signor Poletti, 18/11: knit and piqué none); "optional" is not a requirement
+  const film = (p: FabricPreset) => /Topping: Film idrosolubile(?! facoltativo)/.test(p.info.it) || /Topping: Water-soluble film/.test(p.info.en);
+  check(shipped.presets.every((p) => (p.topping === "water-soluble-film") === film(p)), `the info sheet's topping matches the structured field (${shipped.presets.filter((p) => (p.topping === "water-soluble-film") !== film(p)).map((p) => p.id).join(", ") || "all"})`);
   // the info sheet starts from Filum's texts (FabricInfo) in both languages
   check(shipped.presets.every((p) => p.info.it.includes("Stabilizzatore:") && p.info.en.includes("Stabiliser:")), "the info sheet has Filum's stabiliser, topping and needle in both languages");
   check(/non si stirano/.test(by.get("knit" as never)?.info.it ?? "") && /adesivo|fasciato/.test(by.get("silk" as never)?.info.it ?? "") && /morsetti/.test(by.get("denim" as never)?.info.it ?? ""), "the info sheet adds the book's rules (knit, satin/silk, thick fabrics)");
