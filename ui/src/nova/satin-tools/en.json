@@ -1,0 +1,7 @@
+{
+  "m.satin.name": "Satin",
+  "m.twoRails.oddDropped": "Odd number of clicks: the last point had no pair and was dropped.",
+  "m.twoRails.tooFew": "At least two pairs of points are needed: keep clicking, one point per rail.",
+  "m.split.autoDirection": "One or more parts have no direction line: their stitches run across the long side. Check that this is right.",
+  "m.split.notOneColumn": "In one or more parts the direction crosses the shape more than once: only the longest stretch is sewn. Add a cut where the shape forks."
+}
