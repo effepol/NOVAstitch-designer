@@ -3,5 +3,10 @@
   "m.twoRails.oddDropped": "Numero di click dispari: l'ultimo punto non ha la sua coppia ed è stato scartato.",
   "m.twoRails.tooFew": "Servono almeno due coppie di punti: continua a cliccare, un punto per binario.",
   "m.split.autoDirection": "Una o più parti non hanno una linea di direzione: i punti vanno di traverso al lato lungo. Controlla che vada bene.",
-  "m.split.notOneColumn": "In una o più parti la direzione attraversa la forma più volte: è cucita solo la striscia più lunga. Aggiungi un taglio dove la forma si divide."
+  "m.split.notOneColumn": "In una o più parti la direzione attraversa la forma più volte: è cucita solo la striscia più lunga. Aggiungi un taglio dove la forma si divide.",
+  "m.tool.twoRails": "Satin a due binari: clic sinistro = punto dritto, clic destro = punto curvo, alternando binario 1 e binario 2; Invio crea, Esc annulla",
+  "m.tool.split": "Dividi e dirigi: trascina col tasto sinistro le linee di taglio (marroni), col destro le linee di direzione (rosse); Invio applica, Esc annulla",
+  "m.twoRails.studioOnly": "Il satin a due binari si usa in Studio.",
+  "m.split.selectShape": "Seleziona prima una forma piena da dividere.",
+  "m.split.nothing": "Questa forma non si può trasformare in satin."
 }
