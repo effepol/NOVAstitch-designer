@@ -1,0 +1,10 @@
+{
+  "f.patch.panel": "The Patch panel",
+  "f.patch.rows": "Number of rows of the grid",
+  "f.patch.cols": "Number of columns of the grid",
+  "f.patch.gap": "Gap between the pieces",
+  "f.patch.order": "Order of the pieces (row by row or serpentine)",
+  "f.patch.grouping": "Colour grouping (by colour or by copy)",
+  "f.patch.create": "Create the patch from the selection",
+  "f.patch.center": "Centre the patch in the hoop"
+}
