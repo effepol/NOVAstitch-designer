@@ -4,7 +4,7 @@ import { hideSelection, lockSelection, orderSelection, showAll, unlockAll } from
 import { DensityLegend } from "./components/DensityPanel";
 import { is2D, removeNodes, selectedGradient } from "./lib/gradient";
 import { TextEditorOverlay } from "./components/Lettering";
-import { Box, Mountain, Scissors, Spline, Type, Upload } from "lucide-react";
+import { Box, Mountain, Scissors, Spline, Type, Upload, XCircle } from "lucide-react";
 import { Digitize, StitchRunning } from "./icons/stitch";
 import { useEffect } from "react";
 import { Canvas } from "./canvas/Canvas";
@@ -255,6 +255,8 @@ function Toasts() {
     <div className="toasts" aria-live="polite">
       {toasts.map((t) => (
         <div key={t.id} className={`toast ${t.kind ?? ""}`}>
+          {/* NOVAstitch (r.4): an error is not told by its colour alone */}
+          {t.kind === "error" && <XCircle size={15} aria-hidden="true" />}
           {t.text}
         </div>
       ))}

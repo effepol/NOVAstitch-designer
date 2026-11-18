@@ -28,7 +28,7 @@ SVG_DIR = os.path.join(ROOT, "ui", "src", "icons", "svg")
 
 INK = "#303231"
 PAPER = "#fbfbf9"
-ACCENT = "#7c3aed"
+ACCENT = "#CC1219"  # NOVAstitch Designer red (18/11)
 
 
 # --------------------------------------------------------------------------------------

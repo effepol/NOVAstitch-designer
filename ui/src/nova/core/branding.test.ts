@@ -57,7 +57,7 @@ check(lock("package-lock.json").name === "novastitch-designer" && lock("ui/packa
 // the logo: the attached icon, as it is
 const icon = path.join(root, "ui/public/icon.png");
 check(existsSync(icon) && readFileSync(icon, "utf8").length > 0, "the interface has the provisional icon (ui/public/icon.png)");
-check(read("ui/src/components/MenuBar.tsx").includes(`src="/icon.png"`), "the title bar shows it");
+check(read("ui/src/components/MenuBar.tsx").includes(`src="/icon-small.png"`), "the title bar shows it, in its simplified 16 px variant (r.6)");
 check(existsSync(path.join(root, "src-tauri/icons/icon.png")) && !existsSync(path.join(root, "src-tauri/icons/android")) && !existsSync(path.join(root, "src-tauri/icons/ios")), "the app icons are desktop only");
 
 // About window: texts in Italian and English

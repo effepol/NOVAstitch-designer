@@ -2,7 +2,17 @@
 // Declared here instead of @types/node, which would change timer types in all of Filum.
 
 declare module "node:fs" {
+  /** Node's Buffer, as far as the tests use it (binary files: icons). */
+  export interface Buffer extends Uint8Array {
+    equals(other: Uint8Array): boolean;
+    readUInt16LE(offset: number): number;
+    readUInt32LE(offset: number): number;
+    readUInt32BE(offset: number): number;
+    subarray(start?: number, end?: number): Buffer;
+    toString(encoding?: string): string;
+  }
   export function readFileSync(path: string, encoding: "utf8"): string;
+  export function readFileSync(path: string): Buffer;
   export function writeFileSync(path: string, data: string): void;
   export function renameSync(from: string, to: string): void;
   export function rmSync(path: string, opts?: { force?: boolean; recursive?: boolean }): void;
