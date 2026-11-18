@@ -20,13 +20,14 @@
   --text: #303231;
   --muted: #646665;
   --faint: #818381;
-  /* brand */
-  --accent: #7c3aed;
-  --accent-hover: #6a32cc;
-  --accent-soft: rgba(124, 58, 237, 0.1);
+  /* brand: NOVAstitch Designer's red (lib/prefs.ts accentTokens gives the same) */
+  --accent: #cc1219;
+  --accent-hover: #af0f16;
+  --accent-soft: rgba(204, 18, 25, 0.1);
   --accent-fg: #ffffff;
-  --accent-text: #7c3aed;
-  --select: #7c3aed;
+  --accent-text: #b30f16;
+  /* the canvas selection: a fixed blue, not the accent (it would vanish on red threads) */
+  --select: #1971c2;
   /* status: base for fills, borders and icons; -text for words (AA); -strong for solid fills under white */
   --success: #2e9d5b;
   --success-text: #1e6f40;
@@ -75,12 +76,12 @@
   --text: #dddddd;
   --muted: #a0a0a0;
   --faint: #808080;
-  --accent: #8a4fef;
-  --accent-hover: #7c3aed;
-  --accent-soft: rgba(124, 58, 237, 0.2);
+  --accent: #d22e35;
+  --accent-hover: #cc1219;
+  --accent-soft: rgba(204, 18, 25, 0.2);
   --accent-fg: #ffffff;
-  --accent-text: #b08cf6;
-  --select: #a375f2;
+  --accent-text: #ff7a7f;
+  --select: #4dabf7;
   --success: #3fb878;
   --success-text: #6fd6a2;
   --success-strong: #24704d;
@@ -2351,6 +2352,15 @@ textarea.input {
 }
 .toast.error {
   background: var(--danger-strong);
+}
+/* NOVAstitch (r.4): the error toast's icon beside its text */
+.toast.error {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.toast.error > svg {
+  flex: none;
 }
 .toast.success {
   background: var(--success-strong);
@@ -7569,4 +7579,26 @@ tr.on .cal-letter {
 .hs-verdict.yes svg,
 .hs-verdict.wide svg {
   color: var(--hoop);
+}
+
+/* ---------------------------------------------------------------- NOVAstitch (r.4)
+   No warning, error or destructive button is told by its colour alone: an
+   alert icon (the text's own colour) comes before its words. */
+.hint.warn::before,
+.dz-hint.warn::before,
+.badge.warn::before,
+.font-meta.warn::before,
+.tm-report.warn::before,
+.mine-report.warn::before,
+.dz-stats .warn::before,
+.btn.danger::before {
+  content: "";
+  display: inline-block;
+  flex: none;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.3em;
+  vertical-align: -0.15em;
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E") center / contain no-repeat;
 }

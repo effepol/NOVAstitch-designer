@@ -131,7 +131,7 @@ export function ThreadListDialog({ onClose }: { onClose: () => void }) {
         {t("filum.finestre.colour_block_1_gets_the")}
       </p>
       {!file.bytes.length && <p className="hint">{t("filum.finestre.choose_a_thread_list_ink")}</p>}
-      {error && <p className="hint" style={{ color: "var(--danger-text)" }}>{file.name}: {error}</p>}
+      {error && <p className="hint warn">{file.name}: {error}</p>}
       {list && (
         <>
           <div className="tl-summary">

@@ -60,7 +60,7 @@ Pull requests are welcome. A few house rules:
 | `src-tauri` | The Tauri 2 desktop shell (and mobile scaffolding) |
 | `ui` | The React + TypeScript editor |
 | `ui/public` | Bundled embroidery fonts, thread charts, licences and AI models |
-| `assets` | The app icon, and `assets/logo` with the logo's source |
+| `assets` | The app icon's sources and generator (`assets/icon`) |
 | `docs` | The [implementation plan](../IMPLEMENTATION_PLAN.md), [algorithm research](../ALGORITHMS_RESEARCH.md), the [density model](../density-model.md) and this wiki |
 
 ## Refreshing bundled data
@@ -83,15 +83,12 @@ npm --prefix ui run inkstitch
 npm --prefix ui run models
 ```
 
-## The logo
+## The icon
 
-The logo is a lower-case "f" drawn as one thread: up the stem, over the hook, back down and round in a loop that makes the crossbar, then into the fabric as a single stitch. It is drawn on the same 24 px grid and stroke rules as the app's icons (`ui/src/icons/stitch.ts`). It's built with Grease Pencil in Blender (tested with 5.3) by `assets/logo/filum_logo.py`. That script is the single source of the logo: it holds the geometry, builds the Blender scene, renders the PNGs and writes the SVGs.
+NOVAstitch Designer's icon is NS in white dots on red (#CC1219): `assets/icon/ns-1024.png` (1024 px, provisional). At 16, 24 and 32 px the dots run together, so those sizes use a simplified NS of full white letters (`assets/icon/ns-small.svg`). `assets/icon/make_icons.py` (Pillow) writes every size from these two: `src-tauri/icons/` (the `.ico` and `.icns` take 16–32 px from the simplified variant), `ui/public/icon.png`, `icon-small.png` and `icon.svg`.
 
 ```bash
-blender --background --python assets/logo/filum_logo.py
-cp assets/logo/filum-icon.svg assets/icon.svg
-cp assets/logo/filum-icon.svg ui/public/icon.svg
-npx tauri icon assets/logo/filum-icon-1024.png -o src-tauri/icons
+python3 assets/icon/make_icons.py
 ```
 
 ## The screenshots
