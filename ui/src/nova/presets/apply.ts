@@ -146,8 +146,11 @@ export interface NewObjectDefaults {
 
 /**
  * What new objects start from in `doc`: the preset in force, then the fabric
- * calibration's values on top (lib/calibration.ts; `calibrated` replaces it in
- * tests). Without a preset: the calibration only, as in Filum (e.8).
+ * calibration's values (lib/calibration.ts; `calibrated` replaces it in tests).
+ * The calibration replaces only the preset's pull compensation (the user's
+ * measurement on their own fabric wins); its expand is added to the preset's
+ * overlap, which always counts (Architect, 13/11). Without a preset: the
+ * calibration only, as in Filum (e.8).
  */
 export function newObjectDefaults(doc: StitchDocument, calibrated: { satin?: Partial<SatinParams>; fill?: Partial<FillParams> } = calibratedDefaults(doc.fabric)): NewObjectDefaults {
   const p = presetOf(doc);
@@ -157,7 +160,10 @@ export function newObjectDefaults(doc: StitchDocument, calibrated: { satin?: Par
   const running = presetValuesFor(p, { type: "running" } as StitchParams, hk) as Partial<RunningParams>;
   const out: NewObjectDefaults = {};
   if (Object.keys(satin).length || calibrated.satin) out.satin = { ...satin, ...calibrated.satin };
-  if (Object.keys(fill).length || calibrated.fill) out.fill = { ...fill, ...calibrated.fill };
+  if (Object.keys(fill).length || calibrated.fill) {
+    out.fill = { ...fill, ...calibrated.fill };
+    if (p && calibrated.fill?.expand !== undefined) out.fill.expand = round6((fill.expand ?? 0) + calibrated.fill.expand);
+  }
   if (Object.keys(running).length) out.running = running;
   return out;
 }

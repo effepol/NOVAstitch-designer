@@ -24,9 +24,9 @@ const base = (over: Record<string, unknown> = {}) => ({
   base: "cotton",
   elastic: false,
   overlap: { flat: 0.2, cap: 0.4 },
-  limits: { minSpacing: 0.3 },
+  limits: { minSpacingRatio: 0.75 },
   info: { it: "Scheda di prova", en: "Test sheet" },
-  stabilizer: { type: "tear-away", weight: 50 },
+  stabilizer: { type: "tear-away", weight: "medium" },
   topping: "none",
   needlePoint: "normal",
   ...over,
@@ -34,8 +34,8 @@ const base = (over: Record<string, unknown> = {}) => ({
 const file = (o: Record<string, unknown>) => JSON.stringify(o);
 
 // A: tatami underlay across the rows; B: no underlay, other spacing
-const A = parsePreset("a.json", base({ id: "a", name: { it: "A", en: "A" }, fill: { underlay: true, underlayAngle: 90, underlaySpacing: 0.8, pullComp: 0.3 }, satin: { spacing: 0.4, contourInset: 0.5 }, satinContourFrom: 2 }));
-const B = parsePreset("b.json", base({ id: "b", rev: 3, name: { it: "B", en: "B" }, base: "knit", elastic: true, fill: { underlay: false, rowSpacing: 0.3, pullComp: 0.5 }, satin: { spacing: 0.45, contourInset: 0.5 }, satinContourFrom: 2 }));
+const A = parsePreset("a.json", base({ id: "a", name: { it: "A", en: "A" }, fill: { underlay: true, underlayAngle: 90, underlaySpacing: 0.8, pullComp: 0.3 }, satin: { pullComp: 0.2, contourInset: 0.5 }, satinContourFrom: 2 }));
+const B = parsePreset("b.json", base({ id: "b", rev: 3, name: { it: "B", en: "B" }, base: "knit", elastic: true, fill: { underlay: false, underlayStitchLength: 3, pullComp: 0.5 }, satin: { pullComp: 1, contourInset: 0.5 }, satinContourFrom: 2 }));
 setPresetList([A, B]);
 const offCmds = installPresetCommands();
 
@@ -84,10 +84,10 @@ const offEv = on("preset.applied", (p) => events.push(p));
 const past = st().past.length;
 runCommand("e.preset.apply", { presetId: "b" });
 const five = st().doc.objects.filter((o) => o.id !== "t0");
-check(five.every((o) => fillOf(o).underlay === false && fillOf(o).rowSpacing === 0.3 && fillOf(o).pullComp === 0.5), "e.3 the 5 untouched tatami take preset B's values");
+check(five.every((o) => fillOf(o).underlay === false && fillOf(o).underlayStitchLength === 3 && fillOf(o).pullComp === 0.5), "e.3 the 5 untouched tatami take preset B's values");
 check(five.every((o) => fillOf(o).underlayAngle === 90 && fillOf(o).underlaySpacing === 0.75), "e.3 a value A set and B does not set goes back to Filum's (underlay spacing 0.75)");
 check(five.every((o) => fillOf(o).expand === 0.2), "e.3 overlap 0.2 mm on a flat hoop");
-check(fillOf(t0()).underlay === false && fillOf(t0()).rowSpacing === 0.3, "e.3 the edited tatami keeps its underlay off (and takes the other values)");
+check(fillOf(t0()).underlay === false && fillOf(t0()).underlayStitchLength === 3, "e.3 the edited tatami keeps its underlay off (and takes the other values)");
 check(five.every((o) => !o.nova?.edited?.length), "e.3 applying a preset records nothing in nova.edited (system command)");
 check(st().past.length === past + 1, `e.3 one undo step (${st().past.length - past})`);
 check(st().doc.fabric === "knit" && st().doc.nova?.fabricPreset?.id === "b" && st().doc.nova?.fabricPreset?.rev === 3, "e.3 doc.fabric and nova.fabricPreset follow the preset");
@@ -173,10 +173,45 @@ check(st().doc.objects.every((o) => fillOf(o).expand === 0.4 && Math.abs(grown(o
 const stretchy: FabricPreset = { ...B, id: "maglia-prova", overlap: { flat: 0.4, cap: 0.4 } };
 check(presetValuesFor(stretchy, defaultStitch("fill"), "flat").expand === 0.4, "e.10 stretchy fabric: the preset's own overlap 0.4 mm");
 
-// calibration on top of the preset in new objects (Architect, 13/11): the user's measurement wins
-setFabricDefaults(() => newObjectDefaults(st().doc, { fill: { pullComp: 0.45 } }));
-check(fillOf({ stitch: defaultStitch("fill") } as DesignObject).pullComp === 0.45, "calibration: the measured pull compensation wins over the preset's");
-check(fillOf({ stitch: defaultStitch("fill") } as DesignObject).underlayAngle === 90, "calibration: …the preset's other values stay");
+// calibration (Architect, 13/11): it replaces only the preset's pull compensation; its expand adds to the overlap
+load([]);
+runCommand("e.preset.apply", { presetId: "a" });
+setFabricDefaults(() => newObjectDefaults(st().doc, { satin: { pullComp: 0.6, pushComp: 0.4 }, fill: { pullComp: 0.45, expand: -0.1 } }));
+const cal = fillOf({ stitch: defaultStitch("fill") } as DesignObject);
+check(cal.pullComp === 0.45, `calibration: the measured pull compensation replaces the preset's (${cal.pullComp})`);
+check(cal.expand === 0.1, `calibration: its expand (−0.1) adds to the preset's overlap (0.2) → 0.1 (${cal.expand})`);
+check(cal.underlayAngle === 90 && cal.underlaySpacing === 0.8, "calibration: the preset's other values stay");
+const calS = satinOf({ stitch: defaultStitch("satin") } as DesignObject);
+check(calS.pullComp === 0.6 && calS.pushComp === 0.4 && calS.contourInset === 0.5, "calibration: satin pull compensation measured, contour inset from the preset");
+setFabricDefaults(() => newObjectDefaults(st().doc));
+
+// ---- the shipped presets: the Architect's values (13/11 evening)
+{
+  const by = new Map(shipped.presets.map((p) => [p.base, p]));
+  const fabrics = ["cotton", "polyester", "denim", "knit", "sheer", "felt", "towel", "cap", "fleece", "pique", "leather", "canvas", "silk"];
+  check(shipped.presets.length === 13 && fabrics.every((f) => by.has(f as never)), `13 presets, one per Filum fabric (${shipped.presets.map((p) => p.id).join(", ")})`);
+  const stretch = ["knit", "fleece", "towel", "pique", "sheer"];
+  const pull: Record<string, number> = { knit: 1, pique: 1, fleece: 0.5 };
+  for (const f of fabrics) {
+    const p = by.get(f as never);
+    if (!p) continue;
+    const overlap = stretch.includes(f) || f === "cap" ? 0.4 : 0.2;
+    const ok =
+      p.overlap.flat === overlap && p.overlap.cap === 0.4 &&
+      p.satin?.pullComp === (pull[f] ?? 0) && p.fill?.pullComp === (pull[f] ?? 0) &&
+      p.fill?.underlay === true && p.fill?.underlayAngle === 90 &&
+      p.satin?.contourInset === 0.5 && p.satinContourFrom === 2 &&
+      p.limits.minSpacingRatio === 0.75 &&
+      p.topping === (f === "towel" || f === "fleece" ? "water-soluble-film" : "none") &&
+      p.needlePoint === (["knit", "pique", "fleece"].includes(f) ? "ballpoint" : "normal") &&
+      p.elastic === stretch.includes(f) &&
+      !("spacing" in (p.satin ?? {})) && !("rowSpacing" in (p.fill ?? {}));
+    check(ok, `${p.id}: overlap ${p.overlap.flat}/${p.overlap.cap}, pull ${p.fill?.pullComp}, topping ${p.topping}, needle ${p.needlePoint}, stabiliser ${p.stabilizer.type} ${p.stabilizer.weight}`);
+  }
+  // the info sheet starts from Filum's texts (FabricInfo) in both languages
+  check(shipped.presets.every((p) => p.info.it.includes("Stabilizzatore:") && p.info.en.includes("Stabiliser:")), "the info sheet has Filum's stabiliser, topping and needle in both languages");
+  check(/non si stirano/.test(by.get("knit" as never)?.info.it ?? "") && /adesivo|fasciato/.test(by.get("silk" as never)?.info.it ?? "") && /morsetti/.test(by.get("denim" as never)?.info.it ?? ""), "the info sheet adds the book's rules (knit, satin/silk, thick fabrics)");
+}
 
 // a preset applied to a doc with nothing to change leaves no undo step
 load([]);

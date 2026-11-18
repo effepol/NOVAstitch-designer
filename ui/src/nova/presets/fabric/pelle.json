@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "pelle",
+  "rev": 1,
+  "name": {
+    "it": "Pelle / Vinile",
+    "en": "Leather / Vinyl"
+  },
+  "base": "leather",
+  "elastic": false,
+  "overlap": {
+    "flat": 0.2,
+    "cap": 0.4
+  },
+  "satin": {
+    "pullComp": 0,
+    "contourInset": 0.5
+  },
+  "fill": {
+    "pullComp": 0,
+    "underlay": true,
+    "underlayAngle": 90
+  },
+  "satinContourFrom": 2,
+  "limits": {
+    "minSpacingRatio": 0.75
+  },
+  "info": {
+    "it": "Stabilizzatore: Da tagliare adesivo, appoggiato invece che intelaiato (o strappabile). Topping: Nessuno. Ago: Punta acuta 75/11–90/14. Segna con il telaio: stabilizzatore adesivo (il tessuto si appoggia sopra) oppure anello interno fasciato.",
+    "en": "Stabiliser: Sticky cut-away, floated instead of hooped (or tear-away). Topping: None. Needle: Sharp 75/11–90/14. It shows hoop marks: use an adhesive stabiliser (the fabric is laid on top) or a wrapped inner ring."
+  },
+  "stabilizer": {
+    "type": "adhesive",
+    "weight": "medium"
+  },
+  "topping": "none",
+  "needlePoint": "normal"
+}

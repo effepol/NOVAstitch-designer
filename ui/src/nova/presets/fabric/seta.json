@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "seta",
+  "rev": 1,
+  "name": {
+    "it": "Seta / Raso",
+    "en": "Silk / Satin"
+  },
+  "base": "silk",
+  "elastic": false,
+  "overlap": {
+    "flat": 0.2,
+    "cap": 0.4
+  },
+  "satin": {
+    "pullComp": 0,
+    "contourInset": 0.5
+  },
+  "fill": {
+    "pullComp": 0,
+    "underlay": true,
+    "underlayAngle": 90
+  },
+  "satinContourFrom": 2,
+  "limits": {
+    "minSpacingRatio": 0.75
+  },
+  "info": {
+    "it": "Stabilizzatore: Teletta adesiva tessuta + strappabile. Topping: Film idrosolubile facoltativo. Ago: Punta acuta fine (Microtex) 65/9–75/11. Segna con il telaio: stabilizzatore adesivo (il tessuto si appoggia sopra) oppure anello interno fasciato.",
+    "en": "Stabiliser: Fusible woven interfacing + tear-away. Topping: Optional water-soluble film. Needle: Fine sharp (Microtex) 65/9–75/11. It shows hoop marks: use an adhesive stabiliser (the fabric is laid on top) or a wrapped inner ring."
+  },
+  "stabilizer": {
+    "type": "adhesive",
+    "weight": "light"
+  },
+  "topping": "none",
+  "needlePoint": "normal"
+}

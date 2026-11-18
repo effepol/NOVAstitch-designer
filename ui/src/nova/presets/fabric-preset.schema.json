@@ -98,9 +98,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "spacing": {
-          "type": "number"
-        },
         "pullComp": {
           "type": "number"
         },
@@ -144,15 +141,12 @@
           "type": "number"
         }
       },
-      "description": "Satin parameters (SatinParams)."
+      "description": "Satin parameters (SatinParams). Not the spacing: Filum's fabric profile adjusts the density."
     },
     "fill": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "rowSpacing": {
-          "type": "number"
-        },
         "maxStitchLength": {
           "type": "number"
         },
@@ -193,7 +187,7 @@
           "type": "number"
         }
       },
-      "description": "Tatami parameters (FillParams); the overlap goes in `overlap`."
+      "description": "Tatami parameters (FillParams). Not the row spacing (Filum's fabric profile) nor the overlap (in `overlap`)."
     },
     "running": {
       "type": "object",
@@ -223,13 +217,14 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "minSpacing"
+        "minSpacingRatio"
       ],
       "properties": {
-        "minSpacing": {
+        "minSpacingRatio": {
           "type": "number",
           "minimum": 0,
-          "description": "Smallest distance between stitches for No. 40 thread, mm (scaled with the thread's width for the others)."
+          "maximum": 1,
+          "description": "Satin spacing below this share of the spacing recommended for the thread (Madeira: 60 → 0.35, 40 → 0.40, 30 → 0.50, 12 → 0.80 mm) is warned about."
         }
       }
     },
@@ -271,9 +266,12 @@
           ]
         },
         "weight": {
-          "type": "number",
-          "exclusiveMinimum": 0,
-          "description": "g/m²"
+          "enum": [
+            "light",
+            "medium",
+            "heavy"
+          ],
+          "description": "The book gives no grams."
         }
       }
     },

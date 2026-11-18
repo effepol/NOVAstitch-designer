@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "maglia",
+  "rev": 1,
+  "name": {
+    "it": "Maglia / Jersey",
+    "en": "Knit / Jersey"
+  },
+  "base": "knit",
+  "elastic": true,
+  "overlap": {
+    "flat": 0.4,
+    "cap": 0.4
+  },
+  "satin": {
+    "pullComp": 1.0,
+    "contourInset": 0.5
+  },
+  "fill": {
+    "pullComp": 1.0,
+    "underlay": true,
+    "underlayAngle": 90
+  },
+  "satinContourFrom": 2,
+  "limits": {
+    "minSpacingRatio": 0.75
+  },
+  "info": {
+    "it": "Stabilizzatore: Da tagliare (rete invisibile per disegni leggeri, da tagliare medio per quelli fitti). Topping: Film idrosolubile. Ago: Punta a sfera 70/10–75/11. Maglia e tessuti elastici: nel telaio non si stirano; stabilizzatore da tagliare.",
+    "en": "Stabiliser: Cut-away (no-show mesh for light designs, medium cut-away for dense ones). Topping: Water-soluble film. Needle: Ballpoint 70/10–75/11. Knits and stretchy fabrics: do not stretch them in the hoop; use a cut-away stabiliser."
+  },
+  "stabilizer": {
+    "type": "cut-away",
+    "weight": "medium"
+  },
+  "topping": "none",
+  "needlePoint": "ballpoint"
+}

@@ -12,6 +12,8 @@ export const PRESET_SCHEMA = 1;
 export type Stabilizer = "tear-away" | "cut-away" | "wash-away" | "adhesive";
 export type Topping = "none" | "water-soluble-film";
 export type NeedlePoint = "normal" | "ballpoint";
+/** The book gives no grams: light, medium or heavy. */
+export type StabilizerWeight = "light" | "medium" | "heavy";
 
 export interface FabricPreset {
   schemaVersion: number;
@@ -33,13 +35,13 @@ export interface FabricPreset {
   satinContourFrom?: number;
   /** Warning thresholds. */
   limits: {
-    /** Smallest distance between stitches for No. 40 thread, mm; scaled with the thread's width for the others (e.11). */
-    minSpacing: number;
+    /** Satin spacing below this share of the spacing recommended for the thread (Filum's THREAD_WEIGHTS, Madeira) is warned about (e.11). */
+    minSpacingRatio: number;
   };
   /** Info sheet (stabiliser, hoop, thread, needle, topping): text, not a rule. */
   info: { it: string; en: string };
   /** Structured fields for the work sheet (module l). */
-  stabilizer: { type: Stabilizer; /** g/m² */ weight: number };
+  stabilizer: { type: Stabilizer; weight: StabilizerWeight };
   topping: Topping;
   needlePoint: NeedlePoint;
 }
@@ -48,12 +50,16 @@ export const FABRICS: readonly Fabric[] = ["cotton", "polyester", "denim", "knit
 const STABILIZERS: readonly Stabilizer[] = ["tear-away", "cut-away", "wash-away", "adhesive"];
 const TOPPINGS: readonly Topping[] = ["none", "water-soluble-film"];
 const POINTS: readonly NeedlePoint[] = ["normal", "ballpoint"];
+const WEIGHTS: readonly StabilizerWeight[] = ["light", "medium", "heavy"];
 
 type Kind = "number" | "boolean" | "string";
-/** The stitch parameters a preset may set, with their type (a misspelt name is refused, not ignored). */
+/**
+ * The stitch parameters a preset may set, with their type (a misspelt name is
+ * refused, not ignored). Not the density (satin spacing, row spacing): Filum's
+ * fabric profile already adjusts it in the engine (Architect, 13/11).
+ */
 export const PARAMS: Record<"satin" | "fill" | "running", Record<string, Kind>> = {
   satin: {
-    spacing: "number",
     pullComp: "number",
     pullCompPct: "number",
     pushComp: "number",
@@ -70,7 +76,6 @@ export const PARAMS: Record<"satin" | "fill" | "running", Record<string, Kind>> 
     underlayStitchLength: "number",
   },
   fill: {
-    rowSpacing: "number",
     maxStitchLength: "number",
     staggers: "number",
     pullComp: "number",
@@ -154,14 +159,15 @@ export function parsePreset(file: string, json: unknown): FabricPreset {
   if (p.satinContourFrom !== undefined && !mm(p.satinContourFrom)) throw bad("satinContourFrom");
   if (p.limits === undefined) throw miss("limits");
   if (!isObj(p.limits)) throw bad("limits");
-  if (p.limits.minSpacing === undefined) throw miss("limits.minSpacing");
-  if (!mm(p.limits.minSpacing)) throw bad("limits.minSpacing");
+  for (const k of Object.keys(p.limits)) if (k !== "minSpacingRatio") throw new PresetError(file, `limits.${k}`, "unknown");
+  if (p.limits.minSpacingRatio === undefined) throw miss("limits.minSpacingRatio");
+  if (!mm(p.limits.minSpacingRatio) || (p.limits.minSpacingRatio as number) > 1) throw bad("limits.minSpacingRatio");
   if (p.stabilizer === undefined) throw miss("stabilizer");
   if (!isObj(p.stabilizer)) throw bad("stabilizer");
   if (p.stabilizer.type === undefined) throw miss("stabilizer.type");
   if (!STABILIZERS.includes(p.stabilizer.type as Stabilizer)) throw bad("stabilizer.type");
   if (p.stabilizer.weight === undefined) throw miss("stabilizer.weight");
-  if (!num(p.stabilizer.weight) || (p.stabilizer.weight as number) <= 0) throw bad("stabilizer.weight");
+  if (!WEIGHTS.includes(p.stabilizer.weight as StabilizerWeight)) throw bad("stabilizer.weight");
   if (p.topping === undefined) throw miss("topping");
   if (!TOPPINGS.includes(p.topping as Topping)) throw bad("topping");
   if (p.needlePoint === undefined) throw miss("needlePoint");

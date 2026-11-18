@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "spugna",
+  "rev": 1,
+  "name": {
+    "it": "Spugna",
+    "en": "Towel / Terry"
+  },
+  "base": "towel",
+  "elastic": true,
+  "overlap": {
+    "flat": 0.4,
+    "cap": 0.4
+  },
+  "satin": {
+    "pullComp": 0,
+    "contourInset": 0.5
+  },
+  "fill": {
+    "pullComp": 0,
+    "underlay": true,
+    "underlayAngle": 90
+  },
+  "satinContourFrom": 2,
+  "limits": {
+    "minSpacingRatio": 0.75
+  },
+  "info": {
+    "it": "Stabilizzatore: Strappabile. Topping: Film idrosolubile — indispensabile, altrimenti gli anelli inghiottono i punti. Ago: 75/11. Tessuto spesso: vite del telaio allentata, oppure telaio a morsetti. Tessuto con pelo: topping idrosolubile sopra, così i punti non affondano.",
+    "en": "Stabiliser: Tear-away. Topping: Water-soluble film — essential, or the loops swallow the stitches. Needle: 75/11. Thick fabric: loosen the hoop screw, or use a clamp frame. Pile fabric: water-soluble topping on top, so the stitches do not sink."
+  },
+  "stabilizer": {
+    "type": "tear-away",
+    "weight": "medium"
+  },
+  "topping": "water-soluble-film",
+  "needlePoint": "normal"
+}

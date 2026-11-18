@@ -23,9 +23,9 @@ const preset = (over: Record<string, unknown>) =>
     base: "cotton",
     elastic: false,
     overlap: { flat: 0.2, cap: 0.4 },
-    limits: { minSpacing: 0.3 },
+    limits: { minSpacingRatio: 0.75 },
     info: { it: "Prova", en: "Test" },
-    stabilizer: { type: "tear-away", weight: 50 },
+    stabilizer: { type: "tear-away", weight: "medium" },
     topping: "none",
     needlePoint: "normal",
     ...over,
@@ -88,10 +88,13 @@ const offCmds = installPresetCommands(() => null);
   check(found.length === 1 && fabricIssues(d, null, stable).find((i) => i.objId === "dense")!.title === t("e.issue.dense.title") && /troppo fitti/.test(t("e.issue.dense.title")), `e.11 «${t("e.issue.dense.title")}»`);
   setLanguage("en");
   check(/too dense|too close/i.test(t("e.issue.dense.title")), `e.11 English: «${t("e.issue.dense.title")}»`);
-  // the threshold follows the thread: 0.25 mm is too dense for No. 40 (0.3 mm), fine for No. 60 (0.3 × width 60 / width 40 ≈ 0.24 mm)
-  check(ofKind(fabricIssues(docOf([satin("x", { spacing: 0.25 })], 40), null, stable), "dense").length === 1, "e.11 0.25 mm with No. 40: too dense");
-  check(ofKind(fabricIssues(docOf([satin("x", { spacing: 0.25 })], 60), null, stable), "dense").length === 0, "e.11 0.25 mm with No. 60: fine (the threshold scales with the thread)");
+  // the threshold follows the thread: 75% of the recommended spacing (No. 40: 0.40 → 0.30 mm; No. 60: 0.35 → 0.2625 mm)
+  check(ofKind(fabricIssues(docOf([satin("x", { spacing: 0.28 })], 40), null, stable), "dense").length === 1, "e.11 0.28 mm with No. 40: too dense (under 0.30)");
+  check(ofKind(fabricIssues(docOf([satin("x", { spacing: 0.28 })], 60), null, stable), "dense").length === 0, "e.11 0.28 mm with No. 60: fine (over 0.2625)");
   check(ofKind(fabricIssues(docOf([satin("x", { spacing: 0.15 })]), null, null), "dense").length === 0, "e.11 no preset, no threshold: no warning");
+  const foam = obj("f", { ...defaultStitch("satin"), type: "foam", spacing: 0.15 } as unknown as DesignObject["stitch"]);
+  check(ofKind(fabricIssues(docOf([foam]), null, stable), "dense").length === 0, "e.11 never on foam (3D): denser on purpose");
+  check(ofKind(fabricIssues(docOf([fill("ft", 0, { rowSpacing: 0.15 })]), null, stable), "dense").length === 0, "e.11 fills: Filum's own «Very dense fill» warns, module e does not repeat it");
   // fix: the spacing goes to the threshold, one undo step
   useStore.getState().setDoc(d, { history: false });
   const issue = found[0];

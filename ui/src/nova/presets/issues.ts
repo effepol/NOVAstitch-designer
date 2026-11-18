@@ -1,7 +1,7 @@
 // Module e's warnings (contract, module e: new warnings from the Punch book),
 // in Filum's Issue form so module 0's issue registry can list them beside
 // Filum's own. Pure: the document, the stitch plan and the preset in force.
-//   dense         stitches closer than the preset allows for the thread (e.11)
+//   dense         satin stitches closer than the preset allows for the thread (e.11; never on foam)
 //   facing        stretchy fabric: adjacent fills whose rows sew towards each other (e.12)
 //   zigzagOnly    satin with zig-zag underlay and no contour (e.13)
 //   contourOrder  knit: a shape's contour not sewn right after it (e.14)
@@ -9,11 +9,11 @@
 // «Satin too wide» (e.7) is Filum's own warning (lib/issues.ts): not repeated here.
 // Ids are "e.<kind>:<object id>", the same for the same design and plan (e.issue.fix finds them again).
 
-import type { DesignObject, FillParams, PlanData, SatinParams, StitchDocument, Vec2 } from "../../types";
+import type { DesignObject, PlanData, SatinParams, StitchDocument, Vec2 } from "../../types";
 import { FLAG } from "../../types";
 import type { Issue } from "../../lib/issues";
 import { flatten, objectBoundsCached } from "../../lib/geometry";
-import { threadWidth } from "../../lib/materials";
+import { threadWeightInfo } from "../../lib/materials";
 import { t } from "../core/i18n";
 import type { FabricPreset } from "./preset";
 import { round6 } from "./round";
@@ -152,22 +152,20 @@ export function fabricIssues(doc: StitchDocument, plan: PlanData | null, preset:
     if (!c) return;
     const st = o.stitch;
 
-    // e.11: closer than the preset allows for this thread (No. 40's limit scaled with the thread's width)
-    if (preset && (st.type === "satin" || (st.type === "fill" && (st.method ?? "tatami") === "tatami"))) {
+    // e.11: satin closer than the preset allows for this thread: a share of the spacing recommended
+    // for the thread (Filum's THREAD_WEIGHTS, Madeira's guide). Satin only: Filum already warns about
+    // dense fills ("Very dense fill") and maps needle holes per mm² (density.rs). Never on foam (3D),
+    // denser on purpose.
+    if (preset && st.type === "satin") {
       const w = weightOf(doc, o);
-      const limit = round6((preset.limits.minSpacing * threadWidth(w as 40)) / threadWidth(40));
-      const spacing = st.type === "satin" ? st.spacing : (st as FillParams).rowSpacing;
-      if (spacing < limit)
+      const limit = round6(Math.round(preset.limits.minSpacingRatio * threadWeightInfo(w as 40).spacing * 1000) / 1000);
+      if (st.spacing < limit)
         add("dense", o, {
           level: "warning",
           title: t("e.issue.dense.title"),
-          detail: t("e.issue.dense.detail", { spacing, limit, weight: w }),
+          detail: t("e.issue.dense.detail", { spacing: st.spacing, limit, weight: w }),
           at: c,
-          fix: {
-            label: t("e.issue.dense.fix", { limit }),
-            apply: (x) =>
-              x.stitch.type === "satin" ? { ...x, stitch: { ...x.stitch, spacing: limit } } : x.stitch.type === "fill" ? { ...x, stitch: { ...x.stitch, rowSpacing: limit } } : x,
-          },
+          fix: { label: t("e.issue.dense.fix", { limit }), apply: (x) => (x.stitch.type === "satin" ? { ...x, stitch: { ...x.stitch, spacing: limit } } : x) },
         });
     }
 
