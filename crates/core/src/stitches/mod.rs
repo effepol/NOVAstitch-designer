@@ -282,6 +282,7 @@ mod tests {
             end,
             lock: None,
             color_sort_index: None,
+            link: None,
         }
     }
 
@@ -346,6 +347,7 @@ mod pattern_tests {
             end: None,
             lock: None,
             color_sort_index: None,
+            link: None,
         }
     }
     fn pts(o: &Object) -> Vec<Point> {

@@ -429,6 +429,10 @@ export interface DesignObject {
   clone?: import("./lib/clones").CloneLink;
   /** NOVAstitch: per-object data (contract, section 2). */
   nova?: NovaObject;
+  /** NOVAstitch: the connection to the next object chosen by hand; absent = as Filum decides (contract «b, parte 2»).
+   * join: sewn through in 2.5 mm running stitches, no locks; jump: locked, a jump, locked, no trim.
+   * A colour change after the object, or trimAfter / stopAfter, win over it. */
+  link?: "join" | "jump";
 }
 
 export interface Thread {
@@ -730,6 +734,23 @@ export interface PlanData {
   basting?: [number, number] | null;
   /** Records the canvas leaves out (the finished view), 1 = hidden. */
   hide?: Uint8Array | null;
+  /** NOVAstitch: every connection between consecutive objects, in sewing order (contract «b, parte 2»). */
+  links?: PlanLink[];
+}
+
+/** What the plan does between the end of one object and the start of the next. */
+export interface PlanLink {
+  /** The objects (indices in doc.objects) it goes from and to. */
+  from: number;
+  to: number;
+  kind: "trim" | "jump" | "sew" | "colorChange";
+  /** Chosen by hand (the object's link, trim after or stop after), not by the trim distance. */
+  manual: boolean;
+  /** The straight connection would stay visible: nothing sewn later covers a stretch of it longer than 1 mm. */
+  visible: boolean;
+  /** Where the first object ends and the next starts (mm). */
+  start: Vec2;
+  end: Vec2;
 }
 
 export const FLAG = {
