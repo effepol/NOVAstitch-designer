@@ -7,7 +7,7 @@ import { threadWidth } from "../lib/materials";
 import { paintInteractive, paintUnderlays, type InteractiveOverlay } from "./interactive";
 import { colourGroup, groupPicture } from "./vectorGradient";
 import type { DensityMode } from "../lib/density";
-import { canvasLayersVersion, drawCanvasLayers } from "../nova/core/registry";
+import { canvasLayersVersion, drawCanvasLayers, drawStitchLine } from "../nova/core/registry";
 
 // Rendering model
 // ---------------
@@ -107,6 +107,8 @@ export interface RenderInput {
   dpr: number;
   /** Stitches are drawn by the WebGL renderer: paint background/overlays only. */
   glStitches?: boolean;
+  /** NOVAstitch: a module's needle path replaces the stitch line (nova/core/registry, module d). */
+  noStitches?: boolean;
   /** Handles, satin drafting, cutter, troubleshoot markers, tooltip. */
   interactive?: InteractiveOverlay;
   showDensity?: boolean;
@@ -812,6 +814,7 @@ export class Renderer {
     return [
       r.mode,
       !!r.glStitches,
+      r.noStitches,
       stitched ? r.plan : r.doc,
       r.doc.hoop.width,
       r.doc.hoop.height,
@@ -961,7 +964,7 @@ export class Renderer {
     const base = (this.base ??= newLayer());
     this.sized(base, pw, ph);
     const key = this.contentKey(r);
-    const stitched = r.mode !== "vector" && !!r.plan && !r.glStitches;
+    const stitched = r.mode !== "vector" && !!r.plan && !r.glStitches && !r.noStitches;
     const chunks = stitched ? getChunks(r.plan!, r.showUnderlay) : [];
     const total = r.plan && r.mode !== "vector" ? r.plan.flags.length : 0;
     const limit = r.animIndex == null ? total : Math.max(0, Math.min(total, r.animIndex));
@@ -1036,6 +1039,8 @@ export class Renderer {
     mmTransform(ctx, r);
     paintReferences(ctx, r, "over");
     mmTransform(ctx, r);
+    // NOVAstitch: module d's needle path in place of Filum's stitch line, under the overlays
+    if (r.noStitches && plan) drawStitchLine(ctx, { scale, ox, oy, width: r.width, height: r.height, dpr, mode, dark: theme.dark, showUnderlay: r.showUnderlay }, plan, limit);
 
     // what hidden-stitch removal takes out: the part of each cut object that isn't stitched, hatched
     if (r.hiddenShapes?.length) paintHidden(ctx, doc, r.hiddenShapes, scale, theme.dark);

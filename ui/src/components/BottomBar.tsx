@@ -6,7 +6,7 @@ import { useStore } from "../store";
 import { fmtTime } from "./ui";
 import { STITCH_COLORS, colorSequence, threadUsage } from "../lib/threads";
 import { threadTitle } from "./ThreadPicker";
-import { toolbarButtons, useRegistry } from "../nova/core/registry";
+import { oneToOneScale, toolbarButtons, useRegistry } from "../nova/core/registry";
 import { useLanguage } from "../nova/core/i18n";
 import { t } from "../nova/i18n/filum";
 
@@ -39,8 +39,10 @@ export function BottomBar() {
     else sewOrder.push({ t, n: 1 });
   }
   for (const t of doc.threads) if (!sewOrder.some((x) => x.t.id === t.id) && doc.objects.some((o) => o.thread === t.id)) sewOrder.push({ t, n: 0 });
-  const zooms = [0.5, 1, 3, 6];
-  const actual = 96 / 25.4;
+  // NOVAstitch (Signor Poletti, 18/11): 0.5×, 1×, 2×, 4×, 6× (no 3×); 1× from the screen
+  // calibration a module registers (module c), else 96/25.4
+  const zooms = [0.5, 1, 2, 4, 6];
+  const actual = oneToOneScale();
   return (
     <div className="bottombar">
       <div className="swatches">
@@ -95,6 +97,7 @@ export function BottomBar() {
       {zooms.map((z) => (
         <button
           key={z}
+          data-nova={z === 2 || z === 4 ? "core" : undefined}
           className="btn sm ghost bb-zoom"
           style={Math.abs(view.scale / actual - z) < 0.02 ? { color: "var(--accent-text)", fontWeight: "var(--fw-semibold)" } : undefined}
           title={z === 1 ? t("filum.barre.zoom_1_actual_size") : t("filum.barre.zoom_z", { z })}
