@@ -39,6 +39,7 @@ import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { markedWithFilum, norm } from "./regola-i3.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(here, "../../../../..");
@@ -86,8 +87,6 @@ function moduleCatalogs() {
     .filter((f) => f !== path.join(here, "en.json"))
     .flatMap((f) => Object.entries(JSON.parse(readFileSync(f, "utf8"))).map(([k, v]) => [k.split(".")[0], v]));
 }
-/** Una voce di catalogo come confronto: cifre → #, un segnaposto {nome} vale qualunque testo. */
-const pattern = (text) => new RegExp("^" + norm(text).split(/\{\w+\}/).map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join(".+") + "$");
 
 /** Le parti dello schermo che appartengono ad altre aree, per qualche area (aree.json, «fuori»). */
 const FUORI = Object.values(JSON.parse(readFileSync(path.join(here, "aree.json"), "utf8")).aree).flatMap((a) => a.fuori ?? []).join(", ") || null;
@@ -98,7 +97,6 @@ const json = (f) => JSON.parse(readFileSync(path.join(here, f), "utf8"));
 /** Scritte uguali in ogni lingua: tasti delle scorciatoie (Ctrl+⇧S, B) e sigle tutte maiuscole (PES, U#). */
 const KEYS = /^(?:(?:Ctrl|Alt|Shift|⇧|⌘|⌥)\+?)*(?:[A-Z#,.\\/[\]=+-]|F#|Esc|Enter|Tab|Space|Home|End|Ctrl|Alt|Shift)$/;
 const SIGLA = /^[A-Z][A-Z0-9#]+$/;
-const norm = (s) => s.replace(/\d+(?:[.,  ]\d+)*/g, "#");
 
 // --- nella pagina ------------------------------------------------------------
 
@@ -543,14 +541,7 @@ try {
 
     // i.3, regola del 13/11: un elemento marcato (data-nova) non può contenere una scritta di Filum
     // (non scatta per una scritta che è anche nel catalogo del modulo che ha marcato l'elemento: «Close», «About»)
-    const catalogs = moduleCatalogs();
-    const ownedBy = (text, mod) => catalogs.some(([m, v]) => m === mod && pattern(v).test(text));
-    const hidden = {};
-    for (const id of Object.keys(ref)) {
-      const filum = new Set(ref[id]);
-      const inside = (en.marked[id] ?? []).filter(([s, mod]) => filum.has(app([s])[0]) && !ownedBy(s, mod)).map(([s, mod]) => `${s} (${mod})`);
-      if (inside.length) hidden[id] = inside;
-    }
+    const hidden = markedWithFilum(ref, en.marked, moduleCatalogs(), app);
     if (Object.keys(hidden).length)
       fail(`i.3 elementi marcati (data-nova) con scritte di Filum 0.2.1:\n` + Object.entries(hidden).map(([id, l]) => `       ${id}: ${l.slice(0, 12).join(" · ")}`).join("\n"));
     else console.log("ok   i.3 nessun elemento marcato (data-nova) contiene scritte di Filum 0.2.1");
