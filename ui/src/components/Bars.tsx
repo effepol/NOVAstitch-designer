@@ -18,6 +18,7 @@ import { chooseHoop, hoopGroups, useHoopGroups } from "../nova/core/hoopChoice";
 import type { Hoop as DocHoop } from "../types";
 import { useStore } from "../store";
 import type { Fabric, StitchType, Tool } from "../types";
+import { drawingTools, useRegistry } from "../nova/core/registry";
 import { Num } from "./ui";
 import { t } from "../nova/i18n/filum";
 
@@ -350,12 +351,20 @@ function RailButton({ tool, title, on, onClick }: { tool: Tool; title: string; o
 }
 
 export function ToolRail() {
+  useRegistry();
   const tool = useStore((s) => s.tool);
   const setTool = useStore((s) => s.setTool);
   const setDialog = useStore((s) => s.setDialog);
   return (
     <nav className="toolrail" aria-label={t("filum.barre.tools")}>
       {RAIL.map((t, i) => (t === "-" ? <div className="grp-sep" key={i} /> : <RailButton key={t.tool} tool={t.tool} title={t.title} on={tool === t.tool} onClick={() => setTool(t.tool)} />))}
+      {/* NOVAstitch: drawing tools registered by the modules (nova/core/registry), after Filum's */}
+      {drawingTools().length > 0 && <div className="grp-sep" />}
+      {drawingTools().map((d) => (
+        <button key={d.id} data-nova={d.module} className={`icon-btn ${tool === d.id ? "on" : ""}`} title={t(d.label)} aria-pressed={tool === d.id} onClick={() => setTool(d.id as Tool)}>
+          <d.icon size={17} />
+        </button>
+      ))}
       <div className="grp-sep" />
       <button className="icon-btn" title={t("filum.barre.import_artwork_or_embroidery_file")} onClick={importFile}>
         <Import size={17} />

@@ -26,6 +26,7 @@ import type { Tool } from "./types";
 import { compoundSelection, joinSelection, releaseSelection } from "./lib/pathActions";
 import { averageSelectedNodes } from "./lib/nodeActions";
 import { t } from "./nova/i18n/filum";
+import { drawingTool } from "./nova/core/registry";
 
 const TOOL_KEYS: Record<string, Tool> = {
   v: "select",
@@ -126,6 +127,8 @@ function useShortcuts() {
         }
         return;
       }
+      // NOVAstitch: a registered drawing tool gets Esc, Backspace and Delete from the canvas (nova/core/registry)
+      if (drawingTool(s.tool) && (k === "escape" || k === "backspace" || k === "delete")) return;
       if (k === "delete" || k === "backspace") {
         if (s.tool === "gradient" && s.gradNodes.length) {
           const sg = selectedGradient();
