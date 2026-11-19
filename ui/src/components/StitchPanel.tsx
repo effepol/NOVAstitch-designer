@@ -14,6 +14,7 @@ import { useStore } from "../store";
 import type { DesignObject, StitchParams } from "../types";
 import { FLAG } from "../types";
 import { useEditTargets } from "./editTargets";
+import { stitchTypeOf, stitchTypes, useStitchTypes, type StitchTypeEntry } from "../nova/core/stitchTypes";
 
 type St = StitchParams;
 
@@ -347,10 +348,30 @@ export const FILL_STYLES: Style[] = [
   },
 ];
 
+/** NOVAstitch: a module's stitch type as a card of the picker. */
+type NovaStyle = Style & { module: string; group: StitchTypeEntry["group"] };
+const novaStyle = (e: StitchTypeEntry): NovaStyle => ({
+  id: e.id,
+  module: e.module,
+  group: e.group,
+  label: e.label(),
+  title: e.title?.() ?? e.label(),
+  icon: e.icon,
+  matches: (st) => e.matches(st),
+  apply: (o) => e.apply(o),
+  needs: e.needs,
+});
+
 const hasClosed = (o: DesignObject) => o.paths.some((p) => p.closed && p.nodes.length >= 3);
 
 /** Visual stitch style picker. */
 export function StylePicker({ o }: { o: DesignObject }) {
+  // NOVAstitch: the stitch types the modules register (nova/core/stitchTypes.ts), beside Filum's
+  useStitchTypes();
+  const own = stitchTypeOf(o.stitch);
+  const reg = stitchTypes().map(novaStyle);
+  const regFill = reg.filter((s) => s.group === "fill");
+  const regLine = reg.filter((s) => s.group === "line");
   const closed = hasClosed(o);
   const targets = useEditTargets(o);
   const many = targets.length > 1;
@@ -361,7 +382,7 @@ export function StylePicker({ o }: { o: DesignObject }) {
       ...d,
       objects: d.objects.map((x) => {
         // a fill style only on closed shapes
-        if (!ids.has(x.id) || s.needs?.(x) || (FILL_STYLES.includes(s) && !hasClosed(x))) return x;
+        if (!ids.has(x.id) || s.needs?.(x) || ((FILL_STYLES.includes(s) || (s as NovaStyle).group === "fill") && !hasClosed(x))) return x;
         const r = s.apply(x);
         return typeof r === "string" ? x : { ...x, stitch: r };
       }),
@@ -422,8 +443,11 @@ export function StylePicker({ o }: { o: DesignObject }) {
     // shading, gradients and tartans are made on one shape at a time
     const special = many && typeof s.apply(o) === "string";
     const missing = special ? "One object at a time" : (s.needs?.(o) ?? null);
+    const module = (s as NovaStyle).module;
+    // NOVAstitch: a stitch of a module's type shows that card chosen, not Filum's
+    const on = own ? s.id === own.id : s.matches(o.stitch);
     return (
-      <button key={s.id} className={`style-card ${s.matches(o.stitch) ? "on" : ""}`} title={missing ?? s.title} disabled={!!missing} onClick={() => pickStyle(s)}>
+      <button key={s.id} className={`style-card ${on ? "on" : ""}`} data-nova={module} title={missing ?? s.title} disabled={!!missing} onClick={() => pickStyle(s)}>
         {s.icon}
         <span>{s.label}</span>
       </button>
@@ -434,12 +458,12 @@ export function StylePicker({ o }: { o: DesignObject }) {
       {closed && (
         <>
           <div className="style-group-label">{t("filum.pannelli.fill")}</div>
-          <div className="style-grid">{FILL_STYLES.map(card)}</div>
+          <div className="style-grid">{[...FILL_STYLES, ...regFill].map(card)}</div>
           <div className="style-group-label">{t("filum.pannelli.outline")}</div>
         </>
       )}
       {!closed && <div className="style-group-label">{t("filum.pannelli.line")}</div>}
-      <div className="style-grid">{LINE_STYLES.map(card)}</div>
+      <div className="style-grid">{[...LINE_STYLES, ...regLine].map(card)}</div>
       <div className="style-extra">
         <button className={`link ${o.stitch.type === "none" ? "on" : ""}`} onClick={() => pickStyle({ ...LINE_STYLES[0], apply: () => ({ type: "none" }) })}>
           {t("filum.pannelli.no_stitches_guide")}
