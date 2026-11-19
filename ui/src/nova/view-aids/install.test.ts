@@ -2,7 +2,7 @@
 // and menu items registered and removed, settings checked; nothing of Filum is touched.
 
 import { check, done } from "../core/testkit";
-import { canvasLayers, menuItems, toolbarButtons } from "../core/registry";
+import { canvasLayers, menuItems, systemCursorHidden, toolbarButtons } from "../core/registry";
 import { openPrefs } from "../core/prefs";
 import { createViewAids } from "./settings";
 import { installViewAids } from "./install";
@@ -37,6 +37,11 @@ for (const [k, v] of [["grid.step", 0], ["grid.step", -1], ["target.spacing", Na
 check(refused === 5 && aids.gridStep() === 10 && aids.cursorMode() === "normal", "wrong settings are refused");
 await aids.set("cursor.mode", "crossWindow");
 check(aids.cursorMode() === "crossWindow", "cursor.mode = crossWindow");
+check(systemCursorHidden(), "with a cross on, the system cursor hides over the canvas");
+await aids.set("cursor.mode", "normal");
+check(!systemCursorHidden(), "cursor.mode = normal: the system cursor is back");
+const listed = Object.keys(anchors);
+check(toolbarButtons().filter((b) => b.module === "c").every((b) => !!b.anchor && listed.includes(b.anchor)), "every c button in the bar has a lesson anchor listed in anchors.json");
 // a damaged value in the file falls back to the default
 files.set("nova-prefs.json", JSON.stringify({ schemaVersion: 1, values: { "grid.step": "x", "cursor.mode": 3, "screen.pxPerMm": -2 } }));
 const damaged = createViewAids(await openPrefs({ read: async (n) => files.get(n) ?? null, write: async () => {}, rename: async () => {} }));

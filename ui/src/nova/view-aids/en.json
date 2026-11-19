@@ -1,7 +1,4 @@
 {
-  "c.zoom.fit": "Fit",
-  "c.zoom.fit.title": "Fit the design to the window",
-  "c.zoom.k.title": "Zoom {k}× (1× = actual size)",
   "c.zoom.uncalibrated": "not calibrated",
   "c.zoom.uncalibrated.title": "The screen is not calibrated: 1× is an estimate (96 dots per inch). View → Calibrate the screen",
   "c.grid.step.1": "Grid 1 mm",

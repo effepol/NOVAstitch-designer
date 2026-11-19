@@ -18,6 +18,16 @@ export interface ViewAidsValues {
 }
 export type ViewAidsKey = keyof ViewAidsValues;
 
+/** The pointer on the canvas, from module 0's hook (onCanvasPointer). */
+export interface ViewCursor {
+  tool: string;
+  mm: Vec2;
+  /** The last point of the path being drawn, or null. */
+  last: Vec2 | null;
+  /** The same point on the window (CSS px), when the canvas is on screen. */
+  client: Vec2 | null;
+}
+
 export const DEFAULTS = { "grid.step": 10, "target.spacing": 10, "cursor.mode": "normal" as CursorMode };
 
 const positive = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v) && v > 0;
@@ -41,9 +51,9 @@ export interface ViewAids {
   settled(): Promise<void>;
   targetShown(): boolean;
   showTarget(on: boolean): void;
-  /** Where the pointer is on the canvas (mm) and on the window (CSS px); null when it left. */
-  cursor(): { mm: Vec2; client: Vec2 } | null;
-  setCursor(c: { mm: Vec2; client: Vec2 } | null): void;
+  /** Where the pointer is on the canvas (mm, and CSS px on the window) with the last point drawn; null when it left. */
+  cursor(): ViewCursor | null;
+  setCursor(c: ViewCursor | null): void;
   /** Called after every change; returns the function that stops listening. */
   onChange(fn: (what: ViewAidsKey | "target" | "cursor") => void): () => void;
 }
@@ -68,7 +78,7 @@ export function createViewAids(prefs: Prefs): ViewAids {
   };
   let pending: Promise<void> = Promise.resolve();
   let target = false;
-  let cursor: { mm: Vec2; client: Vec2 } | null = null;
+  let cursor: ViewCursor | null = null;
 
   return {
     gridStep: () => read("grid.step") ?? DEFAULTS["grid.step"],

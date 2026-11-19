@@ -1,10 +1,7 @@
 {
-  "c.zoomFit": "Il pulsante Adatta / The Fit button",
-  "c.zoom05": "Il pulsante zoom 0,5× / The 0.5× zoom button",
-  "c.zoom1": "Il pulsante zoom 1× (dimensione reale) / The 1× zoom button (actual size)",
-  "c.zoom2": "Il pulsante zoom 2× / The 2× zoom button",
-  "c.zoom4": "Il pulsante zoom 4× / The 4× zoom button",
-  "c.zoom6": "Il pulsante zoom 6× / The 6× zoom button",
+  "c.gridStep": "Il pulsante del passo della griglia / The grid step button",
+  "c.target": "Il pulsante della griglia bersaglio / The target grid button",
+  "c.cursorMode": "Il pulsante della croce del cursore / The cursor cross button",
   "c.uncalibrated": "L'avviso «non calibrato» nella barra / The «not calibrated» note in the bar",
   "c.calibrate.dialog": "La finestra di calibrazione dello schermo / The screen calibration window",
   "c.calibrate.ruler": "La linea da misurare col righello / The line to measure with a ruler",
