@@ -52,6 +52,7 @@ import { TartanSection } from "./TartanPanel";
 import { CutworkSection } from "./CutworkPanel";
 import { ElementInfoSection } from "./ElementInfo";
 import { differingSettings, EditTargets, settingLabel, useEditTargets } from "./editTargets";
+import { stitchFieldsFor, stitchTypeOf, useStitchTypes, type FieldsPlace, type StitchSectionProps } from "../nova/core/stitchTypes";
 
 function Thumb({ o, color }: { o: DesignObject; color: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -858,6 +859,27 @@ function StitchOptions({ o }: { o: DesignObject }) {
       live({ [key]: v } as StitchPatch);
     },
   });
+  // NOVAstitch: a stitch of a module's type shows the module's section instead of Filum's (nova/core/stitchTypes.ts)
+  useStitchTypes();
+  const own = stitchTypeOf(st);
+  const nova: StitchSectionProps = { o, targets, up, live, begin };
+  const novaFields = (place: FieldsPlace) =>
+    stitchFieldsFor(st.type, place).map((f) => (
+      <div key={f.id} data-nova={f.module}>
+        <f.Fields {...nova} />
+      </div>
+    ));
+  if (own)
+    return (
+      <>
+        <StylePicker o={o} />
+        <StitchPreview o={o} />
+        <StitchDefaults o={o} />
+        <div data-nova={own.module}>
+          <own.Section {...nova} />
+        </div>
+      </>
+    );
   return (
     <>
       <StylePicker o={o} />
@@ -1535,6 +1557,7 @@ function StitchOptions({ o }: { o: DesignObject }) {
                 <Slider min={1} max={4} step={0.1} value={st.placementLength} unit="mm" {...sl("placementLength")} />
               </Row>
             )}
+            {novaFields("placement")}
           </Section>
           <Section title={t("filum.pannelli.n2_tack_down")}>
             <Row label={t("filum.pannelli.stitch")}>
@@ -1560,6 +1583,7 @@ function StitchOptions({ o }: { o: DesignObject }) {
                 </Row>
               </>
             )}
+            {novaFields("tackdown")}
           </Section>
           <Section title={t("filum.pannelli.n3_cover")}>
             <Row label={t("filum.pannelli.stitch")}>
@@ -1593,7 +1617,9 @@ function StitchOptions({ o }: { o: DesignObject }) {
                 )}
               </>
             )}
+            {novaFields("cover")}
           </Section>
+          {novaFields("end")}
           <Row label={t("filum.pannelli.machine_stops")} title={t("filum.pannelli.stop_after_the_placement_line")}>
             <Toggle on={st.stops} onChange={(v) => up({ stops: v })} />
           </Row>
