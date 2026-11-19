@@ -44,7 +44,7 @@
   "g.menu.lessons": "Lezioni",
   "g.panel.none": "Nessuna lezione per ora. Per aggiungerne una, mettine la cartella nella cartella «lessons» dei dati del programma e premi Ricarica.",
   "g.panel.start": "Inizia",
-  "g.panel.steps": "{n} passi",
+  "g.panel.steps": "Passi della lezione: {n}",
   "g.panel.done": "fatta",
   "g.panel.inProgress": "in corso",
   "g.panel.refused": "Lezioni rifiutate: {n}",

@@ -44,7 +44,7 @@
   "g.menu.lessons": "Lessons",
   "g.panel.none": "No lessons yet. To add one, put its folder in the «lessons» folder of the program's data and press Reload.",
   "g.panel.start": "Start",
-  "g.panel.steps": "{n} steps",
+  "g.panel.steps": "Steps in the lesson: {n}",
   "g.panel.done": "done",
   "g.panel.inProgress": "in progress",
   "g.panel.refused": "Lessons refused: {n}",
