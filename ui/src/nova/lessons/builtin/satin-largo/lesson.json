@@ -1,0 +1,33 @@
+{
+  "id": "satin-largo",
+  "rev": 1,
+  "path": "vector",
+  "title": { "it": "Esempio: la larghezza del satin", "en": "Example: the width of a satin" },
+  "modes": ["assisted", "studio"],
+  "startDesign": "start.nsd",
+  "steps": [
+    {
+      "id": "seleziona",
+      "text": { "it": "Seleziona il satin evidenziato.", "en": "Select the highlighted satin." },
+      "highlight": { "object": "colonna" },
+      "check": { "selection": { "count": 1 } },
+      "hint": { "it": "Fai clic sul satin con lo strumento Seleziona.", "en": "Click the satin with the Select tool." },
+      "reset": "step"
+    },
+    {
+      "id": "larghezza",
+      "text": { "it": "Porta la larghezza del satin tra 3 e 5 mm.", "en": "Set the width of the satin between 3 and 5 mm." },
+      "highlight": { "object": "colonna" },
+      "check": { "exists": { "type": "satin", "param": { "width": { "min": 3, "max": 5 } } } },
+      "hint": { "it": "La larghezza deve stare tra 3 e 5 mm.", "en": "The width must be between 3 and 5 mm." },
+      "reset": "step"
+    },
+    {
+      "id": "fine",
+      "text": { "it": "Fatto. Premi Avanti per finire.", "en": "Done. Press Next to finish." },
+      "highlight": "g.next",
+      "hint": { "it": "Premi Avanti.", "en": "Press Next." },
+      "reset": "start"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "name": "Satin",
+  "threads": [
+    {
+      "id": "t1",
+      "name": "1",
+      "color": "#cc1219",
+      "brand": "",
+      "code": ""
+    }
+  ],
+  "objects": [
+    {
+      "id": "colonna",
+      "name": "Satin",
+      "thread": "t1",
+      "visible": true,
+      "locked": false,
+      "trimAfter": false,
+      "stopAfter": false,
+      "paths": [
+        {
+          "closed": false,
+          "nodes": [
+            {
+              "p": [
+                25,
+                50
+              ]
+            },
+            {
+              "p": [
+                75,
+                50
+              ]
+            }
+          ]
+        }
+      ],
+      "stitch": {
+        "type": "satin",
+        "method": "satin",
+        "width": 2,
+        "swapRails": false,
+        "reverse": false,
+        "spacing": 0.4,
+        "pullComp": 0,
+        "pullCompPct": 0,
+        "maxStitchLength": 0,
+        "shortStitchInset": 0.15,
+        "centerWalk": false,
+        "contourUnderlay": false,
+        "contourInset": 0.4,
+        "zigzagUnderlay": false,
+        "zigzagUnderlaySpacing": 3,
+        "zigzagUnderlayInset": 0.2,
+        "underlayAuto": false
+      }
+    }
+  ],
+  "hoop": {
+    "name": "100 × 100 mm",
+    "width": 100,
+    "height": 100
+  },
+  "fabric": "cotton",
+  "machine": {
+    "trimDistance": 3,
+    "ties": true,
+    "minStitch": 0.1,
+    "maxStitch": 12.1,
+    "spm": 700,
+    "trimSeconds": 10,
+    "colorChangeSeconds": 10
+  },
+  "nova": {
+    "schemaVersion": 1,
+    "hoopRef": null,
+    "hoopKind": "flat",
+    "fabricPreset": null,
+    "edit": {
+      "mirrorPivot": "selection",
+      "duplicateOffset": [
+        0,
+        0
+      ]
+    },
+    "patchGroups": [],
+    "mode": "studio",
+    "lesson": null,
+    "ext": {},
+    "app": {
+      "name": "NOVAstitch Designer",
+      "version": "0.1.0"
+    }
+  }
+}
