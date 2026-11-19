@@ -3,6 +3,7 @@
 // font editor (Ink/Stitch's Edit JSON: metadata, spacing, kerning) with a
 // live preview.
 
+import { t, tn } from "../nova/i18n/filum";
 import { FileArchive, FileJson, LayoutGrid, PencilRuler, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -22,10 +23,10 @@ import { safeSetItem } from "../lib/storage";
 
 /** Stitch directions of Ink/Stitch font variants. */
 export const VARIANT_LABELS: Record<string, { arrow: string; name: string }> = {
-  ltr: { arrow: "→", name: "Left to right" },
-  rtl: { arrow: "←", name: "Right to left" },
-  ttb: { arrow: "↓", name: "Top to bottom" },
-  btt: { arrow: "↑", name: "Bottom to top" },
+  ltr: { arrow: "→", get name() { return t("filum.pannelli.left_to_right"); } },
+  rtl: { arrow: "←", get name() { return t("filum.pannelli.right_to_left"); } },
+  ttb: { arrow: "↓", get name() { return t("filum.pannelli.top_to_bottom"); } },
+  btt: { arrow: "↑", get name() { return t("filum.pannelli.bottom_to_top"); } },
 };
 
 // ---------------------------------------------------------------------------
@@ -33,11 +34,11 @@ export const VARIANT_LABELS: Record<string, { arrow: string; name: string }> = {
 
 const BATCH_KEY = "filum.batchLettering";
 const QUICK_FORMATS = ["pes", "dst", "jef", "exp", "vp3", "hus", "xxx", "svg"];
-const SEPARATORS: [string, string][] = [
-  ["", "New line"],
-  [";", "Semicolon ;"],
-  [",", "Comma ,"],
-  ["|", "Bar |"],
+const SEPARATORS = (): [string, string][] => [
+  ["", t("filum.pannelli.new_line")],
+  [";", t("filum.pannelli.semicolon")],
+  [",", t("filum.pannelli.comma")],
+  ["|", t("filum.pannelli.bar")],
 ];
 
 function loadBatch(): { text: string; separator: string; formats: string[] } {
@@ -75,41 +76,41 @@ export function BatchSection({ group, spec }: { group: string; spec: TextSpec })
     setBusy("0");
     try {
       const { files, failed } = await batchLettering(group, texts, state.formats, (d, n) => setBusy(`${d}/${n}`));
-      for (const f of failed.slice(0, 3)) s.toast(`Batch: ${f}`, "error");
+      for (const f of failed.slice(0, 3)) s.toast(t("filum.pannelli.batch_f", { f }), "error");
       if (!files.length) return;
       const name = `${(s.doc.name || "lettering").replace(/[\\/:*?"<>|]+/g, "_")}-batch.zip`;
       const saved = await saveFile(name, makeZip(files), [{ name: "ZIP archive", extensions: ["zip"] }]);
-      if (saved) s.toast(`Exported ${files.length} file${files.length === 1 ? "" : "s"} to ${name}`, "success");
+      if (saved) s.toast(tn("filum.pannelli.exported_n_files_to", files.length, { name }), "success");
     } catch (e) {
-      s.toast(`Batch lettering failed: ${(e as Error).message}`, "error");
+      s.toast(t("filum.pannelli.batch_lettering_failed_message", { message: (e as Error).message }), "error");
     } finally {
       setBusy(null);
     }
   };
   const total = texts.length * state.formats.length;
   return (
-    <Section title="Batch lettering" defaultOpen={false}>
+    <Section title={t("filum.pannelli.batch_lettering")} defaultOpen={false}>
       <p className="hint" style={{ paddingTop: 2 }}>
-        One file per text — names, numbers, team lists. Each text takes this lettering's place with its font, size, spacing, colours
-        {spec.path ? " and path" : ""}; the rest of the design comes along.
+        {t("filum.pannelli.one_file_per_text_names")}
+        {spec.path ? t("filum.pannelli.and_path") : ""}{t("filum.pannelli.the_rest_of_the_design")}
       </p>
       <textarea
         className="input"
         style={{ width: "100%", height: 84, fontSize: "var(--fs-md)" }}
-        placeholder={state.separator ? `Anna${state.separator}Ben${state.separator}Cleo` : "Anna\nBen\nCleo"}
+        placeholder={state.separator ? t("filum.pannelli.anna_separator_ben_separator__cleo", { separator: state.separator, separator_: state.separator }) : t("filum.pannelli.anna_ben_cleo")}
         value={state.text}
         onChange={(e) => patch({ text: e.target.value })}
       />
-      <Row label="Separator" title="What separates the texts. With a separator other than a new line, type \n for a line break inside a text">
+      <Row label={t("filum.pannelli.separator")} title={t("filum.pannelli.what_separates_the_texts_with")}>
         <select className="select" style={{ width: "100%" }} value={state.separator} onChange={(e) => patch({ separator: e.target.value })}>
-          {SEPARATORS.map(([v, l]) => (
+          {SEPARATORS().map(([v, l]) => (
             <option key={v} value={v}>
               {l}
             </option>
           ))}
         </select>
       </Row>
-      <Row label="Formats" title="Every text is exported in each of these formats">
+      <Row label={t("filum.pannelli.formats")} title={t("filum.pannelli.every_text_is_exported_in")}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
           {quick.map((e) => (
             <button key={e} className={`chip ${state.formats.includes(e) ? "on" : ""}`} onClick={() => toggle(e)} title={formats.find((f) => f.extension === e)?.name}>
@@ -119,13 +120,13 @@ export function BatchSection({ group, spec }: { group: string; spec: TextSpec })
           {state.formats
             .filter((e) => !quick.includes(e))
             .map((e) => (
-              <button key={e} className="chip on" onClick={() => toggle(e)} title="Click to remove">
+              <button key={e} className="chip on" onClick={() => toggle(e)} title={t("filum.pannelli.click_to_remove")}>
                 {e.toUpperCase()}
               </button>
             ))}
           {others.length > 0 && (
-            <select className="select" value="" onChange={(e) => e.target.value && toggle(e.target.value)} title="More formats" style={{ width: 70 }}>
-              <option value="">More…</option>
+            <select className="select" value="" onChange={(e) => e.target.value && toggle(e.target.value)} title={t("filum.pannelli.more_formats")} style={{ width: 70 }}>
+              <option value="">{t("filum.pannelli.more")}</option>
               {others
                 .filter((f) => !state.formats.includes(f.extension))
                 .map((f) => (
@@ -137,9 +138,9 @@ export function BatchSection({ group, spec }: { group: string; spec: TextSpec })
           )}
         </div>
       </Row>
-      <button className="btn sm" style={{ width: "100%", marginTop: 6 }} disabled={!total || busy !== null} onClick={run} title="Files are named like Ink/Stitch's: 000-Anna.pes, 001-Ben.pes …">
+      <button className="btn sm" style={{ width: "100%", marginTop: 6 }} disabled={!total || busy !== null} onClick={run} title={t("filum.pannelli.files_are_named_like_ink")}>
         <FileArchive size={13} />
-        {busy !== null ? ` Exporting ${busy}…` : total ? ` Export ${total} file${total === 1 ? "" : "s"} as ZIP` : " Add texts and a format"}
+        {busy !== null ? t("filum.pannelli.exporting_busy", { busy }) : total ? tn("filum.pannelli.export_n_files_zip", total) : t("filum.pannelli.add_texts_and_a_format")}
       </button>
     </Section>
   );
@@ -158,48 +159,48 @@ export function FontSection({ group, spec, font }: { group: string; spec: TextSp
     const g = await insertFontSample(spec.font, { size: spec.size, maxWidth: width, variant: spec.variant });
     if (g) {
       selectGroup(g);
-      useStore.getState().toast(`Sample sheet of ${fontLabel(spec.font)}`, "success");
-    } else useStore.getState().toast("This font has no glyphs to sample", "error");
+      useStore.getState().toast(t("filum.pannelli.sample_sheet_of_v1", { v1: fontLabel(spec.font) }), "success");
+    } else useStore.getState().toast(t("filum.pannelli.this_font_has_no_glyphs"), "error");
   };
   const edit = async () => {
     if (installed) return setEditing(spec.font);
     // bundled fonts are read-only: edit a copy and switch this lettering to it
-    useStore.getState().toast(`Copying ${fontLabel(spec.font)}…`);
+    useStore.getState().toast(t("filum.pannelli.copying_v1", { v1: fontLabel(spec.font) }));
     try {
       const key = await copyBundledFont(spec.font);
       await updateText(group, { font: key });
       setEditing(key);
     } catch (e) {
-      useStore.getState().toast(`Could not copy the font: ${(e as Error).message}`, "error");
+      useStore.getState().toast(t("filum.pannelli.could_not_copy_the_font", { message: (e as Error).message }), "error");
     }
   };
   const variants = (font?.variants ?? []).map((v) => VARIANT_LABELS[v]?.arrow ?? v).join(" ");
   return (
-    <Section title="Font" defaultOpen={false}>
+    <Section title={t("filum.pannelli.font")} defaultOpen={false}>
       <p className="hint" style={{ paddingTop: 2 }}>
         {font ? (
           <>
-            {font.name} · {font.names.size} glyphs · {font.size.toFixed(0)} mm at 100 %
-            {font.variants.length > 1 ? ` · directions ${variants}` : ""}
-            {font.reversible ? "" : " · not reversible"}
+            {font.name} · {font.names.size}{t("filum.pannelli.glyphs")}{font.size.toFixed(0)}{t("filum.pannelli.mm_at_100")}
+            {font.variants.length > 1 ? t("filum.pannelli.directions_variants", { variants }) : ""}
+            {font.reversible ? "" : t("filum.pannelli.not_reversible")}
           </>
         ) : (
-          "Loading the font…"
+          t("filum.pannelli.loading_the_font")
         )}
       </p>
-      <Row label="Sample width" title="Line width of the sample sheet (Ink/Stitch's Font Sampling: max. line width)">
+      <Row label={t("filum.pannelli.sample_width")} title={t("filum.pannelli.line_width_of_the_sample")}>
         <Num value={width} unit="mm" step={10} min={20} max={1000} digits={0} onChange={setWidth} />
       </Row>
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-        <button className="btn sm" onClick={sample} title="Every glyph of the font as a new lettering at this size, to check the letters, spacing and kerning">
-          <LayoutGrid size={12} /> Insert sample sheet
+        <button className="btn sm" onClick={sample} title={t("filum.pannelli.every_glyph_of_the_font")}>
+          <LayoutGrid size={12} />{t("filum.pannelli.insert_sample_sheet")}
         </button>
         <button
           className="btn sm"
           onClick={edit}
-          title={installed ? "Name, description, spacing, kerning … (Ink/Stitch's font.json)" : "Bundled fonts are read-only: edit an installed copy (this lettering switches to it)"}
+          title={installed ? t("filum.pannelli.name_description_spacing_kerning_ink") : t("filum.pannelli.bundled_fonts_are_read_only")}
         >
-          <PencilRuler size={12} /> {installed ? "Edit font info…" : "Edit a copy…"}
+          <PencilRuler size={12} /> {installed ? t("filum.pannelli.edit_font_info") : t("filum.pannelli.edit_a_copy")}
         </button>
       </div>
       {editing && createPortal(<FontInfoDialog fontKey={editing} onClose={() => setEditing(null)} />, document.body)}
@@ -212,7 +213,7 @@ export function FontSection({ group, spec, font }: { group: string; spec: TextSp
 
 type Info = Record<string, unknown>;
 type Tab = "info" | "settings" | "spacing" | "kerning";
-const PREVIEW_THREADS: Thread[] = [{ id: "preview", name: "Preview", color: "#1f2a56", brand: "", code: "" }];
+const PREVIEW_THREADS: Thread[] = [{ id: "preview", get name() { return t("filum.pannelli.preview"); }, color: "#1f2a56", brand: "", code: "" }];
 
 const str = (v: unknown, d = "") => (typeof v === "string" ? v : v == null ? d : String(v));
 const num = (v: unknown, d: number) => (typeof v === "number" && isFinite(v) ? v : d);
@@ -278,23 +279,23 @@ export function FontInfoDialog({ fontKey, onClose }: { fontKey: string; onClose:
     try {
       await saveInkFontInfo(fontKey, cleanInfo(info));
       const n = await refreshLetterings(fontKey);
-      s.toast(`${str(info.name, "Font")} saved${n ? ` · ${n} lettering${n === 1 ? "" : "s"} updated` : ""}`, "success");
+      s.toast(t("filum.pannelli.font_saved", { name: str(info.name, t("filum.pannelli.font_fallback")) }) + (n ? tn("filum.pannelli.n_letterings_updated", n) : ""), "success");
       onClose();
     } catch (e) {
-      s.toast(`Could not save the font: ${(e as Error).message}`, "error");
+      s.toast(t("filum.pannelli.could_not_save_the_font", { message: (e as Error).message }), "error");
     }
   };
   const exportJson = async () => {
     const { glyphs: g, ...rest } = cleanInfo(info);
     const out = { ...rest, glyphs: g ?? glyphs };
-    const saved = await saveFile("font.json", enc.encode(fontJsonText(out)), [{ name: "Ink/Stitch font info", extensions: ["json"] }]);
-    if (saved) useStore.getState().toast("Saved font.json — put it next to the font's SVG files", "success");
+    const saved = await saveFile("font.json", enc.encode(fontJsonText(out)), [{ name: t("filum.pannelli.ink_stitch_font_info"), extensions: ["json"] }]);
+    if (saved) useStore.getState().toast(t("filum.pannelli.saved_font_json_put_it"), "success");
   };
   const remove = async () => {
     const used = useStore.getState().doc.objects.some((o) => o.text?.font === fontKey);
-    if (!confirm(`Remove ${str(info.name, "this font")} from the installed fonts?${used ? " Letterings in this design that use it can no longer be edited as text." : ""}`)) return;
+    if (!confirm(t("filum.pannelli.remove_font_from_installed", { name: str(info.name, t("filum.pannelli.this_font")) }) + (used ? t("filum.pannelli.letterings_in_this_design_that") : ""))) return;
     await removeInkFont(fontKey);
-    useStore.getState().toast(`${fontLabel(fontKey)} removed`);
+    useStore.getState().toast(t("filum.pannelli.v1_removed", { v1: fontLabel(fontKey) }));
     onClose();
   };
   const field = (label: string, k: string, title?: string, area?: boolean) => (
@@ -323,7 +324,7 @@ export function FontInfoDialog({ fontKey, onClose }: { fontKey: string; onClose:
       </label>
       <Num value={kern[key] ?? kern[left + right] ?? 0} unit="px" step={0.5} digits={1} onChange={(v) => setIn("kerning_pairs", kern[key] === undefined && kern[left + right] !== undefined ? left + right : key, v || null)} />
       {kern[key] !== undefined || kern[left + right] !== undefined ? (
-        <button className="icon-btn" title="Remove the pair" onClick={() => setIn("kerning_pairs", kern[key] !== undefined ? key : left + right, null)}>
+        <button className="icon-btn" title={t("filum.pannelli.remove_the_pair")} onClick={() => setIn("kerning_pairs", kern[key] !== undefined ? key : left + right, null)}>
           <Trash2 size={12} />
         </button>
       ) : (
@@ -335,22 +336,22 @@ export function FontInfoDialog({ fontKey, onClose }: { fontKey: string; onClose:
     <Dialog
       live
       wide
-      title={`Font info — ${str(info.name, fontLabel(fontKey))}`}
+      title={t("filum.pannelli.font_info_v1", { v1: str(info.name, fontLabel(fontKey)) })}
       onClose={onClose}
       footer={
         <>
-          <button className="btn" onClick={exportJson} title="Ink/Stitch's font.json with these values, for the font's folder">
-            <FileJson size={13} /> Export font.json…
+          <button className="btn" onClick={exportJson} title={t("filum.pannelli.ink_stitch_s_font_json")}>
+            <FileJson size={13} />{t("filum.pannelli.export_font_json")}
           </button>
-          <button className="btn ghost" onClick={remove} title="Uninstall this font">
-            <Trash2 size={13} /> Remove font
+          <button className="btn ghost" onClick={remove} title={t("filum.pannelli.uninstall_this_font")}>
+            <Trash2 size={13} />{t("filum.pannelli.remove_font")}
           </button>
           <div className="spacer" />
           <button className="btn" onClick={onClose}>
-            Cancel
+            {t("filum.pannelli.cancel")}
           </button>
           <button className="btn primary" onClick={apply}>
-            Apply
+            {t("filum.pannelli.apply")}
           </button>
         </>
       }
@@ -360,10 +361,10 @@ export function FontInfoDialog({ fontKey, onClose }: { fontKey: string; onClose:
           <div className="seg" style={{ marginBottom: 8 }}>
             {(
               [
-                ["info", "Info"],
-                ["settings", "Settings"],
-                ["spacing", "Spacing"],
-                ["kerning", "Kerning"],
+                ["info", t("filum.pannelli.info")],
+                ["settings", t("filum.pannelli.settings")],
+                ["spacing", t("filum.pannelli.spacing")],
+                ["kerning", t("filum.pannelli.kerning")],
               ] as const
             ).map(([v, l]) => (
               <button key={v} className={tab === v ? "on" : ""} onClick={() => setTab(v)}>
@@ -376,8 +377,8 @@ export function FontInfoDialog({ fontKey, onClose }: { fontKey: string; onClose:
               {field("Name", "name")}
               {field("Description", "description", undefined, true)}
               {field("Licence", "font_license")}
-              <label className="field" title="Comma-separated: they become the font picker's filters">
-                <span>Keywords</span>
+              <label className="field" title={t("filum.pannelli.comma_separated_they_become_the")}>
+                <span>{t("filum.pannelli.keywords")}</span>
                 <input
                   className="input"
                   value={Array.isArray(info.keywords) ? (info.keywords as string[]).join(", ") : str(info.keywords)}
@@ -395,16 +396,16 @@ export function FontInfoDialog({ fontKey, onClose }: { fontKey: string; onClose:
           )}
           {tab === "settings" && (
             <>
-              <Row label="Size" title="Cap height in mm at 100 % — the size the letters are digitized for">
+              <Row label={t("filum.pannelli.size")} title={t("filum.pannelli.cap_height_in_mm_at")}>
                 <Num value={num(info.size, 0)} unit="mm" step={0.5} min={0} digits={1} onChange={(v) => set("size", v)} />
               </Row>
-              <Row label="Min scale" title="Smallest recommended scale (1 = 100 %)">
+              <Row label={t("filum.pannelli.min_scale")} title={t("filum.pannelli.smallest_recommended_scale_1_100")}>
                 <Num value={num(info.min_scale, 1)} step={0.05} min={0.05} max={10} digits={2} onChange={(v) => set("min_scale", v)} />
               </Row>
-              <Row label="Max scale" title="Largest recommended scale (1 = 100 %)">
+              <Row label={t("filum.pannelli.max_scale")} title={t("filum.pannelli.largest_recommended_scale_1_100")}>
                 <Num value={num(info.max_scale, 1)} step={0.05} min={0.05} max={10} digits={2} onChange={(v) => set("max_scale", v)} />
               </Row>
-              <Row label="Default direction" title="The variant used unless a lettering picks another (the font's default_variant)">
+              <Row label={t("filum.pannelli.default_direction")} title={t("filum.pannelli.the_variant_used_unless_a")}>
                 <select className="select" style={{ width: "100%" }} value={str(info.default_variant, "ltr")} onChange={(e) => set("default_variant", e.target.value)}>
                   {(font?.variants ?? ["ltr"]).map((v) => (
                     <option key={v} value={v}>
@@ -413,53 +414,53 @@ export function FontInfoDialog({ fontKey, onClose }: { fontKey: string; onClose:
                   ))}
                 </select>
               </Row>
-              <Row label="Text direction" title="Reading direction of the script: right to left for Hebrew, Arabic …">
+              <Row label={t("filum.pannelli.text_direction")} title={t("filum.pannelli.reading_direction_of_the_script")}>
                 {seg("text_direction", [
-                  ["ltr", "Left to right"],
-                  ["rtl", "Right to left"],
+                  ["ltr", t("filum.pannelli.left_to_right")],
+                  ["rtl", t("filum.pannelli.right_to_left")],
                 ])}
               </Row>
-              <Row label="Letter case" title="Force the text to capitals or small letters (fonts with one case)">
+              <Row label={t("filum.pannelli.letter_case")} title={t("filum.pannelli.force_the_text_to_capitals")}>
                 {seg("letter_case", [
-                  ["", "As typed"],
-                  ["upper", "Upper"],
-                  ["lower", "Lower"],
+                  ["", t("filum.pannelli.as_typed")],
+                  ["upper", t("filum.pannelli.upper")],
+                  ["lower", t("filum.pannelli.lower")],
                 ])}
               </Row>
-              <Row label="Default glyph" title="Shown for letters the font doesn't have; a space leaves a gap">
+              <Row label={t("filum.pannelli.default_glyph")} title={t("filum.pannelli.shown_for_letters_the_font")}>
                 <input className="input" style={{ width: 60 }} value={str(info.default_glyph, "�")} onChange={(e) => set("default_glyph", e.target.value)} />
               </Row>
-              <Row label="Back and forth" title="Reversible: letterings may stitch every second line the other way round">
+              <Row label={t("filum.pannelli.back_and_forth")} title={t("filum.pannelli.reversible_letterings_may_stitch_every")}>
                 <Toggle on={info.reversible !== false} onChange={(v) => set("reversible", v)} />
               </Row>
-              <Row label="Colour sort" title="Sortable: multicolour letterings may sew each colour in one go">
+              <Row label={t("filum.pannelli.colour_sort")} title={t("filum.pannelli.sortable_multicolour_letterings_may_sew")}>
                 <Toggle on={info.sortable === true} onChange={(v) => set("sortable", v)} />
               </Row>
             </>
           )}
           {tab === "spacing" && (
             <>
-              <Row label="Line height" title="Leading: distance from one baseline to the next (px, font units)">
+              <Row label={t("filum.pannelli.line_height")} title={t("filum.pannelli.leading_distance_from_one_baseline")}>
                 <Num value={num(info.leading, 100)} unit="px" step={1} digits={1} onChange={(v) => set("leading", v)} />
               </Row>
-              <Row label="Space" title="Width of a space (horiz_adv_x_space, px)">
+              <Row label="Space" title={t("filum.pannelli.width_of_a_space_horiz_adv_x_space")}>
                 <Num value={num(info.horiz_adv_x_space, 20)} unit="px" step={0.5} digits={1} onChange={(v) => set("horiz_adv_x_space", v)} />
               </Row>
-              <Row label="Advance" title="Default horizontal advance of a glyph (px): from its origin to the next glyph's. Off: every glyph's own width">
+              <Row label={t("filum.pannelli.advance")} title={t("filum.pannelli.default_horizontal_advance_of_a")}>
                 <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                  <Toggle on={advDefault !== null} onChange={(v) => set("horiz_adv_x_default", v ? 50 : null)} title="A fixed default advance instead of the glyph width" />
-                  {advDefault !== null ? <Num value={advDefault} unit="px" step={0.5} digits={1} onChange={(v) => set("horiz_adv_x_default", v)} /> : <span className="hint" style={{ padding: 0 }}>Glyph width</span>}
+                  <Toggle on={advDefault !== null} onChange={(v) => set("horiz_adv_x_default", v ? 50 : null)} title={t("filum.pannelli.a_fixed_default_advance_instead")} />
+                  {advDefault !== null ? <Num value={advDefault} unit="px" step={0.5} digits={1} onChange={(v) => set("horiz_adv_x_default", v)} /> : <span className="hint" style={{ padding: 0 }}>{t("filum.pannelli.glyph_width")}</span>}
                 </div>
               </Row>
-              <p className="hint">Per-glyph advances (empty: the default). Click a glyph's value to change it.</p>
-              <input className="input" placeholder="Filter glyphs" value={filter} onChange={(e) => setFilter(e.target.value)} style={{ width: "100%", marginBottom: 6 }} />
+              <p className="hint">{t("filum.pannelli.per_glyph_advances_empty_the")}</p>
+              <input className="input" placeholder={t("filum.pannelli.filter_glyphs")} value={filter} onChange={(e) => setFilter(e.target.value)} style={{ width: "100%", marginBottom: 6 }} />
               <div style={{ maxHeight: 220, overflow: "auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: "2px 10px" }}>
                 {glyphs
                   .filter((g) => !q || g.includes(q))
                   .map((g) => {
                     const v = map(info.horiz_adv_x)[g];
                     return (
-                      <div key={g} className="row" style={{ gridTemplateColumns: "34px 1fr" }} title={v === undefined ? "Default advance" : "Own advance — set to 0 for the default"}>
+                      <div key={g} className="row" style={{ gridTemplateColumns: "34px 1fr" }} title={v === undefined ? t("filum.pannelli.default_advance") : t("filum.pannelli.own_advance_set_to_0")}>
                         <label className="mono" style={{ fontSize: "var(--fs-lg)" }}>
                           {g}
                         </label>
@@ -473,7 +474,7 @@ export function FontInfoDialog({ fontKey, onClose }: { fontKey: string; onClose:
           {tab === "kerning" && (
             <>
               <p className="hint" style={{ paddingTop: 0 }}>
-                Kerning moves the right glyph of a pair closer (positive, px) or further away (negative). The preview's pairs first.
+                {t("filum.pannelli.kerning_moves_the_right_glyph")}
               </p>
               <div style={{ maxHeight: 150, overflow: "auto" }}>
                 {textPairs(text)
@@ -495,29 +496,29 @@ export function FontInfoDialog({ fontKey, onClose }: { fontKey: string; onClose:
                     setPair(["", ""]);
                   }}
                 >
-                  Add pair
+                  {t("filum.pannelli.add_pair")}
                 </button>
-                <input className="input" placeholder="Filter pairs" value={filter} onChange={(e) => setFilter(e.target.value)} style={{ flex: 1 }} />
+                <input className="input" placeholder={t("filum.pannelli.filter_pairs")} value={filter} onChange={(e) => setFilter(e.target.value)} style={{ flex: 1 }} />
               </div>
               <div style={{ maxHeight: 180, overflow: "auto" }}>
                 {kerningRows(kern)
                   .filter((r) => !q || r.left.includes(q) || r.right.includes(q))
                   .slice(0, 400)
                   .map((r) => kernRow(r.key, r.left, r.right))}
-                {!Object.keys(kern).length && <p className="hint">No kerning pairs yet.</p>}
+                {!Object.keys(kern).length && <p className="hint">{t("filum.pannelli.no_kerning_pairs_yet")}</p>}
               </div>
             </>
           )}
         </div>
         <div>
-          <label className="field" title="Type pairs to check spacing and kerning">
-            <span>Preview</span>
+          <label className="field" title={t("filum.pannelli.type_pairs_to_check_spacing")}>
+            <span>{t("filum.pannelli.preview")}</span>
             <textarea className="input" style={{ width: "100%", height: 48 }} value={text} onChange={(e) => setText(e.target.value)} />
           </label>
           <div style={{ height: 224, borderRadius: "var(--r-md)", border: "1px solid var(--border)" }}>
             <DesignView doc={previewDoc} plan={null} mode="vector" fabricColor="#ffffff" pad={10} />
           </div>
-          <p className="hint">The outlines at the font's size; Apply updates every lettering with this font.</p>
+          <p className="hint">{t("filum.pannelli.the_outlines_at_the_font")}</p>
         </div>
       </div>
     </Dialog>

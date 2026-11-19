@@ -1,11 +1,12 @@
 // Machine pickers: <option>s grouped by brand, and the frame buttons of a
 // machine (everyday frames first, special ones — cap, cylinder … — apart).
 
+import { t } from "../nova/i18n/filum";
 import { MACHINE_BRANDS, MACHINES, SETTINGS_PRESETS, type Frame } from "../lib/machines";
 
 function FrameButton({ f, on, onPick }: { f: Frame; on: boolean; onPick: (f: Frame) => void }) {
   return (
-    <button className={on ? "on" : ""} title={`${f.width} × ${f.height} mm${f.shape === "oval" ? " (round / oval)" : ""}${f.note ? ` — ${f.note}` : ""}`} onClick={() => onPick(f)}>
+    <button className={on ? "on" : ""} title={`${f.width} × ${f.height} mm${f.shape === "oval" ? t("filum.pannelli.round_oval") : ""}${f.note ? ` — ${f.note}` : ""}`} onClick={() => onPick(f)}>
       <i className={f.shape === "oval" ? "oval" : ""} style={{ aspectRatio: `${f.width} / ${f.height}` }} />
       {f.name}
     </button>
@@ -26,7 +27,7 @@ export function FrameButtons({ frames, isOn, onPick, className = "" }: { frames:
       {special.length > 0 && (
         <details className="xp-special" open={special.some(isOn)}>
           <summary>
-            Special frames <span className="stat">{special.length}</span>
+            {t("filum.pannelli.special_frames")}<span className="stat">{special.length}</span>
           </summary>
           <div className={`xp-frames ${className}`}>
             {special.map((f) => (
@@ -67,7 +68,7 @@ export function SettingsPresetOptions() {
   return (
     <>
       {groups.map((g) => (
-        <optgroup key={g} label={g}>
+        <optgroup key={g} label={g === "General" ? t("filum.pannelli.preset_group_general") : g}>
           {SETTINGS_PRESETS.filter((p) => p.group === g).map((p) => (
             <option key={p.id} value={p.id} title={p.hint}>
               {p.name}

@@ -1,6 +1,7 @@
 // Multicolour satin: split the selected satin into colour stripes across its
 // width (Ink/Stitch "Satin multicolor"), from its Properties section.
 
+import { t } from "../nova/i18n/filum";
 import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { splitSatin, type Stripe } from "../lib/multicolorSatin";
@@ -29,7 +30,7 @@ export function MulticolorSatin({ o }: { o: DesignObject }) {
       return { ...d, objects };
     });
     s.select(parts.map((p) => p.id));
-    s.toast(`Split into ${parts.length} stripes`);
+    s.toast(t("filum.pannelli.split_into_length_stripes", { length: parts.length }));
   };
   return (
     <div className="mc-satin">
@@ -39,7 +40,7 @@ export function MulticolorSatin({ o }: { o: DesignObject }) {
           <ThreadPicker value={st.thread} onPick={(t) => set(i, { thread: t })} />
           <Num value={st.width} step={0.5} min={0.1} max={10} digits={1} unit="×" onChange={(v) => set(i, { width: v })} />
           {stripes.length > 2 && (
-            <button className="btn sm ghost" title="Remove this stripe" onClick={() => setStripes(stripes.filter((_, k) => k !== i))}>
+            <button className="btn sm ghost" title={t("filum.pannelli.remove_this_stripe")} onClick={() => setStripes(stripes.filter((_, k) => k !== i))}>
               <Trash2 size={12} />
             </button>
           )}
@@ -47,13 +48,13 @@ export function MulticolorSatin({ o }: { o: DesignObject }) {
       ))}
       <div className="mc-actions">
         <button className="btn sm ghost" onClick={() => setStripes([...stripes, { thread: threads[(stripes.length + 1) % Math.max(1, threads.length)]?.id ?? o.thread, width: 1 }])}>
-          <Plus size={12} /> Stripe
+          <Plus size={12} />{t("filum.pannelli.stripe")}
         </button>
-        <Row label="Overlap" title="How far each stripe reaches under its neighbour, so no gap opens">
+        <Row label={t("filum.pannelli.overlap")} title={t("filum.pannelli.how_far_each_stripe_reaches")}>
           <Num value={overlap} step={0.1} min={0} max={1.5} unit="mm" onChange={setOverlap} />
         </Row>
-        <button className="btn sm primary" onClick={split} title="Replace the column by one satin per stripe (the first keeps the underlay)">
-          Split into stripes
+        <button className="btn sm primary" onClick={split} title={t("filum.pannelli.replace_the_column_by_one")}>
+          {t("filum.pannelli.split_into_stripes")}
         </button>
       </div>
     </div>

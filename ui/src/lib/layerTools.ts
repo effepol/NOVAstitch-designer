@@ -3,18 +3,19 @@
 // Pure functions on the document and the rows.
 
 import type { DesignObject, StitchDocument } from "../types";
+import { t } from "../nova/i18n/filum";
 import { chainOf, liveGroups, withParent } from "./groups";
 import { groupInfo, isFixedMember, pruneGroups, type LayerListRow } from "./layerRows";
 
 /** What the type filter offers. */
 export type KindFilter = "all" | "fill" | "satin" | "line" | "text";
 
-export const KIND_FILTERS: [KindFilter, string][] = [
-  ["all", "All types"],
-  ["fill", "Fills"],
-  ["satin", "Satins"],
-  ["line", "Lines"],
-  ["text", "Lettering"],
+export const KIND_FILTERS = (): [KindFilter, string][] => [
+  ["all", t("filum.pannelli.kind_all")],
+  ["fill", t("filum.pannelli.kind_fill")],
+  ["satin", t("filum.pannelli.kind_satin")],
+  ["line", t("filum.pannelli.kind_line")],
+  ["text", t("filum.pannelli.kind_text")],
 ];
 
 /** The kind an object counts as in the filter. */
@@ -136,10 +137,10 @@ function groupLooseBy(doc: StitchDocument, key: (o: DesignObject) => string, nam
 /** Group the loose objects by thread colour (named after the thread). */
 export function groupByThread(doc: StitchDocument) {
   const names = new Map(doc.threads.map((t) => [t.id, t.name || t.color.toUpperCase()]));
-  return groupLooseBy(doc, (o) => o.thread, (k) => names.get(k) ?? "Thread");
+  return groupLooseBy(doc, (o) => o.thread, (k) => names.get(k) ?? t("filum.pannelli.kind_thread"));
 }
 
-const KIND_NAMES: Record<Exclude<KindFilter, "all">, string> = { fill: "Fills", satin: "Satins", line: "Lines", text: "Lettering" };
+const KIND_NAMES: Record<Exclude<KindFilter, "all">, string> = { get fill() { return t("filum.pannelli.kind_fill"); }, get satin() { return t("filum.pannelli.kind_satin"); }, get line() { return t("filum.pannelli.kind_line"); }, get text() { return t("filum.pannelli.kind_text"); } };
 
 /** Group the loose objects by stitch type (fills, satins, lines, lettering). */
 export function groupByKind(doc: StitchDocument) {

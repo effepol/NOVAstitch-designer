@@ -7,6 +7,7 @@
 // Machine): speed and the trim / colour-change times for the estimates, next
 // to Ink/Stitch's defaults (what a new design starts with).
 
+import { t } from "../nova/i18n/filum";
 import type { MachineSettings, PlanStats } from "../types";
 import { cutterOf, DEFAULT_CUT_OVER, type Cutter } from "./cuts";
 
@@ -629,7 +630,7 @@ export const SETTINGS_PRESETS: SettingsPreset[] = [
     id: "inkstitch",
     name: "Ink/Stitch",
     group: "General",
-    hint: "Ink/Stitch's defaults, what a new design starts with: 0.1 mm shortest stitch, 3 mm jumps, 700 spm and 10 s per trim / colour change.",
+    get hint() { return t("filum.dati.inkstitch_preset_hint"); },
     values: INKSTITCH_DEFAULTS,
   },
   ...MACHINES.filter((m) => m.id !== "doc").map((m) => ({

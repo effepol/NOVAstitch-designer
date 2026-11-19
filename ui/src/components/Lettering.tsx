@@ -1,3 +1,4 @@
+import { t } from "../nova/i18n/filum";
 import { ALargeSmall, AlignCenter, AlignJustify, AlignLeft, AlignRight, Check, Download, Search, Type, Unlink } from "lucide-react";
 import { LetterSpacing, TextArc } from "../icons/stitch";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -34,6 +35,11 @@ import { ElementInfoSection } from "./ElementInfo";
 import { safeSetItem } from "../lib/storage";
 
 /** Reactive spec of a lettering group. */
+
+/** La descrizione dei font vettoriali inclusi (lib/fonts.ts), tradotta solo a schermo. */
+const DESC_KEYS: Record<string, string> = { "Rounded sans": "filum.pannelli.font_desc_rounded", "Block capitals": "filum.pannelli.font_desc_block", Script: "filum.pannelli.font_desc_script" };
+const descShown = (d?: string) => (d && d in DESC_KEYS ? t(DESC_KEYS[d]) : d);
+
 export function useTextSpec(group: string | null): TextSpec | null {
   return useStore((s) => (group ? s.doc.objects.find((o) => o.text?.group === group)?.text ?? null : null));
 }
@@ -65,10 +71,10 @@ function useEmbroideryFont(key: string | undefined): EmbroideryFont | null {
 }
 
 const STYLES: { id: TextStyle; label: string; title: string }[] = [
-  { id: "fill", label: "Fill", title: "Tatami fill" },
-  { id: "border", label: "Satin edge", title: "Satin column around every letter" },
-  { id: "fillBorder", label: "Fill + edge", title: "Fill with a satin border on top" },
-  { id: "outline", label: "Outline", title: "Triple running stitch outline" },
+  { id: "fill", get label() { return t("filum.pannelli.fill"); }, get title() { return t("filum.pannelli.tatami_fill"); } },
+  { id: "border", get label() { return t("filum.pannelli.satin_edge"); }, get title() { return t("filum.pannelli.satin_column_around_every_letter"); } },
+  { id: "fillBorder", get label() { return t("filum.pannelli.fill_edge"); }, get title() { return t("filum.pannelli.fill_with_a_satin_border"); } },
+  { id: "outline", get label() { return t("filum.pannelli.outline"); }, get title() { return t("filum.pannelli.triple_running_stitch_outline"); } },
 ];
 
 const FILL_NAMES: Partial<Record<FillParams["method"], string>> = {
@@ -94,9 +100,9 @@ function LetterFill({ group, spec, fontFill, fontScales }: { group: string; spec
   const grow = spec.crossScale ?? !!fontScales;
   return (
     <>
-      <Row label="Fill" title="The fill of the letters' filled areas: as the font is digitized, or another fill">
+      <Row label={t("filum.pannelli.fill")} title={t("filum.pannelli.the_fill_of_the_letters")}>
         <select className="select" style={{ width: "100%" }} value={cur} onChange={(e) => updateText(group, { fill: e.target.value as TextSpec["fill"] })}>
-          <option value="font">Font's own · {FILL_NAMES[fontFill] ?? fontFill}</option>
+          <option value="font">{t("filum.pannelli.font_s_own_n", { n: FILL_NAMES[fontFill] ?? fontFill })}</option>
           {LETTER_FILLS.filter((m) => m !== fontFill).map((m) => (
             <option key={m} value={m}>
               {FILL_NAMES[m]}
@@ -106,15 +112,15 @@ function LetterFill({ group, spec, fontFill, fontScales }: { group: string; spec
       </Row>
       {crosses && cur === "font" && (
         <Row
-          label="Crosses"
-          title={`Keep the font's cross size (more crosses on bigger letters) or grow the crosses with the letters (the designed pattern at every size). This font: ${fontScales ? "grow with the letters" : "keep their size"} (Ink/Stitch's scale cross stitch pattern).`}
+          label={t("filum.pannelli.crosses")}
+          title={t("filum.pannelli.cross_size_this_font", { choice: fontScales ? t("filum.pannelli.grow_with_the_letters") : t("filum.pannelli.keep_their_size") })}
         >
           <div className="seg">
             <button className={!grow ? "on" : ""} onClick={() => updateText(group, { crossScale: false })}>
-              Font size
+              {t("filum.pannelli.font_size")}
             </button>
             <button className={grow ? "on" : ""} onClick={() => updateText(group, { crossScale: true })}>
-              Grow with letters
+              {t("filum.pannelli.grow_with_letters")}
             </button>
           </div>
         </Row>
@@ -131,10 +137,10 @@ function FontButton({ spec }: { spec: TextSpec }) {
       .catch(() => {});
   }, []);
   return (
-    <button className="btn sm font-btn" title="Choose font" onClick={() => useStore.getState().setDialog("fonts")}>
+    <button className="btn sm font-btn" title={t("filum.pannelli.choose_font")} onClick={() => useStore.getState().setDialog("fonts")}>
       <Type size={13} />
       <span>{fontLabel(spec.font)}</span>
-      {fontKind(spec.font) === "embroidery" && <span className="badge">stitched</span>}
+      {fontKind(spec.font) === "embroidery" && <span className="badge">{t("filum.pannelli.stitched")}</span>}
     </button>
   );
 }
@@ -144,7 +150,7 @@ function AlignSeg({ spec, group }: { spec: TextSpec; group: string }) {
   const titles = { left: "Align left", center: "Centre", right: "Align right", block: "Block: spread every line to the width of the longest (Ink/Stitch Block)" };
   const block = spec.align === "block" || spec.align === "blockLetters";
   return (
-    <div className="seg" role="group" aria-label="Alignment">
+    <div className="seg" role="group" aria-label={t("filum.pannelli.alignment")}>
       {(["left", "center", "right", "block"] as const).map((a) => (
         <button
           key={a}
@@ -171,13 +177,13 @@ export function TextBar({ group }: { group: string }) {
         <span>“{spec.content.split("\n")[0]}”</span>
       </span>
       <FontButton spec={spec} />
-      <label className="ctx-field" title="Cap height">
+      <label className="ctx-field" title={t("filum.pannelli.cap_height")}>
         <ALargeSmall size={14} />
-        <span className="sr-only">Cap height</span>
+        <span className="sr-only">{t("filum.pannelli.cap_height")}</span>
         <Num value={spec.size} unit="mm" step={0.5} min={2} max={200} onChange={(v) => updateText(group, { size: v })} />
       </label>
       {outline && (
-        <div className="seg" role="group" aria-label="Style">
+        <div className="seg" role="group" aria-label={t("filum.pannelli.style")}>
           {STYLES.map((s) => (
             <button key={s.id} title={s.title} className={spec.style === s.id ? "on" : ""} onClick={() => updateText(group, { style: s.id })}>
               {s.label}
@@ -186,18 +192,18 @@ export function TextBar({ group }: { group: string }) {
         </div>
       )}
       <AlignSeg spec={spec} group={group} />
-      <label className="ctx-field" title="Arc (bend): positive arches up, negative dips down">
+      <label className="ctx-field" title={t("filum.pannelli.arc_bend_positive_arches_up")}>
         <TextArc size={13} />
-        <span className="sr-only">Arc (bend): positive arches up, negative dips down</span>
+        <span className="sr-only">{t("filum.pannelli.arc_bend_positive_arches_up")}</span>
         <Num value={spec.arc} unit="°" step={5} min={-330} max={330} digits={0} onChange={(v) => updateText(group, { arc: v })} />
       </label>
-      <label className="ctx-field" title="Letter spacing">
+      <label className="ctx-field" title={t("filum.pannelli.letter_spacing")}>
         <LetterSpacing size={13} />
-        <span className="sr-only">Letter spacing</span>
+        <span className="sr-only">{t("filum.pannelli.letter_spacing")}</span>
         <Num value={spec.letterSpacing} unit="mm" step={0.1} min={-10} max={50} onChange={(v) => updateText(group, { letterSpacing: v })} />
       </label>
       <button className="btn sm" onClick={() => useStore.getState().set({ editingText: group })}>
-        Edit text
+        {t("filum.pannelli.edit_text")}
       </button>
     </div>
   );
@@ -243,10 +249,10 @@ export function TextProperties({ group }: { group: string }) {
     <div className="props">
       <div className="props-head">
         <Type size={15} />
-        <span className="grow">Lettering</span>
-        <span className="stat">{count} objects</span>
+        <span className="grow">{t("filum.pannelli.lettering")}</span>
+        <span className="stat">{t("filum.pannelli.count_objects", { count })}</span>
       </div>
-      <Section title="Text">
+      <Section title={t("filum.pannelli.text")}>
         <textarea
           className="input"
           style={{ width: "100%", height: 64, fontSize: "var(--fs-lg)" }}
@@ -260,47 +266,47 @@ export function TextProperties({ group }: { group: string }) {
             setDraft(spec.content);
           }}
         />
-        <Row label="Font">
+        <Row label={t("filum.pannelli.font")}>
           <FontButton spec={spec} />
         </Row>
-        <Row label="Cap height">
+        <Row label={t("filum.pannelli.cap_height")}>
           <Slider min={3} max={80} step={0.5} unit="mm" value={spec.size} onChange={(v) => updateText(group, { size: v })} />
         </Row>
-        <Row label="Letter spacing">
+        <Row label={t("filum.pannelli.letter_spacing")}>
           <Slider min={-3} max={10} step={0.1} unit="mm" value={spec.letterSpacing} onChange={(v) => updateText(group, { letterSpacing: v })} />
         </Row>
-        <Row label="Word spacing" title="Extra space between words (Ink/Stitch word spacing)">
+        <Row label={t("filum.pannelli.word_spacing")} title={t("filum.pannelli.extra_space_between_words_ink")}>
           <Slider min={-5} max={20} step={0.1} unit="mm" value={spec.wordSpacing ?? 0} onChange={(v) => updateText(group, { wordSpacing: v })} />
         </Row>
-        <Row label="Line spacing">
+        <Row label={t("filum.pannelli.line_spacing")}>
           <Slider min={0.6} max={2.5} step={0.05} unit="×" value={spec.lineSpacing} onChange={(v) => updateText(group, { lineSpacing: v })} />
         </Row>
-        <Row label="Align">
+        <Row label={t("filum.pannelli.align")}>
           <AlignSeg spec={spec} group={group} />
         </Row>
         {(spec.align === "block" || spec.align === "blockLetters") && (
-          <Row label="One-word lines" title="Block alignment widens the gaps between words; a line of one word can keep its spacing or spread its letters (Ink/Stitch Block, letter spacing)">
+          <Row label={t("filum.pannelli.one_word_lines")} title={t("filum.pannelli.block_alignment_widens_the_gaps")}>
             <div className="seg">
               <button className={spec.align === "block" ? "on" : ""} onClick={() => updateText(group, { align: "block" })}>
-                Keep
+                {t("filum.pannelli.keep")}
               </button>
               <button className={spec.align === "blockLetters" ? "on" : ""} onClick={() => updateText(group, { align: "blockLetters" })}>
-                Spread letters
+                {t("filum.pannelli.spread_letters")}
               </button>
             </div>
           </Row>
         )}
       </Section>
       {spec.path && (
-        <Section title="On a path">
-          <Row label="Place" title="Where the text sits along the path">
+        <Section title={t("filum.pannelli.on_a_path")}>
+          <Row label={t("filum.pannelli.place_2")} title={t("filum.pannelli.where_the_text_sits_along")}>
             <div className="seg">
               {(
                 [
-                  ["start", "Start"],
-                  ["center", "Centre"],
+                  ["start", t("filum.pannelli.start_2")],
+                  ["center", t("filum.pannelli.centre")],
                   ["end", "End"],
-                  ["stretch", "Stretch"],
+                  ["stretch", t("filum.pannelli.stretch")],
                 ] as const
               ).map(([v, l]) => (
                 <button key={v} className={(spec.pathAlign ?? "center") === v ? "on" : ""} onClick={() => updateText(group, { pathAlign: v })}>
@@ -309,33 +315,33 @@ export function TextProperties({ group }: { group: string }) {
               ))}
             </div>
           </Row>
-          <Row label="Side" title="Letters on top of the path, or below it (the path read backwards)">
+          <Row label={t("filum.pannelli.side")} title={t("filum.pannelli.letters_on_top_of_the")}>
             <div className="seg">
               <button className={!spec.pathFlip ? "on" : ""} onClick={() => updateText(group, { pathFlip: false })}>
-                Above
+                {t("filum.pannelli.above")}
               </button>
               <button className={spec.pathFlip ? "on" : ""} onClick={() => updateText(group, { pathFlip: true })}>
-                Below
+                {t("filum.pannelli.below")}
               </button>
             </div>
           </Row>
-          <button className="btn sm ghost" onClick={() => updateText(group, { path: undefined })} title="Back to straight text at the anchor">
-            Off the path
+          <button className="btn sm ghost" onClick={() => updateText(group, { path: undefined })} title={t("filum.pannelli.back_to_straight_text_at")}>
+            {t("filum.pannelli.off_the_path")}
           </button>
         </Section>
       )}
-      <Section title="Shape">
-        <Row label="Arc" title="Bend the text along a circle: positive arches up, negative dips down">
+      <Section title={t("filum.pannelli.shape")}>
+        <Row label={t("filum.pannelli.arc")} title={t("filum.pannelli.bend_the_text_along_a")}>
           <Slider min={-330} max={330} step={1} digits={0} unit="°" value={spec.arc} onChange={(v) => updateText(group, { arc: v })} />
         </Row>
-        <Row label="Rotation">
+        <Row label={t("filum.pannelli.rotation")}>
           <Num value={spec.rotation} unit="°" step={5} digits={1} onChange={(v) => updateText(group, { rotation: v })} />
         </Row>
       </Section>
-      <Section title="Stitches">
+      <Section title={t("filum.pannelli.stitches")}>
         {outline ? (
           <>
-            <Row label="Style">
+            <Row label={t("filum.pannelli.style")}>
               <select className="select" style={{ width: "100%" }} value={spec.style} onChange={(e) => updateText(group, { style: e.target.value as TextStyle })}>
                 {STYLES.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -345,12 +351,12 @@ export function TextProperties({ group }: { group: string }) {
               </select>
             </Row>
             {(spec.style === "fill" || spec.style === "fillBorder") && (
-              <Row label="Fill angle">
+              <Row label={t("filum.pannelli.fill_angle")}>
                 <Slider min={-90} max={90} step={1} digits={0} unit="°" value={spec.fillAngle} onChange={(v) => updateText(group, { fillAngle: v })} />
               </Row>
             )}
             {(spec.style === "border" || spec.style === "fillBorder") && (
-              <Row label="Edge width">
+              <Row label={t("filum.pannelli.edge_width")}>
                 <Slider min={0.5} max={4} step={0.1} unit="mm" value={spec.borderWidth} onChange={(v) => updateText(group, { borderWidth: v })} />
               </Row>
             )}
@@ -359,12 +365,12 @@ export function TextProperties({ group }: { group: string }) {
           <>
           <LetterFill group={group} spec={spec} fontFill={fontFill} fontScales={emb?.scaleCrossStitch} />
           {emb && emb.variants.length > 1 && (
-            <Row label="Direction" title="The direction the letters are stitched in: the font comes digitized in several (Ink/Stitch font variants)">
+            <Row label={t("filum.pannelli.direction")} title={t("filum.pannelli.the_direction_the_letters_are")}>
               <div className="seg">
                 {emb.variants.map((v) => (
                   <button
                     key={v}
-                    title={`${VARIANT_LABELS[v]?.name ?? v}${v === emb.variant ? " (the font's default)" : ""}`}
+                    title={`${VARIANT_LABELS[v]?.name ?? v}${v === emb.variant ? t("filum.pannelli.the_font_s_default") : ""}`}
                     className={(spec.variant && emb.variants.includes(spec.variant) ? spec.variant : emb.variant) === v ? "on" : ""}
                     onClick={() => updateText(group, { variant: v === emb.variant ? undefined : v })}
                   >
@@ -375,29 +381,29 @@ export function TextProperties({ group }: { group: string }) {
             </Row>
           )}
           <Row
-            label="Back and forth"
+            label={t("filum.pannelli.back_and_forth")}
             title={
               emb && !emb.reversible
-                ? "This font is digitized to be stitched in one direction only (font.json: reversible false)"
-                : "Stitch every second line the other way round, so each line starts where the last one ended — less travel (Ink/Stitch: stitch lines of text back and forth)"
+                ? t("filum.pannelli.this_font_is_digitized_to")
+                : t("filum.pannelli.stitch_every_second_line_the")
             }
           >
             {emb && !emb.reversible ? (
               <span className="hint" style={{ padding: 0 }}>
-                Not for this font
+                {t("filum.pannelli.not_for_this_font")}
               </span>
             ) : (
               <Toggle on={!!spec.backAndForth} onChange={(v) => updateText(group, { backAndForth: v })} />
             )}
           </Row>
-          <Row label="Trims" title="Trim the thread after every letter, word or line (the font's own trims are always kept)">
+          <Row label={t("filum.pannelli.trims")} title={t("filum.pannelli.trim_the_thread_after_every")}>
             <div className="seg">
               {(
                 [
-                  ["never", "Never"],
-                  ["letter", "Letters"],
-                  ["word", "Words"],
-                  ["line", "Lines"],
+                  ["never", t("filum.pannelli.never")],
+                  ["letter", t("filum.pannelli.letters")],
+                  ["word", t("filum.pannelli.words")],
+                  ["line", t("filum.pannelli.lines")],
                 ] as const
               ).map(([v, l]) => (
                 <button key={v} className={(spec.trims ?? "never") === v ? "on" : ""} onClick={() => updateText(group, { trims: v })}>
@@ -407,23 +413,23 @@ export function TextProperties({ group }: { group: string }) {
             </div>
           </Row>
           <p className={`hint ${outOfRange ? "warn" : ""}`}>
-            Pre-digitized Ink/Stitch embroidery font: every letter carries its own satin columns and underlay.
+            {t("filum.pannelli.pre_digitized_ink_stitch_embroidery")}
             {range &&
               (range[1] > range[0]
-                ? ` Designed for ${range[0].toFixed(0)}–${range[1].toFixed(0)} mm${outOfRange ? " — outside this range stitches get too dense or too loose." : "."}`
-                : ` Designed for ${range[0].toFixed(0)} mm.`)}
+                ? t("filum.pannelli.designed_for_range", { from: range[0].toFixed(0), to: range[1].toFixed(0) }) + (outOfRange ? t("filum.pannelli.outside_this_range_stitches_get") : ".")
+                : t("filum.pannelli.designed_for_v1_mm", { v1: range[0].toFixed(0) }))}
           </p>
           </>
         )}
         {!outline && emb?.sortable && (
-          <Row label="Colour order" title="Sew the font's colours in turn (its colour sort order) within the whole text, each line or each word — fewer colour changes (Ink/Stitch colour sort; the font allows it)">
+          <Row label={t("filum.pannelli.colour_order")} title={t("filum.pannelli.sew_the_font_s_colours")}>
             <div className="seg">
               {(
                 [
-                  ["off", "As drawn"],
-                  ["all", "Text"],
-                  ["line", "Line"],
-                  ["word", "Word"],
+                  ["off", t("filum.pannelli.as_drawn")],
+                  ["all", t("filum.pannelli.text")],
+                  ["line", t("filum.pannelli.line")],
+                  ["word", t("filum.pannelli.word")],
                 ] as const
               ).map(([v, l]) => (
                 <button key={v} className={(spec.colorSort ?? "off") === v ? "on" : ""} onClick={() => updateText(group, { colorSort: v })}>
@@ -435,7 +441,7 @@ export function TextProperties({ group }: { group: string }) {
         )}
         {palette && palette.length > 1 ? (
           palette.map((tid, i) => (
-            <Row key={i} label={`Colour ${i + 1}`}>
+            <Row key={i} label={t("filum.pannelli.colour_v1", { v1: i + 1 })}>
               {swatches(tid, (id) => {
                 const next = [...palette];
                 next[i] = id;
@@ -444,27 +450,27 @@ export function TextProperties({ group }: { group: string }) {
             </Row>
           ))
         ) : (
-          <Row label={spec.style === "fillBorder" && outline ? "Fill colour" : "Colour"}>{threadPick("thread")}</Row>
+          <Row label={spec.style === "fillBorder" && outline ? t("filum.pannelli.fill_colour") : t("filum.pannelli.colour")}>{threadPick("thread")}</Row>
         )}
-        {spec.style === "fillBorder" && outline && <Row label="Edge colour">{threadPick("borderThread")}</Row>}
+        {spec.style === "fillBorder" && outline && <Row label={t("filum.pannelli.edge_colour")}>{threadPick("borderThread")}</Row>}
       </Section>
       {!outline && <FontSection group={group} spec={spec} font={emb} />}
       <BatchSection group={group} spec={spec} />
-      <Section title="Transform" defaultOpen={false}>
+      <Section title={t("filum.pannelli.transform")} defaultOpen={false}>
         <TransformPanel objects={groupObjects} />
       </Section>
       <CommandsSection objects={groupObjects} />
       <ElementInfoSection ids={groupObjects.map((o) => o.id)} />
       <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
         <button className="btn sm" onClick={() => useStore.getState().set({ editingText: group })}>
-          Edit on canvas
+          {t("filum.pannelli.edit_on_canvas")}
         </button>
         <button
           className="btn sm ghost"
-          title="Turn into ordinary shapes (no longer editable as text)"
+          title={t("filum.pannelli.turn_into_ordinary_shapes_no")}
           onClick={() => useStore.getState().commit((d) => ({ ...d, objects: d.objects.map((o) => (o.text?.group === group ? { ...o, text: undefined } : o)) }))}
         >
-          <Unlink size={12} /> Convert to shapes
+          <Unlink size={12} />{t("filum.pannelli.convert_to_shapes")}
         </button>
       </div>
     </div>
@@ -513,7 +519,7 @@ export function TextEditorOverlay() {
         ref={ref}
         value={value}
         rows={Math.min(6, value.split("\n").length)}
-        placeholder="Type…"
+        placeholder={t("filum.pannelli.type_2")}
         onChange={(e) => {
           setValue(e.target.value);
           if (!e.target.value.trim()) return;
@@ -533,7 +539,7 @@ export function TextEditorOverlay() {
         onBlur={close}
       />
       <span className="text-editor-hint">
-        <Check size={11} /> Esc or click outside to finish · Enter for a new line
+        <Check size={11} />{t("filum.pannelli.esc_or_click_outside_to")}
       </span>
     </div>
   );
@@ -628,7 +634,7 @@ export function FontPickerDialog({ onClose }: { onClose: () => void }) {
       return;
     }
     if (group) {
-      useStore.getState().toast(`Loading ${fontLabel(key)}…`);
+      useStore.getState().toast(t("filum.pannelli.loading_v1", { v1: fontLabel(key) }));
       // Ink/Stitch keeps the scale, within the new font's range
       const [to, from] = await Promise.all([loadFont(key).catch(() => null), spec ? loadFont(spec.font).catch(() => null) : null]);
       const size = to && spec ? sizeForFont(spec.size, from, to) : undefined;
@@ -643,7 +649,7 @@ export function FontPickerDialog({ onClose }: { onClose: () => void }) {
       }
       const to = await loadFont(key).catch(() => null);
       safeSetItem("filum.textDefaults", JSON.stringify({ ...d, font: key, ...(to?.kind === "embroidery" ? { size: startSize(to) } : {}) }));
-      useStore.getState().toast(`${fontLabel(key)} will be used for new text`);
+      useStore.getState().toast(t("filum.pannelli.v1_will_be_used_for", { v1: fontLabel(key) }));
     }
     onClose();
   };
@@ -656,26 +662,26 @@ export function FontPickerDialog({ onClose }: { onClose: () => void }) {
       setTab("embroidery");
       await choose(key);
     } catch (e) {
-      useStore.getState().toast(`Not an Ink/Stitch font: ${(e as Error).message}`, "error");
+      useStore.getState().toast(t("filum.pannelli.not_an_ink_stitch_font", { message: (e as Error).message }), "error");
     }
   };
   const fromLetters = async () => {
     const files = await openFolder([...MACHINE_EXT, "svg"]);
     if (!files) return;
     const s = useStore.getState();
-    s.toast("Making a font from the letter files…");
+    s.toast(t("filum.pannelli.making_a_font_from_the"));
     try {
       const { key, letters } = await lettersToFont(files);
       setImported(await importedFonts());
       setTab("embroidery");
       await choose(key);
-      useStore.getState().toast(`${fontLabel(key)}: ${letters} letters — fine-tune spacing and kerning in Lettering → Font → Edit font info`, "success");
+      useStore.getState().toast(t("filum.pannelli.v1_letters_letters_fine_tune", { v1: fontLabel(key), letters }), "success");
     } catch (e) {
-      s.toast(`Letters to font: ${(e as Error).message}`, "error");
+      s.toast(t("filum.pannelli.letters_to_font_message", { message: (e as Error).message }), "error");
     }
   };
   const importFont = async () => {
-    const f = await openFile([{ name: "Fonts", extensions: ["ttf", "otf"] }]);
+    const f = await openFile([{ name: t("filum.pannelli.fonts"), extensions: ["ttf", "otf"] }]);
     if (!f) return;
     try {
       const key = await importFontFile(f.name, f.bytes);
@@ -683,7 +689,7 @@ export function FontPickerDialog({ onClose }: { onClose: () => void }) {
       setTab("outline");
       await choose(key);
     } catch (e) {
-      useStore.getState().toast(`Not a usable font: ${(e as Error).message}`, "error");
+      useStore.getState().toast(t("filum.pannelli.not_a_usable_font_message", { message: (e as Error).message }), "error");
     }
   };
 
@@ -691,26 +697,26 @@ export function FontPickerDialog({ onClose }: { onClose: () => void }) {
     <Dialog
       live
       wide
-      title="Fonts"
+      title={t("filum.pannelli.fonts")}
       onClose={onClose}
       footer={
         <>
           <button className="btn" onClick={importFont}>
-            Import TTF / OTF…
+            {t("filum.pannelli.import_ttf_otf")}
           </button>
-          <button className="btn" onClick={importInk} title="A folder with font.json and the font's Inkscape files (ltr.svg / →.svg, and the other directions if it has them), as in Ink/Stitch's fonts folder">
-            Import Ink/Stitch font…
+          <button className="btn" onClick={importInk} title={t("filum.pannelli.a_folder_with_font_json")}>
+            {t("filum.pannelli.import_ink_stitch_font")}
           </button>
           <button
             className="btn"
             onClick={fromLetters}
-            title="Letters to font: a folder of embroidery files (PES, DST, JEF … or SVG), one letter each, the letter at the end of the name — Font_A.pes, Font_B.pes …"
+            title={t("filum.pannelli.letters_to_font_a_folder")}
           >
-            Letters to font…
+            {t("filum.pannelli.letters_to_font")}
           </button>
           <div className="spacer" />
           <button className="btn" onClick={onClose}>
-            Close
+            {t("filum.pannelli.close")}
           </button>
         </>
       }
@@ -718,10 +724,9 @@ export function FontPickerDialog({ onClose }: { onClose: () => void }) {
       <div className="font-tabs">
         <div className="seg">
           <button className={tab === "embroidery" ? "on" : ""} onClick={() => setTab("embroidery")}>
-            Embroidery fonts ({library.length})
-          </button>
+            {t("filum.pannelli.embroidery_fonts_library", { library: library.length })}</button>
           <button className={tab === "outline" ? "on" : ""} onClick={() => setTab("outline")}>
-            Outline fonts
+            {t("filum.pannelli.outline_fonts")}
           </button>
           <button
             className={tab === "system" ? "on" : ""}
@@ -736,19 +741,19 @@ export function FontPickerDialog({ onClose }: { onClose: () => void }) {
               }
             }}
           >
-            System fonts
+            {t("filum.pannelli.system_fonts")}
           </button>
         </div>
         <label className="ctx-field" style={{ flex: 1 }}>
           <Search size={13} />
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search fonts" style={{ width: "100%", textAlign: "left" }} />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("filum.pannelli.search_fonts")} style={{ width: "100%", textAlign: "left" }} />
         </label>
       </div>
       <p className="hint" style={{ padding: "6px 2px" }}>
         {tab === "embroidery" &&
-          "The Ink/Stitch community collection, bundled for offline use: every letter is hand-digitized with satin columns and underlay. Each font has its own licence (Help → Licences). Fonts marked optional download aren't included because of their licence: click one to download them in Preferences → Downloads."}
-        {tab === "outline" && "Regular fonts, stitched as fill, satin edge, fill + edge or outline."}
-        {tab === "system" && (systemFontsSupported() ? "Fonts installed on this computer (the browser asks for permission once)." : "This browser can't list system fonts — import a TTF/OTF file instead.")}
+          t("filum.pannelli.the_ink_stitch_community_collection")}
+        {tab === "outline" && t("filum.pannelli.regular_fonts_stitched_as_fill")}
+        {tab === "system" && (systemFontsSupported() ? t("filum.pannelli.fonts_installed_on_this_computer") : t("filum.pannelli.this_browser_can_t_list"))}
       </p>
       {tab === "embroidery" && tags.length > 0 && (
         <div className="font-tags">
@@ -767,20 +772,20 @@ export function FontPickerDialog({ onClose }: { onClose: () => void }) {
             onClick={() => choose(f.key)}
             title={
               f.download && !f.installed
-                ? `Optional download (${f.license}): Preferences → Downloads`
-                : [f.description, f.original && `Based on ${f.original}`, f.license].filter(Boolean).join("\n") || f.name
+                ? t("filum.pannelli.optional_download_license_preferences_downloads", { license: String(f.license) })
+                : [descShown(f.description), f.original && t("filum.pannelli.based_on", { original: f.original }), f.license].filter(Boolean).join("\n") || f.name
             }
           >
             <div className="font-preview">
               {f.download && !f.installed ? (
                 <span className="font-dl">
                   <Download size={16} />
-                  Optional download
+                  {t("filum.pannelli.optional_download")}
                 </span>
               ) : f.kind === "embroidery" && f.preview ? (
                 <img src={f.preview} alt="" loading="lazy" />
               ) : f.kind === "embroidery" ? (
-                <span style={{ fontSize: "var(--fs-md)", color: "var(--muted)" }}>Installed font</span>
+                <span style={{ fontSize: "var(--fs-md)", color: "var(--muted)" }}>{t("filum.pannelli.installed_font")}</span>
               ) : f.source === "system" ? (
                 <span style={{ fontFamily: `"${f.description}", sans-serif`, fontSize: 24 }}>{sample}</span>
               ) : (
@@ -788,24 +793,24 @@ export function FontPickerDialog({ onClose }: { onClose: () => void }) {
               )}
             </div>
             <b>{f.name}</b>
-            {f.description && f.source !== "system" && <span className="font-desc">{f.description}</span>}
+            {f.description && f.source !== "system" && <span className="font-desc">{descShown(f.description)}</span>}
             {f.kind === "embroidery" && !!f.size && (
               <span className="font-meta">
                 {f.minScale && f.maxScale && f.maxScale > f.minScale
                   ? `${(f.size * f.minScale).toFixed(0)}–${(f.size * f.maxScale).toFixed(0)} mm`
                   : `${f.size.toFixed(0)} mm`}
                 {" · "}
-                {f.glyphs} glyphs{f.direction === "rtl" ? " · RTL" : ""}
+                {f.glyphs}{t("filum.pannelli.glyphs_2")}{f.direction === "rtl" ? t("filum.pannelli.rtl") : ""}
               </span>
             )}
             {f.kind === "embroidery" && f.license && (/\bNC\b/.test(f.license) || /non.?commercial/i.test(f.license)) && (
               <span className="font-meta warn" title={f.license}>
-                Non-commercial licence
+                {t("filum.pannelli.non_commercial_licence")}
               </span>
             )}
           </button>
         ))}
-        {!list.length && <p className="hint">{tab === "system" && system === null ? "Loading…" : "No fonts found."}</p>}
+        {!list.length && <p className="hint">{tab === "system" && system === null ? t("filum.pannelli.loading") : t("filum.pannelli.no_fonts_found")}</p>}
       </div>
     </Dialog>
   );

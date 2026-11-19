@@ -318,7 +318,7 @@ function statFor(id: string) {
   if (!plan || idx < 0) return "";
   let n = 0;
   for (let i = 0; i < plan.objects.length; i++) if (plan.objects[i] === idx && !(plan.flags[i] & 31)) n++;
-  return `${n.toLocaleString()} stitches`;
+  return t("filum.barre.n_stitches_plain", { n: n.toLocaleString() });
 }
 
 const RAIL: ({ tool: Tool; title: string } | "-")[] = [
