@@ -112,7 +112,7 @@ function hintsFor(s: ReturnType<typeof useStore.getState>): Hint[] {
         ? [
             [["LMB"], t("filum.barre.corner_point")],
             [["Drag"], t("filum.barre.curve_point")],
-            [["Shift", "LMB"], satin ? "Angles in 15°" : "Angles in 45°"],
+            [["Shift", "LMB"], satin ? t("filum.barre.angles_in_15") : t("filum.barre.angles_in_45")],
             [["Alt", "Drag"], t("filum.barre.break_the_handles")],
             [["Space", "Drag"], t("filum.barre.move_the_point")],
             [["Ctrl", "LMB"], t("filum.barre.no_snapping")],

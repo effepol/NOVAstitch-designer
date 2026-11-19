@@ -38,5 +38,6 @@
   "g.err.planMeasure": "misura del piano sconosciuta «{measure}» in {where} (stitches, colorChanges, trims)",
   "g.err.view": "«view» di {where} vuole mode o zoom",
   "g.err.viewMode": "vista sconosciuta «{mode}» in {where} (vector, stitch, realistic)",
-  "g.err.selection": "«selection» di {where} vuole «count»"
+  "g.err.selection": "«selection» di {where} vuole «count»",
+  "g.err.idTaken": "una lezione del programma ha già questo id"
 }

@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { commandScore as score } from "../lib/commandSearch";
 import { buildMenus, flattenMenus, menuName, type MenuEntry } from "./menuModel";
 import { safeSetItem } from "../lib/storage";
-import { inEnglish, t } from "../nova/i18n/filum";
+import { inEnglish, keysShown, t } from "../nova/i18n/filum";
 
 const RECENT_KEY = "filum.palette.recent";
 const recent = (): string[] => {
@@ -119,7 +119,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
                   {c.item.checked ? " ✓" : ""}
                 </span>
                 <span className="pl-path">{shownPath(c.path).join(" ▸ ")}{c.item.hint ? ` · ${c.item.hint}` : ""}</span>
-                {c.item.kbd && <span className="kbd">{c.item.kbd}</span>}
+                {c.item.kbd && <span className="kbd">{keysShown(c.item.kbd)}</span>}
               </button>
             ))
           ) : (
