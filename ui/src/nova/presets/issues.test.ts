@@ -13,6 +13,8 @@ import { parsePreset } from "./preset";
 import { fabricIssues } from "./issues";
 import { installPresetCommands } from "./commands";
 import { setPresetList } from "./registry";
+import { registerStitchType } from "../core/stitchTypes";
+import { setModeSource } from "../core/mode";
 import "./texts";
 
 const preset = (over: Record<string, unknown>) =>
@@ -94,13 +96,21 @@ const offCmds = installPresetCommands(() => null);
   check(ofKind(fabricIssues(docOf([satin("x", { spacing: 0.15 })]), null, null), "dense").length === 0, "e.11 no preset, no threshold: no warning");
   const foam = obj("f", { ...defaultStitch("satin"), type: "foam", spacing: 0.15 } as unknown as DesignObject["stitch"]);
   check(ofKind(fabricIssues(docOf([foam]), null, stable), "dense").length === 0, "e.11 never on foam (3D): denser on purpose");
+  // module j's foam, as module 0's stitch type registry knows it (a satin with its own field)
+  const offFoam = registerStitchType({ id: "j.foam", module: "j", group: "line", label: () => "Schiuma", icon: null, matches: (st) => !!(st as { foam?: unknown }).foam, apply: (o) => o.stitch, Section: () => null });
+  const foamSatin = obj("fs", { ...defaultStitch("satin"), spacing: 0.15, foam: { passes: 1 } } as unknown as DesignObject["stitch"]);
+  check(ofKind(fabricIssues(docOf([foamSatin]), null, stable), "dense").length === 0, "e.11 never on module j's foam (a satin the stitch type registry calls j.foam)");
+  offFoam();
   check(ofKind(fabricIssues(docOf([fill("ft", 0, { rowSpacing: 0.15 })]), null, stable), "dense").length === 0, "e.11 fills: Filum's own «Very dense fill» warns, module e does not repeat it");
   // fix: the spacing goes to the threshold, one undo step
   useStore.getState().setDoc(d, { history: false });
+  setModeSource(() => "studio");
   const issue = found[0];
   runCommand("e.issue.fix", { issueId: issue.id });
   const s = useStore.getState().doc.objects[0].stitch as { spacing: number };
-  check(s.spacing === 0.3 && !useStore.getState().doc.objects[0].nova?.edited?.length, `e.11 the fix sets the threshold (${s.spacing} mm), nothing in nova.edited`);
+  const edited = useStore.getState().doc.objects[0].nova?.edited ?? [];
+  check(s.spacing === 0.3 && edited.includes("stitch.spacing"), `e.11 the fix sets the threshold (${s.spacing} mm); it is the user's choice: in nova.edited (${JSON.stringify(edited)})`);
+  setModeSource(null);
 }
 
 // ---- e.12: knit; two adjacent tatami whose rows sew towards each other → a warning on both
