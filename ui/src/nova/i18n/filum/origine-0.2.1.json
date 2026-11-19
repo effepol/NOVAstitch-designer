@@ -10451,6 +10451,10 @@
     "testo": "Hides",
     "file": "components/HiddenStitching.tsx"
   },
+  "filum.pannelli.hides_auto": {
+    "testo": "Auto",
+    "file": "components/HiddenStitching.tsx"
+  },
   "filum.pannelli.hilbert_curve_textured_even": {
     "testo": "Hilbert curve — textured, even",
     "file": "components/StitchPanel.tsx"

@@ -217,7 +217,7 @@ export function ObjectHiddenSection({ o }: { o: DesignObject }) {
             <div className="seg hs-seg">
               {(["auto", "always", "never"] as const).map((m) => (
                 <button key={m} className={mode === m ? "on" : ""} onClick={() => set({ covers: m })}>
-                  {m === "auto" ? t("filum.pannelli.auto") : m === "always" ? t("filum.pannelli.always") : t("filum.pannelli.never")}
+                  {m === "auto" ? t("filum.pannelli.hides_auto") : m === "always" ? t("filum.pannelli.always") : t("filum.pannelli.never")}
                 </button>
               ))}
             </div>

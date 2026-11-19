@@ -55,5 +55,20 @@ Per cambiarne una basta scrivere la scelta nella colonna «Decisione»: la PR su
 | hue / lightness / saturation (abbinamento dei fili) | tinta / luminosità / saturazione | tonalità / chiarezza / croma | filum.finestre.hue, filum.finestre.lightness, filum.finestre.saturation | |
 | Filum violet → {app} red (colore d'accento, decisione dell'Architetto 18/11) | Rosso {app} | Rosso NOVAstitch | filum.finestre.filum_violet | |
 | warp shapes (Arc, Bulge, Flag, Squeeze…) | Arcata, Rigonfio, Bandiera, Strizza… | Arco, Gonfiore, Onda, Comprimi | filum.finestre.arc, filum.finestre.bulge, filum.finestre.flag, filum.finestre.squeeze | |
+| pull compensation / push compensation | compensazione del tiro / della spinta (Comp. tiro, Comp. spinta) | compensazione di trazione | filum.pannelli.pull_comp, filum.pannelli.push_comp | |
+| stagger(s) | sfalsamento, sfalsato | sfasamento | filum.pannelli.staggers, filum.pannelli.stagger_3 | |
+| meander | meandro | — | filum.pannelli.meander_pattern e vicine | |
+| ripple stitch | punto increspato, increspatura | ripple | filum.pannelli.ripple, filum.pannelli.metodo.ripple | |
+| stem stitch | punto erba | punto stelo, punto erba | filum.pannelli.stem, filum.pannelli.metodo.stem | |
+| E-stitch / blanket stitch | punto E / punto festone | punto coperta | filum.pannelli.e_stitch, filum.pannelli.blanket | |
+| travel stitch / underpath | punto di spostamento / percorso sotto | punto di trasferimento | filum.pannelli.travel_stitch, filum.pannelli.underpath | |
+| gap rows | file di raccordo | file di riempimento degli spazi | filum.pannelli.gap_rows | |
+| lock stitch, tie-in / tie-off | fermatura, fermatura iniziale / finale | punto di bloccaggio, nodo | filum.pannelli.start_lock, filum.pannelli.tie_in_tie_off | |
+| carving (program split) | intaglio a punti, riempimento intagliato | incisione, goffratura | filum.pannelli.carving, filum.pannelli.carved | |
+| dither | retinatura | dithering | filum.pannelli.dither | |
+| kerning / glyph / advance | crenatura / glifo / avanzamento | kerning | filum.pannelli.kerning, filum.pannelli.advance | |
+| sett / warp / weft / twill (tartan) | sett / ordito / trama / saia | — | filum.pannelli.weft, filum.pannelli.warp, filum.pannelli.twill_angle | |
+| hidden stitching | punti nascosti | cucitura nascosta | filum.pannelli.hidden_stitching e vicine | |
+| spm (stitches per minute) | ppm (punti per minuto) | spm | filum.pannelli.spm | |
 
 Le righe si aggiungono a ogni PR di traduzione, area per area.
