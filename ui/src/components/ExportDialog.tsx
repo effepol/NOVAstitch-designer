@@ -3,7 +3,7 @@
 // sequence as the machine shows it. One file, or several at once in a ZIP
 // (Ink/Stitch zip.py: formats, thread list, pictures, repeats).
 
-import { t, tn } from "../nova/i18n/filum";
+import { t, tData, tn } from "../nova/i18n/filum";
 import { AlertTriangle, CheckCircle2, XCircle } from "lucide-react";
 import { exportTarget, exportZip, isPicture, PICTURE_SETTINGS, PNG_TARGETS, targetExtension, type PictureSettings } from "../lib/exportFiles";
 import { PicturePreview, PictureOptionsPanel, RepeatOptions, StopPositionChoice, ZipFileList } from "./ExportExtras";
@@ -62,6 +62,8 @@ const shown = (prefix: string, en: Record<string, string>): Record<string, strin
 const FORMAT_HINT = shown("filum.esportazione.formato", FORMAT_HINT_EN);
 const DATA_HINT = shown("filum.esportazione.dati", DATA_HINT_EN);
 const PICTURE_HINT = shown("filum.esportazione.immagine", PICTURE_HINT_EN);
+/** Il nome di un formato, dal motore (crates/formats): tradotto se il catalogo ha quel nome inglese. */
+const fmtName = (f: { extension: string; name: string }) => tData(`filum.esportazione.nome.${f.extension}`, f.name);
 const loadJson = <T,>(key: string, fallback: T): T => {
   try {
     const v = localStorage.getItem(key);
@@ -352,12 +354,12 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
                 return fmtButton(
                   f.extension,
                   `.${f.extension.toUpperCase()}`,
-                  FORMAT_HINT[f.extension] ?? f.name,
+                  FORMAT_HINT[f.extension] ?? fmtName(f),
                   reads ? "" : "other",
-                  reads ? f.name : `${f.name} — not read by ${machine.brand} machines`,
+                  reads ? fmtName(f) : t("filum.esportazione.not_read_by", { name: fmtName(f), brand: machine.brand }),
                 );
               })}
-              {PROJECT.map((e) => fmtButton(e, `.${e === "filum" ? "FILUM" : "SVG"}`, e === "svg" ? "Ink/Stitch, editable" : "Project, lossless", "project"))}
+              {PROJECT.map((e) => fmtButton(e, `.${e === "filum" ? "FILUM" : "SVG"}`, e === "svg" ? t("filum.esportazione.svg_editable") : t("filum.esportazione.project_lossless"), "project"))}
             </div>
           </section>
 
@@ -365,7 +367,7 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
             <section className="xp-sec">
               <h4>{t("filum.esportazione.thread_lists_stitch_data")}</h4>
               <div className="xp-formats">
-                {dataFormats.map((f) => fmtButton(f.extension, `.${targetExtension(f.extension).toUpperCase()}`, FORMAT_HINT[f.extension] ?? f.name, "", f.name))}
+                {dataFormats.map((f) => fmtButton(f.extension, `.${targetExtension(f.extension).toUpperCase()}`, FORMAT_HINT[f.extension] ?? fmtName(f), "", fmtName(f)))}
               </div>
             </section>
           )}

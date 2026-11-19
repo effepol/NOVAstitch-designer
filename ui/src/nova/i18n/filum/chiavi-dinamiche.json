@@ -14,6 +14,7 @@
     "filum.pannelli.font_desc_": "le descrizioni dei font vettoriali inclusi: descShown() in Lettering.tsx le prende da DESC_KEYS",
     "filum.esportazione.formato.": "i formati di file nella finestra Esporta: shown() in ExportDialog.tsx compone filum.esportazione.formato.<formato>",
     "filum.esportazione.dati.": "i file di dati nella finestra Esporta: shown() in ExportDialog.tsx compone filum.esportazione.dati.<formato>",
-    "filum.esportazione.immagine.": "le immagini nella finestra Esporta: shown() in ExportDialog.tsx compone filum.esportazione.immagine.<formato>"
+    "filum.esportazione.immagine.": "le immagini nella finestra Esporta: shown() in ExportDialog.tsx compone filum.esportazione.immagine.<formato>",
+    "filum.esportazione.nome.": "i nomi dei formati dal motore (crates/formats): fmtName() in ExportDialog.tsx usa tData(filum.esportazione.nome.<formato>)"
   }
 }

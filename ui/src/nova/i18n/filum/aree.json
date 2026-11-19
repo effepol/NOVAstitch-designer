@@ -154,7 +154,14 @@
       ],
       "schermate": [
         "finestra/export"
-      ]
+      ],
+      "fuori": [
+        ".ec-name",
+        "select:has(optgroup) > option",
+        "optgroup > option",
+        ".xp-frames button"
+      ],
+      "nota_fuori": "Fuori dal controllo i.1 di quest'area: i nomi dei colori della tabella fili delle macchine (Brother…), i nomi delle macchine e dei telai (lib/machines.ts, area dati; i nomi dei telai finiscono anche nei disegni salvati)."
     },
     "messaggi": {
       "descrizione": "Messaggi, avvisi, errori (anche quelli del motore)",
