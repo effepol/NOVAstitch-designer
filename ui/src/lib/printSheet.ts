@@ -45,7 +45,7 @@ export const PRINT_DEFAULTS: PrintSettings = {
   spm: 700,
   thumbnail: 20,
   showFooter: true,
-  footer: "Made with Filum",
+  get footer() { return t("filum.finestre.foglio_footer"); },
   logo: "",
   infoText: "",
 };

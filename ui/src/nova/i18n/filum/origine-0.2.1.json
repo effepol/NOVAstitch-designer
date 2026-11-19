@@ -1943,6 +1943,14 @@
     "testo": "Makers disagree on cutting (wedge) points: Groz-Beckert advises against them, Organ offers a narrow wedge.",
     "file": "lib/materials.ts"
   },
+  "filum.dati.merged_similar.one": {
+    "testo": "{n} similar thread now share a spool — Revert undoes it",
+    "file": "lib/threads.ts"
+  },
+  "filum.dati.merged_similar.other": {
+    "testo": "{n} similar threads now share a spool — Revert undoes it",
+    "file": "lib/threads.ts"
+  },
   "filum.dati.more_colours_and_finer_detail": {
     "testo": "More colours and finer detail; lines keep the width they are drawn with",
     "file": "lib/digitizePresets.ts"
@@ -1975,9 +1983,41 @@
     "testo": "No stabiliser maker gives felt its own recommendation.",
     "file": "lib/materials.ts"
   },
+  "filum.dati.no_threads_closer": {
+    "testo": "No threads closer than ΔE {de}",
+    "file": "lib/threads.ts"
+  },
   "filum.dati.none": {
     "testo": "None",
     "file": "lib/materials.ts"
+  },
+  "filum.dati.note_cap": {
+    "testo": "cap driver",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.note_clamp": {
+    "testo": "clamp frame for thick items",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.note_compact": {
+    "testo": "compact frame for pockets and small items",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.note_cylinder": {
+    "testo": "cylinder frame for bags and shoes",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.note_sleeves": {
+    "testo": "sleeves and tubular items",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.note_wide_cap": {
+    "testo": "wide cap driver",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.note_wide_table": {
+    "testo": "needs the wide table",
+    "file": "lib/machines.ts"
   },
   "filum.dati.optional": {
     "testo": "Optional",
@@ -6089,6 +6129,10 @@
   },
   "filum.finestre.foglio_estimated_time": {
     "testo": "Estimated time",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_footer": {
+    "testo": "Made with Filum",
     "file": "lib/printSheet.ts"
   },
   "filum.finestre.foglio_hash_stitches": {
@@ -11753,6 +11797,10 @@
   },
   "filum.pannelli.font_desc_block": {
     "testo": "Block capitals",
+    "file": "lib/fonts.ts"
+  },
+  "filum.pannelli.font_desc_letters": {
+    "testo": "Made from {n} letter files",
     "file": "lib/fonts.ts"
   },
   "filum.pannelli.font_desc_rounded": {
