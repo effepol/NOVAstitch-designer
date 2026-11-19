@@ -1,3 +1,4 @@
+import { t, tn } from "../nova/i18n/filum";
 import { engine, type SvgText } from "../engine/client";
 import { machineById, presetById } from "./machines";
 import { conjugate, makeClone } from "./clones";
@@ -30,8 +31,8 @@ export function loadDoc(doc: StitchDocument, path: string | null, warnings: stri
   const s = useStore.getState();
   // a design from a file: the fields every part of the app reads are there
   const checked = checkDoc(doc, emptyDoc());
-  if (!checked) throw new Error("not a Filum design");
-  if (checked.dropped) s.toast(`${checked.dropped} damaged object${checked.dropped === 1 ? " was" : "s were"} left out`, "error");
+  if (!checked) throw new Error(t("filum.messaggi.not_a_design"));
+  if (checked.dropped) s.toast(tn("filum.messaggi.damaged_left_out", checked.dropped), "error");
   s.setDoc(checked.doc);
   s.set({ filePath: path, saved: true, past: [], future: [], selection: [], nodeSel: [], gradNodes: [], activeThread: null, anim: { ...s.anim, index: null, playing: false } });
   setTimeout(() => fit("hoop"), 0);
@@ -41,14 +42,14 @@ export function loadDoc(doc: StitchDocument, path: string | null, warnings: stri
     fromSchema: read?.fromSchema ?? checked.doc.nova?.schemaVersion ?? 0,
     migrated: read?.migrated ?? false,
     readOnly: read?.readOnly ?? false,
-    warnings: [...warnings, ...(checked.dropped ? [`${checked.dropped} damaged object(s) left out`] : [])],
+    warnings: [...warnings, ...(checked.dropped ? [t("filum.messaggi.damaged_objects_left_out", { n: checked.dropped })] : [])],
   });
 }
 
 /** Whether the design may be replaced: saved, empty, or the user says so. */
 export function confirmDiscard(): boolean {
   const s = useStore.getState();
-  return s.saved || !s.doc.objects.length || confirm("Discard unsaved changes?");
+  return s.saved || !s.doc.objects.length || confirm(t("filum.messaggi.discard_unsaved_changes"));
 }
 
 export function newDocument() {
@@ -136,9 +137,9 @@ async function handleBytes(name: string, path: string | null, bytes: Uint8Array,
       s.select(objs.map((o) => o.id));
     }
     for (const w of warnings) s.toast(w);
-    s.toast(`Loaded ${name}`, "success");
+    s.toast(t("filum.messaggi.loaded_name", { name }), "success");
   } catch (e) {
-    s.toast(`Could not open ${name}: ${(e as Error).message}`, "error");
+    s.toast(t("filum.messaggi.could_not_open_name_message", { name, message: (e as Error).message }), "error");
   }
 }
 
@@ -150,11 +151,11 @@ export async function openDocument() {
   const fmt = projectFormat();
   const projectExt = fmt ? fmt.extensions.filter((e) => e !== "json") : [];
   const f = await pickFile([
-    { name: "All supported", extensions: [...new Set([...projectExt, "filum", "svg", ...MACHINE_EXT, ...IMAGE_EXT])] },
+    { name: t("filum.messaggi.all_supported"), extensions: [...new Set([...projectExt, "filum", "svg", ...MACHINE_EXT, ...IMAGE_EXT])] },
     ...(fmt ? [{ name: fmt.filterName(), extensions: projectExt }] : []),
-    { name: "Filum project", extensions: ["filum"] },
-    { name: "Ink/Stitch SVG", extensions: ["svg"] },
-    { name: "Embroidery files", extensions: MACHINE_EXT },
+    { name: t("filum.messaggi.filum_project"), extensions: ["filum"] },
+    { name: t("filum.messaggi.ink_stitch_svg"), extensions: ["svg"] },
+    { name: t("filum.messaggi.embroidery_files"), extensions: MACHINE_EXT },
   ]);
   if (f) await handleBytes(f.name, f.path, f.bytes, "open");
 }
@@ -164,14 +165,14 @@ async function pickFile(filters: Parameters<typeof openFile>[0]) {
   try {
     return await openFile(filters);
   } catch (e) {
-    useStore.getState().toast(`Could not open the file: ${(e as Error)?.message ?? e}`, "error");
+    useStore.getState().toast(t("filum.messaggi.could_not_open_the_file", { v1: (e as Error)?.message ?? e }), "error");
     return null;
   }
 }
 
 export async function importFile() {
   const f = await pickFile([
-    { name: "Artwork & embroidery", extensions: ["svg", ...MACHINE_EXT, ...IMAGE_EXT] },
+    { name: t("filum.messaggi.artwork_embroidery"), extensions: ["svg", ...MACHINE_EXT, ...IMAGE_EXT] },
   ]);
   if (f) await handleBytes(f.name, f.path, f.bytes, "import");
 }
@@ -200,12 +201,12 @@ export async function openLaunchFiles() {
     try {
       bytes = await readFile(path);
     } catch (e) {
-      s.toast(`Could not open ${name}: ${(e as Error).message ?? e}`, "error");
+      s.toast(t("filum.messaggi.could_not_open_name_v2", { name, v2: (e as Error).message ?? e }), "error");
       return;
     }
     // replaced only once the file has loaded (a broken file leaves the design as it was)
     await handleBytes(name, path, bytes, "launch");
-    if (rest.length) s.toast(`Opened ${name}. Open the other ${rest.length === 1 ? "file" : `${rest.length} files`} with File → Open…`);
+    if (rest.length) s.toast(tn("filum.messaggi.opened_open_the_others", rest.length, { name }));
   };
   await listen("open-files", () => void openQueued());
   await openQueued();
@@ -225,26 +226,26 @@ export async function saveDocument(saveAs = false): Promise<boolean> {
     try {
       path = await fmt.save(doc, { saveAs });
     } catch (e) {
-      s.toast(`Could not save: ${(e as Error)?.message ?? e}`, "error");
+      s.toast(t("filum.messaggi.could_not_save_v1", { v1: (e as Error)?.message ?? e }), "error");
       return false;
     }
     if (!path) return false;
     useStore.getState().set({ saved: useStore.getState().doc === doc, filePath: path });
-    s.toast("Saved", "success");
+    s.toast(t("filum.messaggi.saved"), "success");
     emit("doc.saved", { path });
     return true;
   }
   const bytes = enc.encode(JSON.stringify(doc, null, 1));
   try {
-    path = await saveFile(`${doc.name || "design"}.filum`, bytes, [{ name: "Filum project", extensions: ["filum"] }], saveAs ? null : s.filePath);
+    path = await saveFile(`${doc.name || "design"}.filum`, bytes, [{ name: t("filum.messaggi.filum_project"), extensions: ["filum"] }], saveAs ? null : s.filePath);
   } catch (e) {
-    s.toast(`Could not save: ${(e as Error)?.message ?? e}`, "error");
+    s.toast(t("filum.messaggi.could_not_save_v1", { v1: (e as Error)?.message ?? e }), "error");
     return false;
   }
   if (!path) return false;
   // saved is what was written: edits made while the file was written stay unsaved
   s.set({ saved: useStore.getState().doc === doc, filePath: path.includes("/") || path.includes("\\") ? path : s.filePath });
-  s.toast("Saved", "success");
+  s.toast(t("filum.messaggi.saved"), "success");
   emit("doc.saved", { path });
   return true;
 }
@@ -256,9 +257,9 @@ export async function exportDesign(format: string, opts: ExportOptions = {}, fil
     const bytes = await engine.export(s.doc, format, opts);
     const name = `${fileName || s.doc.name || "design"}.${format}`;
     const path = await saveFile(name, bytes, [{ name: format.toUpperCase(), extensions: [format] }]);
-    if (path) s.toast(`Exported ${name}`, "success");
+    if (path) s.toast(t("filum.messaggi.exported_name", { name }), "success");
   } catch (e) {
-    s.toast(`Export failed: ${(e as Error).message}`, "error");
+    s.toast(t("filum.messaggi.export_failed_message", { message: (e as Error).message }), "error");
   }
 }
 
@@ -274,7 +275,7 @@ export async function optimizeOrder() {
     return { ...d, objects: [...ordered, ...d.objects.filter((o) => !placed.has(o.id))] };
   });
   s.toast(
-    `Optimised: colour changes ${r.colorChangesBefore} → ${r.colorChangesAfter}, travel ${Math.round(r.travelBeforeMm)} → ${Math.round(r.travelAfterMm)} mm`,
+    t("filum.messaggi.optimised_colour_changes_colorchangesbefore_colorchangesafter", { colorChangesBefore: r.colorChangesBefore, colorChangesAfter: r.colorChangesAfter, v3: Math.round(r.travelBeforeMm), v4: Math.round(r.travelAfterMm) }),
     "success",
   );
 }
@@ -321,7 +322,7 @@ export function cloneSelection() {
   const clones = sel.map((o) => makeClone(o));
   s.addObjects(clones);
   s.select(clones.map((c) => c.id));
-  s.toast(`${clones.length} clone${clones.length > 1 ? "s" : ""}: they follow the original${clones.length > 1 ? "s" : ""} — edit an original to change its clones`);
+  s.toast(tn("filum.messaggi.n_clones_follow", clones.length));
 }
 
 /**

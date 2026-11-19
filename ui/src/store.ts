@@ -1,3 +1,4 @@
+import { t } from "./nova/i18n/filum";
 import { create } from "zustand";
 import { syncClones } from "./lib/clones";
 import { pruneGroups } from "./lib/layerRows";
@@ -256,7 +257,7 @@ function playerPrefs(): { speed: number; follow: boolean } {
 
 export const emptyDoc = (): StitchDocument => ({
   version: 1,
-  name: "Untitled",
+  name: t("filum.messaggi.untitled"),
   threads: [],
   objects: [],
   hoop: { name: "100 × 100 mm", width: 100, height: 100 },
@@ -604,7 +605,7 @@ export function flushAutosave(): boolean {
   localStorage.removeItem(DOC_KEY);
   if (!autosaveWarned) {
     autosaveWarned = true;
-    s.toast("The design is too big to autosave: save it to a file", "error");
+    s.toast(t("filum.messaggi.the_design_is_too_big"), "error");
   }
   return false;
 }

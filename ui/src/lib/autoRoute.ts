@@ -1,5 +1,6 @@
 // Auto-route running stitch on the selection (see ./route for the routing).
 
+import { t, tn } from "../nova/i18n/filum";
 import type { DesignObject, Vec2 } from "../types";
 import { useStore } from "../store";
 import { flattenSubPath } from "./bezier";
@@ -30,7 +31,7 @@ export function routableSelection(): DesignObject[] {
 export function autoRouteSelection(redwork = false): string | null {
   const s = useStore.getState();
   const objs = routableSelection();
-  if (objs.length < 1) return "Select running-stitch lines";
+  if (objs.length < 1) return t("filum.messaggi.select_running_lines");
   // one route per thread and stitch settings
   const sets = new Map<string, DesignObject[]>();
   for (const o of objs) {
@@ -60,7 +61,7 @@ export function autoRouteSelection(redwork = false): string | null {
       },
     });
   }
-  if (!routes.length) return "Nothing to route";
+  if (!routes.length) return t("filum.messaggi.nothing_to_route");
   // the lines of a style that routed to nothing stay as they were
   const ids = new Set(routes.flatMap((r) => r.members));
   const at = new Map(routes.map((r) => [r.first, r.obj]));
@@ -73,13 +74,13 @@ export function autoRouteSelection(redwork = false): string | null {
   s.select(routes.map((r) => r.obj.id));
   const lines = routes.reduce((n, r) => n + r.lines, 0);
   const parts = routes.reduce((n, r) => n + r.parts, 0);
-  const apart = routes.length > 1 ? ` (${routes.length} routes: one per thread and stitch settings)` : "";
+  const apart = routes.length > 1 ? t("filum.messaggi.n_routes_apart", { n: routes.length }) : "";
   if (redwork) {
-    s.toast(`Redwork: ${lines} line${lines > 1 ? "s" : ""} sewn out and back${parts > routes.length ? ` in ${parts} separate parts` : routes.length > 1 ? "" : " — one path, no jumps"}${apart}`);
+    s.toast(tn("filum.messaggi.redwork_n_lines", lines) + (parts > routes.length ? t("filum.messaggi.in_parts_separate_parts", { parts }) : routes.length > 1 ? "" : t("filum.messaggi.one_path_no_jumps")) + apart);
     return null;
   }
   const jumps = parts - routes.length;
-  s.toast(`Routed ${lines} line${lines > 1 ? "s" : ""} into ${parts} path${parts > 1 ? "s" : ""}${jumps ? ` (${jumps} jump${jumps > 1 ? "s" : ""} between separate parts)` : " — no jumps"}${apart}`);
+  s.toast(t("filum.messaggi.routed_lines_into_paths", { lines: tn("filum.messaggi.n_lines", lines), paths: tn("filum.messaggi.n_paths", parts) }) + (jumps ? tn("filum.messaggi.n_jumps_between_parts", jumps) : t("filum.messaggi.no_jumps")) + apart);
   return null;
 }
 
@@ -92,7 +93,7 @@ export function autoRouteSelection(redwork = false): string | null {
 export function jumpsToStrokes(min = 1, max = 15): string | null {
   const s = useStore.getState();
   const plan = s.plan;
-  if (!plan) return "No stitches yet";
+  if (!plan) return t("filum.messaggi.no_stitches_yet");
   const sel = new Set(s.selection);
   const objs = s.doc.objects;
   // first and last stitch of every object in the plan
@@ -131,7 +132,7 @@ export function jumpsToStrokes(min = 1, max = 15): string | null {
       },
     });
   }
-  if (!inserts.length) return `No jumps between ${min} and ${max} mm in the same thread`;
+  if (!inserts.length) return t("filum.messaggi.no_jumps_between", { min, max });
   s.commit((d) => {
     const out: DesignObject[] = [];
     for (const o of d.objects) {
@@ -140,7 +141,7 @@ export function jumpsToStrokes(min = 1, max = 15): string | null {
     }
     return { ...d, objects: out };
   });
-  s.toast(`${inserts.length} jump${inserts.length > 1 ? "s" : ""} turned into running stitch`);
+  s.toast(tn("filum.messaggi.jumps_to_running", inserts.length));
   return null;
 }
 
@@ -169,10 +170,10 @@ export function setAutoSatinOptions(o: Partial<ReturnType<typeof autoSatinOption
 export function autoRouteSatins(): string | null {
   const s = useStore.getState();
   const sel = s.doc.objects.filter((o) => s.selection.includes(o.id) && (o.stitch.type === "satin" || (o.stitch.type === "running" && !o.stitch.ripple)));
-  if (!sel.some((o) => o.stitch.type === "satin")) return "Select satin columns";
+  if (!sel.some((o) => o.stitch.type === "satin")) return t("filum.messaggi.select_satin_columns");
   const opts = autoSatinOptions();
   const routed = autoSatin(sel, { ...opts, start: sel[0].start, end: sel[sel.length - 1].end });
-  if (!routed?.length) return "Nothing to route";
+  if (!routed?.length) return t("filum.messaggi.nothing_to_route");
   const ids = new Set(sel.map((o) => o.id));
   const at = s.doc.objects.findIndex((o) => ids.has(o.id));
   const group = uid("g");
@@ -189,6 +190,6 @@ export function autoRouteSatins(): string | null {
   s.select(out.map((o) => o.id));
   const satins = out.filter((o) => o.stitch.type === "satin").length;
   const runs = out.length - satins;
-  s.toast(`Auto-routed: ${satins} satin${satins > 1 ? "s" : ""}${runs ? ` and ${runs} underpath${runs > 1 ? "s" : ""}` : ""}${opts.trim ? ", trims between parts" : ""}`);
+  s.toast(t("filum.messaggi.auto_routed", { satins: tn("filum.messaggi.n_satins", satins) }) + (runs ? tn("filum.messaggi.and_n_underpaths", runs) : "") + (opts.trim ? t("filum.messaggi.trims_between_parts") : ""));
   return null;
 }

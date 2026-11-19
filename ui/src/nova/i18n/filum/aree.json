@@ -158,7 +158,7 @@
     },
     "messaggi": {
       "descrizione": "Messaggi, avvisi, errori (anche quelli del motore)",
-      "fatta": false,
+      "fatta": true,
       "file": [
         "store.ts",
         "lib/actions.ts",

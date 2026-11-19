@@ -112,7 +112,7 @@ export function DensityLegend() {
             <span title={t("filum.pannelli.thread_added_to_the_fabric", { v1: f?.limits?.gsm ?? "?" })}>
               +<b>{read.added.toFixed(0)}</b>{t("filum.pannelli.g_m2")}
             </span>
-            <span className={`dl-cls k${read.cls}`}>{CLASS_LABELS[read.cls]}</span>
+            <span className={`dl-cls k${read.cls}`}>{CLASS_LABELS()[read.cls]}</span>
           </>
         ) : f && f.stats.area > 0 ? (
           <span className="stat">

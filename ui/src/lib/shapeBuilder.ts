@@ -1,6 +1,7 @@
 // Shape Builder commands that act on the whole selection (the on-canvas
 // merging and deleting of regions lives in the canvas).
 
+import { t } from "../nova/i18n/filum";
 import { engine } from "../engine/client";
 import { useStore } from "../store";
 import type { DesignObject } from "../types";
@@ -25,7 +26,7 @@ export const builderRefusal = (objs: DesignObject[]): string | null => layeredRe
 export async function divideSelection() {
   const s = useStore.getState();
   const targets = builderTargets();
-  if (!targets.length) return s.toast("Select overlapping fills to divide");
+  if (!targets.length) return s.toast(t("filum.messaggi.select_overlapping_fills_to_divide"));
   const no = builderRefusal(targets);
   if (no) return s.toast(no, "error");
   const ids = targets.map((o) => o.id);
@@ -41,5 +42,5 @@ export async function divideSelection() {
   const made = [...byOwner.values()].flat();
   s.commit((d) => ({ ...d, objects: d.objects.flatMap((o) => (ids.includes(o.id) ? byOwner.get(o.id) ?? [] : [o])) }));
   s.select(made.map((o) => o.id));
-  s.toast(`Divided into ${made.length} shapes`, "success");
+  s.toast(t("filum.messaggi.divided_into_length_shapes", { length: made.length }), "success");
 }

@@ -4,6 +4,7 @@
 // The design-wide knockdown (DesignOptions.knockdown*) covers everything;
 // this one is an ordinary, editable object.
 
+import { t } from "../nova/i18n/filum";
 import { engine } from "../engine/client";
 import { useStore } from "../store";
 import type { DesignObject, FillParams, StitchDocument, SubPath } from "../types";
@@ -80,7 +81,7 @@ export async function createKnockdown(o: KnockdownSelectionOptions): Promise<num
   if (!ids.length) return 0;
   const paths = await knockdownPaths(s.doc, ids, o);
   if (!paths.length) {
-    s.toast("Nothing to knock down", "error");
+    s.toast(t("filum.messaggi.nothing_to_knock_down"), "error");
     return 0;
   }
   const color = (o.color || s.fabricColor || "#f4f1ea").toLowerCase();
