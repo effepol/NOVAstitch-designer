@@ -6059,6 +6059,154 @@
     "testo": "Flag",
     "file": "lib/shapeOps.ts"
   },
+  "filum.finestre.foglio_choose_layout": {
+    "testo": "Choose at least one layout.",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_client": {
+    "testo": "Client:",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_client_signature": {
+    "testo": "Client signature",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_colour_blocks": {
+    "testo": "Colour blocks",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_colour_blocks_n": {
+    "testo": "Colour blocks: {n}",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_colour_n": {
+    "testo": "Colour {n}",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_design_box_size": {
+    "testo": "Design box size",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_estimated_time": {
+    "testo": "Estimated time",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_hash_stitches": {
+    "testo": "# stitches",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_hash_trims": {
+    "testo": "# trims",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_job_time": {
+    "testo": "Job estimated time",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_m_thread": {
+    "testo": "{m} m thread",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_machine_speed": {
+    "testo": "Machine speed",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_n_jumps": {
+    "testo": "{n} jumps",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_n_stitches": {
+    "testo": "{n} stitches",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_n_stops": {
+    "testo": "{n} stops",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_n_trims": {
+    "testo": "{n} trims",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_no": {
+    "testo": "no",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_po": {
+    "testo": "Purchase order #:",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_snip_by_hand": {
+    "testo": "Snip by hand",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_spm": {
+    "testo": "{spm} spm",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_stop_after": {
+    "testo": "Stop after?",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_th_colour": {
+    "testo": "Colour",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_th_consumption": {
+    "testo": "Thread consumption",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_th_notes": {
+    "testo": "Notes",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_th_stops_trims": {
+    "testo": "Stops and trims",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_thread": {
+    "testo": "Thread",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_top_bobbin": {
+    "testo": "{top} m top · {bobbin} m bobbin",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_total_stitch_count": {
+    "testo": "Total stitch count",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_total_stops": {
+    "testo": "Total stops",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_total_thread_used": {
+    "testo": "Total thread used",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_total_trims": {
+    "testo": "Total trims",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_trims_stops": {
+    "testo": "{trims} trims · {stops} stops",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_unique_colours": {
+    "testo": "Unique colours",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_unique_colours_n": {
+    "testo": "Unique colours: {n}",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_untitled": {
+    "testo": "Untitled",
+    "file": "lib/printSheet.ts"
+  },
+  "filum.finestre.foglio_yes": {
+    "testo": "yes",
+    "file": "lib/printSheet.ts"
+  },
   "filum.finestre.follow_the_design_or_a": {
     "testo": "Follow the design, or a rectangle / circle around it with the design cut out (an embossed look)",
     "file": "components/KnockdownDialog.tsx"
@@ -7726,6 +7874,34 @@
   "filum.finestre.snapping": {
     "testo": "Snapping",
     "file": "components/SettingsDialog.tsx"
+  },
+  "filum.finestre.so_colour_n": {
+    "testo": "Colour {n}",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.so_gradient_colour": {
+    "testo": "Colour {n} of {of} of a gradient ({name})",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.so_n_stops.one": {
+    "testo": "{n} stop",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.so_n_stops.other": {
+    "testo": "{n} stops",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.so_n_trims.one": {
+    "testo": "{n} trim",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.so_n_trims.other": {
+    "testo": "{n} trims",
+    "file": "components/StitchOut.tsx"
+  },
+  "filum.finestre.so_stitches_time": {
+    "testo": "{n} stitches · {time} on the machine",
+    "file": "components/StitchOut.tsx"
   },
   "filum.finestre.something_went_wrong": {
     "testo": "Something went wrong",
