@@ -3,6 +3,9 @@
 // target grid and the cross as canvas layers, buttons in the bottom bar, items in
 // the View menu. No command on the document: nothing here makes an undo step.
 //
+// The plain grid is Filum's own, with its step from grid.step; module c draws
+// only the target grid and the cross (Architect, 18/11).
+//
 // Waiting for module 0's hooks (request of 18/11): the zoom buttons in the bar
 // (ZoomButtons.tsx is ready for it), and the pointer on the canvas with the
 // previous point of Filum's own tools for the cross (aids.setCursor, setTracePoint).
@@ -33,7 +36,7 @@ export function installViewAids(aids: ViewAids): () => void {
   const offs: (() => void)[] = [];
   const failed = (e: unknown) => useStore.getState().toast(String(e instanceof Error ? e.message : e), "error");
 
-  // Filum's grid follows grid.step (until module 0's hook lets the c grid layer replace it)
+  // Filum's grid draws the plain grid, every grid.step mm
   const syncFilumGrid = () => useStore.getState().set({ gridStep: aids.gridStep() });
   syncFilumGrid();
 
