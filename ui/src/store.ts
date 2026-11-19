@@ -15,6 +15,7 @@ import { safeSetItem } from "./lib/storage";
 import { checkDoc } from "./lib/docCheck";
 import { INKSTITCH_DEFAULTS } from "./lib/machines";
 import { recordEdits } from "./nova/core/edited";
+import { chooseFabric } from "./nova/core/fabricChoice";
 import type {
   DensityField,
   DesignObject,
@@ -487,7 +488,8 @@ export const useStore = create<State>((set, get) => ({
     set({ doc: { ...d, threads: [...d.threads, t] } });
     return id;
   },
-  setFabric: (fabric) => get().commit((d) => ({ ...d, fabric })),
+  // NOVAstitch: through chooseFabric (module e: e.preset.apply, one undo step)
+  setFabric: (fabric) => chooseFabric(fabric, () => get().commit((d) => ({ ...d, fabric }))),
   toast: (text, kind = "info") => {
     const id = Date.now() + Math.random();
     set({ toasts: [...get().toasts, { id, text, kind }] });
