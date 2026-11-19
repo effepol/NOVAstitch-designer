@@ -3,7 +3,13 @@
 
 import { planOf, useStore } from "../../store";
 import { registerCanvasLayer, registerToolbarButton, type ToolbarButtonEntry } from "../core/registry";
-import { connections, drawConnections, drawMarks, startEndMarks } from "./overlay";
+import { connectionAt, connections, drawConnections, drawMarks, startEndMarks } from "./overlay";
+import { currentMode } from "../core/mode";
+import type { Vec2 } from "../../types";
+import { linkChoice } from "./commands";
+import { linkMenu } from "./SequencePanel";
+import { openMenu } from "./menuHost";
+import { focusRow } from "./events";
 import { isOn, onViewOptions, toggleOption, type ViewOption } from "./view";
 
 /** The plan of the document on screen (a stale plan of another document is not drawn). */
@@ -23,6 +29,17 @@ const BUTTONS: { option: ViewOption; entry: Omit<ToolbarButtonEntry, "run" | "ac
   { option: "links", entry: { id: "b.links", module: "b", label: "b.view.links", title: "b.view.links.title", order: 11 } },
 ];
 
+/**
+ * The connection under a click: only with «Connections» on, the selection tool and the
+ * left button (the canvas sends only those), within the line's tolerance, in Studio.
+ */
+function clicked(p: Vec2, scale: number) {
+  if (currentMode() === "assisted") return null;
+  const { doc, plan } = current();
+  if (!plan) return null;
+  return connectionAt(connections(doc, plan), p, { scale, linksOn: isOn("links"), tool: useStore.getState().tool, button: 0 });
+}
+
 /** Registers the buttons and the layers; returns the function that removes them. */
 export function registerCanvasViews(): () => void {
   // a button is registered again when its option changes: the bar re-reads the registry and shows it on or off
@@ -39,10 +56,20 @@ export function registerCanvasViews(): () => void {
     id: "b.links",
     module: "b",
     order: 10,
+    visible: () => isOn("links"),
     draw: (ctx, info) => {
       if (!isOn("links")) return;
       const { doc, plan } = current();
       if (plan) drawConnections(ctx, connections(doc, plan), info.scale);
+    },
+    // a click on a connection line (Studio): the menu Trim / Jump / Sew through / Automatic
+    hit: (p, info) => !!clicked(p, info.scale),
+    onClick: (p, info, x, y) => {
+      const c = clicked(p, info.scale);
+      const o = c && useStore.getState().doc.objects.find((x) => x.id === c.objId);
+      if (!o) return;
+      focusRow(o.id);
+      openMenu(linkMenu(o.id, linkChoice(o)), x, y);
     },
   });
   const offMarks = registerCanvasLayer({
