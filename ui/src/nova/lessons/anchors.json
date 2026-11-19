@@ -1,1 +1,9 @@
-{}
+{
+  "g.panel": "Il pannello Lezioni con l'elenco / The Lessons panel with the list",
+  "g.start": "Il pulsante Inizia di una lezione / A lesson's Start button",
+  "g.reload": "Il pulsante Ricarica delle lezioni / The lessons' Reload button",
+  "g.step": "Il riquadro del passo in corso / The box of the current step",
+  "g.hint": "Il suggerimento del passo / The step's hint",
+  "g.reset": "Il pulsante Ripristina / The Reset button",
+  "g.next": "Il pulsante Avanti / The Next button"
+}
