@@ -154,6 +154,8 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
     if (ts.isNoSubstitutionTemplateLiteral(node) || ts.isTemplateHead(node) || ts.isTemplateMiddle(node) || ts.isTemplateTail(node)) {
       for (const m of node.text.matchAll(/>([^<>]*\p{L}[^<>]*)</gu)) {
         const v = visibleText(m[1], allowed);
+        // «a < b && c > d» nel codice di uno shader non è testo: niente ; { } = & |
+        if (/[;{}=&|]/.test(m[1])) continue;
         if (v && (m[1].match(/\p{L}+/gu) ?? []).some((w) => !allowed.has(w))) report(node, v, "testo in un template HTML");
       }
     }

@@ -38,7 +38,10 @@ import { safeSetItem } from "../lib/storage";
 
 /** La descrizione dei font vettoriali inclusi (lib/fonts.ts), tradotta solo a schermo. */
 const DESC_KEYS: Record<string, string> = { "Rounded sans": "filum.pannelli.font_desc_rounded", "Block capitals": "filum.pannelli.font_desc_block", Script: "filum.pannelli.font_desc_script" };
-const descShown = (d?: string) => (d && d in DESC_KEYS ? t(DESC_KEYS[d]) : d);
+const descShown = (d?: string) => {
+  const letters = d?.match(/^Made from (\d+) letter files$/);
+  return letters ? t("filum.pannelli.font_desc_letters", { n: letters[1] }) : d && d in DESC_KEYS ? t(DESC_KEYS[d]) : d;
+};
 
 export function useTextSpec(group: string | null): TextSpec | null {
   return useStore((s) => (group ? s.doc.objects.find((o) => o.text?.group === group)?.text ?? null : null));
