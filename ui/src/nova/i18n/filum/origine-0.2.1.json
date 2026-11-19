@@ -9055,6 +9055,10 @@
     "testo": "Bar |",
     "file": "components/LetteringTools.tsx"
   },
+  "filum.pannelli.based_on": {
+    "testo": "Based on {original}",
+    "file": "components/Lettering.tsx"
+  },
   "filum.pannelli.basting": {
     "testo": "Basting",
     "file": "components/Dock.tsx"
@@ -10198,6 +10202,18 @@
   "filum.pannelli.font": {
     "testo": "Font",
     "file": "components/LetteringTools.tsx"
+  },
+  "filum.pannelli.font_desc_block": {
+    "testo": "Block capitals",
+    "file": "lib/fonts.ts"
+  },
+  "filum.pannelli.font_desc_rounded": {
+    "testo": "Rounded sans",
+    "file": "lib/fonts.ts"
+  },
+  "filum.pannelli.font_desc_script": {
+    "testo": "Script",
+    "file": "lib/fonts.ts"
   },
   "filum.pannelli.font_fallback": {
     "testo": "Font",

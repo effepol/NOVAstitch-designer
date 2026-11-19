@@ -10,6 +10,7 @@
     "filum.barre.dove.": "le indicazioni accanto ai tasti (corner, knob…): shown() in StatusHints.tsx compone filum.barre.dove.<nome>",
     "filum.finestre.pacchetto.": "i testi dei pacchetti scaricabili (public/downloads/*.json): tData() in DownloadsPanel.tsx compone filum.finestre.pacchetto.<id>.<campo>",
     "filum.pannelli.tipo.": "i tipi di oggetto in Informazioni sull'elemento: kindShown() in ElementInfo.tsx compone filum.pannelli.tipo.<tipo>",
-    "filum.pannelli.metodo.": "i metodi di punto in Informazioni sull'elemento: methodShown() in ElementInfo.tsx compone filum.pannelli.metodo.<metodo>"
+    "filum.pannelli.metodo.": "i metodi di punto in Informazioni sull'elemento: methodShown() in ElementInfo.tsx compone filum.pannelli.metodo.<metodo>",
+    "filum.pannelli.font_desc_": "le descrizioni dei font vettoriali inclusi: descShown() in Lettering.tsx le prende da DESC_KEYS"
   }
 }

@@ -35,6 +35,11 @@ import { ElementInfoSection } from "./ElementInfo";
 import { safeSetItem } from "../lib/storage";
 
 /** Reactive spec of a lettering group. */
+
+/** La descrizione dei font vettoriali inclusi (lib/fonts.ts), tradotta solo a schermo. */
+const DESC_KEYS: Record<string, string> = { "Rounded sans": "filum.pannelli.font_desc_rounded", "Block capitals": "filum.pannelli.font_desc_block", Script: "filum.pannelli.font_desc_script" };
+const descShown = (d?: string) => (d && d in DESC_KEYS ? t(DESC_KEYS[d]) : d);
+
 export function useTextSpec(group: string | null): TextSpec | null {
   return useStore((s) => (group ? s.doc.objects.find((o) => o.text?.group === group)?.text ?? null : null));
 }
@@ -768,7 +773,7 @@ export function FontPickerDialog({ onClose }: { onClose: () => void }) {
             title={
               f.download && !f.installed
                 ? t("filum.pannelli.optional_download_license_preferences_downloads", { license: String(f.license) })
-                : [f.description, f.original && `Based on ${f.original}`, f.license].filter(Boolean).join("\n") || f.name
+                : [descShown(f.description), f.original && t("filum.pannelli.based_on", { original: f.original }), f.license].filter(Boolean).join("\n") || f.name
             }
           >
             <div className="font-preview">
@@ -788,7 +793,7 @@ export function FontPickerDialog({ onClose }: { onClose: () => void }) {
               )}
             </div>
             <b>{f.name}</b>
-            {f.description && f.source !== "system" && <span className="font-desc">{f.description}</span>}
+            {f.description && f.source !== "system" && <span className="font-desc">{descShown(f.description)}</span>}
             {f.kind === "embroidery" && !!f.size && (
               <span className="font-meta">
                 {f.minScale && f.maxScale && f.maxScale > f.minScale

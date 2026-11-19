@@ -69,7 +69,12 @@
     "Standard": "uguale in italiano",
     "V": "verticale (⧄ V, inclinazione)",
     "x": "coordinata",
-    "y": "coordinata"
+    "y": "coordinata",
+    "Bebas": "nome di un font",
+    "Neue": "nome di un font",
+    "Nunito": "nome di un font",
+    "Pacifico": "nome di un font",
+    "Bebas Neue": "nome di un font"
   },
   "chiavi_con_filum": {
     "filum.menu.about_filum": "la voce apre la finestra Informazioni, che parla di Filum e non usa {app} (decisione dell'Architetto, 13/11)"
