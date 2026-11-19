@@ -17,6 +17,7 @@ import { chooseHoop } from "../nova/core/hoopChoice";
 import { FLAG, type ExportOptions, type FormatInfo, type MachineColorInfo, type PlanData } from "../types";
 import { Dialog, fmtTime, Num } from "./ui";
 import { FrameButtons, MachineOptions } from "./MachineOptions";
+import { NovaSlot } from "../nova/core/Slot";
 import { cutterOf, DEFAULT_CUT_OVER, uncutTrims } from "../lib/cuts";
 import { safeSetItem } from "../lib/storage";
 
@@ -403,6 +404,8 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
             {hasStitches && <StopPositionChoice stops={stats?.stops ?? 0} />}
             {hasStitches && <RepeatOptions opts={repeat} set={setRepeat} width={stats?.width ?? 0} height={stats?.height ?? 0} />}
           </section>
+          {/* NOVAstitch: the modules' space in the settings column (nova/core/slots.ts) */}
+          <NovaSlot name="export" props={{ format: fmt }} />
         </div>
 
         <div className="xp-main">

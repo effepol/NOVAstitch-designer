@@ -50,7 +50,21 @@ export interface CanvasLayerEntry extends Entry {
   /** Under the design (after Filum's grid and hoop) or over it (default). */
   z?: "under" | "over";
   draw: (ctx: CanvasRenderingContext2D, info: LayerInfo) => void;
+  /** On or off (default: on). A layer that is off is not drawn and takes no click. */
+  visible?: () => boolean;
+  /** Does a click at `p` (mm of the design) touch what the layer draws? Tolerance: info.tol. */
+  hit?: (p: Vec2, info: LayerHitInfo) => boolean;
+  /** A click (select tool, left button, no drag) that hit the layer: it goes here, not to Filum's selection. */
+  onClick?: (p: Vec2, info: LayerHitInfo, clientX: number, clientY: number) => void;
 }
+
+/** The view, and the click tolerance in mm (Filum's: 6 px). */
+export interface LayerHitInfo extends LayerInfo {
+  tol: number;
+}
+
+/** Filum's click tolerance, in screen pixels. */
+export const LAYER_HIT_PX = 6;
 
 /** A button of the bottom bar (beside the zoom buttons). */
 export interface ToolbarButtonEntry extends Entry {
@@ -207,7 +221,7 @@ export function drawingCursor(id: string): { registered: boolean; crosshair: boo
 export function drawCanvasLayers(ctx: CanvasRenderingContext2D, info: LayerInfo, z: "under" | "over" = "over"): void {
   const tool = z === "over" && activeTool ? drawingTool(activeTool) : undefined;
   const all: { id: string; draw: (ctx: CanvasRenderingContext2D, info: LayerInfo) => void }[] = [
-    ...layers.list().filter((l) => (l.z ?? "over") === z),
+    ...layers.list().filter((l) => (l.z ?? "over") === z && isOn(l)),
     ...(tool?.drawPreview ? [{ id: tool.id, draw: tool.drawPreview }] : []),
   ];
   for (const l of all) {
@@ -220,6 +234,43 @@ export function drawCanvasLayers(ctx: CanvasRenderingContext2D, info: LayerInfo,
       ctx.restore?.();
     }
   }
+}
+
+function isOn(l: CanvasLayerEntry): boolean {
+  try {
+    return l.visible?.() ?? true;
+  } catch (e) {
+    console.error(`nova: canvas layer "${l.id}" failed`, e);
+    return false;
+  }
+}
+
+/** The layer a click at `p` (mm) touches: the topmost one that is on and answers hit; null: Filum's. */
+export function layerHit(p: Vec2, view: LayerInfo): CanvasLayerEntry | null {
+  const info: LayerHitInfo = { ...view, tol: LAYER_HIT_PX / view.scale };
+  // over the design before under it, the last registered (drawn last, on top) first
+  const order = [...layers.list().filter((l) => (l.z ?? "over") === "over").reverse(), ...layers.list().filter((l) => l.z === "under").reverse()];
+  for (const l of order) {
+    if (!l.hit || !l.onClick || !isOn(l)) continue;
+    try {
+      if (l.hit(p, info)) return l;
+    } catch (e) {
+      console.error(`nova: canvas layer "${l.id}" failed`, e);
+    }
+  }
+  return null;
+}
+
+/** A click at `p`: to the layer it touches (true), else false (Filum's selection). */
+export function layerClick(p: Vec2, view: LayerInfo, clientX: number, clientY: number): boolean {
+  const l = layerHit(p, view);
+  if (!l) return false;
+  try {
+    l.onClick!(p, { ...view, tol: LAYER_HIT_PX / view.scale }, clientX, clientY);
+  } catch (e) {
+    console.error(`nova: canvas layer "${l.id}" failed`, e);
+  }
+  return true;
 }
 
 const redraws = new Set<() => void>();

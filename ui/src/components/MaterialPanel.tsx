@@ -10,6 +10,7 @@ import { FABRICS, fabricInfo, THREAD_WEIGHTS, threadWeightInfo } from "../lib/ma
 import { PILE } from "../lib/underlay";
 import { useStore } from "../store";
 import { chooseHoop } from "../nova/core/hoopChoice";
+import { NovaSlot } from "../nova/core/Slot";
 import type { HoopShape, ThreadWeight } from "../types";
 import { Row } from "./ui";
 
@@ -64,6 +65,8 @@ export function MaterialSection() {
           </button>
         </div>
       </Row>
+      {/* NOVAstitch: the modules' space under the fabric picker (nova/core/slots.ts) */}
+      <NovaSlot name="material" props={{}} />
       <Row label={t("filum.pannelli.thread_2")} title={t("filum.pannelli.top_thread_weight_finer_thread")}>
         <div className="seg mt-weights">
           {THREAD_WEIGHTS.map((th) => (
