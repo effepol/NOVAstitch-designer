@@ -150,6 +150,15 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
         strings(node.initializer, "proprietà name");
       else if (name === "name" && ts.isTemplateExpression(node.initializer) && LOOKS_LIKE_TEXT(node.initializer.head.text)) strings(node.initializer, "proprietà name");
     }
+    // HTML scritto in un template (il foglio di stampa): «<dt>Total trims</dt>», «<span>${n} stitches</span>»
+    if (ts.isNoSubstitutionTemplateLiteral(node) || ts.isTemplateHead(node) || ts.isTemplateMiddle(node) || ts.isTemplateTail(node)) {
+      for (const m of node.text.matchAll(/>([^<>]*\p{L}[^<>]*)</gu)) {
+        const v = visibleText(m[1], allowed);
+        // «a < b && c > d» nel codice di uno shader non è testo: niente ; { } = & |
+        if (/[;{}=&|]/.test(m[1])) continue;
+        if (v && (m[1].match(/\p{L}+/gu) ?? []).some((w) => !allowed.has(w))) report(node, v, "testo in un template HTML");
+      }
+    }
     ts.forEachChild(node, visit);
   };
   visit(sf);

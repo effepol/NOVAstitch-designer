@@ -35,6 +35,7 @@ const cases: [string, string][] = [
   ["template", "export const A = (n: number) => <b title={`${n} stitches`} />;"],
   ["messaggio", `declare const s: { toast(m: string): void }; s.toast("Saved");`],
   ["proprietà group", `export const groups = [{ group: "Everywhere", rows: [] }];`],
+  ["template HTML", "export const page = (n: number) => `<dl><dt>Total trims</dt><dd>${n}</dd></dl>`;"],
   ["template in un elenco", "export const tabs = (n: number) => [[\"fonts\", `Fonts (${n})`]];"],
 ];
 for (const [name, code] of cases) {
@@ -65,5 +66,15 @@ try {
   console.log((e as { stdout: string }).stdout);
 }
 check(areas === 0, "i.2 nelle aree tradotte (aree.json) nessun testo scritto a mano");
+
+// tutte le aree sono tradotte: il linter passa anche su tutti i file di Filum, fuori dalle aree
+let all = 0;
+try {
+  execFileSync("node", [linter, "--tutti"], { encoding: "utf8", stdio: "pipe" });
+} catch (e) {
+  all = (e as { status: number }).status;
+  console.log((e as { stdout: string }).stdout);
+}
+check(all === 0, "i.2 in tutti i file di Filum nessun testo scritto a mano (check-texts --tutti)");
 
 done("traduzione di Filum: linter");

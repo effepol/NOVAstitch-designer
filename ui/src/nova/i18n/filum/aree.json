@@ -132,7 +132,8 @@
         "lib/threadMatch.ts",
         "lib/convertActions.ts",
         "components/MatchPanel.tsx",
-        "components/ThreadPicker.tsx"
+        "components/ThreadPicker.tsx",
+        "lib/printSheet.ts"
       ],
       "schermate": [
         "finestra/"
@@ -187,17 +188,18 @@
     },
     "dati": {
       "descrizione": "Dati: macchine, materiali, preset, cartelle colori",
-      "fatta": false,
+      "fatta": true,
       "file": [
         "lib/machines.ts",
         "lib/materials.ts",
         "lib/digitizePresets.ts",
         "lib/threads.ts",
         "lib/fonts.ts",
-        "lib/calibration.ts"
+        "lib/calibration.ts",
+        "lib/hoops.ts"
       ],
       "schermate": [],
-      "nota": "I nomi dei telai preimpostati (lib/hoops.ts) compaiono nei selettori dei telai delle barre: li controlla quest'area, non «barre» (che li ha nel suo «fuori»)."
+      "nota": "I nomi dei telai e delle macchine preimpostati (lib/hoops.ts, lib/machines.ts) restano in inglese come nomi di prodotto (Signor Poletti, 19/11): sono in non-tradurre.json, e i «fuori» delle aree barre, pannelli, finestre ed esportazione li escludono dal controllo i.1."
     }
   }
 }

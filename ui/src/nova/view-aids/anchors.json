@@ -1,0 +1,10 @@
+{
+  "c.gridStep": "Il pulsante del passo della griglia / The grid step button",
+  "c.target": "Il pulsante della griglia bersaglio / The target grid button",
+  "c.cursorMode": "Il pulsante della croce del cursore / The cursor cross button",
+  "c.uncalibrated": "L'avviso «non calibrato» nella barra / The «not calibrated» note in the bar",
+  "c.calibrate.dialog": "La finestra di calibrazione dello schermo / The screen calibration window",
+  "c.calibrate.ruler": "La linea da misurare col righello / The line to measure with a ruler",
+  "c.calibrate.measured": "Il campo della lunghezza misurata / The measured length field",
+  "c.calibrate.save": "Il pulsante Salva della calibrazione / The calibration's Save button"
+}

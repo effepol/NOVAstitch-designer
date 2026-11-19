@@ -13,7 +13,7 @@ import type { PlanData } from "../types";
 import { fmtTime } from "./ui";
 import { threadTitle } from "./ThreadPicker";
 import { safeSetItem } from "../lib/storage";
-import { t } from "../nova/i18n/filum";
+import { t, tn } from "../nova/i18n/filum";
 
 // ---------------------------------------------------------------------------
 // Playback
@@ -357,23 +357,23 @@ export function StitchOutPanel() {
   const rows: RowInfo[] = useMemo(() => {
     if (!tl || !plan) return [];
     const out = tl.blocks.map((b) => {
-      const t = seq[b.index]?.thread ?? plan.threads[b.index];
-      const name = t ? t.name || [t.brand, t.code].filter(Boolean).join(" ") || t.color.toUpperCase() : `Colour ${b.index + 1}`;
+      const thr = seq[b.index]?.thread ?? plan.threads[b.index];
+      const name = thr ? thr.name || [thr.brand, thr.code].filter(Boolean).join(" ") || thr.color.toUpperCase() : t("filum.finestre.so_colour_n", { n: b.index + 1 });
       const seconds = tl.secondsAt[b.end] - tl.secondsAt[b.start];
       // the object of the block's first stitch: is it a colour of a gradient?
       let obj: (typeof doc.objects)[number] | undefined;
       for (let i = b.start; i < b.end && !obj; i++) if (plan.objects[i] < doc.objects.length) obj = doc.objects[plan.objects[i]];
       const g = obj?.stitch.type === "fill" ? obj.stitch.gradient : undefined;
       const title = [
-        `${b.index + 1}. ${t ? threadTitle(t) : name}`,
-        g ? `Colour ${g.layer + 1} of ${g.stops.length} of a gradient (${obj!.name.replace(/ · colour \d+$/, "")})` : obj ? obj.name : "",
-        `${b.stitches.toLocaleString()} stitches · ${fmtTime(seconds)} on the machine`,
-        b.trims.length ? `${b.trims.length} trim${b.trims.length === 1 ? "" : "s"}` : "",
-        b.stops.length ? `${b.stops.length} stop${b.stops.length === 1 ? "" : "s"}` : "",
+        `${b.index + 1}. ${thr ? threadTitle(thr) : name}`,
+        g ? t("filum.finestre.so_gradient_colour", { n: g.layer + 1, of: g.stops.length, name: obj!.name.replace(/ · colour \d+$/, "") }) : obj ? obj.name : "",
+        t("filum.finestre.so_stitches_time", { n: b.stitches.toLocaleString(), time: fmtTime(seconds) }),
+        b.trims.length ? tn("filum.finestre.so_n_trims", b.trims.length) : "",
+        b.stops.length ? tn("filum.finestre.so_n_stops", b.stops.length) : "",
       ]
         .filter(Boolean)
         .join("\n");
-      return { block: b, color: t?.color ?? "#888", title, name, seconds, gradient: g ? { group: g.group, layer: g.layer, of: g.stops.length, first: false, last: false } : undefined };
+      return { block: b, color: thr?.color ?? "#888", title, name, seconds, gradient: g ? { group: g.group, layer: g.layer, of: g.stops.length, first: false, last: false } : undefined };
     });
     // a bracket joins the neighbouring rows of one gradient
     out.forEach((r, i) => {

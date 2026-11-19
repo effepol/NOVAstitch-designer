@@ -23,7 +23,7 @@ import { hexToRgb, rgbToHex, normHex, lab, deltaE, type Lab } from "./colorMath"
 import { remapThreads, threadsOf } from "./copies";
 import { safeSetItem } from "./storage";
 import { bySewOrder, chartIdFor, myThreadsGpl, ownedKey, paletteBrand, similarMerges, spoolsOfPalette, type ParsedPalette } from "./threadTools";
-import { t, withTexts } from "../nova/i18n/filum";
+import { t, tn, withTexts } from "../nova/i18n/filum";
 export { colourEdit, ownedKey } from "./threadTools";
 
 export const hexDeltaE = (a: string, b: string) => deltaE(lab(a), lab(b));
@@ -112,7 +112,7 @@ export function myThreads(): OwnedThread[] {
     return [];
   }
 }
-const mineMeta = (): ChartMeta => ({ id: MY_CHART, name: "My threads", brand: "My threads", source: "mine", count: myThreads().length });
+const mineMeta = (): ChartMeta => ({ id: MY_CHART, name: t("filum.finestre.my_threads"), brand: "My threads", source: "mine", count: myThreads().length });
 const localMeta = () => [mineMeta(), ...customMeta()];
 const mineListeners = new Set<() => void>();
 function saveMine(list: OwnedThread[]) {
@@ -432,7 +432,7 @@ export function setMergeTolerance(v: number) {
 /** Merge similar colours at the remembered tolerance, and say what happened. */
 export function mergeSimilarColours() {
   const n = mergeSimilar(mergeTolerance());
-  store().toast(n ? `${n} similar thread${n === 1 ? "" : "s"} now share a spool — Revert undoes it` : `No threads closer than ΔE ${mergeTolerance()}`, n ? "success" : "info");
+  store().toast(n ? tn("filum.dati.merged_similar", n) : t("filum.dati.no_threads_closer", { de: mergeTolerance() }), n ? "success" : "info");
 }
 
 export function mergeSimilar(threshold: number): number {
