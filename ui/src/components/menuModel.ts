@@ -85,7 +85,7 @@ function withRegisteredItems(menus: Record<string, MenuItem[]>): Record<string, 
   const added = (name: string): MenuItem[] =>
     items
       .filter((i) => i.menu === name)
-      .map((i) => ({ label: t(i.label), kbd: i.kbd, hint: i.hint ? t(i.hint) : undefined, run: i.run, checked: i.checked?.(), disabled: i.disabled?.(), nova: i.module }));
+      .map((i) => ({ label: t(i.label), kbd: i.kbd, hint: i.hint ? t(i.hint) : undefined, run: i.run, checked: i.checked?.(), disabled: i.disabled?.(), nova: i.module, novaAnchor: i.anchor }));
   const fresh = [...new Set(items.map((i) => i.menu))].filter((m) => !(m in menus));
   for (const m of fresh) addedMenus.set(m, items.find((i) => i.menu === m)!.module);
   for (const [name, list] of Object.entries(menus)) {
@@ -112,6 +112,8 @@ export type MenuItem =
       sub?: MenuItem[];
       /** NOVAstitch (rule i.3): the module that registered it (data-nova on the item). */
       nova?: string;
+      /** NOVAstitch: its lesson anchor (data-nova-anchor on the item). */
+      novaAnchor?: string;
     }
   | "-";
 

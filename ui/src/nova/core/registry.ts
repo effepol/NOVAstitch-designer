@@ -24,6 +24,8 @@ export interface MenuItemEntry extends Entry {
   run: () => void;
   checked?: () => boolean;
   disabled?: () => boolean;
+  /** Lesson anchor ("<module>.<name>", listed in the module's anchors.json): data-nova-anchor on the item. */
+  anchor?: string;
 }
 
 /** A tab of the layers panel (beside Filum's Layers and Issues). */

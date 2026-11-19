@@ -160,6 +160,7 @@ export function Menu({ items, x, y, alt, onClose, onBack }: { items: MenuItem[];
             key={i}
             role="menuitem"
             data-nova={it.nova}
+            data-nova-anchor={it.novaAnchor}
             className={`menu-item ${it.sub ? "has-sub" : ""} ${openSub?.i === i ? "sub-open" : ""}`}
             disabled={it.disabled}
             title={it.hint}
