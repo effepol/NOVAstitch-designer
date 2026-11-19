@@ -602,7 +602,7 @@ export function LayersPanel() {
           )}
         </label>
         <select className="select" value={kind} aria-label={t("filum.pannelli.show_stitch_type")} onChange={(e) => setKind(e.target.value as KindFilter)}>
-          {KIND_FILTERS.map(([k, label]) => (
+          {KIND_FILTERS().map(([k, label]) => (
             <option key={k} value={k}>
               {label}
             </option>

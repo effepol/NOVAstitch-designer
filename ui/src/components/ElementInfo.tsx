@@ -42,6 +42,9 @@ const METHOD: Record<string, string> = {
 /** "streamline" → "Streamline", "linearGradient" → "Linear gradient". */
 const words = (id: string) => (id ? (id[0].toUpperCase() + id.slice(1)).replace(/([a-z])([A-Z])/g, (_, a, b) => `${a} ${b.toLowerCase()}`) : "");
 export const methodLabel = (o: Pick<ObjectInfo, "kind" | "method">) => (o.method ? (METHOD[o.method] ?? `${words(o.method)}${o.kind === "fill" ? " fill" : ""}`) : (KIND[o.kind] ?? words(o.kind)));
+/** Il nome mostrato a schermo (tradotto); la tabella copiata (infoTable) resta quella di Ink/Stitch. */
+const kindShown = (kind: string) => (kind in KIND ? t(`filum.pannelli.tipo.${kind}`) : words(kind));
+const methodShown = (o: Pick<ObjectInfo, "kind" | "method">) => (o.method ? (o.method in METHOD ? t(`filum.pannelli.metodo.${o.method}`) : methodLabel(o)) : kindShown(o.kind));
 const mm = (v: number) => v.toFixed(2);
 
 /** Ink/Stitch's export text: one tab-separated line per object. */
@@ -78,11 +81,11 @@ function ObjectRows({ o }: { o: ObjectInfo }) {
   return (
     <dl className="ei-grid">
       <dt>{t("filum.pannelli.type")}</dt>
-      <dd>{KIND[o.kind] ?? words(o.kind)}</dd>
+      <dd>{kindShown(o.kind)}</dd>
       {o.method && (
         <>
           <dt>{t("filum.pannelli.method")}</dt>
-          <dd>{methodLabel(o)}</dd>
+          <dd>{methodShown(o)}</dd>
         </>
       )}
       <dt>{t("filum.pannelli.dimensions")}</dt>

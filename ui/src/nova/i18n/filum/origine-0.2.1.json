@@ -1011,6 +1011,10 @@
     "testo": "{n} selected · ",
     "file": "components/StatusHints.tsx"
   },
+  "filum.barre.n_stitches_plain": {
+    "testo": "{n} stitches",
+    "file": "components/Bars.tsx"
+  },
   "filum.barre.new": {
     "testo": "New",
     "file": "components/ToolOptions.tsx"
@@ -1890,6 +1894,10 @@
   "filum.dati.illustration": {
     "testo": "Illustration",
     "file": "lib/digitizePresets.ts"
+  },
+  "filum.dati.inkstitch_preset_hint": {
+    "testo": "Ink/Stitch's defaults, what a new design starts with: 0.1 mm shortest stitch, 3 mm jumps, 700 spm and 10 s per trim / colour change.",
+    "file": "lib/machines.ts"
   },
   "filum.dati.knit_jersey": {
     "testo": "Knit / Jersey",
@@ -8839,6 +8847,38 @@
     "testo": "Align",
     "file": "components/ArrangeTools.tsx"
   },
+  "filum.pannelli.align_bottom_hoop": {
+    "testo": "Align bottom edges (to the hoop)",
+    "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.align_bottom_selection": {
+    "testo": "Align bottom edges (to the selection)",
+    "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.align_left_hoop": {
+    "testo": "Align left edges (to the hoop)",
+    "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.align_left_selection": {
+    "testo": "Align left edges (to the selection)",
+    "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.align_right_hoop": {
+    "testo": "Align right edges (to the hoop)",
+    "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.align_right_selection": {
+    "testo": "Align right edges (to the selection)",
+    "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.align_top_hoop": {
+    "testo": "Align top edges (to the hoop)",
+    "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.align_top_selection": {
+    "testo": "Align top edges (to the selection)",
+    "file": "components/ArrangeTools.tsx"
+  },
   "filum.pannelli.alignment": {
     "testo": "Alignment",
     "file": "components/Lettering.tsx"
@@ -8998,6 +9038,10 @@
   "filum.pannelli.back_to_straight_text_at": {
     "testo": "Back to straight text at the anchor",
     "file": "components/Lettering.tsx"
+  },
+  "filum.pannelli.back_to_the_name_settings": {
+    "testo": "Back to the {name} settings",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.backing": {
     "testo": "Backing",
@@ -9195,9 +9239,29 @@
     "testo": "Centre",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.centre_h_hoop": {
+    "testo": "Centre horizontally (to the hoop)",
+    "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.centre_h_selection": {
+    "testo": "Centre horizontally (to the selection)",
+    "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.centre_in_hoop": {
+    "testo": "Centre in hoop",
+    "file": "components/ArrangeTools.tsx"
+  },
   "filum.pannelli.centre_out": {
     "testo": "Centre out",
     "file": "components/Dock.tsx"
+  },
+  "filum.pannelli.centre_v_hoop": {
+    "testo": "Centre vertically (to the hoop)",
+    "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.centre_v_selection": {
+    "testo": "Centre vertically (to the selection)",
+    "file": "components/ArrangeTools.tsx"
   },
   "filum.pannelli.centre_walk": {
     "testo": "Centre walk",
@@ -9210,6 +9274,10 @@
   "filum.pannelli.change_the_density_not_the": {
     "testo": "Change the density (not the spacing) evenly — two opposite gradients add up to full coverage (colour blending)",
     "file": "components/Dock.tsx"
+  },
+  "filum.pannelli.changed_since_the_preset_was": {
+    "testo": "Changed since the preset was applied",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.changes_apply_to_all_length": {
     "testo": "Changes apply to all {length}.",
@@ -9322,6 +9390,10 @@
   "filum.pannelli.colour": {
     "testo": "Colour",
     "file": "components/Dock.tsx"
+  },
+  "filum.pannelli.colour_change": {
+    "testo": "Colour change",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.colour_changes": {
     "testo": "Colour changes",
@@ -9563,6 +9635,18 @@
     "testo": "Cut too",
     "file": "components/HiddenStitching.tsx"
   },
+  "filum.pannelli.cuts_every_trim": {
+    "testo": "Cuts every trim",
+    "file": "components/MachineSettings.tsx"
+  },
+  "filum.pannelli.cuts_jumps_over": {
+    "testo": "Cuts jumps over",
+    "file": "components/MachineSettings.tsx"
+  },
+  "filum.pannelli.cuts_longer_jumps_only": {
+    "testo": "Cuts longer jumps only",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.cutwork": {
     "testo": "Cutwork",
     "file": "components/CutworkPanel.tsx"
@@ -9703,6 +9787,14 @@
     "testo": "Distribute",
     "file": "components/ArrangeTools.tsx"
   },
+  "filum.pannelli.distribute_h": {
+    "testo": "Distribute horizontally (equal gaps)",
+    "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.distribute_v": {
+    "testo": "Distribute vertically (equal gaps)",
+    "file": "components/ArrangeTools.tsx"
+  },
   "filum.pannelli.dither": {
     "testo": "Dither",
     "file": "components/GradientPanel.tsx"
@@ -9827,6 +9919,10 @@
     "testo": "Edit the guides on the canvas (D)",
     "file": "components/SatinGuides.tsx"
   },
+  "filum.pannelli.edited": {
+    "testo": "edited",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.element_info": {
     "testo": "Element info",
     "file": "components/ElementInfo.tsx"
@@ -9838,6 +9934,10 @@
   "filum.pannelli.end": {
     "testo": "end",
     "file": "components/Dock.tsx"
+  },
+  "filum.pannelli.end_lock": {
+    "testo": "End lock",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.end_point": {
     "testo": "End point",
@@ -9946,6 +10046,10 @@
   "filum.pannelli.felt": {
     "testo": "Felt",
     "file": "components/FabricLook.tsx"
+  },
+  "filum.pannelli.field": {
+    "testo": "Field",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.files_are_named_like_ink": {
     "testo": "Files are named like Ink/Stitch's: 000-Anna.pes, 001-Ben.pes …",
@@ -10387,6 +10491,74 @@
     "testo": "How much of a cell must be inside the shape to get a cross",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.hs_applique_hides": {
+    "testo": "The appliqué fabric hides what's under it, {wide}.",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_applique_not": {
+    "testo": "Appliqué fabric is set not to hide.",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_dense_fill": {
+    "testo": "Dense fill: hides {wide}.",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_dense_satin": {
+    "testo": "Dense satin: hides {wide}.",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_gradient_colour": {
+    "testo": "One colour of a gradient: the colours together hide what's under them, not each other.",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_hidden_objects": {
+    "testo": "Hidden objects aren't stitched.",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_if_any_part_wide": {
+    "testo": "if any part is at least {mm} mm wide",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_lines_never": {
+    "testo": "Lines never hide what's under them.",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_open_rows": {
+    "testo": "Open: rows {spacing} mm apart (the limit is {limit} mm).",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_rows_open_up": {
+    "testo": "Its rows open up towards one end, so it shows what's under it.",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_set_always": {
+    "testo": "Set to always hide, even when thin or open.",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_set_never": {
+    "testo": "Set to never hide.",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_texture": {
+    "testo": "A texture (stipple, meander, Hilbert, cross stitch) shows what's under it.",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_why_fine": {
+    "testo": "fine fabrics: every needle hole shows",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_why_knits": {
+    "testo": "knits stretch: 0.8–1.0 mm",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_why_pile": {
+    "testo": "pile fabrics move the most",
+    "file": "lib/hiddenStitching.ts"
+  },
+  "filum.pannelli.hs_why_stable": {
+    "testo": "stable fabrics: 0.3–0.5 mm",
+    "file": "lib/hiddenStitching.ts"
+  },
   "filum.pannelli.import_ink_stitch_font": {
     "testo": "Import Ink/Stitch font…",
     "file": "components/Lettering.tsx"
@@ -10535,6 +10707,30 @@
     "testo": "Keywords",
     "file": "components/LetteringTools.tsx"
   },
+  "filum.pannelli.kind_all": {
+    "testo": "All types",
+    "file": "lib/layerTools.ts"
+  },
+  "filum.pannelli.kind_fill": {
+    "testo": "Fills",
+    "file": "lib/layerTools.ts"
+  },
+  "filum.pannelli.kind_line": {
+    "testo": "Lines",
+    "file": "lib/layerTools.ts"
+  },
+  "filum.pannelli.kind_satin": {
+    "testo": "Satins",
+    "file": "lib/layerTools.ts"
+  },
+  "filum.pannelli.kind_text": {
+    "testo": "Lettering",
+    "file": "lib/layerTools.ts"
+  },
+  "filum.pannelli.kind_thread": {
+    "testo": "Thread",
+    "file": "lib/layerTools.ts"
+  },
   "filum.pannelli.knockdown_is_on_the_net": {
     "testo": "Knockdown is on — the net flattens the pile first (Stitch processing).",
     "file": "components/MaterialPanel.tsx"
@@ -10654,6 +10850,10 @@
   "filum.pannelli.length_of_one_zig_and": {
     "testo": "Length of one zig and zag together",
     "file": "components/Dock.tsx"
+  },
+  "filum.pannelli.length_of_the_back_and": {
+    "testo": "Length of the back-and-forth lock",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.length_of_the_dither_cells": {
     "testo": "Length of the dither cells along the rows. Shorter mixes finer but adds stitches.",
@@ -10783,6 +10983,26 @@
     "testo": "Lock everything in {name}",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.lock_length": {
+    "testo": "Lock length",
+    "file": "components/MachineSettings.tsx"
+  },
+  "filum.pannelli.lock_size": {
+    "testo": "Lock size",
+    "file": "components/MachineSettings.tsx"
+  },
+  "filum.pannelli.lock_stitch_shape_where_a": {
+    "testo": "Lock stitch shape where a piece starts (Ink/Stitch lock styles)",
+    "file": "components/MachineSettings.tsx"
+  },
+  "filum.pannelli.lock_stitch_shape_where_a_2": {
+    "testo": "Lock stitch shape where a piece ends",
+    "file": "components/MachineSettings.tsx"
+  },
+  "filum.pannelli.lock_stitches_at_the_start": {
+    "testo": "Lock stitches at the start and end of every piece",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.lock_stitches_where_it_starts": {
     "testo": "Lock stitches where it starts and ends (the shapes are set in Design ▸ Stitch-out)",
     "file": "components/CommandsSection.tsx"
@@ -10811,6 +11031,14 @@
     "testo": "Long stitches sewn first to hold fabric and stabiliser together (floating, hard-to-hoop items)",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.longer_stitches_are_split": {
+    "testo": "Longer stitches are split",
+    "file": "components/MachineSettings.tsx"
+  },
+  "filum.pannelli.longer_travel_becomes_tie_off": {
+    "testo": "Longer travel becomes tie-off + trim + jump",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.loops": {
     "testo": "Loops",
     "file": "components/Dock.tsx"
@@ -10818,6 +11046,10 @@
   "filum.pannelli.lower": {
     "testo": "Lower",
     "file": "components/LetteringTools.tsx"
+  },
+  "filum.pannelli.machine": {
+    "testo": "Machine",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.machine_pause": {
     "testo": "Machine pause (appliqué, puff foam, …)",
@@ -10854,6 +11086,10 @@
   "filum.pannelli.max_stitch": {
     "testo": "Max stitch",
     "file": "components/Dock.tsx"
+  },
+  "filum.pannelli.max_stitch_2": {
+    "testo": "Max. stitch",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.max_stitch_length": {
     "testo": "Max stitch length",
@@ -10899,6 +11135,74 @@
     "testo": "Method",
     "file": "components/ElementInfo.tsx"
   },
+  "filum.pannelli.metodo.bean": {
+    "testo": "Bean stitch",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.circular": {
+    "testo": "Circular fill",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.contour": {
+    "testo": "Contour fill",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.cross": {
+    "testo": "Cross stitch",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.curved": {
+    "testo": "Curved fill",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.eStitch": {
+    "testo": "E-stitch",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.flow": {
+    "testo": "Flow fill",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.guided": {
+    "testo": "Guided fill",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.meander": {
+    "testo": "Meander fill",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.motif": {
+    "testo": "Motif stitch",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.ripple": {
+    "testo": "Ripple stitch",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.running": {
+    "testo": "Running stitch",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.sStitch": {
+    "testo": "S-stitch",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.satin": {
+    "testo": "Satin column",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.stem": {
+    "testo": "Stem stitch",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.tatami": {
+    "testo": "Auto fill (tatami)",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.metodo.zigzag": {
+    "testo": "Zig-zag",
+    "file": "components/ElementInfo.tsx"
+  },
   "filum.pannelli.midpoint_v1_drag_to_move": {
     "testo": "Midpoint {v1} % · drag to move the 50 % mix",
     "file": "components/GradientPanel.tsx"
@@ -10935,12 +11239,20 @@
     "testo": "Mirror 4×",
     "file": "components/ArrangeTools.tsx"
   },
+  "filum.pannelli.mirror_h": {
+    "testo": "Mirror horizontally",
+    "file": "components/ArrangeTools.tsx"
+  },
   "filum.pannelli.mirror_horizontally": {
     "testo": "Mirror horizontally",
     "file": "components/TransformPanel.tsx"
   },
   "filum.pannelli.mirror_images_joined_at_the": {
     "testo": "Mirror images joined at the centre line (mirror-merge).",
+    "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.mirror_v": {
+    "testo": "Mirror vertically",
     "file": "components/ArrangeTools.tsx"
   },
   "filum.pannelli.mirror_vertically": {
@@ -11131,6 +11443,10 @@
     "testo": "{n} points selected",
     "file": "components/GradientPanel.tsx"
   },
+  "filum.pannelli.n_stitches_m_thread": {
+    "testo": "{n} stitches · {m} m thread",
+    "file": "components/StitchPanel.tsx"
+  },
   "filum.pannelli.n_thin": {
     "testo": "{n}% thin · ",
     "file": "components/DensityPanel.tsx"
@@ -11210,6 +11526,10 @@
   "filum.pannelli.needle_v1": {
     "testo": "Needle {v1}",
     "file": "components/CutworkPanel.tsx"
+  },
+  "filum.pannelli.needles": {
+    "testo": "Needles",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.never": {
     "testo": "Never",
@@ -11306,6 +11626,10 @@
   "filum.pannelli.none_raw_edge": {
     "testo": "None (raw edge)",
     "file": "components/Dock.tsx"
+  },
+  "filum.pannelli.none_snip_by_hand": {
+    "testo": "None: snip by hand",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.normal": {
     "testo": "Normal",
@@ -11406,6 +11730,10 @@
   "filum.pannelli.one_word_lines": {
     "testo": "One-word lines",
     "file": "components/Lettering.tsx"
+  },
+  "filum.pannelli.only_for_flow_fills": {
+    "testo": "Only for fills made by the auto-digitizer with the Flow fill (they carry the picture's direction field). For a gradient, pick Flow under Rows in the gradient settings: the rows follow its colour bands.",
+    "file": "components/StitchPanel.tsx"
   },
   "filum.pannelli.open": {
     "testo": "Open",
@@ -11575,6 +11903,10 @@
     "testo": "Preset",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.preset_group_general": {
+    "testo": "General",
+    "file": "components/MachineOptions.tsx"
+  },
   "filum.pannelli.preview": {
     "testo": "Preview",
     "file": "components/LetteringTools.tsx"
@@ -11642,6 +11974,10 @@
   "filum.pannelli.reading_direction_of_the_script": {
     "testo": "Reading direction of the script: right to left for Hebrew, Arabic …",
     "file": "components/LetteringTools.tsx"
+  },
+  "filum.pannelli.reads": {
+    "testo": "Reads",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.rebuild_shapes_from_the_stitches": {
     "testo": "rebuild shapes from the stitches…",
@@ -11754,6 +12090,10 @@
   "filum.pannelli.reset": {
     "testo": "Reset",
     "file": "components/Dock.tsx"
+  },
+  "filum.pannelli.reset_2": {
+    "testo": " Reset",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.reset_the_guide_to_an": {
     "testo": "Reset the guide to an S-curve across the shape",
@@ -12127,6 +12467,10 @@
     "testo": "Set by hand:",
     "file": "components/HiddenStitching.tsx"
   },
+  "filum.pannelli.sets_the_stitch_out_and": {
+    "testo": "Sets the stitch-out and time settings below; saved with the design",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.settings": {
     "testo": "Settings",
     "file": "components/LetteringTools.tsx"
@@ -12263,6 +12607,10 @@
     "testo": "Short stitch",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.shorter_stitches_are_dropped": {
+    "testo": "Shorter stitches are dropped",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.show": {
     "testo": "Show",
     "file": "components/Dock.tsx"
@@ -12347,6 +12695,10 @@
     "testo": "Size of the innermost ripple (0 = shrinks to the centre)",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.size_of_the_shaped_locks": {
+    "testo": "Size of the shaped locks",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.size_of_the_tile_ink": {
     "testo": "Size of the tile (Ink/Stitch meander scale) — bigger is looser and uses fewer stitches",
     "file": "components/Dock.tsx"
@@ -12423,6 +12775,10 @@
     "testo": "Special frames ",
     "file": "components/MachineOptions.tsx"
   },
+  "filum.pannelli.speed": {
+    "testo": "Speed",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.spiral": {
     "testo": "Spiral",
     "file": "components/StitchPanel.tsx"
@@ -12479,6 +12835,14 @@
     "testo": "Split zig-zag underlay stitches longer than this (0 = never)",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.spm": {
+    "testo": "spm",
+    "file": "components/MachineSettings.tsx"
+  },
+  "filum.pannelli.spm_spm": {
+    "testo": "{spm} spm",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.spread": {
     "testo": "Spread",
     "file": "components/Dock.tsx"
@@ -12531,6 +12895,10 @@
     "testo": "Start at the centre / far copy",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.start_lock": {
+    "testo": "Start lock",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.start_point": {
     "testo": "Start point",
     "file": "components/CommandsSection.tsx"
@@ -12574,6 +12942,10 @@
   "filum.pannelli.stitch_options_type": {
     "testo": "Stitch options · {type}",
     "file": "components/Dock.tsx"
+  },
+  "filum.pannelli.stitch_out": {
+    "testo": "Stitch-out",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.stitch_pattern": {
     "testo": "Stitch pattern",
@@ -12691,6 +13063,10 @@
     "testo": "Tartan: a woven plaid in several thread colours — stripes one way and the other, rows in a twill (Ink/Stitch tartan fill)",
     "file": "components/StitchPanel.tsx"
   },
+  "filum.pannelli.tartan_fills_closed_shape": {
+    "testo": "Tartan fills a closed shape",
+    "file": "components/StitchPanel.tsx"
+  },
   "filum.pannelli.tatami_fill": {
     "testo": "Tatami fill",
     "file": "components/Lettering.tsx"
@@ -12751,6 +13127,10 @@
     "testo": "The lattice or Ink/Stitch tile the meander walks on",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.the_machine_s_jump_stitch": {
+    "testo": "The machine's jump stitch trimming length (Brother and Baby Lock: 5 mm by default, 5–50 mm)",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.the_mesh_border_stays_select": {
     "testo": "The mesh border stays — select an inner node",
     "file": "components/GradientPanel.tsx"
@@ -12774,6 +13154,10 @@
   "filum.pannelli.the_path_sewn_this_many": {
     "testo": "The path sewn this many times, and bean stitch: every stitch sewn back and forth (bolder lines)",
     "file": "components/Dock.tsx"
+  },
+  "filum.pannelli.the_rated_top_speed_dense": {
+    "testo": "The rated top speed: dense designs with short stitches run slower. A one-needle machine waits for you to rethread at every colour change.",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.the_rest_of_the_design": {
     "testo": "; the rest of the design comes along.",
@@ -12847,6 +13231,18 @@
     "testo": "Thread added to the fabric (top + bobbin); the fabric weighs about {v1} g/m²",
     "file": "components/DensityPanel.tsx"
   },
+  "filum.pannelli.thread_cutter": {
+    "testo": "Thread cutter",
+    "file": "components/MachineSettings.tsx"
+  },
+  "filum.pannelli.tie_in_tie_off": {
+    "testo": "Tie-in / tie-off",
+    "file": "components/MachineSettings.tsx"
+  },
+  "filum.pannelli.time_estimates": {
+    "testo": "Time estimates",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.tiny_objects_under_many": {
     "testo": "{n} tiny or empty objects (fills under {area} mm², lines under {length} mm)",
     "file": "components/Dock.tsx"
@@ -12855,6 +13251,30 @@
     "testo": "{n} tiny or empty object (fills under {area} mm², lines under {length} mm)",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.tipo.applique": {
+    "testo": "Appliqué",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.tipo.fill": {
+    "testo": "Fill",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.tipo.manual": {
+    "testo": "Manual stitch",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.tipo.none": {
+    "testo": "Not stitched",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.tipo.running": {
+    "testo": "Stroke",
+    "file": "components/ElementInfo.tsx"
+  },
+  "filum.pannelli.tipo.satin": {
+    "testo": "Satin column",
+    "file": "components/ElementInfo.tsx"
+  },
   "filum.pannelli.tolerance": {
     "testo": "Tolerance",
     "file": "components/Dock.tsx"
@@ -12862,6 +13282,10 @@
   "filum.pannelli.top_left_to_bottom_right": {
     "testo": "Top-left to bottom-right first",
     "file": "components/Dock.tsx"
+  },
+  "filum.pannelli.top_speed": {
+    "testo": "Top speed",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.top_thread_weight_finer_thread": {
     "testo": "Top thread weight — finer thread stitches denser, heavier thread wider (Madeira's density guide)",
@@ -12915,9 +13339,17 @@
     "testo": "Trim after",
     "file": "components/CommandsSection.tsx"
   },
+  "filum.pannelli.trim_jumps_over": {
+    "testo": "Trim jumps over",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.trim_the_thread_after_every": {
     "testo": "Trim the thread after every letter, word or line (the font's own trims are always kept)",
     "file": "components/Lettering.tsx"
+  },
+  "filum.pannelli.trim_time": {
+    "testo": "Trim time",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.trims": {
     "testo": "Trims",
@@ -13059,6 +13491,10 @@
     "testo": "Upright cross",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.use_a_frame_as_the": {
+    "testo": "Use a frame as the design hoop",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.use_as_ripple_guide": {
     "testo": "Use as ripple guide",
     "file": "components/Dock.tsx"
@@ -13163,6 +13599,10 @@
     "testo": "stitch type",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.what_the_machine_cuts_jumps": {
+    "testo": "What the machine cuts: jumps it leaves are shown as thread and counted as hand trims",
+    "file": "components/MachineSettings.tsx"
+  },
   "filum.pannelli.what_thread": {
     "testo": "thread",
     "file": "components/Dock.tsx"
@@ -13246,6 +13686,10 @@
   "filum.pannelli.y": {
     "testo": "y",
     "file": "components/TartanPanel.tsx"
+  },
+  "filum.pannelli.your_own_settings_pick_a": {
+    "testo": "Your own settings — pick a preset to start from a machine.",
+    "file": "components/MachineSettings.tsx"
   },
   "filum.pannelli.zig_zag_along_the_path": {
     "testo": "Zig-zag along the path",

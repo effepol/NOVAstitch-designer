@@ -68,7 +68,7 @@ export function SettingsPresetOptions() {
   return (
     <>
       {groups.map((g) => (
-        <optgroup key={g} label={g}>
+        <optgroup key={g} label={g === "General" ? t("filum.pannelli.preset_group_general") : g}>
           {SETTINGS_PRESETS.filter((p) => p.group === g).map((p) => (
             <option key={p.id} value={p.id} title={p.hint}>
               {p.name}

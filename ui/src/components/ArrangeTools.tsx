@@ -20,27 +20,27 @@ export function ArrangeButtons({ count }: { count: number }) {
       {icon}
     </button>
   );
-  const to = count > 1 ? "selection" : "hoop";
+  const sel = count > 1;
   return (
     <>
       <div className="seg" role="group" aria-label={t("filum.pannelli.align")}>
-        {b(`Align left edges (to the ${to})`, <AlignStartVertical size={14} />, () => align("left"))}
-        {b(`Centre horizontally (to the ${to})`, <AlignCenterVertical size={14} />, () => align("hcenter"))}
-        {b(`Align right edges (to the ${to})`, <AlignEndVertical size={14} />, () => align("right"))}
-        {b(`Align top edges (to the ${to})`, <AlignStartHorizontal size={14} />, () => align("top"))}
-        {b(`Centre vertically (to the ${to})`, <AlignCenterHorizontal size={14} />, () => align("vcenter"))}
-        {b(`Align bottom edges (to the ${to})`, <AlignEndHorizontal size={14} />, () => align("bottom"))}
+        {b(sel ? t("filum.pannelli.align_left_selection") : t("filum.pannelli.align_left_hoop"), <AlignStartVertical size={14} />, () => align("left"))}
+        {b(sel ? t("filum.pannelli.centre_h_selection") : t("filum.pannelli.centre_h_hoop"), <AlignCenterVertical size={14} />, () => align("hcenter"))}
+        {b(sel ? t("filum.pannelli.align_right_selection") : t("filum.pannelli.align_right_hoop"), <AlignEndVertical size={14} />, () => align("right"))}
+        {b(sel ? t("filum.pannelli.align_top_selection") : t("filum.pannelli.align_top_hoop"), <AlignStartHorizontal size={14} />, () => align("top"))}
+        {b(sel ? t("filum.pannelli.centre_v_selection") : t("filum.pannelli.centre_v_hoop"), <AlignCenterHorizontal size={14} />, () => align("vcenter"))}
+        {b(sel ? t("filum.pannelli.align_bottom_selection") : t("filum.pannelli.align_bottom_hoop"), <AlignEndHorizontal size={14} />, () => align("bottom"))}
       </div>
       {count > 2 && (
         <div className="seg" role="group" aria-label={t("filum.pannelli.distribute")}>
-          {b("Distribute horizontally (equal gaps)", <AlignHorizontalDistributeCenter size={14} />, () => distribute("h"))}
-          {b("Distribute vertically (equal gaps)", <AlignVerticalDistributeCenter size={14} />, () => distribute("v"))}
+          {b(t("filum.pannelli.distribute_h"), <AlignHorizontalDistributeCenter size={14} />, () => distribute("h"))}
+          {b(t("filum.pannelli.distribute_v"), <AlignVerticalDistributeCenter size={14} />, () => distribute("v"))}
         </div>
       )}
       <div className="seg" role="group" aria-label={t("filum.pannelli.mirror")}>
-        {b("Mirror horizontally", <FlipHorizontal2 size={14} />, () => mirrorSelection("h"))}
-        {b("Mirror vertically", <FlipVertical2 size={14} />, () => mirrorSelection("v"))}
-        {b("Centre in hoop", <Crosshair size={14} />, centerInHoop)}
+        {b(t("filum.pannelli.mirror_h"), <FlipHorizontal2 size={14} />, () => mirrorSelection("h"))}
+        {b(t("filum.pannelli.mirror_v"), <FlipVertical2 size={14} />, () => mirrorSelection("v"))}
+        {b(t("filum.pannelli.centre_in_hoop"), <Crosshair size={14} />, centerInHoop)}
       </div>
     </>
   );

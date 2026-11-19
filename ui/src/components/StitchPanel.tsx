@@ -221,7 +221,7 @@ export const FILL_STYLES: Style[] = [
     ),
     matches: (st) => st.type === "fill" && st.method === "tartan",
     apply: () => "tartan",
-    needs: (o) => (hasClosed(o) ? null : "Tartan fills a closed shape"),
+    needs: (o) => (hasClosed(o) ? null : t("filum.pannelli.tartan_fills_closed_shape")),
   },
   {
     id: "curved",
@@ -238,7 +238,7 @@ export const FILL_STYLES: Style[] = [
     icon: fillIcon(<path d="M4 6 C10 12, 16 2, 22 9 S32 4, 36 10 M4 13 C10 19, 16 9, 22 16 S32 11, 36 17 M4 20 C10 26, 16 16, 22 23 S32 18, 36 24" {...stroke} strokeWidth={1.1} />),
     matches: (st) => st.type === "fill" && st.method === "flow" && !st.gradient,
     apply: (o) => asSt({ type: "fill", ...defaultFill(), ...keep(o, "fill"), ...fillMethodDefaults("flow"), gradient: undefined }),
-    needs: (o) => (o.stitch.type === "fill" && o.stitch.flow ? null : "Only for fills made by the auto-digitizer with the Flow fill (they carry the picture's direction field). For a gradient, pick Flow under Rows in the gradient settings: the rows follow its colour bands."),
+    needs: (o) => (o.stitch.type === "fill" && o.stitch.flow ? null : t("filum.pannelli.only_for_flow_fills")),
   },
   {
     id: "contour",
@@ -518,7 +518,7 @@ export function StitchPreview({ o }: { o: DesignObject }) {
       g.lineWidth = Math.max(0.6, Math.min(1.6, k * 0.12)) * (under ? 0.7 : 1);
       g.stroke();
     }
-    if (label.current) label.current.textContent = `${n.toLocaleString()} stitches · ${(len / 1000).toFixed(2)} m thread`;
+    if (label.current) label.current.textContent = t("filum.pannelli.n_stitches_m_thread", { n: n.toLocaleString(), m: (len / 1000).toFixed(2) });
   });
   return (
     <div className="stitch-preview">
