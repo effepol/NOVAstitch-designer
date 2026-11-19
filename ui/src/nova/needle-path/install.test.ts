@@ -2,6 +2,8 @@
 // off, Filum's stitch line as it is (d.4); on, the needle path in its place.
 
 import { check, done } from "../core/testkit";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { activeStitchLine, drawStitchLine, menuItems, toolbarButtons } from "../core/registry";
 import { t } from "../core/i18n";
 import { installNeedlePath } from "./install";
@@ -14,6 +16,10 @@ import { planOf } from "./fixture";
   check(activeStitchLine() === undefined, "d.4 needle path off: Filum draws its own stitch line (no line takes its place)");
   const button = () => toolbarButtons().find((b) => b.id === "d.needlePath");
   check(!!button() && button()!.active?.() === false, "the bar has the «Needle path» button, off");
+  // lesson anchor (contract, section 3): on the button through the registry, listed in anchors.json
+  const anchors = JSON.parse(readFileSync(path.resolve(process.cwd(), "src/nova/needle-path/anchors.json"), "utf8")) as Record<string, string>;
+  check(button()!.anchor === "d.needlePath" && typeof anchors["d.needlePath"] === "string" && !!anchors["d.needlePath"].trim(), `the button carries the lesson anchor d.needlePath, listed in anchors.json (${button()!.anchor})`);
+  check(Object.keys(anchors).every((k) => k.startsWith("d.")), "anchors.json: only module d's anchors");
   const items = menuItems().filter((m) => m.module === "d");
   check(items.length === 5 && items.every((m) => m.menu === "View"), `the View menu has the needle path, its dots and three widths (${items.map((m) => m.id).join(", ")})`);
   check(items.filter((m) => m.id !== "d.needlePath").every((m) => m.disabled?.() === true), "with the needle path off its dots and widths are greyed");
