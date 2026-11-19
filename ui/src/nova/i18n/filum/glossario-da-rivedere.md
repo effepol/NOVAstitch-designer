@@ -36,7 +36,7 @@ Per cambiarne una basta scrivere la scelta nella colonna «Decisione»: la PR su
 | bean stitch (Bean repeats) | punto triplo (ripetizioni del punto triplo) | punto bean | filum.digitalizza.bean_repeats | punto triplo |
 | hairline | linea sottilissima, filo sottile | — | filum.digitalizza.hairlines, filum.digitalizza.lines_narrower_than_the_hairline | linea sottile |
 | buffer / inset (Rebuild shapes) | spessore / rientro | buffer / inset | filum.digitalizza.buffer, filum.digitalizza.inset | sormonto |
-| letter counters | occhielli delle lettere | contrograffi | filum.digitalizza.the_background_colour_left_out e vicine | *dammi contesto o frase di esempio, per il momento contrograffi |
+| letter counters | occhielli delle lettere | contrograffi | filum.digitalizza.the_background_colour_left_out e vicine | vuoti delle lettere (19/11) |
 | left out (hidden stitching) | tralasciato | omesso, escluso | filum.digitalizza.left_out e vicine | omesso |
 | nomi dei tasti (Del, Enter, Space, Shift, Home, End) | Canc, Invio, Spazio; Shift, Home, End lasciati in inglese | Maiusc, Inizio, Fine (come sulle tastiere italiane) | filum.barre.tasto.*, filum.menu.key_del | Maiusc, Inizio, Fine |
 | LMB / RMB / MMB (tasti del mouse) | Tasto sinistro / destro / centrale | clic sinistro… | filum.barre.tasto.lmb e vicine | Tasto sinistro / destro / centrale |
@@ -92,7 +92,7 @@ Le decisioni della colonna «Decisione» sono applicate a tutto il catalogo (`it
 
 «Counter» è lo spazio chiuso dentro una lettera: l'interno della O, della A, della B, della e. Il testo inglese dice per esempio:
 
-- «Leave out the background colour around the design and in simple holes (letter counters)» → oggi «… nei fori semplici (i contrograffi delle lettere)»;
-- «No outlines around holes (letter counters, gaps inside the art)» → oggi «Nessun contorno attorno ai fori (contrograffi delle lettere, spazi dentro il disegno)».
+- «Leave out the background colour around the design and in simple holes (letter counters)» → oggi «… nei fori semplici (i vuoti delle lettere)»;
+- «No outlines around holes (letter counters, gaps inside the art)» → oggi «Nessun contorno attorno ai fori (vuoti delle lettere, spazi dentro il disegno)».
 
-In tipografia italiana si dice anche «occhio» o «controforma». Per ora è «contrograffi», come indicato; se preferisce un altro termine basta scriverlo nella riga 39.
+Decisione del 19/11: «vuoti delle lettere».
