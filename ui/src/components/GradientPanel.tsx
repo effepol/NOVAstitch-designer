@@ -38,7 +38,7 @@ import { useStore } from "../store";
 import type { DitherMethod, GradientKind, GradientParams, DesignObject } from "../types";
 import { ThreadPicker } from "./ThreadPicker";
 import { Num, Row, Section, Slider } from "./ui";
-import { t } from "../nova/i18n/filum";
+import { t, tn } from "../nova/i18n/filum";
 
 /** Paint a dithered preview of the gradient into a canvas. */
 function paintDither(c: HTMLCanvasElement | null, g: Pick<GradientParams, "stops" | "curve" | "steps" | "dither">, colors: string[], cols: number, rows: number) {
@@ -194,7 +194,7 @@ export function GradientBar({ group, selected, onSelect }: { group: string; sele
       <div
         className="grad-bar"
         ref={bar}
-        title="Click to add a colour stop"
+        title={t("filum.pannelli.click_to_add_a_colour")}
         onPointerDown={(e) => {
           if (e.target !== e.currentTarget && e.target !== ref.current) return;
           const pos = posAt(e.clientX);
@@ -212,7 +212,7 @@ export function GradientBar({ group, selected, onSelect }: { group: string; sele
           key={`s${i}`}
           className={`grad-stop ${i === selected ? "on" : ""}`}
           style={{ left: `${s.pos * 100}%`, background: colors[i] }}
-          title={`Colour stop ${i + 1} at ${Math.round(s.pos * 100)} % · drag to move`}
+          title={t("filum.pannelli.colour_stop_v1_at_v2", { v1: i + 1, v2: Math.round(s.pos * 100) })}
           onPointerDown={(e) => {
             onSelect(i);
             drag(e, (pos) => stops.map((x, k) => (k === i ? { ...x, pos } : x)));
@@ -227,7 +227,7 @@ export function GradientBar({ group, selected, onSelect }: { group: string; sele
             key={`m${a}`}
             className="grad-mid"
             style={{ left: `${p * 100}%` }}
-            title={`Midpoint ${Math.round(stops[a].mid * 100)} % · drag to move the 50 % mix`}
+            title={t("filum.pannelli.midpoint_v1_drag_to_move", { v1: Math.round(stops[a].mid * 100) })}
             onPointerDown={(e) =>
               drag(e, (pos) => {
                 const span = stops[b].pos - stops[a].pos || 1;
@@ -381,7 +381,7 @@ function Gradient2DEditor({ group }: { group: string }) {
               key={i}
               className={valid.length && valid.every((k) => nodes[k].c === i) ? "on" : ""}
               style={{ background: colors[i] }}
-              title={`Colour ${i + 1}: ${members.length} ${isMesh ? "nodes" : "points"} · click to select them`}
+              title={isMesh ? t("filum.pannelli.colour_n_nodes_click", { i: i + 1, n: members.length }) : t("filum.pannelli.colour_n_points_click", { i: i + 1, n: members.length })}
               onClick={() => {
                 const s = useStore.getState();
                 s.set({ gradNodes: members });
@@ -395,24 +395,24 @@ function Gradient2DEditor({ group }: { group: string }) {
       </div>
       <div className="grad-stop-edit">
         <span className="stat">
-          {valid.length ? `${valid.length} ${isMesh ? (valid.length === 1 ? "node" : "nodes") : valid.length === 1 ? "point" : "points"} selected` : `Select ${isMesh ? "nodes" : "points"} on the canvas to colour them`}
+          {valid.length ? (isMesh ? tn("filum.pannelli.n_nodes_selected", valid.length) : tn("filum.pannelli.n_points_selected", valid.length)) : isMesh ? t("filum.pannelli.select_nodes_to_colour") : t("filum.pannelli.select_points_to_colour")}
         </span>
         <ThreadPick value={selThread} disabled={!valid.length} onPick={(t) => colorNodes(group, valid, t)} />
         <div className="grad-stop-row">
           {isMesh ? (
             <>
-              <label className="ctx-field" title="Mesh rows (keeps the warp, resamples the colours)">
-                rows
+              <label className="ctx-field" title={t("filum.pannelli.mesh_rows_keeps_the_warp")}>
+                {t("filum.pannelli.rows_3")}
                 <Num value={g.mesh?.rows ?? 2} step={1} min={2} max={16} digits={0} onChange={(v) => { const m = meshResample(g, Math.round(v), g.mesh!.cols); if (m) commit2D(group, { mesh: m }); }} />
               </label>
-              <label className="ctx-field" title="Mesh columns">
-                cols
+              <label className="ctx-field" title={t("filum.pannelli.mesh_columns")}>
+                {t("filum.pannelli.cols")}
                 <Num value={g.mesh?.cols ?? 2} step={1} min={2} max={16} digits={0} onChange={(v) => { const m = meshResample(g, g.mesh!.rows, Math.round(v)); if (m) commit2D(group, { mesh: m }); }} />
               </label>
             </>
           ) : (
-            <label className="ctx-field" title="How far the colour of the selected points (or all points) reaches before it blends">
-              spread
+            <label className="ctx-field" title={t("filum.pannelli.how_far_the_colour_of")}>
+              {t("filum.pannelli.spread_2")}
               <Num
                 value={+(valid.length ? g.points![valid[0]].spread : (g.points ?? []).reduce((a, q) => a + q.spread, 0) / Math.max(1, g.points?.length ?? 1)).toFixed(1)}
                 unit="mm"
@@ -429,9 +429,9 @@ function Gradient2DEditor({ group }: { group: string }) {
           <button
             className="btn sm ghost"
             disabled={!valid.length}
-            title={isMesh ? "Remove the mesh lines through the selected node" : "Delete the selected points"}
+            title={isMesh ? t("filum.pannelli.remove_the_mesh_lines_through") : t("filum.pannelli.delete_the_selected_points")}
             onClick={() => {
-              if (!removeNodes(group, valid)) useStore.getState().toast(isMesh ? "The mesh border stays — select an inner node" : "A gradient keeps at least one colour point");
+              if (!removeNodes(group, valid)) useStore.getState().toast(isMesh ? t("filum.pannelli.the_mesh_border_stays_select") : t("filum.pannelli.a_gradient_keeps_at_least"));
             }}
           >
             <Trash2 size={12} />
@@ -440,7 +440,7 @@ function Gradient2DEditor({ group }: { group: string }) {
       </div>
       {tool !== "gradient" && (
         <button className="btn sm" style={{ marginBottom: 6 }} onClick={() => useStore.getState().setTool("gradient")}>
-          Edit {isMesh ? "mesh" : "points"} on canvas (G)
+          {isMesh ? t("filum.pannelli.edit_mesh_on_canvas") : t("filum.pannelli.edit_points_on_canvas")}
         </button>
       )}
     </>
@@ -470,17 +470,17 @@ export function GradientSection({ group }: { group: string }) {
         <>
           <GradientBar group={group} selected={s} onSelect={setSel} />
           <div className="grad-stop-edit">
-            <span className="stat">Stop {s + 1}</span>
+            <span className="stat">{t("filum.pannelli.stop_n", { n: s + 1 })}</span>
             <ThreadPick value={stop.thread} onPick={(t) => setStops(group, stops.map((x, i) => (i === s ? { ...x, thread: t } : x)))} />
             <div className="grad-stop-row">
-              <label className="ctx-field" title="Position of this stop">
-                at
+              <label className="ctx-field" title={t("filum.pannelli.position_of_this_stop")}>
+                {t("filum.pannelli.at")}
                 <Num value={Math.round(stop.pos * 100)} unit="%" step={5} min={0} max={100} digits={0} onChange={(v) => setStops(group, stops.map((x, i) => (i === s ? { ...x, pos: v / 100 } : x)))} />
               </label>
-              <button className="btn sm ghost" title="Reverse the colours" onClick={() => setStops(group, reverseStops(stops))}>
+              <button className="btn sm ghost" title={t("filum.pannelli.reverse_the_colours")} onClick={() => setStops(group, reverseStops(stops))}>
                 <ArrowLeftRight size={12} />
               </button>
-              <button className="btn sm ghost" disabled={stops.length <= 2} title="Delete this stop" onClick={() => setStops(group, stops.filter((_, i) => i !== s))}>
+              <button className="btn sm ghost" disabled={stops.length <= 2} title={t("filum.pannelli.delete_this_stop")} onClick={() => setStops(group, stops.filter((_, i) => i !== s))}>
                 <Trash2 size={12} />
               </button>
             </div>
@@ -489,11 +489,11 @@ export function GradientSection({ group }: { group: string }) {
       ) : (
         <Gradient2DEditor group={group} />
       )}
-      <Row label="Transition" title={g.kind === "mesh" ? "Smooth blends bicubically across the whole mesh; the others per patch" : undefined}>
+      <Row label={t("filum.pannelli.transition")} title={g.kind === "mesh" ? t("filum.pannelli.smooth_blends_bicubically_across_the") : undefined}>
         <select className="select" value={g.curve} onChange={(e) => up({ curve: e.target.value as GradientParams["curve"] })}>
           {CURVES.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.id === "smooth" && g.kind === "mesh" ? "Smooth (bicubic)" : c.label}
+              {c.id === "smooth" && g.kind === "mesh" ? t("filum.pannelli.smooth_bicubic") : c.label}
             </option>
           ))}
         </select>
@@ -501,33 +501,31 @@ export function GradientSection({ group }: { group: string }) {
       </Row>
       {straight && (
         <div className="grad-rows">
-          <span className="stat">Mix</span>
-          <div className="seg" role="group" aria-label="Mix">
-            <button className={mix === "blend" ? "on" : ""} title="The colours share one set of rows: each row is sewn in one colour at a time, more of them where it is stronger, so the density stays even" onClick={() => up({ mix: "blend" })}>
-              Blend
+          <span className="stat">{t("filum.pannelli.mix")}</span>
+          <div className="seg" role="group" aria-label={t("filum.pannelli.mix")}>
+            <button className={mix === "blend" ? "on" : ""} title={t("filum.pannelli.the_colours_share_one_set")} onClick={() => up({ mix: "blend" })}>
+              {t("filum.pannelli.blend")}
             </button>
             <button
               className={mix === "rows" ? "on" : ""}
-              title="Every row in one colour, the colours alternating rows through the transition (as Ink/Stitch's linear gradient fill); travel along the outline only"
+              title={t("filum.pannelli.every_row_in_one_colour")}
               onClick={() => up({ mix: "rows" })}
             >
-              Rows
+              {t("filum.pannelli.rows_2")}
             </button>
-            <button className={mix === "dither" ? "on" : ""} title="The rows are cut into cells, each in one colour: a crisp pixel mix, with a jump at many cell borders" onClick={() => up({ mix: "dither" })}>
-              Dither
+            <button className={mix === "dither" ? "on" : ""} title={t("filum.pannelli.the_rows_are_cut_into")} onClick={() => up({ mix: "dither" })}>
+              {t("filum.pannelli.dither")}
             </button>
           </div>
         </div>
       )}
       {mix === "rows" ? (
         <p className="hint grad-blend-note">
-          <b>Alternate rows.</b> Every row is sewn in one colour; through the transition the colours take turns, the runs of one colour getting
-          shorter towards the next. Smoothest with the rows across the gradient{flat ? "" : " (2D gradients: by each row's average colour)"}.
+          <b>{t("filum.pannelli.alternate_rows")}</b>{t("filum.pannelli.every_row_is_sewn_in")}{flat ? "" : t("filum.pannelli.n2d_gradients_by_each_row")}.
         </p>
       ) : blended ? (
         <p className="hint grad-blend-note">
-          <b>Blended by rows.</b> The colours share one set of rows, each row sewn in one colour at a time, more of them where a colour is
-          stronger, so the density stays even. {straight ? "Rows or Dither for a crisper mix." : "Flow and curved rows always blend."}
+          <b>{t("filum.pannelli.blended_by_rows")}</b>{t("filum.pannelli.the_colours_share_one_set_2")}{straight ? t("filum.pannelli.rows_or_dither_for_a") : t("filum.pannelli.flow_and_curved_rows_always")}
         </p>
       ) : (
         <div className="dither-cards">
@@ -536,36 +534,36 @@ export function GradientSection({ group }: { group: string }) {
           ))}
         </div>
       )}
-      <Section title="Stitching" defaultOpen={false}>
+      <Section title={t("filum.pannelli.stitching")} defaultOpen={false}>
         {mix === "dither" && (
-          <Row label="Cell length" title="Length of the dither cells along the rows. Shorter mixes finer but adds stitches.">
+          <Row label={t("filum.pannelli.cell_length")} title={t("filum.pannelli.length_of_the_dither_cells")}>
             <Slider min={1} max={8} step={0.5} unit="mm" value={g.cell} onChange={(v) => up({ cell: v })} />
           </Row>
         )}
-        <Row label="Row angle">
+        <Row label={t("filum.pannelli.row_angle")}>
           <Slider min={-90} max={90} step={1} digits={0} unit="°" value={fill.angle} onChange={(v) => up({ angle: v })} />
         </Row>
-        <Row label="Row spacing">
+        <Row label={t("filum.pannelli.row_spacing")}>
           <Slider min={0.15} max={1} step={0.01} unit="mm" value={fill.rowSpacing} onChange={(v) => up({ rowSpacing: v })} />
         </Row>
         {g.dither === "noise" && mix === "dither" && (
-          <Row label="Variation">
+          <Row label={t("filum.pannelli.variation")}>
             <button className="btn sm" onClick={() => up({ seed: (g.seed % 9973) + 1 })}>
-              Shuffle
+              {t("filum.pannelli.shuffle")}
             </button>
           </Row>
         )}
       </Section>
       <p className="hint">
         {g.kind === "mesh"
-          ? "Gradient tool (G): click inside the mesh to add a row and a column (on a line: just the crossing line), drag nodes to warp, Shift-click to select several, Alt-click a node to remove its lines."
+          ? t("filum.pannelli.gradient_tool_g_click_inside")
           : g.kind === "freeform"
-            ? "Gradient tool (G): click the shape to add a colour point, drag points to move them, drag the square on the ring to change the spread, Alt-click to delete."
-            : "Drag the gradient on the canvas with the gradient tool (G)."}{" "}
-        Every colour is its own layer; together they keep an even density.
+            ? t("filum.pannelli.gradient_tool_g_click_the")
+            : t("filum.pannelli.drag_the_gradient_on_the")}{" "}
+        {t("filum.pannelli.every_colour_is_its_own")}
       </p>
       <button className="btn sm ghost" onClick={() => removeGradient(group)}>
-        Remove gradient
+        {t("filum.pannelli.remove_gradient")}
       </button>
     </div>
   );
@@ -648,13 +646,13 @@ export function RowStylePicker({ objects, kind }: { objects: DesignObject[]; kin
       : "Rows follow the picture's flow";
   return (
     <div className="grad-rows">
-      <span className="stat">Rows</span>
-      <div className="seg" role="group" aria-label="Rows">
-        <button className={style === "tatami" ? "on" : ""} title="Straight rows (tatami)" onClick={() => setRowStyle(ids, "tatami")}>
-          Straight
+      <span className="stat">{t("filum.pannelli.rows_2")}</span>
+      <div className="seg" role="group" aria-label={t("filum.pannelli.rows_2")}>
+        <button className={style === "tatami" ? "on" : ""} title={t("filum.pannelli.straight_rows_tatami")} onClick={() => setRowStyle(ids, "tatami")}>
+          {t("filum.pannelli.straight")}
         </button>
         <button className={style === "curved" ? "on" : ""} title={curvedHint} onClick={() => setRowStyle(ids, "curved")}>
-          Curved
+          {t("filum.pannelli.curved")}
         </button>
         <button
           className={style === "flow" ? "on" : ""}
@@ -662,16 +660,16 @@ export function RowStylePicker({ objects, kind }: { objects: DesignObject[]; kin
           title={flowHint}
           onClick={() => setRowStyle(ids, "flow")}
         >
-          Flow
+          {t("filum.pannelli.flow")}
         </button>
       </div>
       {style === "flow" && fromColours && (
-        <div className="seg flow-dir" role="group" aria-label="Flow direction">
-          <button className={!across ? "on" : ""} title="Rows run along the colour bands: each row keeps one shade" onClick={() => setFlowAcross(ids, false)}>
-            <FlowDirIcon across={false} /> Along
+        <div className="seg flow-dir" role="group" aria-label={t("filum.pannelli.flow_direction")}>
+          <button className={!across ? "on" : ""} title={t("filum.pannelli.rows_run_along_the_colour")} onClick={() => setFlowAcross(ids, false)}>
+            <FlowDirIcon across={false} />{t("filum.pannelli.along")}
           </button>
-          <button className={across ? "on" : ""} title="Rows run across the colour bands: from one colour into the next" onClick={() => setFlowAcross(ids, true)}>
-            <FlowDirIcon across /> Across
+          <button className={across ? "on" : ""} title={t("filum.pannelli.rows_run_across_the_colour")} onClick={() => setFlowAcross(ids, true)}>
+            <FlowDirIcon across />{t("filum.pannelli.across")}
           </button>
         </div>
       )}

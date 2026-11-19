@@ -56,7 +56,20 @@
     "Shift+← / Shift+→": "scorciatoie",
     "JavaScript": "nome di un linguaggio di programmazione (scheda della finestra Licenze)",
     "Rust": "nome di un linguaggio di programmazione (scheda della finestra Licenze)",
-    "satin": "punto satin: in italiano si dice così (glossario)"
+    "satin": "punto satin: in italiano si dice così (glossario)",
+    "Clone": "clone collegato: si dice così anche in italiano (glossario)",
+    "cx": "coordinata (centro x)",
+    "cy": "coordinata (centro y)",
+    "Font": "si dice così anche in italiano",
+    "g": "unità di misura (g/m²)",
+    "Jersey": "nome di tessuto, uguale in italiano",
+    "Organza": "nome di tessuto, uguale in italiano",
+    "Piqué": "nome di tessuto, uguale in italiano",
+    "Tartan": "nome del tessuto scozzese, uguale in italiano",
+    "Standard": "uguale in italiano",
+    "V": "verticale (⧄ V, inclinazione)",
+    "x": "coordinata",
+    "y": "coordinata"
   },
   "chiavi_con_filum": {
     "filum.menu.about_filum": "la voce apre la finestra Informazioni, che parla di Filum e non usa {app} (decisione dell'Architetto, 13/11)"

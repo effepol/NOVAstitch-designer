@@ -1,3 +1,4 @@
+import { t, tn, tx } from "../nova/i18n/filum";
 import { ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, Info, OctagonAlert, Shapes, TriangleAlert, type LucideIcon, ChevronUp, Eye, EyeOff, GripVertical, ImagePlus, Lock, Move, Sparkles, Trash2, Type, Unlock, Search, X, FolderTree } from "lucide-react";
 import { HiddenStitchingSection, ObjectHiddenSection } from "./HiddenStitching";
 import { DensityMap, Hoop, StitchFill, StitchRunning, StitchSatin } from "../icons/stitch";
@@ -192,13 +193,13 @@ const LayerRow = memo(function LayerRow({
       onDragEnd={() => ctl.dragEnd()}
     >
       <GripVertical size={12} className="grip" />
-      <input type="checkbox" checked={sel} onClick={(e) => e.stopPropagation()} onChange={(e) => ctl.check(rowKey, e.target.checked)} aria-label={`Select ${o.name}`} />
+      <input type="checkbox" checked={sel} onClick={(e) => e.stopPropagation()} onChange={(e) => ctl.check(rowKey, e.target.checked)} aria-label={t("filum.pannelli.select_name", { name: o.name })} />
       <span className="idx">{i + 1}</span>
       <Thumb o={o} color={color} />
       <span
         className="lname"
         onDoubleClick={() => (o.text ? s().set({ editingText: o.text.group }) : ctl.rename(rowKey))}
-        title={o.text ? "Lettering · double-click to edit the text" : o.name}
+        title={o.text ? t("filum.pannelli.lettering_double_click_to_edit") : o.name}
       >
         {o.text ? (
           <>
@@ -225,7 +226,7 @@ const LayerRow = memo(function LayerRow({
       </span>
       <button
         className="mini"
-        title={`${o.visible ? `Hide ${o.name}` : `Show ${o.name}`} · Alt-click: show only this`}
+        title={o.visible ? t("filum.pannelli.hide_name_alt_click", { name: o.name }) : t("filum.pannelli.show_name_alt_click", { name: o.name })}
         onClick={(e) => {
           e.stopPropagation();
           ctl.toggle(o, e.altKey);
@@ -233,17 +234,17 @@ const LayerRow = memo(function LayerRow({
       >
         {o.visible ? <Eye size={14} /> : <EyeOff size={14} />}
       </button>
-      <button className="mini" title={`Move ${o.name} later in stitch order`} onClick={(e) => (e.stopPropagation(), s().moveInOrder(o.id, 1))} disabled={i === n - 1}>
+      <button className="mini" title={t("filum.pannelli.move_name_later_in_stitch", { name: o.name })} onClick={(e) => (e.stopPropagation(), s().moveInOrder(o.id, 1))} disabled={i === n - 1}>
         <ChevronUp size={14} />
       </button>
-      <button className="mini" title={`Move ${o.name} earlier in stitch order`} onClick={(e) => (e.stopPropagation(), s().moveInOrder(o.id, -1))} disabled={i === 0}>
+      <button className="mini" title={t("filum.pannelli.move_name_earlier_in_stitch", { name: o.name })} onClick={(e) => (e.stopPropagation(), s().moveInOrder(o.id, -1))} disabled={i === 0}>
         <ChevronDown size={14} />
       </button>
     </div>
   );
 });
 
-const ROLE_LABEL: Record<GroupRow["role"], string> = { group: "Group", gradient: "Gradient", tartan: "Tartan" };
+const ROLE_LABEL: Record<GroupRow["role"], string> = { get group() { return t("filum.pannelli.group"); }, get gradient() { return t("filum.pannelli.role_gradient"); }, get tartan() { return t("filum.pannelli.role_tartan"); } };
 
 /** A group's header row: fold, select, show / hide and lock its members together, rename it. */
 const GroupHeader = memo(function GroupHeader({
@@ -277,7 +278,7 @@ const GroupHeader = memo(function GroupHeader({
       style={r.depth ? ({ "--depth": r.depth } as CSSProperties) : undefined}
       onContextMenu={(e) => ctl.menu(r.key, e)}
       tabIndex={0}
-      aria-label={`${ROLE_LABEL[r.role]} ${r.name}, ${r.count} ${r.count === 1 ? "object" : "objects"}, ${r.folded ? "folded" : "unfolded"}`}
+      aria-label={t("filum.pannelli.group_row_aria", { role: ROLE_LABEL[r.role], name: r.name, objects: tn("filum.pannelli.n_objects", r.count), state: r.folded ? t("filum.pannelli.folded") : t("filum.pannelli.unfolded") })}
       onClick={(e) => ctl.select(r.key, e)}
       onKeyDown={(e) => {
         if (e.target !== e.currentTarget && (e.target as HTMLElement).tagName === "INPUT") return;
@@ -305,12 +306,12 @@ const GroupHeader = memo(function GroupHeader({
       onDragEnd={() => ctl.dragEnd()}
     >
       <GripVertical size={12} className="grip" />
-      <input ref={box} type="checkbox" checked={sel === "all"} onClick={(e) => e.stopPropagation()} onChange={(e) => ctl.check(r.key, e.target.checked)} aria-label={`Select the ${what}`} />
+      <input ref={box} type="checkbox" checked={sel === "all"} onClick={(e) => e.stopPropagation()} onChange={(e) => ctl.check(r.key, e.target.checked)} aria-label={t("filum.pannelli.select_the_what", { what })} />
       <button
         className={`mini fold ${r.folded ? "" : "open"}`}
         aria-expanded={!r.folded}
-        aria-label={`${r.folded ? "Unfold" : "Fold"} the ${what}`}
-        title={`${r.folded ? "Unfold" : "Fold"} (← →)`}
+        aria-label={r.folded ? t("filum.pannelli.unfold_the_what", { what }) : t("filum.pannelli.fold_the_what", { what })}
+        title={`${r.folded ? t("filum.pannelli.unfold") : t("filum.pannelli.fold")} (← →)`}
         onClick={(e) => {
           e.stopPropagation();
           ctl.fold(r.group, !r.folded);
@@ -318,12 +319,12 @@ const GroupHeader = memo(function GroupHeader({
       >
         <ChevronRight size={14} />
       </button>
-      <span className="lname" onDoubleClick={() => ctl.rename(r.key)} title={`${r.name} · ${ROLE_LABEL[r.role].toLowerCase()} of ${r.count} · double-click to rename`}>
+      <span className="lname" onDoubleClick={() => ctl.rename(r.key)} title={t("filum.pannelli.name_v2_of_count_double", { name: r.name, v2: ROLE_LABEL[r.role].toLowerCase(), count: r.count })}>
         {renaming ? (
           <input
             autoFocus
             defaultValue={r.name}
-            aria-label={`Name of the ${what}`}
+            aria-label={t("filum.pannelli.name_of_the_what", { what })}
             onClick={(e) => e.stopPropagation()}
             onBlur={(e) => {
               ctl.renameGroup(r.group, e.target.value.trim());
@@ -341,7 +342,7 @@ const GroupHeader = memo(function GroupHeader({
           </>
         )}
       </span>
-      <span className="grp-sw" role="img" aria-label={`${colors.length} ${colors.length === 1 ? "thread" : "threads"}`}>
+      <span className="grp-sw" role="img" aria-label={tn("filum.pannelli.n_threads", colors.length)}>
         {shown.map((c, k) => (
           <i key={k} style={{ background: c }} />
         ))}
@@ -349,8 +350,8 @@ const GroupHeader = memo(function GroupHeader({
       </span>
       <button
         className={`mini ${r.locked === "some" ? "mixed" : ""}`}
-        title={r.locked === "all" ? `Unlock everything in ${r.name}` : `Lock everything in ${r.name}`}
-        aria-label={r.locked === "all" ? `Unlock the ${what}` : `Lock the ${what}`}
+        title={r.locked === "all" ? t("filum.pannelli.unlock_everything_in_name", { name: r.name }) : t("filum.pannelli.lock_everything_in_name", { name: r.name })}
+        aria-label={r.locked === "all" ? t("filum.pannelli.unlock_the_what", { what }) : t("filum.pannelli.lock_the_what", { what })}
         aria-pressed={r.locked === "all" ? true : r.locked === "some" ? "mixed" : false}
         onClick={(e) => {
           e.stopPropagation();
@@ -361,8 +362,8 @@ const GroupHeader = memo(function GroupHeader({
       </button>
       <button
         className={`mini ${r.visible === "some" ? "mixed" : ""}`}
-        title={`${r.visible === "all" ? `Hide everything in ${r.name}` : `Show everything in ${r.name}`} · Alt-click: show only this`}
-        aria-label={r.visible === "all" ? `Hide the ${what}` : `Show the ${what}`}
+        title={r.visible === "all" ? t("filum.pannelli.hide_everything_in_name_alt_click", { name: r.name }) : t("filum.pannelli.show_everything_in_name_alt_click", { name: r.name })}
+        aria-label={r.visible === "all" ? t("filum.pannelli.hide_the_what", { what }) : t("filum.pannelli.show_the_what", { what })}
         onClick={(e) => {
           e.stopPropagation();
           ctl.showGroup(r.key, e.altKey);
@@ -370,10 +371,10 @@ const GroupHeader = memo(function GroupHeader({
       >
         {r.visible === "none" ? <EyeOff size={14} /> : <Eye size={14} />}
       </button>
-      <button className="mini" title={`Move ${r.name} later in stitch order`} onClick={(e) => (e.stopPropagation(), ctl.stepGroup(r.key, 1))} disabled={first}>
+      <button className="mini" title={t("filum.pannelli.move_name_later_in_stitch", { name: r.name })} onClick={(e) => (e.stopPropagation(), ctl.stepGroup(r.key, 1))} disabled={first}>
         <ChevronUp size={14} />
       </button>
-      <button className="mini" title={`Move ${r.name} earlier in stitch order`} onClick={(e) => (e.stopPropagation(), ctl.stepGroup(r.key, -1))} disabled={last}>
+      <button className="mini" title={t("filum.pannelli.move_name_earlier_in_stitch", { name: r.name })} onClick={(e) => (e.stopPropagation(), ctl.stepGroup(r.key, -1))} disabled={last}>
         <ChevronDown size={14} />
       </button>
     </div>
@@ -490,36 +491,36 @@ export function LayersPanel() {
         const items: MenuItem[] = [
           ...(r.kind === "group"
             ? ([
-                { label: "Rename", run: () => cur.current.setRenaming(key) },
-                { label: r.folded ? "Unfold" : "Fold", run: () => setGroupsFolded([r.group], !r.folded) },
+                { label: t("filum.pannelli.rename"), run: () => cur.current.setRenaming(key) },
+                { label: r.folded ? t("filum.pannelli.unfold") : t("filum.pannelli.fold"), run: () => setGroupsFolded([r.group], !r.folded) },
                 "-",
               ] as MenuItem[])
             : []),
-          { label: "Group", kbd: "Ctrl+G", run: groupSelection, disabled: ids.length < 2 && r.kind !== "group" },
-          { label: "Ungroup", kbd: "Ctrl+⇧G", run: ungroupSelection, disabled: !objs.some((o) => o.group) },
+          { label: t("filum.pannelli.group"), kbd: "Ctrl+G", run: groupSelection, disabled: ids.length < 2 && r.kind !== "group" },
+          { label: t("filum.pannelli.ungroup"), kbd: "Ctrl+⇧G", run: ungroupSelection, disabled: !objs.some((o) => o.group) },
           {
-            label: "Move to group",
+            label: t("filum.pannelli.move_to_group"),
             disabled: !targets.length && !objs.some((o) => o.group),
             sub: [
               ...targets.map(([g, name]): MenuItem => ({ label: name, run: into(g) })),
               ...(targets.length ? (["-"] as MenuItem[]) : []),
-              { label: "Out of every group", run: into(undefined), disabled: !objs.some((o) => o.group) },
+              { label: t("filum.pannelli.out_of_every_group"), run: into(undefined), disabled: !objs.some((o) => o.group) },
             ],
           },
           "-",
           {
-            label: "Select same",
+            label: t("filum.pannelli.select_same"),
             sub: [
-              { label: "Colour", run: () => selectSimilar("color") },
-              { label: "Stitch type", run: () => selectSimilar("type") },
+              { label: t("filum.pannelli.colour"), run: () => selectSimilar("color") },
+              { label: t("filum.pannelli.stitch_type"), run: () => selectSimilar("type") },
             ],
           },
           "-",
-          { label: "Show only this", run: () => s().commit((d) => solo(d, ids)), hint: "Alt-click an eye does the same" },
-          { label: "Show all", run: () => setAll(s().doc.objects.map((o) => o.id), () => ({ visible: true })), disabled: doc.objects.every((o) => o.visible) },
-          { label: objs.every((o) => o.locked) ? "Unlock" : "Lock", run: () => setAll(ids, () => ({ locked: !objs.every((o) => o.locked) })) },
+          { label: t("filum.pannelli.show_only_this"), run: () => s().commit((d) => solo(d, ids)), hint: t("filum.pannelli.alt_click_an_eye_does") },
+          { label: t("filum.pannelli.show_all"), run: () => setAll(s().doc.objects.map((o) => o.id), () => ({ visible: true })), disabled: doc.objects.every((o) => o.visible) },
+          { label: objs.every((o) => o.locked) ? t("filum.pannelli.unlock") : t("filum.pannelli.lock"), run: () => setAll(ids, () => ({ locked: !objs.every((o) => o.locked) })) },
           "-",
-          { label: "Delete", kbd: "Del", run: () => s().deleteSelection() },
+          { label: t("filum.pannelli.delete"), kbd: "Del", run: () => s().deleteSelection() },
         ];
         cur.current.setMenu({ x: e.clientX, y: e.clientY, items });
       },
@@ -550,7 +551,7 @@ export function LayersPanel() {
   if (!n)
     return (
       <>
-        <div className="hint" style={{ padding: 14 }}>No objects yet. Draw with the tools on the left, import an SVG or embroidery file, or drop a picture to trace or auto-digitize.</div>
+        <div className="hint" style={{ padding: 14 }}>{t("filum.pannelli.no_objects_yet_draw_with")}</div>
         <ReferencesList />
       </>
     );
@@ -559,25 +560,25 @@ export function LayersPanel() {
     const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const run = (f: (d: typeof doc) => { doc: typeof doc; made: number }, what: string) => () => {
       const out = f(s().doc);
-      if (!out.made) return s().toast(`Nothing to group: no two loose objects share a ${what}`);
+      if (!out.made) return s().toast(t("filum.pannelli.nothing_to_group_no_two", { what }));
       s().commit(() => out.doc);
-      s().toast(`${out.made} group${out.made === 1 ? "" : "s"} by ${what} · the stitch order stays`, "success");
+      s().toast(t("filum.pannelli.groups_by_what", { groups: tn("filum.pannelli.n_groups", out.made), what }), "success");
     };
     const groups = [...liveGroups(doc)];
     setMenu({
       x: r.left,
       y: r.bottom + 2,
       items: [
-        { label: "Group loose objects by thread", run: run(groupByThread, "thread"), hint: "One group per thread colour; the stitch order stays" },
-        { label: "Group loose objects by stitch type", run: run(groupByKind, "stitch type"), hint: "Fills, satins, lines and lettering; the stitch order stays" },
-        { label: "Ungroup all", run: () => s().commit((d) => ungroupAll(d)), disabled: !groups.length },
+        { label: t("filum.pannelli.group_loose_objects_by_thread"), run: run(groupByThread, t("filum.pannelli.what_thread")), hint: t("filum.pannelli.one_group_per_thread_colour") },
+        { label: t("filum.pannelli.group_loose_objects_by_stitch"), run: run(groupByKind, t("filum.pannelli.what_stitch_type")), hint: t("filum.pannelli.fills_satins_lines_and_lettering") },
+        { label: t("filum.pannelli.ungroup_all"), run: () => s().commit((d) => ungroupAll(d)), disabled: !groups.length },
         "-",
-        { label: "Fold all groups", run: () => setGroupsFolded(groups, true), disabled: !groups.length },
-        { label: "Unfold all groups", run: () => setGroupsFolded(groups, false), disabled: !groups.length },
+        { label: t("filum.pannelli.fold_all_groups"), run: () => setGroupsFolded(groups, true), disabled: !groups.length },
+        { label: t("filum.pannelli.unfold_all_groups"), run: () => setGroupsFolded(groups, false), disabled: !groups.length },
         "-",
-        { label: "Select what's listed", run: () => s().select([...new Set(rows.flatMap((x) => x.ids))]), hint: "Every object the filter shows" },
-        { label: "Show all", run: () => s().commit((d) => ({ ...d, objects: d.objects.map((o) => (o.visible ? o : { ...o, visible: true })) })), disabled: doc.objects.every((o) => o.visible) },
-        { label: "Unlock all", run: () => s().commit((d) => ({ ...d, objects: d.objects.map((o) => (o.locked ? { ...o, locked: false } : o)) })), disabled: !doc.objects.some((o) => o.locked) },
+        { label: t("filum.pannelli.select_what_s_listed"), run: () => s().select([...new Set(rows.flatMap((x) => x.ids))]), hint: t("filum.pannelli.every_object_the_filter_shows") },
+        { label: t("filum.pannelli.show_all"), run: () => s().commit((d) => ({ ...d, objects: d.objects.map((o) => (o.visible ? o : { ...o, visible: true })) })), disabled: doc.objects.every((o) => o.visible) },
+        { label: t("filum.pannelli.unlock_all"), run: () => s().commit((d) => ({ ...d, objects: d.objects.map((o) => (o.locked ? { ...o, locked: false } : o)) })), disabled: !doc.objects.some((o) => o.locked) },
       ],
     });
   };
@@ -588,34 +589,34 @@ export function LayersPanel() {
           <Search size={13} aria-hidden="true" />
           <input
             type="search"
-            placeholder="Find layers"
-            aria-label="Find layers by name or thread"
+            placeholder={t("filum.pannelli.find_layers")}
+            aria-label={t("filum.pannelli.find_layers_by_name_or")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Escape" && setQuery("")}
           />
           {query && (
-            <button className="mini" aria-label="Clear the search" onClick={() => setQuery("")}>
+            <button className="mini" aria-label={t("filum.pannelli.clear_the_search")} onClick={() => setQuery("")}>
               <X size={12} />
             </button>
           )}
         </label>
-        <select className="select" value={kind} aria-label="Show stitch type" onChange={(e) => setKind(e.target.value as KindFilter)}>
+        <select className="select" value={kind} aria-label={t("filum.pannelli.show_stitch_type")} onChange={(e) => setKind(e.target.value as KindFilter)}>
           {KIND_FILTERS.map(([k, label]) => (
             <option key={k} value={k}>
               {label}
             </option>
           ))}
         </select>
-        <button className="icon-btn" title="Organise: group by thread or stitch type, fold, show and unlock all" aria-label="Organise layers" onClick={organise}>
+        <button className="icon-btn" title={t("filum.pannelli.organise_group_by_thread_or")} aria-label={t("filum.pannelli.organise_layers")} onClick={organise}>
           <FolderTree size={14} />
         </button>
       </div>
       {filtering && (
         <div className="layers-filtered">
-          {rows.filter((x) => x.kind === "object").length} of {allRows.filter((x) => x.kind === "object").length} rows
+          {t("filum.pannelli.n_of_total_rows", { n: rows.filter((x) => x.kind === "object").length, total: allRows.filter((x) => x.kind === "object").length })}
           <button className="btn sm ghost" onClick={() => (setQuery(""), setKind("all"))}>
-            Clear
+            {t("filum.pannelli.clear")}
           </button>
         </div>
       )}
@@ -672,49 +673,49 @@ function ReferencesList() {
   const refs = useStore((s) => s.doc.references) ?? [];
   const refEdit = useStore((s) => s.refEdit);
   const add = async () => {
-    const f = await openFile([{ name: "Pictures", extensions: ["png", "jpg", "jpeg", "webp", "bmp", "gif"] }]);
+    const f = await openFile([{ name: t("filum.pannelli.pictures"), extensions: ["png", "jpg", "jpeg", "webp", "bmp", "gif"] }]);
     if (f) await addReference(f.name, f.bytes);
   };
   return (
     <div className="refs">
       <div className="refs-head">
-        <span>References</span>
-        <button className="mini" title="Add a picture to trace (or drop / paste one on the canvas)" onClick={add}>
+        <span>{t("filum.pannelli.references")}</span>
+        <button className="mini" title={t("filum.pannelli.add_a_picture_to_trace")} onClick={add}>
           <ImagePlus size={14} />
         </button>
       </div>
-      {!refs.length && <div className="hint refs-empty">Drop or paste a picture on the canvas to trace over it.</div>}
+      {!refs.length && <div className="hint refs-empty">{t("filum.pannelli.drop_or_paste_a_picture")}</div>}
       {[...refs].reverse().map((r) => (
         <div
           key={r.id}
           className={`layer ref-row ${refEdit === r.id ? "sel" : ""} ${r.visible ? "" : "hidden-obj"}`}
           onDoubleClick={() => !r.locked && useStore.getState().set({ refEdit: r.id })}
-          title={r.locked ? r.name : `${r.name} · double-click to adjust`}
+          title={r.locked ? r.name : t("filum.pannelli.name_double_click_to_adjust", { name: r.name })}
         >
           <img className="thumb ref-thumb" src={r.src} alt="" />
           <span className="lname">{r.name}</span>
           <span className="stat">{Math.round(r.opacity * 100)}%</span>
           <button
             className="mini"
-            title={r.locked ? "Locked" : "Adjust on the canvas"}
+            title={r.locked ? t("filum.pannelli.locked") : t("filum.pannelli.adjust_on_the_canvas")}
             disabled={r.locked}
             onClick={() => useStore.getState().set({ refEdit: refEdit === r.id ? null : r.id })}
           >
             <Move size={13} />
           </button>
-          <button className="mini" title={r.locked ? "Unlock" : "Lock"} onClick={() => updateReference(r.id, { locked: !r.locked })}>
+          <button className="mini" title={r.locked ? t("filum.pannelli.unlock") : t("filum.pannelli.lock")} onClick={() => updateReference(r.id, { locked: !r.locked })}>
             {r.locked ? <Lock size={13} /> : <Unlock size={13} />}
           </button>
-          <button className="mini" title={r.visible ? "Hide" : "Show"} onClick={() => updateReference(r.id, { visible: !r.visible })}>
+          <button className="mini" title={r.visible ? t("filum.pannelli.hide") : t("filum.pannelli.show")} onClick={() => updateReference(r.id, { visible: !r.visible })}>
             {r.visible ? <Eye size={14} /> : <EyeOff size={14} />}
           </button>
-          <button className="mini" title="Up (drawn later)" onClick={() => moveReference(r.id, 1)}>
+          <button className="mini" title={t("filum.pannelli.up_drawn_later")} onClick={() => moveReference(r.id, 1)}>
             <ChevronUp size={14} />
           </button>
-          <button className="mini" title="Down (drawn earlier)" onClick={() => moveReference(r.id, -1)}>
+          <button className="mini" title={t("filum.pannelli.down_drawn_earlier")} onClick={() => moveReference(r.id, -1)}>
             <ChevronDown size={14} />
           </button>
-          <button className="mini" title="Remove" onClick={() => removeReference(r.id)}>
+          <button className="mini" title={t("filum.pannelli.remove")} onClick={() => removeReference(r.id)}>
             <Trash2 size={13} />
           </button>
         </div>
@@ -728,37 +729,37 @@ export function ScenePanel() {
   const commit = useStore((s) => s.commit);
   return (
     <div className="props">
-      <Section title="Hoop">
-        <Row label="Preset">
+      <Section title={t("filum.pannelli.hoop")}>
+        <Row label={t("filum.pannelli.preset")}>
           <select
             className="select"
             style={{ width: "100%" }}
             value={hoopValue(doc.hoop, doc.nova?.hoopRef)}
             onChange={(e) => pickHoopOption(e.target.value)}
           >
-            <option value={-1}>Custom</option>
+            <option value={-1}>{t("filum.pannelli.custom")}</option>
             <HoopOptions />
           </select>
         </Row>
         <div className="grid2">
           <div className="row">
             <label>W</label>
-            <Num value={doc.hoop.width} unit="mm" step={5} min={20} onChange={(v) => chooseHoop({ source: "custom", hoop: { ...doc.hoop, width: v, name: "Custom" } }, () => commit((d) => ({ ...d, hoop: { ...d.hoop, width: v, name: "Custom" } })))} />
+            <Num value={doc.hoop.width} unit="mm" step={5} min={20} onChange={(v) => chooseHoop({ source: "custom", hoop: { ...doc.hoop, width: v, name: t("filum.pannelli.custom") } }, () => commit((d) => ({ ...d, hoop: { ...d.hoop, width: v, name: t("filum.pannelli.custom") } })))} />
           </div>
           <div className="row">
             <label>H</label>
-            <Num value={doc.hoop.height} unit="mm" step={5} min={20} onChange={(v) => chooseHoop({ source: "custom", hoop: { ...doc.hoop, height: v, name: "Custom" } }, () => commit((d) => ({ ...d, hoop: { ...d.hoop, height: v, name: "Custom" } })))} />
+            <Num value={doc.hoop.height} unit="mm" step={5} min={20} onChange={(v) => chooseHoop({ source: "custom", hoop: { ...doc.hoop, height: v, name: t("filum.pannelli.custom") } }, () => commit((d) => ({ ...d, hoop: { ...d.hoop, height: v, name: t("filum.pannelli.custom") } })))} />
           </div>
         </div>
         <HoopShapeRow />
       </Section>
-      <Section title="Fabric & thread">
+      <Section title={t("filum.pannelli.fabric_thread")}>
         <MaterialSection />
       </Section>
       <HiddenStitchingSection />
       <DesignOptionsSection />
       <MachineSettings />
-      <Section title="Fabric look" defaultOpen={false}>
+      <Section title={t("filum.pannelli.fabric_look")} defaultOpen={false}>
         <FabricLookRows />
       </Section>
     </div>
@@ -771,20 +772,20 @@ function DesignOptionsSection() {
   const o = doc.options ?? defaultDesignOptions();
   const set = (p: Partial<DesignOptions>) => useStore.getState().commit((d) => ({ ...d, options: { ...(d.options ?? defaultDesignOptions()), ...p } }));
   return (
-    <Section title="Stitch processing">
-      <Row label="Basting" title="Long stitches sewn first to hold fabric and stabiliser together (floating, hard-to-hoop items)">
+    <Section title={t("filum.pannelli.stitch_processing")}>
+      <Row label={t("filum.pannelli.basting")} title={t("filum.pannelli.long_stitches_sewn_first_to")}>
         <select className="select" style={{ width: "100%" }} value={o.basting} onChange={(e) => set({ basting: e.target.value as DesignOptions["basting"] })}>
-          <option value="none">None</option>
-          <option value="box">Box around the design</option>
-          <option value="contour">Following the design</option>
+          <option value="none">{t("filum.pannelli.none")}</option>
+          <option value="box">{t("filum.pannelli.box_around_the_design")}</option>
+          <option value="contour">{t("filum.pannelli.following_the_design")}</option>
         </select>
       </Row>
       {o.basting !== "none" && (
         <>
-          <Row label="Distance">
+          <Row label={t("filum.pannelli.distance")}>
             <Num value={o.bastingMargin} unit="mm" step={1} min={0} max={40} onChange={(v) => set({ bastingMargin: v })} />
           </Row>
-          <Row label="Stitch length">
+          <Row label={t("filum.pannelli.stitch_length")}>
             <Num value={o.bastingLength} unit="mm" step={0.5} min={2} max={10} onChange={(v) => set({ bastingLength: v })} />
           </Row>
         </>
@@ -801,7 +802,7 @@ function AutoUnderlayHint({ kind }: { kind: "fill" | "satin" }) {
   const label = fabricInfo(fabric).label;
   return (
     <p className="hint ul-auto">
-      <Sparkles size={11} /> <b>Auto on {label}:</b> {kind === "fill" ? autoFillHint(fabric, knockdown) : autoSatinHint(fabric, knockdown)}
+      <Sparkles size={11} /> <b>{t("filum.pannelli.auto_on_label", { label })}</b> {kind === "fill" ? autoFillHint(fabric, knockdown) : autoSatinHint(fabric, knockdown)}
     </p>
   );
 }
@@ -811,16 +812,16 @@ function KnockdownRow({ o, set }: { o: DesignOptions; set: (p: Partial<DesignOpt
   const fabricColor = useStore((s) => s.fabricColor);
   const on = !!o.knockdown;
   return (
-    <Row label="Knockdown" title="A light net sewn first under the whole design: flattens the pile of towels, fleece and fur (laydown stitch)">
+    <Row label="Knockdown" title={t("filum.pannelli.a_light_net_sewn_first")}>
       <span className="dz-inline">
         <Toggle on={on} onChange={(v) => set(v ? { knockdown: true, knockdownColor: o.knockdownColor || fabricColor } : { knockdown: false })} />
         {on && (
           <span className="stat">
-            {(o.knockdownLayers ?? 2) === 2 ? "crossed" : "single"} · {o.knockdownSpacing ?? 2} mm
+            {(o.knockdownLayers ?? 2) === 2 ? t("filum.pannelli.crossed") : t("filum.pannelli.single")} · {o.knockdownSpacing ?? 2} mm
           </span>
         )}
-        <button className="btn sm ghost" title="Knockdown settings — for the whole design or an object under the selection" onClick={() => openKnockdown("design")}>
-          Edit…
+        <button className="btn sm ghost" title={t("filum.pannelli.knockdown_settings_for_the_whole")} onClick={() => openKnockdown("design")}>
+          {t("filum.pannelli.edit")}
         </button>
       </span>
     </Row>
@@ -866,12 +867,12 @@ function StitchOptions({ o }: { o: DesignObject }) {
       {st.type === "fill" && !st.gradient && (
         <>
           {st.method === "tatami" && (
-            <Row label="Density">
+            <Row label={t("filum.pannelli.density")}>
               <Presets
                 items={[
-                  ["Light", 0.4, "0.40 mm rows — soft, flexible, fewer stitches"],
-                  ["Normal", 0.25, "0.25 mm rows — the standard"],
-                  ["Dense", 0.2, "0.20 mm rows — full coverage on dark or textured fabric"],
+                  [t("filum.pannelli.light"), 0.4, t("filum.pannelli.rows_040_soft")],
+                  [t("filum.pannelli.normal"), 0.25, t("filum.pannelli.rows_025_standard")],
+                  [t("filum.pannelli.dense"), 0.2, t("filum.pannelli.n0_20_mm_rows_full")],
                 ]}
                 value={st.rowSpacing}
                 onPick={(v) => up({ rowSpacing: v })}
@@ -880,7 +881,7 @@ function StitchOptions({ o }: { o: DesignObject }) {
           )}
           {st.method === "meander" && (
             <>
-              <Row label="Pattern" title="The lattice or Ink/Stitch tile the meander walks on">
+              <Row label={t("filum.pannelli.pattern")} title={t("filum.pannelli.the_lattice_or_ink_stitch")}>
                 <MeanderPicker
                   pattern={st.meanderPattern}
                   tile={st.meanderTile}
@@ -888,7 +889,7 @@ function StitchOptions({ o }: { o: DesignObject }) {
                 />
               </Row>
               {st.meanderTile ? (
-                <Row label="Scale" title="Size of the tile (Ink/Stitch meander scale) — bigger is looser and uses fewer stitches">
+                <Row label={t("filum.pannelli.scale")} title={t("filum.pannelli.size_of_the_tile_ink")}>
                   {(() => {
                     // 2.5 mm ≙ 100 %
                     const s = sl("meanderScale");
@@ -896,17 +897,17 @@ function StitchOptions({ o }: { o: DesignObject }) {
                   })()}
                 </Row>
               ) : (
-                <Row label="Scale" title="Cell size of the lattice — bigger is looser and uses fewer stitches">
+                <Row label={t("filum.pannelli.scale")} title={t("filum.pannelli.cell_size_of_the_lattice")}>
                   <Slider min={1} max={10} step={0.1} value={st.meanderScale ?? 2.5} unit="mm" {...sl("meanderScale")} />
                 </Row>
               )}
-              <Row label="Height" title="Stretch or squash the pattern: its height relative to its width (Ink/Stitch separate x / y meander scale)">
+              <Row label={t("filum.pannelli.height")} title={t("filum.pannelli.stretch_or_squash_the_pattern")}>
                 <Slider min={25} max={400} step={5} digits={0} unit="%" value={Math.round((st.meanderAspect ?? 1) * 100)} onChange={(v) => up({ meanderAspect: v / 100 })} />
               </Row>
-              <Row label="Smoothness" title="0 = sharp corners, 1 = soft curves">
+              <Row label={t("filum.pannelli.smoothness")} title={t("filum.pannelli.n0_sharp_corners_1_soft")}>
                 <Slider min={0} max={1} step={0.05} value={st.smoothness ?? 0.5} {...sl("smoothness")} />
               </Row>
-              <Row label="Zig-zag" title="Sew the meander as a zig-zag line — a bold, textured fill (Ink/Stitch zig-zag meander)">
+              <Row label="Zig-zag" title={t("filum.pannelli.sew_the_meander_as_a")}>
                 <span className="dz-inline">
                   <Toggle on={(st.meanderZigzag ?? 0) > 0} onChange={(on) => up({ meanderZigzag: on ? 1.5 : 0 })} />
                   {(st.meanderZigzag ?? 0) > 0 && (
@@ -917,12 +918,12 @@ function StitchOptions({ o }: { o: DesignObject }) {
                   )}
                 </span>
               </Row>
-              <Row label="Clip to shape" title="Keep every stitch inside the shape — smoothing, the zig-zag and Expand can carry them over the edge (Ink/Stitch clip)">
+              <Row label={t("filum.pannelli.clip_to_shape")} title={t("filum.pannelli.keep_every_stitch_inside_the")}>
                 <Toggle on={!!st.meanderClip} onChange={(v) => up({ meanderClip: v })} />
               </Row>
-              <Row label="Variation">
+              <Row label={t("filum.pannelli.variation")}>
                 <button className="btn sm" onClick={() => up({ seed: ((st.seed ?? 1) % 9973) + 1 })}>
-                  Shuffle
+                  {t("filum.pannelli.shuffle")}
                 </button>
               </Row>
             </>
@@ -930,15 +931,15 @@ function StitchOptions({ o }: { o: DesignObject }) {
           {st.method === "guided" && (
             <>
               <p className="hint" style={{ margin: "2px 0 6px" }}>
-                Rows follow the dashed guide line — drag its points and handles on the canvas.
+                {t("filum.pannelli.rows_follow_the_dashed_guide")}
               </p>
-              <Row label="Rows" title="Copies of the guide shifted across (they bunch where it bends), or parallel to it at an even distance — and round its ends (Ink/Stitch guided fill strategies)">
+              <Row label={t("filum.pannelli.rows_2")} title={t("filum.pannelli.copies_of_the_guide_shifted")}>
                 <div className="seg">
                   {(
                     [
-                      ["copy", "Copies"],
-                      ["parallel", "Parallel"],
-                      ["buffer", "Around"],
+                      ["copy", t("filum.pannelli.copies")],
+                      ["parallel", t("filum.pannelli.parallel")],
+                      ["buffer", t("filum.pannelli.around")],
                     ] as const
                   ).map(([v, l]) => (
                     <button key={v} className={(st.guidedStrategy ?? "copy") === v ? "on" : ""} onClick={() => up({ guidedStrategy: v })}>
@@ -947,10 +948,10 @@ function StitchOptions({ o }: { o: DesignObject }) {
                   ))}
                 </div>
               </Row>
-              <Row label="Guide">
+              <Row label={t("filum.pannelli.guide")}>
                 <button
                   className="btn sm"
-                  title="Reset the guide to an S-curve across the shape"
+                  title={t("filum.pannelli.reset_the_guide_to_an")}
                   onClick={() => {
                     // each object's guide across its own shape
                     const ids = new Set(targets);
@@ -963,29 +964,29 @@ function StitchOptions({ o }: { o: DesignObject }) {
                     }));
                   }}
                 >
-                  Reset
+                  {t("filum.pannelli.reset")}
                 </button>
-                <span className="stat" title="Select the fill and an open line together, then Path ▸ Use line as fill guide">or draw a line → Path ▸ Use line as fill guide</span>
+                <span className="stat" title={t("filum.pannelli.select_the_fill_and_an")}>{t("filum.pannelli.or_draw_a_line_path")}</span>
               </Row>
             </>
           )}
           {st.method !== "hilbert" && st.method !== "stipple" && st.method !== "guided" && st.method !== "circular" && (
-            <Row label="Angle">
+            <Row label={t("filum.pannelli.angle")}>
               <Slider min={-90} max={90} step={1} value={st.angle} unit="°" digits={1} {...sl("angle")} onChange={(v) => up({ angle: normAngle(v) })} />
             </Row>
           )}
           {st.method === "curved" && !st.gradient && (
-            <Row label="Follow the shape" title="0 %: straight rows along the angle · 100 %: rows follow the outline">
+            <Row label={t("filum.pannelli.follow_the_shape")} title={t("filum.pannelli.n0_straight_rows_along_the")}>
               <Slider min={0} max={100} step={5} digits={0} unit="%" value={Math.round((st.curve ?? 1) * 100)} onChange={(v) => up({ curve: v / 100 })} />
             </Row>
           )}
           {/* cross stitch: the cell sets both (see the cross section below) */}
           {st.method !== "cross" && (
             <>
-              <Row label={st.method === "tatami" ? "Row spacing" : "Spacing"}>
+              <Row label={st.method === "tatami" ? t("filum.pannelli.row_spacing") : t("filum.pannelli.spacing")}>
                 <Slider min={0.15} max={st.method === "hilbert" || st.method === "stipple" ? 4 : 1.2} step={0.01} value={st.rowSpacing} unit="mm" {...sl("rowSpacing")} />
               </Row>
-              <Row label="Max stitch">
+              <Row label={t("filum.pannelli.max_stitch")}>
                 <Slider min={1} max={7} step={0.1} value={st.maxStitchLength} unit="mm" {...sl("maxStitchLength")} />
               </Row>
             </>
@@ -993,28 +994,28 @@ function StitchOptions({ o }: { o: DesignObject }) {
           {["tatami", "contour", "spiral", "guided", "circular"].includes(st.method) && !st.gradient && (
             <RandomLength value={st.randomLength ?? 0} onChange={(v) => up({ randomLength: v })} onShuffle={() => up({ seed: ((st.seed ?? 1) % 9973) + 1 })} />
           )}
-          <Row label="Travel stitch" title="Length of the hidden running stitches that travel inside the shape">
+          <Row label={t("filum.pannelli.travel_stitch")} title={t("filum.pannelli.length_of_the_hidden_running")}>
             <Num value={st.travelLength} step={0.5} min={1} max={6} unit="mm" onChange={(v) => up({ travelLength: v })} />
           </Row>
           {st.method === "tatami" && (
-            <Row label="Underpath" title="Travel inside the shape between sections, hidden under rows sewn later (off: along the outline only)">
+            <Row label={t("filum.pannelli.underpath")} title={t("filum.pannelli.travel_inside_the_shape_between")}>
               <Toggle on={st.underpath ?? true} onChange={(v) => up({ underpath: v })} />
             </Row>
           )}
           {st.method === "tatami" && !st.gradient && (
-            <Row label="Gap rows" title="Extra rows sewn past the end of each section before travelling on, so no gap opens between sections on stretchy fabric (Ink/Stitch gap filling; always an even number)">
-              <Num value={st.gapFillRows ?? 0} step={2} min={0} max={10} digits={0} unit="rows" onChange={(v) => up({ gapFillRows: Math.ceil(Math.round(v) / 2) * 2 })} />
+            <Row label={t("filum.pannelli.gap_rows")} title={t("filum.pannelli.extra_rows_sewn_past_the")}>
+              <Num value={st.gapFillRows ?? 0} step={2} min={0} max={10} digits={0} unit={t("filum.pannelli.rows_3")} onChange={(v) => up({ gapFillRows: Math.ceil(Math.round(v) / 2) * 2 })} />
             </Row>
           )}
           {st.method === "cross" && (
-            <Row label="Cross order" title="Which diagonal goes first (all crosses alike), and how often each is sewn">
+            <Row label={t("filum.pannelli.cross_order")} title={t("filum.pannelli.which_diagonal_goes_first_all")}>
               <span className="dz-inline">
                 <div className="seg">
-                  <button className={!st.crossFlip ? "on" : ""} onClick={() => up({ crossFlip: false })} title="Top-left to bottom-right first">
-                    \ then /
+                  <button className={!st.crossFlip ? "on" : ""} onClick={() => up({ crossFlip: false })} title={t("filum.pannelli.top_left_to_bottom_right")}>
+                    {t("filum.pannelli.then")}
                   </button>
-                  <button className={st.crossFlip ? "on" : ""} onClick={() => up({ crossFlip: true })} title="Bottom-left to top-right first">
-                    / then \
+                  <button className={st.crossFlip ? "on" : ""} onClick={() => up({ crossFlip: true })} title={t("filum.pannelli.bottom_left_to_top_right")}>
+                    {t("filum.pannelli.then_2")}
                   </button>
                 </div>
                 <Num value={st.crossThreads ?? 1} step={2} min={1} max={5} digits={0} unit="×" onChange={(v) => up({ crossThreads: Math.max(1, Math.round((v - 1) / 2) * 2 + 1) })} />
@@ -1024,59 +1025,59 @@ function StitchOptions({ o }: { o: DesignObject }) {
           {st.method === "tatami" && (
             <>
               <Row
-                label="Sewing order"
-                title="The order the rows are sewn in (the underlay too). One way: from the top row down, so the fabric is pushed one way only and never caught between rows sewn towards each other. Centre out: from the middle out to both sides. Ink/Stitch: least travel, ends where it started, so a shape is often sewn in two halves that meet in the middle."
+                label={t("filum.pannelli.sewing_order")}
+                title={t("filum.pannelli.the_order_the_rows_are")}
               >
                 <select
                   className="select"
-                  aria-label="Sewing order"
+                  aria-label={t("filum.pannelli.sewing_order")}
                   value={st.centerOut ? "centre" : st.tatamiRoute === "inkStitch" ? "inkStitch" : "oneWay"}
                   onChange={(e) => {
                     const v = e.target.value;
                     up(v === "centre" ? { centerOut: true } : { centerOut: false, tatamiRoute: v as "oneWay" | "inkStitch" });
                   }}
                 >
-                  <option value="oneWay">One way</option>
-                  <option value="centre">Centre out</option>
+                  <option value="oneWay">{t("filum.pannelli.one_way")}</option>
+                  <option value="centre">{t("filum.pannelli.centre_out")}</option>
                   <option value="inkStitch">Ink/Stitch</option>
                 </select>
               </Row>
-              <Row label="Skip last" title="Leave out the last stitch of every row: it sits right next to the first of the next one (fewer stitches, less build-up at the edges)">
+              <Row label={t("filum.pannelli.skip_last")} title={t("filum.pannelli.leave_out_the_last_stitch")}>
                 <Toggle on={!!st.skipLast} onChange={(v) => up({ skipLast: v })} />
               </Row>
             </>
           )}
           {st.method === "spiral" && (
-            <Row label="Double spiral" title="In on every other ring and back out on the rest: it ends next to where it started">
+            <Row label={t("filum.pannelli.double_spiral")} title={t("filum.pannelli.in_on_every_other_ring")}>
               <Toggle on={!!st.contourDouble} onChange={(v) => up({ contourDouble: v })} />
             </Row>
           )}
           {(st.method === "contour" || st.method === "spiral") && (
-            <Row label="Clockwise" title="Go round clockwise (Ink/Stitch's default) or counter-clockwise">
+            <Row label={t("filum.pannelli.clockwise")} title={t("filum.pannelli.go_round_clockwise_ink_stitch")}>
               <Toggle on={contourClockwise(st)} onChange={(v) => up({ contourClockwise: v, clockwise: undefined })} />
             </Row>
           )}
           {(st.method === "meander" || st.method === "circular" || st.method === "contour" || st.method === "spiral") && (
-            <Row label="Repeats" title="The path sewn this many times, and bean stitch: every stitch sewn back and forth (bolder lines)">
+            <Row label={t("filum.pannelli.repeats")} title={t("filum.pannelli.the_path_sewn_this_many")}>
               <span className="dz-inline">
                 <Num value={st.repeats ?? 1} step={1} min={1} max={5} digits={0} onChange={(v) => up({ repeats: Math.round(v) })} />
-                <span className="stat">bean</span>
+                <span className="stat">{t("filum.pannelli.bean")}</span>
                 <Num value={st.beanRepeats ?? 0} step={2} min={0} max={6} digits={0} onChange={(v) => up({ beanRepeats: Math.round(v) })} />
               </span>
             </Row>
           )}
           {st.method === "tatami" && !st.gradient && (
-            <Row label="Carving" title="Needle points lined up into a pattern (program split) — an embossed look">
+            <Row label={t("filum.pannelli.carving")} title={t("filum.pannelli.needle_points_lined_up_into")}>
               <span className="dz-inline">
                 <select className="select" value={st.carve ?? "none"} onChange={(e) => up({ carve: e.target.value as NonNullable<typeof st.carve> })}>
                   {(
                     [
-                      ["none", "None"],
-                      ["diamonds", "Diamonds"],
-                      ["waves", "Waves"],
-                      ["chevrons", "Chevrons"],
-                      ["bricks", "Bricks"],
-                      ["circles", "Circles"],
+                      ["none", t("filum.pannelli.none")],
+                      ["diamonds", t("filum.pannelli.diamonds")],
+                      ["waves", t("filum.pannelli.waves")],
+                      ["chevrons", t("filum.pannelli.chevrons")],
+                      ["bricks", t("filum.pannelli.bricks")],
+                      ["circles", t("filum.pannelli.circles")],
                     ] as const
                   ).map(([k, l]) => (
                     <option key={k} value={k}>
@@ -1091,33 +1092,33 @@ function StitchOptions({ o }: { o: DesignObject }) {
           {st.method === "tartan" && st.tartan && <TartanSection t={st.tartan} />}
           {st.method === "cross" && (
             <>
-              <Row label="Cell" title="Size of one cross">
+              <Row label={t("filum.pannelli.cell")} title={t("filum.pannelli.size_of_one_cross")}>
                 <Slider min={1} max={8} step={0.1} unit="mm" value={st.crossSize ?? 2.5} onChange={(v) => up({ crossSize: v })} />
               </Row>
-              <Row label="Cell height" title="Cells taller or flatter than wide (Ink/Stitch pattern size x y); Square keeps them square">
+              <Row label={t("filum.pannelli.cell_height")} title={t("filum.pannelli.cells_taller_or_flatter_than")}>
                 <span className="dz-inline">
                   <span style={{ opacity: st.crossSizeY ? 1 : 0.55 }}>
                     <Num value={st.crossSizeY || st.crossSize || 2.5} step={0.1} min={0.8} max={12} unit="mm" onChange={(v) => up({ crossSizeY: Math.abs(v - (st.crossSize ?? 2.5)) < 1e-6 ? 0 : v })} />
                   </span>
                   {!!st.crossSizeY && (
                     <button className="btn sm ghost" onClick={() => up({ crossSizeY: 0 })}>
-                      Square
+                      {t("filum.pannelli.square")}
                     </button>
                   )}
                 </span>
               </Row>
-              <Row label="Coverage" title="How much of a cell must be inside the shape to get a cross">
+              <Row label={t("filum.pannelli.coverage")} title={t("filum.pannelli.how_much_of_a_cell")}>
                 <Slider min={10} max={100} step={5} digits={0} unit="%" value={Math.round((st.crossCoverage ?? 0.5) * 100)} onChange={(v) => up({ crossCoverage: v / 100 })} />
               </Row>
-              <Row label="Stitches">
+              <Row label={t("filum.pannelli.stitches")}>
                 <div className="seg">
                   {(
                     [
-                      ["cross", "×", "Both diagonals"],
-                      ["half", "/", "Half cross: one diagonal"],
-                      ["upright", "+", "Upright cross"],
-                      ["double", "✳", "Double cross: one diagonal, the upright cross, then the other diagonal on top"],
-                      ["smyrna", "⁜", "Smyrna cross: the diagonal cross, then the upright cross on top"],
+                      ["cross", "×", t("filum.pannelli.both_diagonals")],
+                      ["half", "/", t("filum.pannelli.half_cross_one_diagonal")],
+                      ["upright", "+", t("filum.pannelli.upright_cross")],
+                      ["double", "✳", t("filum.pannelli.double_cross_one_diagonal_the")],
+                      ["smyrna", "⁜", t("filum.pannelli.smyrna_cross_the_diagonal_cross")],
                     ] as const
                   ).map(([k, l, t]) => (
                     <button key={k} title={t} className={(st.crossKind ?? "cross") === k ? "on" : ""} onClick={() => up({ crossKind: k })}>
@@ -1127,29 +1128,29 @@ function StitchOptions({ o }: { o: DesignObject }) {
                 </div>
               </Row>
               {st.crossKind === "upright" && (
-                <Row label="Dense" title="A second grid of upright crosses shifted by half a cell — a closed, woven look (Ink/Stitch dense upright cross)">
+                <Row label={t("filum.pannelli.dense")} title={t("filum.pannelli.a_second_grid_of_upright")}>
                   <Toggle on={!!st.crossDense} onChange={(v) => up({ crossDense: v })} />
                 </Row>
               )}
-              <Row label="Split longer" title="Split cross stitches longer than this — big cells stay secure (0 = never)">
+              <Row label={t("filum.pannelli.split_longer")} title={t("filum.pannelli.split_cross_stitches_longer_than")}>
                 <Num value={st.crossMaxLength ?? 11} step={0.5} min={0} max={20} unit="mm" onChange={(v) => up({ crossMaxLength: v })} />
               </Row>
             </>
           )}
           {st.method === "tatami" && (
             <>
-              <Row label="Staggers" title="Rows repeat their needle pattern every N rows">
+              <Row label={t("filum.pannelli.staggers")} title={t("filum.pannelli.rows_repeat_their_needle_pattern")}>
                 <Num value={st.staggers} step={1} min={1} max={12} digits={0} onChange={(v) => up({ staggers: Math.round(v) })} />
               </Row>
-              <Row label="Gradient end" title="Row spacing at the far end (0 = off) — density gradient across the fill">
+              <Row label={t("filum.pannelli.gradient_end")} title={t("filum.pannelli.row_spacing_at_the_far")}>
                 <Num value={st.endRowSpacing} step={0.05} min={0} unit="mm" onChange={(v) => up({ endRowSpacing: v })} />
               </Row>
               {st.endRowSpacing > 0 && (
-                <Row label="Even blend" title="Change the density (not the spacing) evenly — two opposite gradients add up to full coverage (colour blending)">
+                <Row label={t("filum.pannelli.even_blend")} title={t("filum.pannelli.change_the_density_not_the")}>
                   <Toggle on={!!st.gradientDensity} onChange={(v) => up({ gradientDensity: v })} />
                 </Row>
               )}
-              <Row label="Pull comp." title="Rows grow at both ends by this much, plus a share of their length">
+              <Row label={t("filum.pannelli.pull_comp")} title={t("filum.pannelli.rows_grow_at_both_ends")}>
                 <span className="dz-inline">
                   <Num value={st.pullComp} step={0.05} unit="mm" onChange={(v) => up({ pullComp: v })} />
                   <Num value={Math.round((st.pullCompPct ?? 0) * 100)} step={1} min={0} max={30} unit="%" digits={0} onChange={(v) => up({ pullCompPct: v / 100 })} />
@@ -1160,26 +1161,26 @@ function StitchOptions({ o }: { o: DesignObject }) {
           {(st.method === "radial" || st.method === "circular") && (
             <div className="grid2">
               <div className="row">
-                <label>cx</label>
+                <label>{t("filum.pannelli.cx")}</label>
                 <Num value={st.center[0]} step={0.05} min={0} max={1} onChange={(v) => up({ center: [v, st.center[1]] })} />
               </div>
               <div className="row">
-                <label>cy</label>
+                <label>{t("filum.pannelli.cy")}</label>
                 <Num value={st.center[1]} step={0.05} min={0} max={1} onChange={(v) => up({ center: [st.center[0], v] })} />
               </div>
             </div>
           )}
           <Section
-            title="Underlay"
+            title={t("filum.pannelli.underlay")}
             extra={<Toggle on={st.underlay || !!st.underlayAuto} onChange={(v) => up(v ? { underlay: true } : { underlay: false, underlayAuto: false })} />}
           >
             <Presets
               items={[
-                ["Auto", { underlayAuto: true, underlay: true }, "Chosen by the shape's size and the fabric"],
-                ["None", { underlayAuto: false, underlay: false }, "No underlay — light fills, stable fabric"],
-                ["Light", { underlayAuto: false, underlay: true, underlaySpacing: 1.2, underlayInset: 0.4 }, "Open grid that just holds the fabric"],
-                ["Standard", { underlayAuto: false, underlay: true, underlaySpacing: 0.75, underlayInset: 0.3 }, "Good for most fabrics"],
-                ["Heavy", { underlayAuto: false, underlay: true, underlaySpacing: 0.5, underlayInset: 0.2 }, "Stretchy or fluffy fabrics (knits, towels)"],
+                [t("filum.pannelli.auto"), { underlayAuto: true, underlay: true }, t("filum.pannelli.chosen_by_the_shape_s")],
+                [t("filum.pannelli.none"), { underlayAuto: false, underlay: false }, t("filum.pannelli.no_underlay_light_fills_stable")],
+                [t("filum.pannelli.light"), { underlayAuto: false, underlay: true, underlaySpacing: 1.2, underlayInset: 0.4 }, t("filum.pannelli.open_grid_that_just_holds")],
+                [t("filum.pannelli.standard"), { underlayAuto: false, underlay: true, underlaySpacing: 0.75, underlayInset: 0.3 }, t("filum.pannelli.good_for_most_fabrics")],
+                [t("filum.pannelli.heavy"), { underlayAuto: false, underlay: true, underlaySpacing: 0.5, underlayInset: 0.2 }, t("filum.pannelli.stretchy_or_fluffy_fabrics_knits")],
               ]}
               value={
                 st.underlayAuto
@@ -1193,26 +1194,26 @@ function StitchOptions({ o }: { o: DesignObject }) {
             {st.underlayAuto && <AutoUnderlayHint kind="fill" />}
             {st.underlay && !st.underlayAuto && (
               <>
-                <Row label="Edge run" title="A running stitch just inside the outline first: holds the edge so the fill's border stays crisp">
+                <Row label={t("filum.pannelli.edge_run")} title={t("filum.pannelli.a_running_stitch_just_inside")}>
                   <Toggle on={!!st.underlayEdge} onChange={(v) => up({ underlayEdge: v })} />
                 </Row>
-                <Row label="Cross-hatch" title="Two tatami passes crossing at ±45° to the underlay angle (double tatami): for soft, stretchy and pile fabrics">
+                <Row label={t("filum.pannelli.cross_hatch")} title={t("filum.pannelli.two_tatami_passes_crossing_at")}>
                   <Toggle on={!!st.underlayCross} onChange={(v) => up({ underlayCross: v })} />
                 </Row>
-                <Row label="Skip last" title="Leave out the last underlay stitch of every row (fewer stitches at the edges)">
+                <Row label={t("filum.pannelli.skip_last")} title={t("filum.pannelli.leave_out_the_last_underlay")}>
                   <Toggle on={!!st.underlaySkipLast} onChange={(v) => up({ underlaySkipLast: v })} />
                 </Row>
-                <Row label="Stitch length">
+                <Row label={t("filum.pannelli.stitch_length")}>
                   <Num value={st.underlayStitchLength} step={0.5} min={1} max={6} unit="mm" onChange={(v) => up({ underlayStitchLength: v })} />
                 </Row>
-                <Row label="Angle (rel.)" title="Relative to the fill angle. Or a list of angles for several passes, e.g. 30 90 150">
+                <Row label={t("filum.pannelli.angle_rel")} title={t("filum.pannelli.relative_to_the_fill_angle")}>
                   <span className="dz-inline">
                     <Num value={st.underlayAngle} step={15} unit="°" onChange={(v) => up({ underlayAngle: v, underlayAngles: undefined })} />
                     <input
                       className="input"
                       style={{ width: 90 }}
-                      placeholder="or a list"
-                      title="Several passes: angles separated by spaces (Ink/Stitch's underlay angle list)"
+                      placeholder={t("filum.pannelli.or_a_list")}
+                      title={t("filum.pannelli.several_passes_angles_separated_by")}
                       defaultValue={(st.underlayAngles ?? []).join(" ")}
                       onBlur={(e) => {
                         const list = e.target.value.split(/[\s,]+/).map(Number).filter((x) => Number.isFinite(x) && e.target.value.trim() !== "");
@@ -1221,10 +1222,10 @@ function StitchOptions({ o }: { o: DesignObject }) {
                     />
                   </span>
                 </Row>
-                <Row label="Spacing">
+                <Row label={t("filum.pannelli.spacing")}>
                   <Num value={st.underlaySpacing} step={0.1} min={0.3} unit="mm" onChange={(v) => up({ underlaySpacing: v })} />
                 </Row>
-                <Row label="Inset">
+                <Row label={t("filum.pannelli.inset")}>
                   <Num value={st.underlayInset} step={0.1} min={0} unit="mm" onChange={(v) => up({ underlayInset: v })} />
                 </Row>
               </>
@@ -1235,12 +1236,12 @@ function StitchOptions({ o }: { o: DesignObject }) {
       {st.type === "satin" && (
         <>
           {st.method === "satin" && (
-            <Row label="Density">
+            <Row label={t("filum.pannelli.density")}>
               <Presets
                 items={[
-                  ["Open", 0.6, "0.6 mm — light, flexible"],
-                  ["Normal", 0.4, "0.4 mm — the standard"],
-                  ["Dense", 0.3, "0.3 mm — full, shiny coverage"],
+                  [t("filum.pannelli.open"), 0.6, t("filum.pannelli.satin_06_light")],
+                  [t("filum.pannelli.normal"), 0.4, t("filum.pannelli.satin_04_standard")],
+                  [t("filum.pannelli.dense"), 0.3, t("filum.pannelli.satin_03_full")],
                 ]}
                 value={st.spacing}
                 onPick={(v) => up({ spacing: v })}
@@ -1248,43 +1249,43 @@ function StitchOptions({ o }: { o: DesignObject }) {
             </Row>
           )}
           {o.paths.length === 1 && (
-            <Row label="Width">
+            <Row label={t("filum.pannelli.width")}>
               <Slider min={0.5} max={12} step={0.1} value={st.width} unit="mm" {...sl("width")} />
             </Row>
           )}
-          <Row label="Spacing">
+          <Row label={t("filum.pannelli.spacing")}>
             <Slider min={0.2} max={2} step={0.01} value={st.spacing} unit="mm" {...sl("spacing")} />
           </Row>
-          <Row label="Pull comp.">
+          <Row label={t("filum.pannelli.pull_comp")}>
             <Num value={st.pullComp} step={0.05} unit="mm" onChange={(v) => up({ pullComp: v })} />
           </Row>
-          <Row label="Pull comp. %">
+          <Row label={t("filum.pannelli.pull_comp_2")}>
             <Num value={st.pullCompPct} step={5} unit="%" onChange={(v) => up({ pullCompPct: v })} />
           </Row>
-          <Row label="Split above" title="Split stitches longer than this (0 = off)">
+          <Row label={t("filum.pannelli.split_above")} title={t("filum.pannelli.split_stitches_longer_than_this")}>
             <Num value={st.maxStitchLength} step={0.5} min={0} unit="mm" onChange={(v) => up({ maxStitchLength: v })} />
           </Row>
-          <Row label="Short stitch" title="In tight curves every other stitch is shortened by this share, where stitches come closer than the distance">
+          <Row label={t("filum.pannelli.short_stitch")} title={t("filum.pannelli.in_tight_curves_every_other")}>
             <span className="dz-inline">
               <Num value={st.shortStitchInset * 100} step={5} min={0} max={90} unit="%" digits={0} onChange={(v) => up({ shortStitchInset: v / 100 })} />
               <Num value={st.shortStitchDistance ?? 0.25} step={0.05} min={0} max={2} unit="mm" onChange={(v) => up({ shortStitchDistance: v })} />
             </span>
           </Row>
-          <Row label="Push comp." title="Pull the column's ends in: satins push the fabric out where they start and end">
+          <Row label={t("filum.pannelli.push_comp")} title={t("filum.pannelli.pull_the_column_s_ends")}>
             <Num value={st.pushComp ?? 0} step={0.1} min={0} max={3} unit="mm" onChange={(v) => up({ pushComp: v })} />
           </Row>
           {st.maxStitchLength > 0 && (
             <>
-              <Row label="Split pattern" title="Where long stitches are split: evenly (the points line up), staggered from stitch to stitch, or at a random phase (Ink/Stitch split methods)">
+              <Row label={t("filum.pannelli.split_pattern")} title={t("filum.pannelli.where_long_stitches_are_split")}>
                 <div className="seg">
                   {(
                     [
-                      ["even", "Even", { splitStaggers: 0, splitRandomPhase: false }],
+                      ["even", t("filum.pannelli.even"), { splitStaggers: 0, splitRandomPhase: false }],
                       // Ink/Stitch "simple": the same split points on every stitch
-                      ["simple", "Simple", { splitStaggers: 1, splitRandomPhase: false }],
-                      ["s3", "Stagger 3", { splitStaggers: 3, splitRandomPhase: false }],
-                      ["s4", "Stagger 4", { splitStaggers: 4, splitRandomPhase: false }],
-                      ["random", "Random", { splitStaggers: 0, splitRandomPhase: true }],
+                      ["simple", t("filum.pannelli.simple"), { splitStaggers: 1, splitRandomPhase: false }],
+                      ["s3", t("filum.pannelli.stagger_3"), { splitStaggers: 3, splitRandomPhase: false }],
+                      ["s4", t("filum.pannelli.stagger_4"), { splitStaggers: 4, splitRandomPhase: false }],
+                      ["random", t("filum.pannelli.random"), { splitStaggers: 0, splitRandomPhase: true }],
                     ] as const
                   ).map(([k, l, patch]) => {
                     const cur = st.splitRandomPhase ? "random" : (st.splitStaggers ?? 0) >= 4 ? "s4" : (st.splitStaggers ?? 0) >= 2 ? "s3" : st.splitStaggers === 1 ? "simple" : "even";
@@ -1297,12 +1298,12 @@ function StitchOptions({ o }: { o: DesignObject }) {
                 </div>
               </Row>
               {(st.splitStaggers ?? 0) < 2 && (
-                <Row label="Split jitter" title={st.splitRandomPhase ? "Vary the length of the split stitches by up to this much" : "Move every split point by up to this share of a split stitch"}>
+                <Row label={t("filum.pannelli.split_jitter")} title={st.splitRandomPhase ? t("filum.pannelli.vary_the_length_of_the") : t("filum.pannelli.move_every_split_point_by")}>
                   <span className="dz-inline">
                     <Num value={Math.round((st.splitJitter ?? 0) * 100)} step={5} min={0} max={100} unit="%" digits={0} onChange={(v) => up({ splitJitter: v / 100 })} />
                     {st.splitRandomPhase && (
-                      <span title="Split stitches longer than this already (default: the max stitch length) — a gradual change between single and split stitches">
-                        <Num value={st.splitMinLength || st.maxStitchLength} step={0.5} min={0.5} max={st.maxStitchLength} unit="mm≥" onChange={(v) => up({ splitMinLength: v >= st.maxStitchLength ? 0 : v })} />
+                      <span title={t("filum.pannelli.split_stitches_longer_than_this_2")}>
+                        <Num value={st.splitMinLength || st.maxStitchLength} step={0.5} min={0.5} max={st.maxStitchLength} unit={t("filum.pannelli.mm")} onChange={(v) => up({ splitMinLength: v >= st.maxStitchLength ? 0 : v })} />
                       </span>
                     )}
                   </span>
@@ -1310,55 +1311,55 @@ function StitchOptions({ o }: { o: DesignObject }) {
               )}
             </>
           )}
-          <Row label="Texture" title="Random width (up to this much wider / narrower) and spacing for a hand-made look; Shuffle gives another pattern">
+          <Row label={t("filum.pannelli.texture")} title={t("filum.pannelli.random_width_up_to_this")}>
             <span className="dz-inline">
               <Num value={Math.round((st.randomWider ?? 0) * 100)} step={5} min={0} max={50} unit="%+" digits={0} onChange={(v) => up({ randomWider: v / 100 })} />
               <Num value={Math.round((st.randomNarrower ?? 0) * 100)} step={5} min={0} max={50} unit="%−" digits={0} onChange={(v) => up({ randomNarrower: v / 100 })} />
-              <span title="Random spacing: each stitch's distance to the next varies by up to this much (Ink/Stitch random zig-zag spacing)">
+              <span title={t("filum.pannelli.random_spacing_each_stitch_s")}>
                 <Num value={Math.round((st.randomSpacing ?? 0) * 100)} step={5} min={0} max={100} unit="%↔" digits={0} onChange={(v) => up({ randomSpacing: v / 100 })} />
               </span>
               {((st.randomWider ?? 0) > 0 || (st.randomNarrower ?? 0) > 0 || (st.randomSpacing ?? 0) > 0 || (st.splitJitter ?? 0) > 0 || !!st.splitRandomPhase) && (
-                <button className="btn sm ghost" title="Another random pattern" onClick={() => up({ randomSeed: ((st.randomSeed ?? 1) % 9973) + 1 })}>
-                  Shuffle
+                <button className="btn sm ghost" title={t("filum.pannelli.another_random_pattern")} onClick={() => up({ randomSeed: ((st.randomSeed ?? 1) % 9973) + 1 })}>
+                  {t("filum.pannelli.shuffle")}
                 </button>
               )}
             </span>
           </Row>
-          <Row label="Direction" title="Direction guides: lines across the column that set the stitch angle there (Ink/Stitch rungs)">
+          <Row label={t("filum.pannelli.direction")} title={t("filum.pannelli.direction_guides_lines_across_the")}>
             <GuideActions />
           </Row>
-          <Row label="Reverse">
+          <Row label={t("filum.pannelli.reverse")}>
             <Toggle on={st.reverse} onChange={(v) => up({ reverse: v })} />
           </Row>
           {o.paths.length > 1 && (
             <>
-              <Row label="Swap rails">
+              <Row label={t("filum.pannelli.swap_rails")}>
                 <Toggle on={st.swapRails} onChange={(v) => up({ swapRails: v })} />
               </Row>
-              <Row label="Rail direction" title="A rail drawn the other way twists the satin: Auto detects it; set it by hand if a satin renders strangely (Ink/Stitch reverse rails)">
+              <Row label={t("filum.pannelli.rail_direction")} title={t("filum.pannelli.a_rail_drawn_the_other")}>
                 <select className="select" value={st.reverseRails ?? "automatic"} onChange={(e) => up({ reverseRails: e.target.value as NonNullable<typeof st.reverseRails> })}>
-                  <option value="automatic">Auto</option>
-                  <option value="none">As drawn</option>
-                  <option value="first">Reverse first</option>
-                  <option value="second">Reverse second</option>
-                  <option value="both">Reverse both</option>
+                  <option value="automatic">{t("filum.pannelli.auto")}</option>
+                  <option value="none">{t("filum.pannelli.as_drawn")}</option>
+                  <option value="first">{t("filum.pannelli.reverse_first")}</option>
+                  <option value="second">{t("filum.pannelli.reverse_second")}</option>
+                  <option value="both">{t("filum.pannelli.reverse_both")}</option>
                 </select>
               </Row>
             </>
           )}
           {!many && (
-            <Section title="Colour stripes" defaultOpen={false}>
+            <Section title={t("filum.pannelli.colour_stripes")} defaultOpen={false}>
               <MulticolorSatin o={o} />
             </Section>
           )}
-          <Section title="Underlay">
+          <Section title={t("filum.pannelli.underlay")}>
             <Presets
               items={[
-                ["Auto", { underlayAuto: true }, "Chosen by the column's width and the fabric"],
-                ["None", { underlayAuto: false, centerWalk: false, contourUnderlay: false, zigzagUnderlay: false }, "No underlay — thin columns"],
-                ["Centre", { underlayAuto: false, centerWalk: true, contourUnderlay: false, zigzagUnderlay: false }, "Centre walk — narrow columns (< 2.5 mm)"],
-                ["Edges", { underlayAuto: false, centerWalk: false, contourUnderlay: true, zigzagUnderlay: false }, "Contour underlay — crisp edges (2.5–4 mm)"],
-                ["Full", { underlayAuto: false, centerWalk: false, contourUnderlay: true, zigzagUnderlay: true }, "Contour + zig-zag — wide columns, lofty look"],
+                [t("filum.pannelli.auto"), { underlayAuto: true }, t("filum.pannelli.chosen_by_the_column_s")],
+                [t("filum.pannelli.none"), { underlayAuto: false, centerWalk: false, contourUnderlay: false, zigzagUnderlay: false }, t("filum.pannelli.no_underlay_thin_columns")],
+                [t("filum.pannelli.centre"), { underlayAuto: false, centerWalk: true, contourUnderlay: false, zigzagUnderlay: false }, t("filum.pannelli.centre_walk_narrow_columns_2")],
+                [t("filum.pannelli.edges"), { underlayAuto: false, centerWalk: false, contourUnderlay: true, zigzagUnderlay: false }, t("filum.pannelli.contour_underlay_crisp_edges_2")],
+                [t("filum.pannelli.full"), { underlayAuto: false, centerWalk: false, contourUnderlay: true, zigzagUnderlay: true }, t("filum.pannelli.contour_zig_zag_wide_columns")],
               ]}
               value={
                 st.underlayAuto
@@ -1370,11 +1371,11 @@ function StitchOptions({ o }: { o: DesignObject }) {
             {st.underlayAuto && <AutoUnderlayHint kind="satin" />}
             {!st.underlayAuto && (
             <>
-            <Row label="Centre walk">
+            <Row label={t("filum.pannelli.centre_walk")}>
               <Toggle on={st.centerWalk} onChange={(v) => up({ centerWalk: v })} />
             </Row>
             {st.centerWalk && (
-              <Row label="Walk" title="Passes along the column (there and back = 2) and where across it (50 % = centre)">
+              <Row label={t("filum.pannelli.walk")} title={t("filum.pannelli.passes_along_the_column_there")}>
                 <span className="dz-inline">
                   <Num value={st.centerWalkRepeats ?? 2} step={2} min={2} max={8} digits={0} onChange={(v) => up({ centerWalkRepeats: Math.max(2, Math.round(v / 2) * 2) })} />
                   <Num value={Math.round((st.centerWalkPosition ?? 0.5) * 100)} step={5} min={0} max={100} unit="%" digits={0} onChange={(v) => up({ centerWalkPosition: v / 100 })} />
@@ -1382,15 +1383,15 @@ function StitchOptions({ o }: { o: DesignObject }) {
               </Row>
             )}
             {(st.centerWalk || st.contourUnderlay) && (
-              <Row label="Run length" title="Stitch length of the centre walk and contour underlay">
+              <Row label={t("filum.pannelli.run_length")} title={t("filum.pannelli.stitch_length_of_the_centre")}>
                 <Num value={st.underlayStitchLength ?? 2.5} step={0.5} min={1} max={6} unit="mm" onChange={(v) => up({ underlayStitchLength: v })} />
               </Row>
             )}
-            <Row label="Contour">
+            <Row label={t("filum.pannelli.contour")}>
               <Toggle on={st.contourUnderlay} onChange={(v) => up({ contourUnderlay: v })} />
             </Row>
             {st.contourUnderlay && (
-              <Row label="Contour inset" title="Inset from the edges: a fixed distance plus a share of the column width">
+              <Row label={t("filum.pannelli.contour_inset")} title={t("filum.pannelli.inset_from_the_edges_a")}>
                 <span className="dz-inline">
                   <Num value={st.contourInset} step={0.1} min={0} unit="mm" onChange={(v) => up({ contourInset: v })} />
                   <Num value={Math.round((st.contourInsetPct ?? 0) * 100)} step={5} min={0} max={45} unit="%" digits={0} onChange={(v) => up({ contourInsetPct: v / 100 })} />
@@ -1402,16 +1403,16 @@ function StitchOptions({ o }: { o: DesignObject }) {
             </Row>
             {st.zigzagUnderlay && (
               <>
-                <Row label="ZZ spacing">
+                <Row label={t("filum.pannelli.zz_spacing")}>
                   <Num value={st.zigzagUnderlaySpacing} step={0.25} min={0.5} unit="mm" onChange={(v) => up({ zigzagUnderlaySpacing: v })} />
                 </Row>
-                <Row label="ZZ inset" title="Inset from the edges: a fixed distance plus a share of the column width">
+                <Row label={t("filum.pannelli.zz_inset")} title={t("filum.pannelli.inset_from_the_edges_a")}>
                   <span className="dz-inline">
                     <Num value={st.zigzagUnderlayInset} step={0.1} min={0} unit="mm" onChange={(v) => up({ zigzagUnderlayInset: v })} />
                     <Num value={Math.round((st.zigzagInsetPct ?? 0) * 100)} step={5} min={0} max={45} unit="%" digits={0} onChange={(v) => up({ zigzagInsetPct: v / 100 })} />
                   </span>
                 </Row>
-                <Row label="ZZ split" title="Split zig-zag underlay stitches longer than this (0 = never)">
+                <Row label={t("filum.pannelli.zz_split")} title={t("filum.pannelli.split_zig_zag_underlay_stitches")}>
                   <Num value={st.zigzagUnderlayMaxStitch ?? 0} step={0.5} min={0} max={10} unit="mm" onChange={(v) => up({ zigzagUnderlayMaxStitch: v })} />
                 </Row>
               </>
@@ -1423,62 +1424,62 @@ function StitchOptions({ o }: { o: DesignObject }) {
       )}
       {st.type === "running" && st.zigzag && (
         <>
-          <Row label="Width">
+          <Row label={t("filum.pannelli.width")}>
             <Slider min={0.5} max={8} step={0.1} unit="mm" value={st.zigzag.width} onChange={(v) => up({ zigzag: { ...st.zigzag!, width: v } })} />
           </Row>
-          <Row label="Spacing" title="Length of one zig and zag together">
+          <Row label={t("filum.pannelli.spacing")} title={t("filum.pannelli.length_of_one_zig_and")}>
             <Slider min={0.2} max={4} step={0.05} unit="mm" value={st.zigzag.spacing} onChange={(v) => up({ zigzag: { ...st.zigzag!, spacing: v } })} />
           </Row>
-          <Row label="Angle" title="Turn every zig-zag by this angle — spokes on curves (Ink/Stitch zig-zag angle)">
+          <Row label={t("filum.pannelli.angle")} title={t("filum.pannelli.turn_every_zig_zag_by")}>
             <Slider min={-89} max={89} step={1} digits={0} unit="°" value={st.zigzag.angle} onChange={(v) => up({ zigzag: { ...st.zigzag!, angle: v } })} />
           </Row>
-          <Row label="Pull comp." title="Widen each side against the fabric pulling the zig-zag together">
+          <Row label={t("filum.pannelli.pull_comp")} title={t("filum.pannelli.widen_each_side_against_the")}>
             <Num value={st.zigzag.pullComp} step={0.05} min={-1} max={2} unit="mm" onChange={(v) => up({ zigzag: { ...st.zigzag!, pullComp: v } })} />
           </Row>
-          <Row label="Repeats" title="Passes along the path (2 = there and back on the same points)">
+          <Row label={t("filum.pannelli.repeats")} title={t("filum.pannelli.passes_along_the_path_2")}>
             <Num value={st.repeats} step={1} min={1} max={9} digits={0} onChange={(v) => up({ repeats: Math.round(v) })} />
           </Row>
         </>
       )}
       {st.type === "running" && !st.zigzag && (
         <>
-          <Row label="Stitch">
+          <Row label={t("filum.pannelli.stitch")}>
             <Presets
               items={[
-                ["Fine", 1.5, "1.5 mm — tight curves, small details"],
-                ["Normal", 2.5, "2.5 mm — the standard"],
-                ["Long", 3.5, "3.5 mm — straight lines, quilting"],
+                ["Fine", 1.5, t("filum.pannelli.run_15_tight")],
+                [t("filum.pannelli.normal"), 2.5, t("filum.pannelli.run_25_standard")],
+                [t("filum.pannelli.long"), 3.5, t("filum.pannelli.run_35_straight")],
               ]}
               value={st.length}
               onPick={(v) => up({ length: v })}
             />
           </Row>
-          <Row label="Length">
+          <Row label={t("filum.pannelli.length")}>
             <Slider min={0.5} max={6} step={0.1} value={st.length} unit="mm" {...sl("length")} />
           </Row>
-          <Row label="Tolerance" title="How closely stitches follow curves">
+          <Row label={t("filum.pannelli.tolerance")} title={t("filum.pannelli.how_closely_stitches_follow_curves")}>
             <Num value={st.tolerance} step={0.05} min={0.01} unit="mm" onChange={(v) => up({ tolerance: v })} />
           </Row>
-          <Row label="Repeats" title="Passes along the path (2 = there and back)">
+          <Row label={t("filum.pannelli.repeats")} title={t("filum.pannelli.passes_along_the_path_2_2")}>
             <Num value={st.repeats} step={1} min={1} max={9} digits={0} onChange={(v) => up({ repeats: Math.round(v) })} />
           </Row>
-          <Row label="Bean repeats" title="0 = single, 2 = triple (bean) stitch">
+          <Row label={t("filum.pannelli.bean_repeats")} title={t("filum.pannelli.n0_single_2_triple_bean")}>
             <Num value={st.beanRepeats} step={2} min={0} max={8} digits={0} onChange={(v) => up({ beanRepeats: Math.round(v) })} />
           </Row>
           <CutworkSection o={o} />
           {!st.stem && !st.motif && (
-            <Section title="Length pattern & texture" defaultOpen={!!(st.lengthPattern?.length || st.beanPattern?.length || st.randomLength)}>
-              <Row label="Lengths" title="Several stitch lengths used in turn, e.g. “2 1” for long-short (Ink/Stitch). Empty: the length above">
+            <Section title={t("filum.pannelli.length_pattern_texture")} defaultOpen={!!(st.lengthPattern?.length || st.beanPattern?.length || st.randomLength)}>
+              <Row label={t("filum.pannelli.lengths")} title={t("filum.pannelli.several_stitch_lengths_used_in")}>
                 <PatternInput
                   value={st.lengthPattern}
-                  placeholder={`${st.length} (even)`}
+                  placeholder={t("filum.pannelli.length_even", { length: st.length })}
                   unit="mm"
                   parse={(t) => parsePattern(t, { min: 0.3, max: 12 })}
                   format={formatPattern}
                   onChange={(v) => up({ lengthPattern: v.length > 1 ? v : undefined, ...(v.length === 1 ? { length: v[0] } : {}) })}
                 />
               </Row>
-              <Row label="Bean pattern" title="Back-and-forth repeats per stitch in turn, e.g. “0 1” (1 = triple), Ink/Stitch style. Empty: the bean repeats above">
+              <Row label={t("filum.pannelli.bean_pattern")} title={t("filum.pannelli.back_and_forth_repeats_per")}>
                 <PatternInput
                   value={passesToBeans(st.beanPattern)}
                   placeholder={String(Math.ceil(st.beanRepeats / 2))}
@@ -1491,22 +1492,22 @@ function StitchOptions({ o }: { o: DesignObject }) {
             </Section>
           )}
           {st.stem && (
-            <Row label="Rope width" title="How far the stem stitches slant across the line">
+            <Row label={t("filum.pannelli.rope_width")} title={t("filum.pannelli.how_far_the_stem_stitches")}>
               <Slider min={0.2} max={3} step={0.1} unit="mm" value={st.stem.width} onChange={(v) => up({ stem: { width: v } })} />
             </Row>
           )}
           {st.motif && (
             <>
-              <Row label="Motif">
+              <Row label={t("filum.pannelli.motif")}>
                 <select className="select" value={st.motif.kind} onChange={(e) => up({ motif: { ...st.motif!, kind: e.target.value as typeof st.motif.kind } })}>
                   {(
                     [
-                      ["wave", "Wave"],
+                      ["wave", t("filum.pannelli.wave")],
                       ["zigzag", "Zig-zag"],
-                      ["scallop", "Scallop"],
-                      ["loop", "Loops"],
-                      ["diamond", "Diamonds"],
-                      ["cross", "Crosses"],
+                      ["scallop", t("filum.pannelli.scallop")],
+                      ["loop", t("filum.pannelli.loops")],
+                      ["diamond", t("filum.pannelli.diamonds")],
+                      ["cross", t("filum.pannelli.crosses")],
                     ] as const
                   ).map(([k, l]) => (
                     <option key={k} value={k}>
@@ -1515,7 +1516,7 @@ function StitchOptions({ o }: { o: DesignObject }) {
                   ))}
                 </select>
               </Row>
-              <Row label="Motif size" title="Length of one motif along the line (its height: half of it)">
+              <Row label={t("filum.pannelli.motif_size")} title={t("filum.pannelli.length_of_one_motif_along")}>
                 <Slider min={1.5} max={15} step={0.5} unit="mm" value={st.motif.size} onChange={(v) => up({ motif: { ...st.motif!, size: v } })} />
               </Row>
             </>
@@ -1526,74 +1527,74 @@ function StitchOptions({ o }: { o: DesignObject }) {
       {st.type === "applique" && (
         <>
           <p className="hint" style={{ margin: "2px 0 8px" }}>
-            Sews the placement line, stops so you can lay the fabric, tacks it down, stops so you can trim it, then covers the edge.
+            {t("filum.pannelli.sews_the_placement_line_stops")}
           </p>
-          <Section title="1 · Placement line" extra={<Toggle on={st.placement} onChange={(v) => up({ placement: v })} />}>
+          <Section title={t("filum.pannelli.n1_placement_line")} extra={<Toggle on={st.placement} onChange={(v) => up({ placement: v })} />}>
             {st.placement && (
-              <Row label="Stitch length">
+              <Row label={t("filum.pannelli.stitch_length")}>
                 <Slider min={1} max={4} step={0.1} value={st.placementLength} unit="mm" {...sl("placementLength")} />
               </Row>
             )}
           </Section>
-          <Section title="2 · Tack-down">
-            <Row label="Stitch">
+          <Section title={t("filum.pannelli.n2_tack_down")}>
+            <Row label={t("filum.pannelli.stitch")}>
               <select className="select" style={{ width: "100%" }} value={st.tackdown} onChange={(e) => up({ tackdown: e.target.value })}>
                 <option value="zigzag">Zig-zag</option>
-                <option value="eStitch">E-stitch</option>
-                <option value="run">Running stitch</option>
-                <option value="none">None</option>
+                <option value="eStitch">{t("filum.pannelli.e_stitch")}</option>
+                <option value="run">{t("filum.pannelli.running_stitch")}</option>
+                <option value="none">{t("filum.pannelli.none")}</option>
               </select>
             </Row>
             {st.tackdown !== "none" && (
-              <Row label="Inset" title="Distance inside the edge">
+              <Row label={t("filum.pannelli.inset")} title={t("filum.pannelli.distance_inside_the_edge")}>
                 <Slider min={0} max={3} step={0.05} value={st.tackdownInset} unit="mm" {...sl("tackdownInset")} />
               </Row>
             )}
             {(st.tackdown === "zigzag" || st.tackdown === "eStitch") && (
               <>
-                <Row label="Width">
+                <Row label={t("filum.pannelli.width")}>
                   <Slider min={0.5} max={4} step={0.1} value={st.tackdownWidth} unit="mm" {...sl("tackdownWidth")} />
                 </Row>
-                <Row label="Spacing">
+                <Row label={t("filum.pannelli.spacing")}>
                   <Slider min={0.4} max={4} step={0.1} value={st.tackdownSpacing} unit="mm" {...sl("tackdownSpacing")} />
                 </Row>
               </>
             )}
           </Section>
-          <Section title="3 · Cover">
-            <Row label="Stitch">
+          <Section title={t("filum.pannelli.n3_cover")}>
+            <Row label={t("filum.pannelli.stitch")}>
               <select className="select" style={{ width: "100%" }} value={st.cover} onChange={(e) => up({ cover: e.target.value })}>
                 <option value="satin">Satin</option>
-                <option value="eStitch">E-stitch (blanket)</option>
-                <option value="none">None (raw edge)</option>
+                <option value="eStitch">{t("filum.pannelli.e_stitch_blanket")}</option>
+                <option value="none">{t("filum.pannelli.none_raw_edge")}</option>
               </select>
             </Row>
             {st.cover !== "none" && (
               <>
-                <Row label="Width">
+                <Row label={t("filum.pannelli.width")}>
                   <Slider min={1} max={8} step={0.1} value={st.coverWidth} unit="mm" {...sl("coverWidth")} />
                 </Row>
-                <Row label="Spacing">
+                <Row label={t("filum.pannelli.spacing")}>
                   <Slider min={0.2} max={2.5} step={0.05} value={st.coverSpacing} unit="mm" {...sl("coverSpacing")} />
                 </Row>
-                <Row label="Offset" title="Shift the cover outwards (+) or inwards (−) from the edge">
+                <Row label={t("filum.pannelli.offset")} title={t("filum.pannelli.shift_the_cover_outwards_or")}>
                   <Slider min={-2} max={2} step={0.05} value={st.coverOffset} unit="mm" {...sl("coverOffset")} />
                 </Row>
-                <Row label="Pull comp.">
+                <Row label={t("filum.pannelli.pull_comp")}>
                   <Num value={st.pullComp} step={0.05} unit="mm" onChange={(v) => up({ pullComp: v })} />
                 </Row>
-                <Row label="Underlay">
+                <Row label={t("filum.pannelli.underlay")}>
                   <Toggle on={st.coverUnderlay} onChange={(v) => up({ coverUnderlay: v })} />
                 </Row>
                 {st.cover === "eStitch" && (
-                  <Row label="Flip prongs">
+                  <Row label={t("filum.pannelli.flip_prongs")}>
                     <Toggle on={st.flip} onChange={(v) => up({ flip: v })} />
                   </Row>
                 )}
               </>
             )}
           </Section>
-          <Row label="Machine stops" title="Stop after the placement line and after the tack-down">
+          <Row label={t("filum.pannelli.machine_stops")} title={t("filum.pannelli.stop_after_the_placement_line")}>
             <Toggle on={st.stops} onChange={(v) => up({ stops: v })} />
           </Row>
         </>
@@ -1601,15 +1602,15 @@ function StitchOptions({ o }: { o: DesignObject }) {
       {st.type === "manual" && (
         <>
           <div className="hint">
-            Every node is a needle penetration (imported machine files use this). Edit nodes with the node tool (A), or{" "}
-            <button className="link" onClick={() => useStore.getState().setDialog("rebuild")} title="Turn the stitches back into shapes that can be stitched again (Ink/Stitch Outline)">
-              rebuild shapes from the stitches…
+            {t("filum.pannelli.every_node_is_a_needle")}{" "}
+            <button className="link" onClick={() => useStore.getState().setDialog("rebuild")} title={t("filum.pannelli.turn_the_stitches_back_into")}>
+              {t("filum.pannelli.rebuild_shapes_from_the_stitches")}
             </button>
           </div>
-          <Row label="Split longer" title="Split stitches longer than this into even parts (0 = keep them; Ink/Stitch max stitch length)">
+          <Row label={t("filum.pannelli.split_longer")} title={t("filum.pannelli.split_stitches_longer_than_this_3")}>
             <Num value={st.maxLength ?? 0} step={0.5} min={0} max={12} unit="mm" onChange={(v) => up({ maxLength: v || undefined })} />
           </Row>
-          <Row label="Bean pattern" title="Back-and-forth repeats per stitch in turn, e.g. “1” (triple) or “0 1”">
+          <Row label={t("filum.pannelli.bean_pattern")} title={t("filum.pannelli.back_and_forth_repeats_per_2")}>
             <PatternInput
               value={passesToBeans(st.beanPattern)}
               placeholder="0"
@@ -1632,16 +1633,16 @@ function MultiProperties({ objects }: { objects: DesignObject[] }) {
   return (
     <div className="props">
       <div className="props-head">
-        <span className="grow">{objects.length} objects</span>
+        <span className="grow">{t("filum.pannelli.objects_objects", { objects: objects.length })}</span>
         <span className="stat">{types.join(" · ")}</span>
       </div>
       {(() => {
         const pair = guidePair(objects);
         if (!pair) return null;
         return (
-          <Section title="Ripple guide">
+          <Section title={t("filum.pannelli.ripple_guide")}>
             <p className="hint" style={{ margin: "2px 0 6px" }}>
-              Copies of “{pair.ripple.name}” follow “{pair.guide.name}”{pair.guide.stitch.type === "satin" && pair.guide.paths.length >= 2 ? ", fitted between its rails" : ""} (Ink/Stitch guided ripples). The guide object is taken into the ripple.
+              {pair.guide.stitch.type === "satin" && pair.guide.paths.length >= 2 ? t("filum.pannelli.copies_follow_guide_rails", { ripple: pair.ripple.name, guide: pair.guide.name }) : t("filum.pannelli.copies_follow_guide", { ripple: pair.ripple.name, guide: pair.guide.name })}
             </p>
             <button
               className="btn primary sm"
@@ -1650,7 +1651,7 @@ function MultiProperties({ objects }: { objects: DesignObject[] }) {
                 useStore.getState().set({ selection: [pair.ripple.id] });
               }}
             >
-              Use as ripple guide
+              {t("filum.pannelli.use_as_ripple_guide")}
             </button>
           </Section>
         );
@@ -1659,10 +1660,9 @@ function MultiProperties({ objects }: { objects: DesignObject[] }) {
         const pair = guidePair(objects) ? null : patternPair(objects);
         if (!pair) return null;
         return (
-          <Section title="Stitch pattern" defaultOpen={false}>
+          <Section title={t("filum.pannelli.stitch_pattern")} defaultOpen={false}>
             <p className="hint" style={{ margin: "2px 0 6px" }}>
-              Draw over “{pair.target.name}”: lines add a needle point wherever a stitch crosses them, shapes leave the needle points inside them out (Ink/Stitch selection to pattern).
-            </p>
+              {t("filum.pannelli.draw_over_name_lines_add", { name: pair.target.name })}</p>
             <button
               className="btn sm"
               onClick={() => {
@@ -1670,24 +1670,24 @@ function MultiProperties({ objects }: { objects: DesignObject[] }) {
                 useStore.getState().set({ selection: [pair.target.id] });
               }}
             >
-              Use {pair.patterns.length > 1 ? `these ${pair.patterns.length}` : "it"} as stitch pattern
+              {pair.patterns.length > 1 ? t("filum.pannelli.use_these_as_stitch_pattern", { n: pair.patterns.length }) : t("filum.pannelli.use_it_as_stitch_pattern")}
             </button>
           </Section>
         );
       })()}
-      <Section title="Transform">
+      <Section title={t("filum.pannelli.transform")}>
         <TransformPanel objects={objects} />
       </Section>
       <MultiStitchOptions objects={objects} />
-      <Section title="Thread">
+      <Section title={t("filum.pannelli.thread_2")}>
         <ThreadPicker
           value={objects[0]?.thread}
           mixed={!objects.every((o) => o.thread === objects[0]?.thread)}
           // letters: their lettering keeps the colour (all its letters of that colour take it)
           onPick={(id) => useStore.getState().commit((d) => ({ ...d, objects: setObjectsThread(d.objects, ids, id) }))}
         />
-        {!objects.every((o) => o.thread === objects[0]?.thread) && <p className="hint">{new Set(objects.map((o) => o.thread)).size} colours — pick one to give it to all.</p>}
-        {threads.length === 0 && <p className="hint">No threads yet.</p>}
+        {!objects.every((o) => o.thread === objects[0]?.thread) && <p className="hint">{t("filum.pannelli.n_colours_pick_one", { n: new Set(objects.map((o) => o.thread)).size })}</p>}
+        {threads.length === 0 && <p className="hint">{t("filum.pannelli.no_threads_yet")}</p>}
       </Section>
       <CommandsSection objects={objects} />
       <ElementInfoSection ids={ids} />
@@ -1710,8 +1710,8 @@ function MultiStitchOptions({ objects }: { objects: DesignObject[] }) {
   for (const o of editable) groups.set(o.stitch.type, [...(groups.get(o.stitch.type) ?? []), o]);
   if (!groups.size)
     return skipped ? (
-      <Section title="Stitch options">
-        <p className="hint">Linked clones, locked objects, gradients and tartans are edited one at a time.</p>
+      <Section title={t("filum.pannelli.stitch_options")}>
+        <p className="hint">{t("filum.pannelli.linked_clones_locked_objects_gradients")}</p>
       </Section>
     ) : null;
   return (
@@ -1719,10 +1719,10 @@ function MultiStitchOptions({ objects }: { objects: DesignObject[] }) {
       {[...groups].map(([type, objs]) => {
         const differ = differingSettings(objs);
         return (
-          <Section key={type} title={`Stitch options · ${TYPE_LABEL[type] ?? type}${groups.size > 1 || objs.length !== objects.length ? ` (${objs.length})` : ""}`}>
+          <Section key={type} title={t("filum.pannelli.stitch_options_type", { type: TYPE_LABEL[type] ?? type }) + (groups.size > 1 || objs.length !== objects.length ? ` (${objs.length})` : "")}>
             <p className="hint" style={{ margin: "2px 0 6px" }}>
-              {objs.length > 1 ? `Changes apply to all ${objs.length}.` : "Changes apply to this one."}
-              {differ.length > 0 && ` They differ in ${differ.slice(0, 5).map(settingLabel).join(", ")}${differ.length > 5 ? ` and ${differ.length - 5} more` : ""}: shown is the first one's.`}
+              {objs.length > 1 ? t("filum.pannelli.changes_apply_to_all_length", { length: objs.length }) : t("filum.pannelli.changes_apply_to_this_one")}
+              {differ.length > 0 && (differ.length > 5 ? t("filum.pannelli.they_differ_in_more", { list: differ.slice(0, 5).map(settingLabel).join(", "), more: differ.length - 5 }) : t("filum.pannelli.they_differ_in", { list: differ.slice(0, 5).map(settingLabel).join(", ") }))}
             </p>
             <EditTargets.Provider value={objs.map((o) => o.id)}>
               <StitchOptions o={objs[0]} />
@@ -1730,7 +1730,7 @@ function MultiStitchOptions({ objects }: { objects: DesignObject[] }) {
           </Section>
         );
       })}
-      {skipped > 0 && <p className="hint">{skipped} not included: linked clones, locked objects, gradients and tartans are edited one at a time.</p>}
+      {skipped > 0 && <p className="hint">{t("filum.pannelli.skipped_not_included_linked_clones", { skipped })}</p>}
     </>
   );
 }
@@ -1748,7 +1748,7 @@ export function PropertiesPanel() {
   if (!sel.length)
     return (
       <div className="props">
-        <div className="hint" style={{ padding: "10px 2px" }}>Select an object to see its settings. The hoop, fabric and machine are under Design.</div>
+        <div className="hint" style={{ padding: "10px 2px" }}>{t("filum.pannelli.select_an_object_to_see")}</div>
       </div>
     );
   const o = oneGradient ? [...sel].sort((a, b) => ((a.stitch as { gradient?: { layer: number } }).gradient?.layer ?? 0) - ((b.stitch as { gradient?: { layer: number } }).gradient?.layer ?? 0))[0] : sel[0];
@@ -1757,34 +1757,34 @@ export function PropertiesPanel() {
       <div className="props-head">
         <span className="swatch" style={{ background: doc.threads.find((t) => t.id === o.thread)?.color }} />
         <span className="grow">{o.name}</span>
-        <button className="icon-btn" title={o.visible ? "Hide" : "Show"} onClick={() => useStore.getState().updateObject(o.id, { visible: !o.visible })}>
+        <button className="icon-btn" title={o.visible ? t("filum.pannelli.hide") : t("filum.pannelli.show")} onClick={() => useStore.getState().updateObject(o.id, { visible: !o.visible })}>
           {o.visible ? <Eye size={14} /> : <EyeOff size={14} />}
         </button>
-        <button className="icon-btn" title={o.locked ? "Unlock" : "Lock"} onClick={() => useStore.getState().updateObject(o.id, { locked: !o.locked })}>
+        <button className="icon-btn" title={o.locked ? t("filum.pannelli.unlock") : t("filum.pannelli.lock")} onClick={() => useStore.getState().updateObject(o.id, { locked: !o.locked })}>
           {o.locked ? <Lock size={14} /> : <Unlock size={14} />}
         </button>
       </div>
-      <Section title="Transform">
+      <Section title={t("filum.pannelli.transform")}>
         <TransformPanel objects={[o]} />
-        <Row label="Nodes">{nodeCount(o)}</Row>
+        <Row label={t("filum.pannelli.nodes")}>{nodeCount(o)}</Row>
       </Section>
       {!oneGradient && (
-      <Section title="Thread">
+      <Section title={t("filum.pannelli.thread_2")}>
         <ThreadCard threadId={o.thread} />
         <ThreadPicker value={o.thread} onPick={(id) => useStore.getState().updateObject(o.id, { thread: id })} />
       </Section>
       )}
       {!!o.patterns?.length && (
-        <Section title="Stitch patterns">
+        <Section title={t("filum.pannelli.stitch_patterns")}>
           <PatternList o={o} />
         </Section>
       )}
       {o.clone ? (
-        <Section title="Clone">
+        <Section title={t("filum.pannelli.clone")}>
           <CloneInfo o={o} />
         </Section>
       ) : (
-        <Section title="Stitch options">
+        <Section title={t("filum.pannelli.stitch_options")}>
           <StitchOptions o={o} />
         </Section>
       )}
@@ -1804,22 +1804,24 @@ export function IssuesPanel() {
   const cleanup = tiny.length ? (
     <div className="issue-cleanup">
       <span>
-        <b>{tiny.length}</b> tiny or empty object{tiny.length > 1 ? "s" : ""} (fills under {DEFAULT_CLEANUP.minFillArea} mm², lines under {DEFAULT_CLEANUP.minLength} mm)
+        {tiny.length > 1
+          ? tx("filum.pannelli.tiny_objects_under_many", { n: <b>{tiny.length}</b> }, { area: DEFAULT_CLEANUP.minFillArea, length: DEFAULT_CLEANUP.minLength })
+          : tx("filum.pannelli.tiny_objects_under_one", { n: <b>{tiny.length}</b> }, { area: DEFAULT_CLEANUP.minFillArea, length: DEFAULT_CLEANUP.minLength })}
       </span>
       <button
         className="btn sm"
-        title="Remove them in one step (undo brings them back) — Ink/Stitch Cleanup document"
+        title={t("filum.pannelli.remove_them_in_one_step")}
         onClick={() => {
           const s = useStore.getState();
           const n = cleanupDocument(s.commit, s.doc);
-          s.toast(`Removed ${n} object${n > 1 ? "s" : ""}`);
+          s.toast(tn("filum.pannelli.removed_n_objects", n));
         }}
       >
-        Clean up
+        {t("filum.pannelli.clean_up")}
       </button>
     </div>
   ) : null;
-  if (!issues.length) return cleanup ?? <div className="hint" style={{ padding: 14 }}>No problems found. Markers appear on the canvas while this tab is open.</div>;
+  if (!issues.length) return cleanup ?? <div className="hint" style={{ padding: 14 }}>{t("filum.pannelli.no_problems_found_markers_appear")}</div>;
   const locate = (i: Issue) => {
     const s = useStore.getState();
     if (i.objId) s.select([i.objId]);
@@ -1880,14 +1882,14 @@ export function useIssueCount() {
 /** Random stitch length (Ink/Stitch): off, or ± a share of every stitch, with a new pattern on Shuffle. */
 function RandomLength({ value, onChange, onShuffle }: { value: number; onChange: (v: number) => void; onShuffle: () => void }) {
   return (
-    <Row label="Random length" title="Vary every stitch length by up to this much, with a random start on each line — no lines or moiré across parallel rows (Ink/Stitch random stitch length)">
+    <Row label={t("filum.pannelli.random_length")} title={t("filum.pannelli.vary_every_stitch_length_by")}>
       <span className="dz-inline">
         <Toggle on={value > 0} onChange={(on) => onChange(on ? 10 : 0)} />
         {value > 0 && (
           <>
             <Num value={value} step={5} min={1} max={90} digits={0} unit="%" onChange={onChange} />
-            <button className="btn sm ghost" title="Another random pattern" onClick={onShuffle}>
-              Shuffle
+            <button className="btn sm ghost" title={t("filum.pannelli.another_random_pattern")} onClick={onShuffle}>
+              {t("filum.pannelli.shuffle")}
             </button>
           </>
         )}
@@ -1917,15 +1919,15 @@ function RippleSection({ o }: { o: DesignObject }) {
   const satinGuide = guide.length >= 2;
   return (
     <>
-      <Section title="Ripple">
-        <Row label="Lines" title="How many ripples: a count, or as many as fit at a minimum distance (Ink/Stitch line count / minimum line distance)">
+      <Section title={t("filum.pannelli.ripple")}>
+        <Row label={t("filum.pannelli.lines")} title={t("filum.pannelli.how_many_ripples_a_count")}>
           <span className="dz-inline">
             <div className="seg">
               <button className={!(r.minLineDist ?? 0) ? "on" : ""} onClick={() => up({ minLineDist: 0 })}>
-                Count
+                {t("filum.pannelli.count")}
               </button>
               <button className={(r.minLineDist ?? 0) > 0 ? "on" : ""} onClick={() => up({ minLineDist: r.minLineDist || 2 })}>
-                Distance
+                {t("filum.pannelli.distance")}
               </button>
             </div>
             {(r.minLineDist ?? 0) > 0 ? (
@@ -1936,93 +1938,93 @@ function RippleSection({ o }: { o: DesignObject }) {
           </span>
         </Row>
         {closed ? (
-          <Row label="Inner size" title="Size of the innermost ripple (0 = shrinks to the centre)">
+          <Row label={t("filum.pannelli.inner_size")} title={t("filum.pannelli.size_of_the_innermost_ripple")}>
             <Slider min={0} max={0.95} step={0.01} value={r.minScale} onChange={(v) => up({ minScale: v })} />
           </Row>
         ) : (
           !rails &&
           !guide.length &&
           !r.fan && (
-            <Row label="Spacing" title="Distance between the copies">
+            <Row label={t("filum.pannelli.spacing")} title={t("filum.pannelli.distance_between_the_copies")}>
               <Slider min={0.3} max={10} step={0.1} unit="mm" value={r.spacing} onChange={(v) => up({ spacing: v })} />
             </Row>
           )
         )}
-        <Row label="Spread" title="Bunch the ripples towards one end (exponent above 1) or the other; Flip turns it round (Ink/Stitch exponent)">
+        <Row label={t("filum.pannelli.spread")} title={t("filum.pannelli.bunch_the_ripples_towards_one")}>
           <span className="dz-inline">
             <Slider min={0.25} max={4} step={0.05} value={r.exponent ?? 1} onChange={(v) => up({ exponent: v })} />
-            <Toggle on={!!r.flipExponent} onChange={(v) => up({ flipExponent: v })} title="Flip" />
+            <Toggle on={!!r.flipExponent} onChange={(v) => up({ flipExponent: v })} title={t("filum.pannelli.flip")} />
           </span>
         </Row>
-        <Row label="Skip" title="Leave out ripples at the start and the end">
+        <Row label={t("filum.pannelli.skip")} title={t("filum.pannelli.leave_out_ripples_at_the")}>
           <span className="dz-inline">
-            <Num value={r.skipStart ?? 0} step={1} min={0} max={50} digits={0} unit="start" onChange={(v) => up({ skipStart: Math.round(v) })} />
-            <Num value={r.skipEnd ?? 0} step={1} min={0} max={50} digits={0} unit="end" onChange={(v) => up({ skipEnd: Math.round(v) })} />
+            <Num value={r.skipStart ?? 0} step={1} min={0} max={50} digits={0} unit={t("filum.pannelli.start")} onChange={(v) => up({ skipStart: Math.round(v) })} />
+            <Num value={r.skipEnd ?? 0} step={1} min={0} max={50} digits={0} unit={t("filum.pannelli.end")} onChange={(v) => up({ skipEnd: Math.round(v) })} />
           </span>
         </Row>
-        <Row label="Twist" title="Rotation from the first to the last ripple">
+        <Row label={t("filum.pannelli.twist")} title={t("filum.pannelli.rotation_from_the_first_to")}>
           <Slider min={-360} max={360} step={1} digits={0} unit="°" value={r.rotation} onChange={(v) => up({ rotation: v })} />
         </Row>
-        <Row label="Reverse" title="Start at the centre / far copy">
+        <Row label={t("filum.pannelli.reverse")} title={t("filum.pannelli.start_at_the_centre_far")}>
           <Toggle on={r.reverse} onChange={(v) => up({ reverse: v })} />
         </Row>
       </Section>
       {!closed && (
-        <Section title="Copies" defaultOpen={!!(r.joinPoint || r.flipCopies === false || r.staggers)}>
-          <Row label="Back and forth" title="Sew every other copy backwards; off: every copy the same way, joined at the ends">
+        <Section title={t("filum.pannelli.copies")} defaultOpen={!!(r.joinPoint || r.flipCopies === false || r.staggers)}>
+          <Row label={t("filum.pannelli.back_and_forth")} title={t("filum.pannelli.sew_every_other_copy_backwards")}>
             <Toggle on={r.flipCopies ?? true} onChange={(v) => up({ flipCopies: v })} />
           </Row>
-          <Row label="Joins" title="Where copies meet: flat connections, or points (Ink/Stitch join style)">
+          <Row label={t("filum.pannelli.joins")} title={t("filum.pannelli.where_copies_meet_flat_connections")}>
             <div className="seg">
               <button className={!r.joinPoint ? "on" : ""} onClick={() => up({ joinPoint: false })}>
-                Flat
+                {t("filum.pannelli.flat")}
               </button>
               <button className={r.joinPoint ? "on" : ""} onClick={() => up({ joinPoint: true })}>
-                Point
+                {t("filum.pannelli.point")}
               </button>
             </div>
           </Row>
-          <Row label="Staggers" title="Needle points shifted from line to line over this many lines (0 = even stitches)">
+          <Row label={t("filum.pannelli.staggers")} title={t("filum.pannelli.needle_points_shifted_from_line")}>
             <Num value={r.staggers ?? 0} step={1} min={0} max={12} digits={0} onChange={(v) => up({ staggers: Math.round(v) })} />
           </Row>
           {!rails && !guide.length && (
-            <Row label="Towards target" title="Without a guide: parallel copies, or copies fanned towards the target (Ink/Stitch)">
+            <Row label={t("filum.pannelli.towards_target")} title={t("filum.pannelli.without_a_guide_parallel_copies")}>
               <div className="seg">
                 <button className={!r.fan ? "on" : ""} onClick={() => up({ fan: false })}>
-                  Parallel
+                  {t("filum.pannelli.parallel")}
                 </button>
                 <button className={r.fan ? "on" : ""} onClick={() => up({ fan: true })}>
-                  Fan
+                  {t("filum.pannelli.fan")}
                 </button>
               </div>
             </Row>
           )}
-          <Row label="Manual points" title="The outline's own points are the stitches — no running stitch in between (Ink/Stitch manual pattern placement)">
+          <Row label={t("filum.pannelli.manual_points")} title={t("filum.pannelli.the_outline_s_own_points")}>
             <Toggle on={!!r.manual} onChange={(v) => up({ manual: v })} />
           </Row>
         </Section>
       )}
       {!closed && !rails && (
-        <Section title="Guide" defaultOpen={guide.length > 0}>
+        <Section title={t("filum.pannelli.guide")} defaultOpen={guide.length > 0}>
           {guide.length ? (
             <>
               <p className="hint" style={{ margin: "2px 0 6px" }}>
-                {satinGuide ? "Copies are fitted between the rails of the satin guide." : "Copies follow the guide line — drag its points on the canvas."}
+                {satinGuide ? t("filum.pannelli.copies_are_fitted_between_the") : t("filum.pannelli.copies_follow_the_guide_line")}
               </p>
-              <Row label="Scale" title="Size of the first and the last copy along the guide (Ink/Stitch scale start / end)">
+              <Row label={t("filum.pannelli.scale")} title={t("filum.pannelli.size_of_the_first_and")}>
                 <span className="dz-inline">
                   <Num value={r.scaleStart ?? 100} step={5} min={0} max={400} digits={0} unit="%" onChange={(v) => up({ scaleStart: v })} />
                   <Num value={r.scaleEnd ?? 100} step={5} min={0} max={400} digits={0} unit="%" onChange={(v) => up({ scaleEnd: v })} />
                 </span>
               </Row>
-              <Row label="Scale axes">
+              <Row label={t("filum.pannelli.scale_axes")}>
                 <div className="seg">
                   {(
                     [
                       ["both", "X Y"],
                       ["x", "X"],
                       ["y", "Y"],
-                      ["none", "None"],
+                      ["none", t("filum.pannelli.none")],
                     ] as const
                   ).map(([k, l]) => (
                     <button key={k} className={(r.scaleAxis ?? "both") === k ? "on" : ""} onClick={() => up({ scaleAxis: k })}>
@@ -2031,17 +2033,17 @@ function RippleSection({ o }: { o: DesignObject }) {
                   ))}
                 </div>
               </Row>
-              <Row label="Turn with guide" title="Copies turn with the guide's direction">
+              <Row label={t("filum.pannelli.turn_with_guide")} title={t("filum.pannelli.copies_turn_with_the_guide")}>
                 <Toggle on={r.rotateRipples ?? true} onChange={(v) => up({ rotateRipples: v })} />
               </Row>
               {satinGuide && (
-                <Row label="Copies at" title="By the line count, at the satin's rungs, or as many as fit without overlapping (Ink/Stitch pattern position)">
+                <Row label={t("filum.pannelli.copies_at")} title={t("filum.pannelli.by_the_line_count_at")}>
                   <div className="seg">
                     {(
                       [
-                        ["lineCount", "Count"],
-                        ["rungs", "Rungs"],
-                        ["adaptive", "Fit"],
+                        ["lineCount", t("filum.pannelli.count")],
+                        ["rungs", t("filum.pannelli.rungs")],
+                        ["adaptive", t("filum.pannelli.fit")],
                       ] as const
                     ).map(([k, l]) => (
                       <button key={k} className={(r.guidePosition ?? "lineCount") === k ? "on" : ""} onClick={() => up({ guidePosition: k })}>
@@ -2052,13 +2054,13 @@ function RippleSection({ o }: { o: DesignObject }) {
                 </Row>
               )}
               <button className="btn sm ghost" onClick={() => up({ guide: undefined, anchor: undefined })}>
-                Remove guide
+                {t("filum.pannelli.remove_guide")}
               </button>
             </>
           ) : (
             <>
               <p className="hint" style={{ margin: "2px 0 6px" }}>
-                Copies can follow a guide line or a satin column: select it together with this ripple and choose “Use as ripple guide”.
+                {t("filum.pannelli.copies_can_follow_a_guide")}
               </p>
               <button
                 className="btn sm"
@@ -2067,31 +2069,31 @@ function RippleSection({ o }: { o: DesignObject }) {
                   if (g) up({ guide: [g], scaleStart: 100, scaleEnd: 100 });
                 }}
               >
-                Add a straight guide
+                {t("filum.pannelli.add_a_straight_guide")}
               </button>
             </>
           )}
         </Section>
       )}
-      <Section title="Grid" defaultOpen={(r.gridSize ?? 0) > 0}>
-        <Row label="Grid" title="Lines across the ripples, their points this far apart — a net (Ink/Stitch grid)">
+      <Section title={t("filum.pannelli.grid")} defaultOpen={(r.gridSize ?? 0) > 0}>
+        <Row label={t("filum.pannelli.grid")} title={t("filum.pannelli.lines_across_the_ripples_their")}>
           <span className="dz-inline">
             <Toggle on={(r.gridSize ?? 0) > 0} onChange={(on) => up({ gridSize: on ? 3 : 0 })} />
             {(r.gridSize ?? 0) > 0 && <Num value={r.gridSize!} step={0.5} min={0.5} max={30} unit="mm" onChange={(v) => up({ gridSize: v })} />}
           </span>
         </Row>
         {(r.gridSize ?? 0) > 0 && (
-          <Row label="Grid first" title="Sew the grid before the ripples">
+          <Row label={t("filum.pannelli.grid_first")} title={t("filum.pannelli.sew_the_grid_before_the")}>
             <Toggle on={!!r.gridFirst} onChange={(v) => up({ gridFirst: v })} />
           </Row>
         )}
       </Section>
       {(closed || !guide.length || r.fan) && (
         <p className="hint">
-          {closed ? "Drag the target handle on the canvas to move the ripple centre." : "Drag the target handle to choose the side the copies go to."}
+          {closed ? t("filum.pannelli.drag_the_target_handle_on") : t("filum.pannelli.drag_the_target_handle_to")}
           {r.target && (
             <button className="btn sm ghost" onClick={() => up({ target: undefined })} style={{ marginLeft: 6 }}>
-              Reset
+              {t("filum.pannelli.reset")}
             </button>
           )}
         </p>
@@ -2110,10 +2112,9 @@ function CloneInfo({ o }: { o: DesignObject }) {
   return (
     <>
       <p className="hint" style={{ margin: "2px 0 6px" }}>
-        Follows “{src?.name ?? "?"}”: its shape and stitch settings, moved, turned and scaled with this clone. Edit the original to change all its clones.
-      </p>
+        {t("filum.pannelli.follows_n_its_shape_and", { n: src?.name ?? "?" })}</p>
       {fill && (
-        <Row label="Own angle" title="Keep this fill angle instead of the original’s turned with the clone (Ink/Stitch clone angle)">
+        <Row label={t("filum.pannelli.own_angle")} title={t("filum.pannelli.keep_this_fill_angle_instead")}>
           <span className="dz-inline">
             <Toggle on={link.angle != null} onChange={(on) => setLink({ angle: on ? fill.angle : undefined })} />
             {link.angle != null && <Num value={link.angle} step={5} min={-180} max={180} digits={0} unit="°" onChange={(v) => setLink({ angle: v })} />}
@@ -2123,15 +2124,15 @@ function CloneInfo({ o }: { o: DesignObject }) {
       <div className="dz-inline" style={{ marginTop: 6 }}>
         {src && (
           <button className="btn sm" onClick={() => useStore.getState().select([src.id])}>
-            Select original
+            {t("filum.pannelli.select_original")}
           </button>
         )}
         <button
           className="btn sm ghost"
-          title="Make it a plain copy that no longer follows the original"
+          title={t("filum.pannelli.make_it_a_plain_copy")}
           onClick={() => useStore.getState().commit((d) => ({ ...d, objects: d.objects.map((x) => (x.id === o.id ? unlinkClone(x) : x)) }))}
         >
-          Unlink
+          {t("filum.pannelli.unlink")}
         </button>
       </div>
     </>
@@ -2152,29 +2153,29 @@ function PatternList({ o }: { o: DesignObject }) {
     <>
       {pats.map((p, k) => (
         <div key={k} className="pattern-item">
-          <Row label={`Pattern ${k + 1}`} title="Lines add a needle point where stitches cross them; shapes leave the points inside out">
+          <Row label={t("filum.pannelli.pattern_v1", { v1: k + 1 })} title={t("filum.pannelli.lines_add_a_needle_point")}>
             <div className="seg">
               <button className={p.add && !p.remove ? "on" : ""} onClick={() => set(k, { add: true, remove: false })}>
-                Add points
+                {t("filum.pannelli.add_points")}
               </button>
               <button className={p.remove && !p.add ? "on" : ""} onClick={() => set(k, { add: false, remove: true })}>
-                Leave out
+                {t("filum.pannelli.leave_out")}
               </button>
               <button className={p.add && p.remove ? "on" : ""} onClick={() => set(k, { add: true, remove: true })}>
-                Both
+                {t("filum.pannelli.both")}
               </button>
             </div>
           </Row>
           {p.add && (
-            <Row label="Interval" title="Which crossings get a point, in turn: “2” every second one, “2 1” … (Ink/Stitch pattern interval); then how many to skip first">
+            <Row label={t("filum.pannelli.interval")} title={t("filum.pannelli.which_crossings_get_a_point")}>
               <span className="dz-inline">
                 <PatternInput value={p.interval} placeholder="1" parse={(t) => parsePattern(t, { min: 1, max: 20, integer: true })} format={(v) => (v?.length ? formatPattern(v) : "")} onChange={(v) => set(k, { interval: v })} />
-                <Num value={p.offset} step={1} min={0} max={50} digits={0} unit="skip" onChange={(v) => set(k, { offset: Math.round(v) })} />
+                <Num value={p.offset} step={1} min={0} max={50} digits={0} unit={t("filum.pannelli.skip_2")} onChange={(v) => set(k, { offset: Math.round(v) })} />
               </span>
             </Row>
           )}
           <button className="btn sm ghost" onClick={() => set(k, null)}>
-            Remove pattern
+            {t("filum.pannelli.remove_pattern")}
           </button>
         </div>
       ))}

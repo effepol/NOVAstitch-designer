@@ -2,6 +2,7 @@
 // Ink/Stitch meander tiles (bundled in the engine). Previews are drawn from
 // the tiles' segments, repeated along their two repeat vectors.
 
+import { t } from "../nova/i18n/filum";
 import { ChevronDown, Search, X } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -35,12 +36,12 @@ const A = 2.5;
 const H = (A * Math.sqrt(3)) / 2;
 type Lattice = MeanderTile & { pattern: MeanderPattern; title: string };
 const LATTICES: Lattice[] = [
-  { pattern: "square", id: "square", name: "Square", title: "Right-angle turns — classic meander", shift0: [A, 0], shift1: [0, A], lines: [[0, 0, A, 0], [0, 0, 0, A]] },
+  { pattern: "square", id: "square", get name() { return t("filum.pannelli.square"); }, get title() { return t("filum.pannelli.right_angle_turns_classic_meander"); }, shift0: [A, 0], shift1: [0, A], lines: [[0, 0, A, 0], [0, 0, 0, A]] },
   {
     pattern: "triangle",
     id: "triangle",
-    name: "Triangle",
-    title: "Angular, zig-zagging walk",
+    get name() { return t("filum.pannelli.triangle"); },
+    get title() { return t("filum.pannelli.angular_zig_zagging_walk"); },
     shift0: [A, 0],
     shift1: [A / 2, H],
     lines: [[0, 0, A, 0], [0, 0, A / 2, H], [A, 0, A / 2, H]],
@@ -48,8 +49,8 @@ const LATTICES: Lattice[] = [
   {
     pattern: "hexagon",
     id: "hexagon-lattice",
-    name: "Honeycomb",
-    title: "Organic, cell-like walk",
+    get name() { return t("filum.pannelli.honeycomb"); },
+    get title() { return t("filum.pannelli.organic_cell_like_walk"); },
     shift0: [Math.sqrt(3) * A, 0],
     shift1: [(Math.sqrt(3) * A) / 2, 1.5 * A],
     lines: [[0, 0, 0, A], [0, 0, (-Math.sqrt(3) * A) / 2, -0.5 * A], [0, 0, (Math.sqrt(3) * A) / 2, -0.5 * A]],
@@ -88,9 +89,9 @@ export function MeanderPicker({ pattern, tile, onPick }: { pattern?: MeanderPatt
   const cur: MeanderTile | undefined = tile ? tiles?.find((t) => t.id === tile) : LATTICES.find((l) => l.pattern === (pattern ?? "square"));
   return (
     <>
-      <button type="button" ref={btn} className={`meander-pick ${open ? "on" : ""}`} title="Meander pattern: Filum lattices and the Ink/Stitch tile library" onClick={() => setOpen((v) => !v)}>
+      <button type="button" ref={btn} className={`meander-pick ${open ? "on" : ""}`} title={t("filum.pannelli.meander_pattern_filum_lattices_and")} onClick={() => setOpen((v) => !v)}>
         {cur ? <TilePreview tile={cur} size={26} /> : <span className="tile-preview" style={{ width: 26, height: 26 }} />}
-        <span className="mp-name">{tile ? `Ink/Stitch ${tile}` : (cur?.name ?? "Square")}</span>
+        <span className="mp-name">{tile ? `Ink/Stitch ${tile}` : (cur?.name ?? t("filum.pannelli.square"))}</span>
         <ChevronDown size={13} />
       </button>
       {open && btn.current && (
@@ -156,12 +157,12 @@ function MeanderMenu({
   const lattices = LATTICES.filter((l) => !s || l.name.toLowerCase().includes(s));
   return createPortal(
     <div className="meander-menu" ref={ref} style={{ ...pos, transform: mv.moved ? `translate(${mv.off[0]}px, ${mv.off[1]}px)` : undefined }} data-movable>
-      <Grip grip={mv.grip} label="Meander pattern" />
+      <Grip grip={mv.grip} label={t("filum.pannelli.meander_pattern")} />
       <label className="chart-search">
         <Search size={13} />
-        <input className="input" autoFocus placeholder={`Search ${tiles.length + LATTICES.length} patterns`} value={q} onChange={(e) => setQ(e.target.value)} />
+        <input className="input" autoFocus placeholder={t("filum.pannelli.search_v1_patterns", { v1: tiles.length + LATTICES.length })} value={q} onChange={(e) => setQ(e.target.value)} />
         {q && (
-          <button type="button" className="icon-btn" onClick={() => setQ("")} title="Clear">
+          <button type="button" className="icon-btn" onClick={() => setQ("")} title={t("filum.pannelli.clear")}>
             <X size={12} />
           </button>
         )}
@@ -169,7 +170,7 @@ function MeanderMenu({
       <div className="mm-scroll">
         {lattices.length > 0 && (
           <>
-            <div className="cm-head">Lattices</div>
+            <div className="cm-head">{t("filum.pannelli.lattices")}</div>
             <div className="mm-grid">
               {lattices.map((l) => (
                 <button type="button" key={l.id} title={l.title} className={!tile && (pattern ?? "square") === l.pattern ? "on" : ""} onClick={() => onPick({ pattern: l.pattern, tile: undefined })}>
@@ -182,18 +183,18 @@ function MeanderMenu({
         )}
         {shown.length > 0 && (
           <>
-            <div className="cm-head">Ink/Stitch tiles · {shown.length}</div>
+            <div className="cm-head">{t("filum.pannelli.ink_stitch_tiles_shown", { shown: shown.length })}</div>
             <div className="mm-grid">
-              {shown.map((t) => (
-                <button type="button" key={t.id} title={`Ink/Stitch meander tile ${t.name}`} className={tile === t.id ? "on" : ""} onClick={() => onPick({ tile: t.id })}>
-                  <TilePreview tile={t} />
-                  <span>{t.name}</span>
+              {shown.map((th) => (
+                <button type="button" key={th.id} title={t("filum.pannelli.ink_stitch_meander_tile_name", { name: th.name })} className={tile === th.id ? "on" : ""} onClick={() => onPick({ tile: th.id })}>
+                  <TilePreview tile={th} />
+                  <span>{th.name}</span>
                 </button>
               ))}
             </div>
           </>
         )}
-        {!shown.length && !lattices.length && <p className="hint" style={{ padding: "6px 10px" }}>No pattern matches “{q}”.</p>}
+        {!shown.length && !lattices.length && <p className="hint" style={{ padding: "6px 10px" }}>{t("filum.pannelli.no_pattern_matches_q", { q })}</p>}
       </div>
     </div>,
     document.body,

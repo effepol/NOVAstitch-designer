@@ -1,6 +1,7 @@
 // Stitch style picker (line and fill styles as visual cards), a live preview
 // of the object's own stitches, and preset chips for the common settings.
 
+import { t } from "../nova/i18n/filum";
 import { Check } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { holdsInkDefaults, inkChanges, inkDefaults } from "../lib/stitchDefaults";
@@ -48,48 +49,48 @@ const asSt = (x: object) => x as St;
 export const LINE_STYLES: Style[] = [
   {
     id: "run",
-    label: "Run",
-    title: "Single running stitch — outlines and details",
+    get label() { return t("filum.pannelli.run"); },
+    get title() { return t("filum.pannelli.single_running_stitch_outlines_and"); },
     icon: svg(<path d="M4 18 C14 6, 26 26, 36 12" {...stroke} strokeWidth={1.4} strokeDasharray="3 2" />),
     matches: (st) => st.type === "running" && st.beanRepeats < 2 && !st.ripple && !st.stem && !st.motif && !st.zigzag,
     apply: (o) => asSt({ type: "running", ...defaultRunning(), ...keep(o, "running"), beanRepeats: 0, ripple: undefined, stem: undefined, motif: undefined, zigzag: undefined }),
   },
   {
     id: "triple",
-    label: "Triple",
-    title: "Triple (bean) stitch — bold, hand-stitched look",
+    get label() { return t("filum.pannelli.triple"); },
+    get title() { return t("filum.pannelli.triple_bean_stitch_bold_hand"); },
     icon: svg(<path d="M4 18 C14 6, 26 26, 36 12" {...stroke} strokeWidth={2.6} strokeDasharray="4 2" />),
     matches: (st) => st.type === "running" && st.beanRepeats >= 2 && st.beanRepeats < 4 && !st.ripple && !st.stem && !st.motif && !st.zigzag,
     apply: (o) => asSt({ type: "running", ...defaultRunning(), ...keep(o, "running"), beanRepeats: 2, ripple: undefined, stem: undefined, motif: undefined, zigzag: undefined }),
   },
   {
     id: "heavy",
-    label: "Heavy",
-    title: "Five passes — very bold line",
+    get label() { return t("filum.pannelli.heavy"); },
+    get title() { return t("filum.pannelli.five_passes_very_bold_line"); },
     icon: svg(<path d="M4 18 C14 6, 26 26, 36 12" {...stroke} strokeWidth={3.8} strokeDasharray="5 2" />),
     matches: (st) => st.type === "running" && st.beanRepeats >= 4 && !st.ripple && !st.stem && !st.motif && !st.zigzag,
     apply: (o) => asSt({ type: "running", ...defaultRunning(), ...keep(o, "running"), beanRepeats: 4, ripple: undefined, stem: undefined, motif: undefined, zigzag: undefined }),
   },
   {
     id: "stem",
-    label: "Stem",
-    title: "Stem stitch: slanted stitches that overlap by half — a rope-like, hand-sewn line",
+    get label() { return t("filum.pannelli.stem"); },
+    get title() { return t("filum.pannelli.stem_stitch_slanted_stitches_that"); },
     icon: svg(<path d="M4 20 L12 14 M9 19 L17 13 M14 18 L22 12 M19 17 L27 11 M24 16 L32 10 M29 15 L36 10" {...stroke} strokeWidth={1.5} />),
     matches: (st) => st.type === "running" && !!st.stem,
     apply: (o) => asSt({ type: "running", ...defaultRunning(), ...keep(o, "running"), length: 2.5, beanRepeats: 0, ripple: undefined, motif: undefined, zigzag: undefined, stem: { width: 0.8 } }),
   },
   {
     id: "motif",
-    label: "Motif",
-    title: "Motif run: a small pattern (wave, scallop, loop, diamond…) repeated along the line",
+    get label() { return t("filum.pannelli.motif"); },
+    get title() { return t("filum.pannelli.motif_run_a_small_pattern"); },
     icon: svg(<path d="M4 14 C7 6, 10 6, 13 14 S19 22, 22 14 S28 6, 31 14 S35 20, 36 16" {...stroke} strokeWidth={1.3} />),
     matches: (st) => st.type === "running" && !!st.motif,
     apply: (o) => asSt({ type: "running", ...defaultRunning(), ...keep(o, "running"), length: 1.5, beanRepeats: 0, ripple: undefined, stem: undefined, zigzag: undefined, motif: { kind: "wave", size: 4 } }),
   },
   {
     id: "ripple",
-    label: "Ripple",
-    title: "Ripple stitch (Ink/Stitch): shapes spiral inwards as shrinking copies, lines repeat back and forth",
+    get label() { return t("filum.pannelli.ripple"); },
+    get title() { return t("filum.pannelli.ripple_stitch_ink_stitch_shapes"); },
     icon: svg(
       <>
         <rect x="5" y="3" width="30" height="22" rx="7" {...stroke} strokeWidth={1.1} />
@@ -110,7 +111,7 @@ export const LINE_STYLES: Style[] = [
   {
     id: "satin",
     label: "Satin",
-    title: "Satin column — smooth, shiny borders and lettering",
+    get title() { return t("filum.pannelli.satin_column_smooth_shiny_borders"); },
     icon: svg(<polyline points={zig(16, 8, 20)} {...stroke} strokeWidth={1} />),
     matches: (st) => st.type === "satin" && st.method === "satin",
     apply: (o) => asSt({ type: "satin", ...defaultSatin(), ...keep(o, "satin"), method: "satin", spacing: 0.4 }),
@@ -118,7 +119,7 @@ export const LINE_STYLES: Style[] = [
   {
     id: "zigzag",
     label: "Zig-zag",
-    title: "Open zig-zag — light borders, tack-downs. On a single line: Ink/Stitch's zig-zag line (with an angle for spokes)",
+    get title() { return t("filum.pannelli.open_zig_zag_light_borders"); },
     icon: svg(<polyline points={zig(6, 8, 20)} {...stroke} strokeWidth={1.4} />),
     matches: (st) => (st.type === "satin" && st.method === "zigzag") || (st.type === "running" && !!st.zigzag),
     apply: (o) =>
@@ -137,16 +138,16 @@ export const LINE_STYLES: Style[] = [
   },
   {
     id: "sstitch",
-    label: "S-stitch",
-    title: "S-stitch: short slanted stitches in an S rhythm — a corded edge",
+    get label() { return t("filum.pannelli.s_stitch"); },
+    get title() { return t("filum.pannelli.s_stitch_short_slanted_stitches"); },
     icon: svg(<path d="M6 20 C6 10, 12 10, 12 14 S18 18, 18 8 M18 20 C18 10, 24 10, 24 14 S30 18, 30 8" {...stroke} strokeWidth={1.3} />),
     matches: (st) => st.type === "satin" && st.method === "sStitch",
     apply: (o) => asSt({ type: "satin", ...defaultSatin(), ...keep(o, "satin"), method: "sStitch", spacing: 0.6, centerWalk: false }),
   },
   {
     id: "blanket",
-    label: "Blanket",
-    title: "E-stitch / blanket stitch — appliqué edges",
+    get label() { return t("filum.pannelli.blanket"); },
+    get title() { return t("filum.pannelli.e_stitch_blanket_stitch_applique"); },
     icon: svg(
       <path d="M4 20 H36 M8 20 V9 M14 20 V9 M20 20 V9 M26 20 V9 M32 20 V9" {...stroke} strokeWidth={1.3} />,
     ),
@@ -162,7 +163,7 @@ export const FILL_STYLES: Style[] = [
   {
     id: "tatami",
     label: "Tatami",
-    title: "Rows of stitches — the standard fill",
+    get title() { return t("filum.pannelli.rows_of_stitches_the_standard"); },
     icon: fillIcon(
       <>
         <clipPath id="fc1">
@@ -176,8 +177,8 @@ export const FILL_STYLES: Style[] = [
   },
   {
     id: "carved",
-    label: "Carved",
-    title: "Carved / embossed fill: the needle points line up into a pattern (diamonds, waves, circles…) that catches the light",
+    get label() { return t("filum.pannelli.carved"); },
+    get title() { return t("filum.pannelli.carved_embossed_fill_the_needle"); },
     icon: fillIcon(
       <>
         <clipPath id="fc2">
@@ -194,24 +195,24 @@ export const FILL_STYLES: Style[] = [
   },
   {
     id: "shading",
-    label: "Shading",
-    title: "Shading (a gradient fill): dense rows that open up across the shape — drag its direction with the gradient tool (G)",
+    get label() { return t("filum.pannelli.shading"); },
+    get title() { return t("filum.pannelli.shading_a_gradient_fill_dense"); },
     icon: fillIcon(<path d="M4 4 H36 M4 6 H36 M4 8.5 H36 M4 11.5 H36 M4 15 H36 M4 19.5 H36 M4 25 H36" {...stroke} strokeWidth={1.1} />),
     matches: (st) => st.type === "fill" && !!st.ramp && !st.ramp.group,
     apply: () => "shading",
   },
   {
     id: "cross",
-    label: "Cross",
-    title: "Cross stitch: a grid of little crosses — the hand-embroidered, pixel look",
+    get label() { return t("filum.pannelli.cross"); },
+    get title() { return t("filum.pannelli.cross_stitch_a_grid_of"); },
     icon: fillIcon(<path d="M5 5 L13 13 M13 5 L5 13 M14 5 L22 13 M22 5 L14 13 M23 5 L31 13 M31 5 L23 13 M5 15 L13 23 M13 15 L5 23 M14 15 L22 23 M22 15 L14 23" {...stroke} strokeWidth={1.2} />),
     matches: (st) => st.type === "fill" && st.method === "cross",
     apply: (o) => asSt({ type: "fill", ...defaultFill(), ...keep(o, "fill"), ...fillMethodDefaults("cross"), gradient: undefined, ramp: undefined }),
   },
   {
     id: "tartan",
-    label: "Tartan",
-    title: "Tartan: a woven plaid in several thread colours — stripes one way and the other, rows in a twill (Ink/Stitch tartan fill)",
+    get label() { return t("filum.pannelli.tartan"); },
+    get title() { return t("filum.pannelli.tartan_a_woven_plaid_in"); },
     icon: fillIcon(
       <>
         <path d="M10 2 V26 M24 2 V26 M2 9 H38 M2 19 H38" {...stroke} strokeWidth={3} opacity={0.55} />
@@ -224,16 +225,16 @@ export const FILL_STYLES: Style[] = [
   },
   {
     id: "curved",
-    label: "Curved",
-    title: "Curved fill: rows that follow the outline of the shape (how much: Follow the shape)",
+    get label() { return t("filum.pannelli.curved"); },
+    get title() { return t("filum.pannelli.curved_fill_rows_that_follow"); },
     icon: fillIcon(<path d="M4 8 C12 2, 28 2, 36 8 M4 14 C12 8, 28 8, 36 14 M4 20 C12 14, 28 14, 36 20 M4 26 C12 20, 28 20, 36 26" {...stroke} strokeWidth={1.1} />),
     matches: (st) => st.type === "fill" && st.method === "curved" && !st.gradient,
     apply: (o) => asSt({ type: "fill", ...defaultFill(), ...keep(o, "fill"), ...fillMethodDefaults("curved"), gradient: undefined }),
   },
   {
     id: "flow",
-    label: "Flow",
-    title: "Flow fill: rows follow the picture's flow (fills made by the auto-digitizer)",
+    get label() { return t("filum.pannelli.flow"); },
+    get title() { return t("filum.pannelli.flow_fill_rows_follow_the"); },
     icon: fillIcon(<path d="M4 6 C10 12, 16 2, 22 9 S32 4, 36 10 M4 13 C10 19, 16 9, 22 16 S32 11, 36 17 M4 20 C10 26, 16 16, 22 23 S32 18, 36 24" {...stroke} strokeWidth={1.1} />),
     matches: (st) => st.type === "fill" && st.method === "flow" && !st.gradient,
     apply: (o) => asSt({ type: "fill", ...defaultFill(), ...keep(o, "fill"), ...fillMethodDefaults("flow"), gradient: undefined }),
@@ -241,8 +242,8 @@ export const FILL_STYLES: Style[] = [
   },
   {
     id: "contour",
-    label: "Contour",
-    title: "Follows the outline inwards",
+    get label() { return t("filum.pannelli.contour"); },
+    get title() { return t("filum.pannelli.follows_the_outline_inwards"); },
     icon: fillIcon(
       <>
         <rect x="4" y="3" width="32" height="22" rx="5" {...stroke} strokeWidth={1.1} />
@@ -255,48 +256,48 @@ export const FILL_STYLES: Style[] = [
   },
   {
     id: "spiral",
-    label: "Spiral",
-    title: "One continuous spiral",
+    get label() { return t("filum.pannelli.spiral"); },
+    get title() { return t("filum.pannelli.one_continuous_spiral"); },
     icon: fillIcon(<path d="M20 14 m0 0 a2 2 0 1 1 3 1 a5 5 0 1 1 -8 -3 a8 8 0 1 1 14 6 a11 11 0 0 1 -20 -6" {...stroke} strokeWidth={1.2} />),
     matches: (st) => st.type === "fill" && st.method === "spiral",
     apply: (o) => asSt({ type: "fill", ...defaultFill(), ...keep(o, "fill"), ...fillMethodDefaults("spiral"), gradient: undefined }),
   },
   {
     id: "radial",
-    label: "Sunburst",
-    title: "Rays from a centre",
+    get label() { return t("filum.pannelli.sunburst"); },
+    get title() { return t("filum.pannelli.rays_from_a_centre"); },
     icon: fillIcon(<path d="M20 14 L4 4 M20 14 L20 2 M20 14 L36 4 M20 14 L38 14 M20 14 L36 25 M20 14 L20 26 M20 14 L4 25 M20 14 L2 14" {...stroke} strokeWidth={1.1} />),
     matches: (st) => st.type === "fill" && st.method === "radial",
     apply: (o) => asSt({ type: "fill", ...defaultFill(), ...keep(o, "fill"), ...fillMethodDefaults("radial"), gradient: undefined }),
   },
   {
     id: "hilbert",
-    label: "Maze",
-    title: "Hilbert curve — textured, even",
+    get label() { return t("filum.pannelli.maze"); },
+    get title() { return t("filum.pannelli.hilbert_curve_textured_even"); },
     icon: fillIcon(<path d="M6 24 V16 H12 V24 H18 V16 V10 H12 V4 H6 M18 4 H24 V10 H30 V4 H36 M36 10 V16 H30 V24 H36" {...stroke} strokeWidth={1.2} />),
     matches: (st) => st.type === "fill" && st.method === "hilbert",
     apply: (o) => asSt({ type: "fill", ...defaultFill(), ...keep(o, "fill"), ...fillMethodDefaults("hilbert"), gradient: undefined }),
   },
   {
     id: "stipple",
-    label: "Stipple",
-    title: "Meandering running stitch — light, quilted texture",
+    get label() { return t("filum.pannelli.stipple"); },
+    get title() { return t("filum.pannelli.meandering_running_stitch_light_quilted"); },
     icon: fillIcon(<path d="M4 20 C8 4, 12 26, 16 10 S24 4, 22 18 S32 26, 30 10 S38 8, 36 20" {...stroke} strokeWidth={1.2} />),
     matches: (st) => st.type === "fill" && st.method === "stipple",
     apply: (o) => asSt({ type: "fill", ...defaultFill(), ...keep(o, "fill"), ...fillMethodDefaults("stipple"), gradient: undefined }),
   },
   {
     id: "meander",
-    label: "Meander",
-    title: "Meander fill (Ink/Stitch): a random walk over a lattice or one of the 75 Ink/Stitch tiles — quilted look, few stitches",
+    get label() { return t("filum.pannelli.meander"); },
+    get title() { return t("filum.pannelli.meander_fill_ink_stitch_a"); },
     icon: fillIcon(<path d="M5 24 V18 H11 V24 H17 V12 H5 V4 H17 M17 4 H23 V18 H29 V10 H23 M29 4 H35 V24 H29" {...stroke} strokeWidth={1.2} />),
     matches: (st) => st.type === "fill" && st.method === "meander",
     apply: (o) => asSt({ type: "fill", ...defaultFill(), ...keep(o, "fill"), ...fillMethodDefaults("meander"), gradient: undefined }),
   },
   {
     id: "guided",
-    label: "Guided",
-    title: "Guided fill (Ink/Stitch): rows follow a guide line you can bend on the canvas",
+    get label() { return t("filum.pannelli.guided"); },
+    get title() { return t("filum.pannelli.guided_fill_ink_stitch_rows"); },
     icon: fillIcon(<path d="M3 9 C12 1, 24 15, 37 6 M3 15 C12 7, 24 21, 37 12 M3 21 C12 13, 24 27, 37 18 M3 27 C12 19, 24 33, 37 24" {...stroke} strokeWidth={1.1} />),
     matches: (st) => st.type === "fill" && st.method === "guided",
     apply: (o) => {
@@ -307,16 +308,16 @@ export const FILL_STYLES: Style[] = [
   },
   {
     id: "circular",
-    label: "Circular",
-    title: "Circular fill (Ink/Stitch): one spiral around a centre you can drag",
+    get label() { return t("filum.pannelli.circular"); },
+    get title() { return t("filum.pannelli.circular_fill_ink_stitch_one"); },
     icon: fillIcon(<path d="M20 14 m0 0 a1.5 1.5 0 1 1 2 0.5 a4 4 0 1 1 -6 -2 a7 7 0 1 1 11 6 a10 10 0 1 1 -16 -8 a13 13 0 0 1 21 3" {...stroke} strokeWidth={1.1} />),
     matches: (st) => st.type === "fill" && st.method === "circular",
     apply: (o) => asSt({ type: "fill", ...defaultFill(), ...keep(o, "fill"), ...fillMethodDefaults("circular"), gradient: undefined }),
   },
   {
     id: "gradient",
-    label: "Gradient",
-    title: "Multi-colour gradient with dithering",
+    get label() { return t("filum.pannelli.gradient"); },
+    get title() { return t("filum.pannelli.multi_colour_gradient_with_dithering"); },
     icon: fillIcon(
       <>
         <defs>
@@ -333,8 +334,8 @@ export const FILL_STYLES: Style[] = [
   },
   {
     id: "applique",
-    label: "Appliqué",
-    title: "Fabric patch: placement, tack-down, cover",
+    get label() { return t("filum.pannelli.applique"); },
+    get title() { return t("filum.pannelli.fabric_patch_placement_tack_down"); },
     icon: fillIcon(
       <>
         <rect x="6" y="5" width="28" height="18" rx="4" fill="currentColor" opacity="0.2" />
@@ -374,7 +375,7 @@ export function StylePicker({ o }: { o: DesignObject }) {
       if (!b) return;
       const err = applyRamp(o.id, [b.x + b.w * 0.1, b.y + b.h / 2], [b.x + b.w * 0.9, b.y + b.h / 2], "density");
       if (err) useStore.getState().toast(err, "error");
-      else useStore.getState().toast("Shading: dense on the left, open on the right — drag a new direction with the gradient tool (G)");
+      else useStore.getState().toast(t("filum.pannelli.shading_dense_on_the_left"));
       return;
     }
     const st = useStore.getState();
@@ -393,13 +394,13 @@ export function StylePicker({ o }: { o: DesignObject }) {
         return c.id ? makeTartan(c.doc, c.id) : d;
       });
       reselect(kept);
-      st.toast("Tartan: a layer per thread colour — edit the stripes in the Tartan section");
+      st.toast(t("filum.pannelli.tartan_a_layer_per_thread"));
       return;
     }
     if (r === "gradient") {
       const [a, b] = defaultVector([o]);
       if (!makeGradient(o.id, a, b)) return;
-      st.toast("Gradient created — drag across the shape with the gradient tool (G) to set its direction");
+      st.toast(t("filum.pannelli.gradient_created_drag_across_the"));
       return;
     }
     const style = r;
@@ -432,18 +433,18 @@ export function StylePicker({ o }: { o: DesignObject }) {
     <div className="style-picker">
       {closed && (
         <>
-          <div className="style-group-label">Fill</div>
+          <div className="style-group-label">{t("filum.pannelli.fill")}</div>
           <div className="style-grid">{FILL_STYLES.map(card)}</div>
-          <div className="style-group-label">Outline</div>
+          <div className="style-group-label">{t("filum.pannelli.outline")}</div>
         </>
       )}
-      {!closed && <div className="style-group-label">Line</div>}
+      {!closed && <div className="style-group-label">{t("filum.pannelli.line")}</div>}
       <div className="style-grid">{LINE_STYLES.map(card)}</div>
       <div className="style-extra">
         <button className={`link ${o.stitch.type === "none" ? "on" : ""}`} onClick={() => pickStyle({ ...LINE_STYLES[0], apply: () => ({ type: "none" }) })}>
-          No stitches (guide)
+          {t("filum.pannelli.no_stitches_guide")}
         </button>
-        {o.stitch.type === "manual" && <span className="stat">Manual stitches (imported)</span>}
+        {o.stitch.type === "manual" && <span className="stat">{t("filum.pannelli.manual_stitches_imported")}</span>}
       </div>
     </div>
   );
@@ -550,18 +551,18 @@ export function StitchDefaults({ o }: { o: DesignObject }) {
   const changes = inkChanges(o.stitch);
   return (
     <div className="st-defaults">
-      <span className="st-defaults-label">Defaults</span>
+      <span className="st-defaults-label">{t("filum.pannelli.defaults")}</span>
       <div className="seg">
         <button
           className={on ? "on" : ""}
-          title={on ? "Holds Ink/Stitch's defaults" : `Back to Ink/Stitch's defaults: ${changes.join(", ")}`}
+          title={on ? t("filum.pannelli.holds_ink_stitch_s_defaults") : t("filum.pannelli.back_to_ink_stitch_s", { v1: changes.join(", ") })}
           onClick={() => useStore.getState().updateStitch(targets, values)}
         >
           {on && <Check size={11} />}
           Ink/Stitch
         </button>
       </div>
-      {!on && <span className="stat">custom</span>}
+      {!on && <span className="stat">{t("filum.pannelli.custom_2")}</span>}
     </div>
   );
 }

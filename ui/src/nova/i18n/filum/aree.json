@@ -50,7 +50,7 @@
     },
     "pannelli": {
       "descrizione": "Pannelli del Dock e controlli",
-      "fatta": false,
+      "fatta": true,
       "file": [
         "components/Dock.tsx",
         "components/Panels.tsx",

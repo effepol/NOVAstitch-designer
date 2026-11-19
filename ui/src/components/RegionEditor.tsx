@@ -3,6 +3,7 @@
 // dropped colours, areas clicked away). Hover tells what an area is and why;
 // a click stitches it or leaves it out, Alt-click does it for the whole colour.
 
+import { t } from "../nova/i18n/filum";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { REGION_REASON, type DigitizePreview, type RegionEdit } from "../types";
 
@@ -15,13 +16,13 @@ export function regionAt(p: DigitizePreview, fx: number, fy: number): number {
   return p.regions[y * p.regionWidth + x];
 }
 
-const REASON_TEXT: Record<number, [string, string]> = {
-  [REGION_REASON.stitched]: ["Stitched", "Click to leave this area out"],
-  [REGION_REASON.background]: ["Left out · background", "Click to stitch this area"],
-  [REGION_REASON.colour]: ["Left out · colour switched off", "Click to stitch this area · Alt-click: the whole colour"],
-  [REGION_REASON.edit]: ["Left out by you", "Click to stitch it again"],
-  [REGION_REASON.transparent]: ["Transparent in the picture or masked", "Not editable here — use Select objects (AI)"],
-};
+const REASON_TEXT = (): Record<number, [string, string]> => ({
+  [REGION_REASON.stitched]: [t("filum.pannelli.stitched_2"), t("filum.pannelli.click_to_leave_this_area")],
+  [REGION_REASON.background]: [t("filum.pannelli.left_out_background"), t("filum.pannelli.click_to_stitch_this_area")],
+  [REGION_REASON.colour]: [t("filum.pannelli.left_out_colour_switched_off"), t("filum.pannelli.click_to_stitch_this_area_2")],
+  [REGION_REASON.edit]: [t("filum.pannelli.left_out_by_you"), t("filum.pannelli.click_to_stitch_it_again")],
+  [REGION_REASON.transparent]: [t("filum.pannelli.transparent_in_the_picture_or"), t("filum.pannelli.not_editable_here_use_select")],
+});
 
 function canvasOf(w: number, h: number) {
   const c = document.createElement("canvas");
@@ -226,10 +227,10 @@ export function RegionEditor({
         <div className="region-tip" style={{ left: Math.min(hover.x + 14, w - 230), top: Math.min(hover.y + 14, h - 64) }}>
           <div className="rt-head">
             {colour ? <i style={{ background: colour.hex }} /> : <i className="none" />}
-            <b>{colour ? colour.name : label > p.colors.length ? "Gradient" : "Transparent"}</b>
-            <span className={`rt-state ${why === REGION_REASON.stitched ? "on" : "off"}`}>{REASON_TEXT[why]?.[0]}</span>
+            <b>{colour ? colour.name : label > p.colors.length ? t("filum.pannelli.gradient") : t("filum.pannelli.transparent")}</b>
+            <span className={`rt-state ${why === REGION_REASON.stitched ? "on" : "off"}`}>{REASON_TEXT()[why]?.[0]}</span>
           </div>
-          <span className="stat">{alt && colour ? (why === REGION_REASON.stitched ? "Alt-click: leave out the whole colour" : "Alt-click: stitch the whole colour") : REASON_TEXT[why]?.[1]}</span>
+          <span className="stat">{alt && colour ? (why === REGION_REASON.stitched ? t("filum.pannelli.alt_click_leave_out_the") : t("filum.pannelli.alt_click_stitch_the_whole")) : REASON_TEXT()[why]?.[1]}</span>
         </div>
       )}
     </div>
