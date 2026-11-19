@@ -1,0 +1,9 @@
+{
+  "d.bar.needlePath": "Needle path",
+  "d.bar.needlePath.title": "Show the needle path in the stitch view: a thin line in the thread's colour, the same width at every zoom; uncut jumps dashed",
+  "d.menu.needlePath": "Needle path",
+  "d.menu.dots": "Needle path: dots on the penetrations",
+  "d.menu.width1": "Needle path: 1 px wide",
+  "d.menu.width2": "Needle path: 2 px wide",
+  "d.menu.width3": "Needle path: 3 px wide"
+}
