@@ -9,7 +9,7 @@ import { useStore } from "../store";
 import type { DesignObject, StitchDocument, StitchParams, SubPath, Vec2 } from "../types";
 import { gatherAtTop, groupInfo, isFixedMember, nextGroupName, pruneGroups } from "./layerRows";
 import { chainOf, commonGroup, groupsOf, objectsIn, parentOf, parentsOf, selectedUnits, topGroupOf, withParent } from "./groups";
-import { defaultApplique, defaultFill, defaultRunning, defaultSatin, normAngle, objectBounds, rotateAbout, scaleAbout, transformObject, translateMat, uid, unionBoxes, type Box } from "./geometry";
+import { defaultApplique, defaultFill, defaultRunning, defaultSatin, normAngle, objectBounds, rotateAbout, satinRailIndices, scaleAbout, transformObject, translateMat, uid, unionBoxes, type Box } from "./geometry";
 import { freshCopies, placeCopies, threadsOf } from "./copies";
 import { layerSetOf, oneLayerEach, pastedStitchDoc, plainGroupOf, plainLayerStitch } from "./fillLayers";
 
@@ -118,14 +118,20 @@ function rotateMat(c: Vec2, deg: number): Mat {
 const det = (m: Mat) => m[0] * m[3] - m[1] * m[2];
 
 /**
- * Transform a copy of an object. Mirroring flips the fill angle and turns a
- * lettering into plain shapes (letters can't be mirrored and stay text).
+ * Transform a copy of an object. Mirroring flips the fill angle, inverts a
+ * two-rail satin's swapRails (NOVAstitch) and turns a lettering into plain shapes (letters can't be mirrored and stay text).
  */
 function transformedCopy(o: DesignObject, m: Mat, rotationDeg: number, axisDeg = 0): DesignObject {
   let c = transformObject(o, m, rotationDeg);
   if (det(m) < 0) {
     // a reflection across an axis at θ turns a fill angle a into −a − 2θ
     if (c.stitch.type === "fill") c = { ...c, stitch: { ...c.stitch, angle: normAngle(-c.stitch.angle - 2 * axisDeg) } };
+    // NOVAstitch: a satin's first stitch stays on the same side of the sewing direction (the same
+    // slant as the original). Two rails keep their order in a mirror, so swapRails is inverted; a
+    // centre line's rails are offsets to its left and right (satin.rs), which a mirror already keeps.
+    // start/end set by hand move with `m` (transformObject).
+    if (c.stitch.type === "satin" && !c.stitch.multi && satinRailIndices(c.paths))
+      c = { ...c, stitch: { ...c.stitch, swapRails: !c.stitch.swapRails } };
     if (c.text) c = { ...c, text: undefined };
   }
   return c;

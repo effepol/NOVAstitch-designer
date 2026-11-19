@@ -10,6 +10,7 @@ import { engine } from "./engine/client";
 import { openDroppedFile, openLaunchFiles } from "./lib/actions";
 import { setFabricDefaults } from "./lib/geometry";
 import { calibratedDefaults } from "./lib/calibration";
+import { composedFabricDefaults } from "./nova/core/objectDefaults";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { isTauri } from "./lib/platform";
 import { installBridge } from "./nova/core/bridge";
@@ -19,7 +20,8 @@ import { t } from "./nova/i18n/filum";
 installBridge();
 
 // New objects start from the design fabric's calibrated numbers (Calibrate fabric…).
-setFabricDefaults(() => calibratedDefaults(useStore.getState().doc.fabric));
+// NOVAstitch: module 0's composed function: the modules' values (module e: the preset), the calibration on top
+setFabricDefaults(composedFabricDefaults(() => calibratedDefaults(useStore.getState().doc.fabric)));
 
 // NOVAstitch: the interface language (the system's, or the one chosen and saved)
 void startLanguage();

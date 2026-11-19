@@ -10,6 +10,7 @@ import { rowAngleFor, rowsAlongGradient } from "./gradient";
 import { ovalNorm, threadWeightInfo } from "./materials";
 import { shapeProblems } from "./shapeCheck";
 import { lineOverlaps } from "./lineOverlaps";
+import { issueChecksVersion, moduleIssues } from "../nova/core/issueChecks";
 
 export interface Issue {
   id: string;
@@ -23,7 +24,7 @@ export interface Issue {
   fix?: { label: string; apply: (o: DesignObject) => DesignObject | null; scope?: (o: DesignObject) => boolean };
 }
 
-const cache = new WeakMap<StitchDocument, { plan: PlanData | null; issues: Issue[] }>();
+const cache = new WeakMap<StitchDocument, { plan: PlanData | null; checks: number; issues: Issue[] }>();
 
 /** Per-object statistics of a plan (by object index). */
 interface PlanStats {
@@ -93,7 +94,7 @@ function shapeProblemsCached(o: DesignObject) {
 
 export function computeIssues(doc: StitchDocument, plan: PlanData | null): Issue[] {
   const hit = cache.get(doc);
-  if (hit && hit.plan === plan) return hit.issues;
+  if (hit && hit.plan === plan && hit.checks === issueChecksVersion()) return hit.issues;
   const out: Issue[] = [];
   const hw = doc.hoop.width;
   const hh = doc.hoop.height;
@@ -253,6 +254,8 @@ export function computeIssues(doc: StitchDocument, plan: PlanData | null): Issue
   });
   const total = plan?.stats.stitches ?? 0;
   if (total > 100000) out.push({ id: "big", objId: "", level: "info", title: t("filum.messaggi.very_large_design"), detail: t("filum.messaggi.v1_stitches", { v1: total.toLocaleString() }), at: [hw / 2, hh / 2] });
-  cache.set(doc, { plan, issues: out });
+  // NOVAstitch: the modules' checks (module 0's registry), after Filum's own
+  out.push(...moduleIssues(doc, plan));
+  cache.set(doc, { plan, checks: issueChecksVersion(), issues: out });
   return out;
 }

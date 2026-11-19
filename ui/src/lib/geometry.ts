@@ -16,10 +16,11 @@ import { INK_FILL_METHODS, INK_RUNNING, INK_SATIN, INK_TATAMI } from "./inkDefau
 export const uid = (p = "o") => `${p}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 
 // new objects start from Ink/Stitch's defaults (lib/inkDefaults.ts)
-export const defaultRunning = (): RunningParams => ({ ...INK_RUNNING });
+export const defaultRunning = (): RunningParams => ({ ...INK_RUNNING, ...fabricDefaults().running });
 
-/** Per-fabric starting numbers for new objects (fabric calibration); set once by the app. */
-let fabricDefaults: () => { satin?: Partial<SatinParams>; fill?: Partial<FillParams> } = () => ({});
+/** Per-fabric starting numbers for new objects (fabric calibration); set once by the app.
+ *  NOVAstitch: module 0's composed function (nova/core/objectDefaults.ts), running stitches included. */
+let fabricDefaults: () => { satin?: Partial<SatinParams>; fill?: Partial<FillParams>; running?: Partial<RunningParams> } = () => ({});
 export const setFabricDefaults = (f: typeof fabricDefaults) => {
   fabricDefaults = f;
 };
