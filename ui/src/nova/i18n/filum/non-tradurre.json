@@ -91,7 +91,9 @@
     "Lock": "marca o nome di un programma",
     "Embird": "marca o nome di un programma",
     "Ink": "marca o nome di un programma",
-    "Stitch": "marca o nome di un programma"
+    "Stitch": "marca o nome di un programma",
+    "rgb": "sigla del modello di colore",
+    "no": "uguale in italiano (sì / no)"
   },
   "chiavi_con_filum": {
     "filum.menu.about_filum": "la voce apre la finestra Informazioni, che parla di Filum e non usa {app} (decisione dell'Architetto, 13/11)",

@@ -132,7 +132,8 @@
         "lib/threadMatch.ts",
         "lib/convertActions.ts",
         "components/MatchPanel.tsx",
-        "components/ThreadPicker.tsx"
+        "components/ThreadPicker.tsx",
+        "lib/printSheet.ts"
       ],
       "schermate": [
         "finestra/"
