@@ -4,6 +4,7 @@
 // ranges give overlapping pieces — wanted where a knife struggles at the
 // edge of its range). Each needle sews in its own colour.
 
+import { t } from "../nova/i18n/filum";
 import type { DesignObject, StitchDocument, Vec2 } from "../types";
 import { flattenSubPath } from "./bezier";
 import { uid } from "./geometry";
@@ -69,12 +70,12 @@ export function cutworkSegmentation(doc: StitchDocument, ids: string[], sectors:
   if (!sel.length) return doc;
   const threads = [...doc.threads];
   const threadFor = (color: string, needle: number) => {
-    let t = threads.find((x) => x.color.toLowerCase() === color.toLowerCase());
-    if (!t) {
-      t = { id: uid("t"), name: `Cutwork needle ${needle + 1}`, color, brand: "", code: "" };
-      threads.push(t);
+    let th = threads.find((x) => x.color.toLowerCase() === color.toLowerCase());
+    if (!th) {
+      th = { id: uid("t"), name: t("filum.messaggi.cutwork_needle_n", { n: needle + 1 }), color, brand: "", code: "" };
+      threads.push(th);
     }
-    return t.id;
+    return th.id;
   };
   let pieces: { needle: number; obj: DesignObject }[] = [];
   for (const o of sel)

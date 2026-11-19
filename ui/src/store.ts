@@ -1,3 +1,4 @@
+import { t } from "./nova/i18n/filum";
 import { create } from "zustand";
 import { syncClones } from "./lib/clones";
 import { pruneGroups } from "./lib/layerRows";
@@ -14,6 +15,7 @@ import { safeSetItem } from "./lib/storage";
 import { checkDoc } from "./lib/docCheck";
 import { INKSTITCH_DEFAULTS } from "./lib/machines";
 import { recordEdits } from "./nova/core/edited";
+import { chooseFabric } from "./nova/core/fabricChoice";
 import type {
   DensityField,
   DesignObject,
@@ -256,7 +258,7 @@ function playerPrefs(): { speed: number; follow: boolean } {
 
 export const emptyDoc = (): StitchDocument => ({
   version: 1,
-  name: "Untitled",
+  name: t("filum.messaggi.untitled"),
   threads: [],
   objects: [],
   hoop: { name: "100 × 100 mm", width: 100, height: 100 },
@@ -486,7 +488,8 @@ export const useStore = create<State>((set, get) => ({
     set({ doc: { ...d, threads: [...d.threads, t] } });
     return id;
   },
-  setFabric: (fabric) => get().commit((d) => ({ ...d, fabric })),
+  // NOVAstitch: through chooseFabric (module e: e.preset.apply, one undo step)
+  setFabric: (fabric) => chooseFabric(fabric, () => get().commit((d) => ({ ...d, fabric }))),
   toast: (text, kind = "info") => {
     const id = Date.now() + Math.random();
     set({ toasts: [...get().toasts, { id, text, kind }] });
@@ -604,7 +607,7 @@ export function flushAutosave(): boolean {
   localStorage.removeItem(DOC_KEY);
   if (!autosaveWarned) {
     autosaveWarned = true;
-    s.toast("The design is too big to autosave: save it to a file", "error");
+    s.toast(t("filum.messaggi.the_design_is_too_big"), "error");
   }
   return false;
 }

@@ -12,14 +12,15 @@
 // Every scale comes from the fabric's limits, so switching the fabric
 // re-judges the same stitches.
 
+import { t } from "../nova/i18n/filum";
 import type { DensityField, DensityStats, FabricLimits, Vec2 } from "../types";
 
 export type DensityMode = "coverage" | "holes" | "stiffness";
 
 export const DENSITY_MODES: { id: DensityMode; label: string; title: string }[] = [
-  { id: "coverage", label: "Coverage", title: "Layers of thread: 1 = the fabric just covered (40 wt rows every 0.25 mm, Ink/Stitch's default fill)" },
-  { id: "holes", label: "Needle holes", title: "Needle penetrations per mm² — what perforates and tears delicate fabric" },
-  { id: "stiffness", label: "Stiffness", title: "Weight of thread added to the fabric (top + bobbin) against the fabric's own weight" },
+  { id: "coverage", get label() { return t("filum.messaggi.coverage"); }, get title() { return t("filum.messaggi.layers_of_thread_1_the"); } },
+  { id: "holes", get label() { return t("filum.messaggi.needle_holes"); }, get title() { return t("filum.messaggi.needle_penetrations_per_mm2_what"); } },
+  { id: "stiffness", get label() { return t("filum.messaggi.stiffness"); }, get title() { return t("filum.messaggi.weight_of_thread_added_to"); } },
 ];
 
 type RGBA = [number, number, number, number];
@@ -155,7 +156,7 @@ export function densityAt(f: DensityField | null, p: Vec2): DensityReading | nul
   return { layers: f.layers[i], holes: f.holes[i], added: f.added[i], ratio: f.added[i] / (f.limits?.gsm ?? DEFAULT_LIMITS.gsm), cls: f.cls[i] };
 }
 
-export const CLASS_LABELS = ["", "Thin", "OK", "Heavy", "Too dense"];
+export const CLASS_LABELS = () => ["", t("filum.messaggi.thin"), "OK", t("filum.messaggi.heavy"), t("filum.messaggi.too_dense")];
 
 /** Shares of the stitched area per class (0..1). */
 export function classShares(st: DensityStats): { thin: number; ok: number; heavy: number; risk: number } {

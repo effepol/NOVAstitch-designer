@@ -2,6 +2,7 @@
 // open along a vector (gradient fill), and colour blending — two layers of
 // one shape with opposite density ramps that add up to an even coverage.
 
+import { t } from "../nova/i18n/filum";
 import { activeThreadOf, useStore } from "../store";
 import type { DensityRamp, DesignObject, FillParams, RampProfile, StitchDocument, Vec2 } from "../types";
 import { rampMembers, rampOf, removeRampDoc } from "./fillLayers";
@@ -9,12 +10,12 @@ import { uid } from "./geometry";
 import { INK_TATAMI } from "./inkDefaults";
 
 export const RAMP_PROFILES: { id: RampProfile; label: string; hint: string }[] = [
-  { id: "linear", label: "Linear", hint: "Even change from dense to open" },
-  { id: "easeIn", label: "Ease in", hint: "Stays dense, then opens up quickly" },
-  { id: "easeOut", label: "Ease out", hint: "Opens up quickly, then stays open" },
-  { id: "smooth", label: "S-curve", hint: "Dense and open ends with a soft transition" },
-  { id: "middle", label: "Centre dense", hint: "Dense in the middle, open at both ends" },
-  { id: "ends", label: "Centre open", hint: "Open in the middle, dense at both ends" },
+  { id: "linear", get label() { return t("filum.messaggi.linear"); }, get hint() { return t("filum.messaggi.even_change_from_dense_to"); } },
+  { id: "easeIn", get label() { return t("filum.messaggi.ease_in"); }, get hint() { return t("filum.messaggi.stays_dense_then_opens_up"); } },
+  { id: "easeOut", get label() { return t("filum.messaggi.ease_out"); }, get hint() { return t("filum.messaggi.opens_up_quickly_then_stays"); } },
+  { id: "smooth", get label() { return t("filum.messaggi.s_curve"); }, get hint() { return t("filum.messaggi.dense_and_open_ends_with"); } },
+  { id: "middle", get label() { return t("filum.messaggi.centre_dense"); }, get hint() { return t("filum.messaggi.dense_in_the_middle_open"); } },
+  { id: "ends", get label() { return t("filum.messaggi.centre_open"); }, get hint() { return t("filum.messaggi.open_in_the_middle_dense"); } },
 ];
 
 /** 0 = densest, 1 = sparsest (mirrors the engine). */
@@ -85,7 +86,7 @@ const isClosedFill = (o: DesignObject) => o.paths.some((sp) => sp.closed) && !(o
 export function applyRamp(id: string, a: Vec2, b: Vec2, mode: "density" | "blend"): string | null {
   const s = useStore.getState();
   const o = s.doc.objects.find((x) => x.id === id);
-  if (!o || !isClosedFill(o)) return "Density gradients need a closed shape (not one with a colour gradient)";
+  if (!o || !isClosedFill(o)) return t("filum.messaggi.density_gradient_needs_closed");
   const opts = s.toolOptions.gradient;
   const angle = angleAcross(a, b);
   const existing = rampOf(o);

@@ -15,6 +15,7 @@ import type { Issue } from "../../lib/issues";
 import { flatten, objectBoundsCached } from "../../lib/geometry";
 import { threadWeightInfo } from "../../lib/materials";
 import { t } from "../core/i18n";
+import { stitchTypeOf } from "../core/stitchTypes";
 import type { FabricPreset } from "./preset";
 import { tidyNumber } from "../format/numbers";
 import "./texts";
@@ -156,7 +157,7 @@ export function fabricIssues(doc: StitchDocument, plan: PlanData | null, preset:
     // for the thread (Filum's THREAD_WEIGHTS, Madeira's guide). Satin only: Filum already warns about
     // dense fills ("Very dense fill") and maps needle holes per mm² (density.rs). Never on foam (3D),
     // denser on purpose.
-    if (preset && st.type === "satin") {
+    if (preset && st.type === "satin" && stitchTypeOf(st)?.id !== "j.foam") {
       const w = weightOf(doc, o);
       const limit = tidyNumber(Math.round(preset.limits.minSpacingRatio * threadWeightInfo(w as 40).spacing * 1000) / 1000);
       if (st.spacing < limit)
@@ -196,14 +197,17 @@ export function fabricIssues(doc: StitchDocument, plan: PlanData | null, preset:
   });
 
   if (preset?.elastic) {
-    // e.12: adjacent fills whose rows sew towards each other (each from its first to its last stitch)
+    // e.12: adjacent fills whose rows sew towards each other. Which way a fill goes: from the middle of
+    // its first third of stitches to the middle of its last third (the first and last stitch alone are
+    // often the travel to and from the shape, both on the same edge).
     const fills = objects.map((o, i) => ({ o, i })).filter(({ o }) => o.visible && o.stitch.type === "fill");
     const progress = (i: number): Vec2 | null => {
-      const r = runs[i];
-      if (!r?.length) return null;
-      const first = r[0][0];
-      const lastRun = r[r.length - 1];
-      const last = lastRun[lastRun.length - 1];
+      const pts = runs[i]?.flat() ?? [];
+      if (pts.length < 6) return null;
+      const mid = (a: Vec2[]): Vec2 => [a.reduce((s, p) => s + p[0], 0) / a.length, a.reduce((s, p) => s + p[1], 0) / a.length];
+      const n = Math.floor(pts.length / 3);
+      const first = mid(pts.slice(0, n));
+      const last = mid(pts.slice(pts.length - n));
       return [last[0] - first[0], last[1] - first[1]];
     };
     const facing = new Map<string, string>();

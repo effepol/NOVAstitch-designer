@@ -3,6 +3,7 @@
 // sequence as the machine shows it. One file, or several at once in a ZIP
 // (Ink/Stitch zip.py: formats, thread list, pictures, repeats).
 
+import { t, tData, tn } from "../nova/i18n/filum";
 import { AlertTriangle, CheckCircle2, XCircle } from "lucide-react";
 import { exportTarget, exportZip, isPicture, PICTURE_SETTINGS, PNG_TARGETS, targetExtension, type PictureSettings } from "../lib/exportFiles";
 import { PicturePreview, PictureOptionsPanel, RepeatOptions, StopPositionChoice, ZipFileList } from "./ExportExtras";
@@ -19,7 +20,7 @@ import { FrameButtons, MachineOptions } from "./MachineOptions";
 import { cutterOf, DEFAULT_CUT_OVER, uncutTrims } from "../lib/cuts";
 import { safeSetItem } from "../lib/storage";
 
-const FORMAT_HINT: Record<string, string> = {
+const FORMAT_HINT_EN: Record<string, string> = {
   pes: "Brother, Baby Lock",
   dst: "Tajima — every machine",
   jef: "Janome, Elna",
@@ -42,7 +43,7 @@ const FORMAT_HINT: Record<string, string> = {
 };
 const PROJECT = ["filum", "svg"];
 // files for people and software, not for the machine: what each one is for
-const DATA_HINT: Record<string, string> = {
+const DATA_HINT_EN: Record<string, string> = {
   csv: "Every stitch and command as a spreadsheet — for checking or scripting, not for the machine.",
   txt: "Every stitch and command as plain text (Ink/Stitch's TXT) — for checking, not for the machine.",
   col: "Only the thread colours, one per colour block. Save it next to a file without colours (such as a DST) under the same name so software shows the right threads.",
@@ -50,11 +51,19 @@ const DATA_HINT: Record<string, string> = {
   inf: "Only the threads (colour, name, chart), one per colour block. Save it next to the stitch file under the same name for Viking and Pfaff software.",
   threadlist: "Ink/Stitch's thread list: design details and the thread of every colour block, as text for the operator. Threads ▸ Apply thread list reads it back onto a design (e.g. a DST).",
 };
-const DATA = Object.keys(DATA_HINT);
-const PICTURE_HINT: Record<string, string> = {
+const DATA = Object.keys(DATA_HINT_EN);
+const PICTURE_HINT_EN: Record<string, string> = {
   png_realistic: "The design as it will look sewn (Ink/Stitch PNG realistic) — for mock-ups, shops and customers.",
   png_simple: "Every stitch as a flat line in its thread colour (Ink/Stitch PNG simple) — clear for checking and for colouring sheets.",
 };
+/** I testi qui sopra, nella lingua corrente: "<prefix>.<formato>" del catalogo (le chiavi restano quelle inglesi). */
+const shown = (prefix: string, en: Record<string, string>): Record<string, string> =>
+  Object.defineProperties({}, Object.fromEntries(Object.keys(en).map((k) => [k, { get: () => t(`${prefix}.${k}`), enumerable: true }])));
+const FORMAT_HINT = shown("filum.esportazione.formato", FORMAT_HINT_EN);
+const DATA_HINT = shown("filum.esportazione.dati", DATA_HINT_EN);
+const PICTURE_HINT = shown("filum.esportazione.immagine", PICTURE_HINT_EN);
+/** Il nome di un formato, dal motore (crates/formats): tradotto se il catalogo ha quel nome inglese. */
+const fmtName = (f: { extension: string; name: string }) => tData(`filum.esportazione.nome.${f.extension}`, f.name);
 const loadJson = <T,>(key: string, fallback: T): T => {
   try {
     const v = localStorage.getItem(key);
@@ -223,16 +232,16 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
     checks.push({
       id: "far",
       level: "warn",
-      title: `${far} colour${far === 1 ? " looks" : "s look"} different on the machine screen`,
-      detail: `The nearest Brother colour is more than ΔE 10 away — the order is right, load your own spool${pesVersion === 1 ? "; PES v6 also stores the exact threads" : ""}`,
+      title: tn("filum.esportazione.n_colours_look_different", far),
+      detail: t("filum.esportazione.nearest_brother_far") + (pesVersion === 1 ? t("filum.esportazione.pes_v6_also_stores_the") : ""),
     });
   const blocks = stats?.stitches ? stats.colorChanges + 1 : 0;
   if (checkFmt === "sew" && blocks > SEW_MAX_COLOURS)
     checks.push({
       id: "sew-colours",
       level: "error",
-      title: `${blocks} colours — SEW holds at most ${SEW_MAX_COLOURS}`,
-      detail: "Merge colours, or export a JEF, which Janome machines also read",
+      title: t("filum.esportazione.blocks_colours_sew_holds_at", { blocks, SEW_MAX_COLOURS }),
+      detail: t("filum.esportazione.merge_colours_or_export_a"),
     });
   const errors = checks.filter((c) => c.level === "error").length;
   const warnings = checks.filter((c) => c.level === "warn").length;
@@ -285,27 +294,27 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
     <Dialog
       live
       wide
-      title="Export"
+      title={t("filum.esportazione.export")}
       onClose={onClose}
       footer={
         <>
           {machineFormat && (
             <span className={`xp-verdict ${errors ? "error" : warnings ? "warn" : "ok"}`}>
               {icon(errors ? "error" : warnings ? "warn" : "ok")}
-              {errors ? `${errors} problem${errors === 1 ? "" : "s"}` : warnings ? `${warnings} note${warnings === 1 ? "" : "s"}` : "Ready for the machine"}
+              {errors ? tn("filum.esportazione.n_problems", errors) : warnings ? tn("filum.esportazione.n_notes", warnings) : t("filum.esportazione.ready_for_the_machine")}
             </span>
           )}
           <div className="spacer" />
           <button className="btn" onClick={onClose}>
-            Cancel
+            {t("filum.esportazione.cancel")}
           </button>
           <button
             className={`btn ${errors ? "danger" : "primary"}`}
             disabled={(!stats?.stitches && hasStitches) || (zipMode && !zipTargets.length)}
             onClick={doExport}
-            title={errors ? "The machine will probably reject this file" : undefined}
+            title={errors ? t("filum.esportazione.the_machine_will_probably_reject") : undefined}
           >
-            {errors ? "Export anyway" : zipMode ? `Export ${fileName}.zip` : `Export ${fileName}.${ext}`}
+            {errors ? t("filum.esportazione.export_anyway") : zipMode ? t("filum.esportazione.export_filename_zip", { fileName }) : t("filum.esportazione.export_filename_ext", { fileName, ext })}
           </button>
         </>
       }
@@ -313,8 +322,8 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
       <div className="xp">
         <div className="xp-side">
           <section className="xp-sec">
-            <h4>Machine</h4>
-            <select className="select" value={machine.id} onChange={(e) => pickMachine(e.target.value)} title={`${machine.models} — the design's machine (Design ▸ Machine)`}>
+            <h4>{t("filum.esportazione.machine")}</h4>
+            <select className="select" value={machine.id} onChange={(e) => pickMachine(e.target.value)} title={t("filum.esportazione.models_the_design_s_machine", { models: machine.models })}>
               <MachineOptions />
             </select>
             <p className="hint xp-models" title={machine.models}>
@@ -330,13 +339,13 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
           </section>
 
           <section className="xp-sec">
-            <h4>Format</h4>
+            <h4>{t("filum.esportazione.format")}</h4>
             <div className="seg seg-full xp-mode">
-              <button className={!zipMode ? "on" : ""} onClick={() => setZipMode(false)} title="Save one file">
-                One file
+              <button className={!zipMode ? "on" : ""} onClick={() => setZipMode(false)} title={t("filum.esportazione.save_one_file")}>
+                {t("filum.esportazione.one_file")}
               </button>
-              <button className={zipMode ? "on" : ""} onClick={() => setZipMode(true)} title="Several formats, the thread list and pictures in one ZIP (Ink/Stitch ZIP export)">
-                Several · ZIP
+              <button className={zipMode ? "on" : ""} onClick={() => setZipMode(true)} title={t("filum.esportazione.several_formats_the_thread_list")}>
+                {t("filum.esportazione.several_zip")}
               </button>
             </div>
             <div className="xp-formats">
@@ -345,26 +354,26 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
                 return fmtButton(
                   f.extension,
                   `.${f.extension.toUpperCase()}`,
-                  FORMAT_HINT[f.extension] ?? f.name,
+                  FORMAT_HINT[f.extension] ?? fmtName(f),
                   reads ? "" : "other",
-                  reads ? f.name : `${f.name} — not read by ${machine.brand} machines`,
+                  reads ? fmtName(f) : t("filum.esportazione.not_read_by", { name: fmtName(f), brand: machine.brand }),
                 );
               })}
-              {PROJECT.map((e) => fmtButton(e, `.${e === "filum" ? "FILUM" : "SVG"}`, e === "svg" ? "Ink/Stitch, editable" : "Project, lossless", "project"))}
+              {PROJECT.map((e) => fmtButton(e, `.${e === "filum" ? "FILUM" : "SVG"}`, e === "svg" ? t("filum.esportazione.svg_editable") : t("filum.esportazione.project_lossless"), "project"))}
             </div>
           </section>
 
           {dataFormats.length > 0 && (
             <section className="xp-sec">
-              <h4>Thread lists &amp; stitch data</h4>
+              <h4>{t("filum.esportazione.thread_lists_stitch_data")}</h4>
               <div className="xp-formats">
-                {dataFormats.map((f) => fmtButton(f.extension, `.${targetExtension(f.extension).toUpperCase()}`, FORMAT_HINT[f.extension] ?? f.name, "", f.name))}
+                {dataFormats.map((f) => fmtButton(f.extension, `.${targetExtension(f.extension).toUpperCase()}`, FORMAT_HINT[f.extension] ?? fmtName(f), "", fmtName(f)))}
               </div>
             </section>
           )}
 
           <section className="xp-sec">
-            <h4>Pictures</h4>
+            <h4>{t("filum.esportazione.pictures")}</h4>
             <div className="xp-formats">{PNG_TARGETS.map((t) => fmtButton(t, ".PNG", FORMAT_HINT[t], "", PICTURE_HINT[t]))}</div>
           </section>
 
@@ -372,21 +381,21 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
             <h4>File</h4>
             <label className="xp-name">
               <input className="input" value={name} onChange={(e) => setName(e.target.value)} spellCheck={false} />
-              <span className="stat">{zipMode ? ".zip" : `.${ext}`}</span>
+              <span className="stat">{zipMode ? t("filum.esportazione.zip") : `.${ext}`}</span>
             </label>
-            {fileName !== name.trim() && <p className="hint">Saved as “{fileName}.{zipMode ? "zip" : ext}”</p>}
+            {fileName !== name.trim() && <p className="hint">{t("filum.esportazione.saved_as_file", { file: `${fileName}.${zipMode ? "zip" : ext}` })}</p>}
             {hasPes && (
               <>
-                <h4>PES version</h4>
+                <h4>{t("filum.esportazione.pes_version")}</h4>
                 <div className="seg seg-full">
-                  <button className={pesVersion === 1 ? "on" : ""} onClick={() => setPesVersion(1)} title="What Ink/Stitch writes: colours are entries of Brother's thread table — every Brother machine reads it">
-                    v1 · Brother colours
+                  <button className={pesVersion === 1 ? "on" : ""} onClick={() => setPesVersion(1)} title={t("filum.esportazione.what_ink_stitch_writes_colours")}>
+                    {t("filum.esportazione.v1_brother_colours")}
                   </button>
-                  <button className={pesVersion === 6 ? "on" : ""} onClick={() => setPesVersion(6)} title="Adds the exact thread list (brand, code, name, colour) for machines and software that read PES 6">
-                    v6 · exact threads
+                  <button className={pesVersion === 6 ? "on" : ""} onClick={() => setPesVersion(6)} title={t("filum.esportazione.adds_the_exact_thread_list")}>
+                    {t("filum.esportazione.v6_exact_threads")}
                   </button>
                 </div>
-                <p className="hint">{pesVersion === 1 ? "Most compatible — Brother thread colours." : "Exact threads; older machines may not read v6."}</p>
+                <p className="hint">{pesVersion === 1 ? t("filum.esportazione.most_compatible_brother_thread_colours") : t("filum.esportazione.exact_threads_older_machines_may")}</p>
               </>
             )}
             {pictureKinds.length > 0 && <PictureOptionsPanel kinds={pictureKinds} pics={pics} set={setPics} />}
@@ -401,11 +410,11 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
             <div className="stats-grid">
               <div className="stat-card">
                 <div className="v">{fileStats.stitches.toLocaleString()}</div>
-                <div className="k">stitches{copies > 1 ? ` · ${copies} copies` : ""}</div>
+                <div className="k">{t("filum.esportazione.stitches")}{copies > 1 ? t("filum.esportazione.copies_copies", { copies }) : ""}</div>
               </div>
               <div className="stat-card">
                 <div className="v">{fileStats.colorChanges + (fileStats.stitches ? 1 : 0)}</div>
-                <div className="k">colours · {fileStats.trims} trims</div>
+                <div className="k">{t("filum.esportazione.colours_trims_trims", { trims: fileStats.trims })}</div>
               </div>
               <div className="stat-card">
                 <div className="v">
@@ -415,7 +424,7 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
               </div>
               <div className="stat-card">
                 <div className="v">{fmtTime(fileStats.seconds)}</div>
-                <div className="k">at {doc.machine.spm} spm</div>
+                <div className="k">{t("filum.esportazione.at_spm_spm", { spm: doc.machine.spm })}</div>
               </div>
             </div>
           )}
@@ -442,8 +451,8 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
             <p className="hint">
               {DATA_HINT[fmt] ??
                 (fmt === "svg"
-                  ? "An SVG with Ink/Stitch parameters: open it in Inkscape with Ink/Stitch to keep editing or export from there."
-                  : "The Filum project keeps every object, setting and colour edit.")}
+                  ? t("filum.esportazione.an_svg_with_ink_stitch")
+                  : t("filum.esportazione.the_filum_project_keeps_every"))}
             </p>
           )}
         </div>
@@ -464,13 +473,13 @@ function MachineColours({ colours, fmt }: { colours: MachineColorInfo[]; fmt: st
   return (
     <div className="exp-colours">
       <div className="exp-colours-head">
-        <b>Colour sequence on the machine</b>
+        <b>{t("filum.esportazione.colour_sequence_on_the_machine")}</b>
         <span className="stat">
           {noColours
-            ? "This format stores no colours: the machine stops at every change — load the threads in this order."
+            ? t("filum.esportazione.this_format_stores_no_colours")
             : exact
-              ? "The file stores the exact threads."
-              : `The file stores ${table} thread-table colours; load your spool when the machine shows its ${table} colour.`}
+              ? t("filum.esportazione.the_file_stores_the_exact")
+              : t("filum.esportazione.the_file_stores_table_thread", { table, table_: table })}
         </span>
       </div>
       <div className="exp-colours-list">
@@ -488,10 +497,10 @@ function MachineColours({ colours, fmt }: { colours: MachineColorInfo[]; fmt: st
                 <span className="ec-name" title={`${table} ${c.shown.code} ${c.shown.name}`}>
                   {table} {c.shown.code} <span className="stat">{c.shown.name}</span>
                 </span>
-                <span className={`ec-de ${(c.deltaE ?? 0) > 10 ? "far" : ""}`}>ΔE {(c.deltaE ?? 0).toFixed(0)}</span>
+                <span className={`ec-de ${(c.deltaE ?? 0) > 10 ? "far" : ""}`}>{t("filum.esportazione.e_n", { n: (c.deltaE ?? 0).toFixed(0) })}</span>
               </>
             )}
-            {c.exact && <span className="badge ok">exact</span>}
+            {c.exact && <span className="badge ok">{t("filum.esportazione.exact")}</span>}
           </div>
         ))}
       </div>
@@ -512,10 +521,10 @@ function OriginChoice() {
   };
   return (
     <>
-      <h4>Origin</h4>
+      <h4>{t("filum.esportazione.origin")}</h4>
       <div className="seg seg-full">
-        <button className={!origin ? "on" : ""} onClick={() => set(undefined)} title="The design is centred on the needle position (machine default)">
-          Centre
+        <button className={!origin ? "on" : ""} onClick={() => set(undefined)} title={t("filum.esportazione.the_design_is_centred_on")}>
+          {t("filum.esportazione.centre")}
         </button>
         <button
           className={origin ? "on" : ""}
@@ -523,9 +532,9 @@ function OriginChoice() {
             const c = corner();
             if (c) set(c);
           }}
-          title="A fixed point becomes the needle position: the top-left corner of the design, or the point set here (Ink/Stitch origin command)"
+          title={t("filum.esportazione.a_fixed_point_becomes_the")}
         >
-          Point
+          {t("filum.esportazione.point")}
         </button>
       </div>
       {origin && (

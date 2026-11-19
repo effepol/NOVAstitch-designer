@@ -1,1 +1,6 @@
-{}
+{
+  "e.presetCard": "The fabric preset card beside the fabric picker",
+  "e.presetCard.close": "Close the preset card",
+  "e.exportSummary": "The summary at export: what to put in the machine",
+  "e.exportSummary.close": "Close the export summary"
+}

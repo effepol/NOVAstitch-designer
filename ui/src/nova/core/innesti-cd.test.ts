@@ -73,4 +73,8 @@ check(/activeStitchLine\(\)/.test(canvas) && /noStitches/.test(canvas), "Canvas.
 const render = read("canvas/render.ts");
 check(/!r\.noStitches/.test(render) && /drawStitchLine\(/.test(render) && /r\.noStitches,/.test(render), "render.ts: Filum's line left out, the module's drawn, the kept background repainted when it switches");
 
+// ---- 4) (18/11 evening) a bar button may carry a lesson anchor: BottomBar puts it as data-nova-anchor
+check(/data-nova-anchor=\{b\.anchor\}/.test(bar), "BottomBar.tsx: a registered button's anchor becomes its data-nova-anchor (for the lessons)");
+check(/anchor\?: string;/.test(read("nova/core/registry.ts").slice(read("nova/core/registry.ts").indexOf("export interface ToolbarButtonEntry"), read("nova/core/registry.ts").indexOf("export interface ToolbarButtonEntry") + 600)), "registry.ts: ToolbarButtonEntry has an optional anchor");
+
 done("hook points for c and d");

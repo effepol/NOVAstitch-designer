@@ -7,6 +7,7 @@
 // Machine): speed and the trim / colour-change times for the estimates, next
 // to Ink/Stitch's defaults (what a new design starts with).
 
+import { t, tn } from "../nova/i18n/filum";
 import type { MachineSettings, PlanStats } from "../types";
 import { cutterOf, DEFAULT_CUT_OVER, type Cutter } from "./cuts";
 
@@ -107,7 +108,7 @@ const F = {
     name: "Sleeve frame 7 × 20 cm",
     width: 70,
     height: 200,
-    note: "sleeves and tubular items",
+    get note() { return t("filum.dati.note_sleeves"); },
   },
   prR100: {
     id: "pr-r100",
@@ -135,28 +136,28 @@ const F = {
     name: "Clamp frame S 4.5 × 2.4 cm",
     width: 45,
     height: 24,
-    note: "clamp frame for thick items",
+    get note() { return t("filum.dati.note_clamp"); },
   },
   prCompact: {
     id: "pr-compact",
     name: "Compact frame 5 × 5 cm",
     width: 50,
     height: 50,
-    note: "compact frame for pockets and small items",
+    get note() { return t("filum.dati.note_compact"); },
   },
   prCap: {
     id: "pr-cap",
     name: "Cap frame 13 × 6 cm",
     width: 130,
     height: 60,
-    note: "cap driver",
+    get note() { return t("filum.dati.note_cap"); },
   },
   prCylinder: {
     id: "pr-cylinder",
     name: "Cylinder frame 9 × 8 cm",
     width: 90,
     height: 80,
-    note: "cylinder frame for bags and shoes",
+    get note() { return t("filum.dati.note_cylinder"); },
   },
   jSQ14: { id: "sq14", name: "SQ14 14 × 14 cm", width: 140, height: 140 },
   jSQ20: { id: "sq20", name: "SQ20 20 × 20 cm", width: 200, height: 200 },
@@ -198,9 +199,9 @@ function babyLock(id: string, name: string, models: string, width: number, heigh
 export const MACHINES: MachineProfile[] = [
   {
     id: "doc",
-    name: "Design hoop",
+    get name() { return t("filum.dati.design_hoop"); },
     brand: "",
-    models: "Checks against the hoop set in the document",
+    get models() { return t("filum.dati.checks_against_doc_hoop"); },
     formats: ["pes", "dst", "jef", "exp", "vp3", "xxx"],
     field: { width: 0, height: 0 },
     frames: [],
@@ -374,14 +375,14 @@ export const MACHINES: MachineProfile[] = [
         name: "Wide cap frame 36 × 6 cm",
         width: 360,
         height: 60,
-        note: "wide cap driver",
+        get note() { return t("filum.dati.note_wide_cap"); },
       },
       {
         id: "pr-jumbo",
         name: "Jumbo frame 36 × 36 cm",
         width: 360,
         height: 360,
-        note: "needs the wide table",
+        get note() { return t("filum.dati.note_wide_table"); },
       },
     ],
     needles: 10,
@@ -629,7 +630,7 @@ export const SETTINGS_PRESETS: SettingsPreset[] = [
     id: "inkstitch",
     name: "Ink/Stitch",
     group: "General",
-    hint: "Ink/Stitch's defaults, what a new design starts with: 0.1 mm shortest stitch, 3 mm jumps, 700 spm and 10 s per trim / colour change.",
+    get hint() { return t("filum.dati.inkstitch_preset_hint"); },
     values: INKSTITCH_DEFAULTS,
   },
   ...MACHINES.filter((m) => m.id !== "doc").map((m) => ({
@@ -754,8 +755,8 @@ export function exportChecks(opts: {
     out.push({
       id: "empty",
       level: "error",
-      title: "No stitches",
-      detail: "The design has nothing to stitch yet.",
+      title: t("filum.esportazione.chk_no_stitches"),
+      detail: t("filum.esportazione.chk_nothing_to_stitch"),
     });
     return out;
   }
@@ -765,71 +766,71 @@ export function exportChecks(opts: {
     frame ??
     (machine.id === "doc"
       ? {
-          name: hoop.name + " hoop",
+          name: t("filum.esportazione.chk_hoop_name", { name: hoop.name }),
           width: hoop.width,
           height: hoop.height,
           shape: hoop.shape,
         }
       : {
-          name: "embroidery field",
+          name: t("filum.esportazione.chk_embroidery_field"),
           width: machine.field.width,
           height: machine.field.height,
         });
   const oval = area.shape === "oval";
   const fits = areaFits(area, w, h, opts.reach);
   const fitsRotated = areaFits(area, h, w, opts.reach && ((W, H) => opts.reach!(H, W)));
-  const where = oval ? `the ${Math.abs(area.width - area.height) < 0.01 ? "round" : "oval"} ${fmtMm(area.width, area.height)}` : fmtMm(area.width, area.height);
+  const where = oval ? (Math.abs(area.width - area.height) < 0.01 ? t("filum.esportazione.chk_the_round", { size: fmtMm(area.width, area.height) }) : t("filum.esportazione.chk_the_oval", { size: fmtMm(area.width, area.height) })) : fmtMm(area.width, area.height);
   if (fits)
     out.push({
       id: "size",
       level: "ok",
-      title: "Fits the " + area.name,
-      detail: `${fmtMm(w, h)} in ${where} · the machine centres it in the frame`,
+      title: t("filum.esportazione.chk_fits_the", { area: area.name }),
+      detail: t("filum.esportazione.chk_fits_detail", { size: fmtMm(w, h), where }),
     });
   else if (fitsRotated)
     out.push({
       id: "size",
       level: "warn",
-      title: "Fits only turned by 90°",
-      detail: `${fmtMm(w, h)} — rotate the design (or on the machine) for the ${area.name}`,
+      title: t("filum.esportazione.chk_fits_turned"),
+      detail: t("filum.esportazione.chk_fits_turned_detail", { size: fmtMm(w, h), area: area.name }),
     });
   else if (oval && w <= area.width + 1e-6 && h <= area.height + 1e-6)
     out.push({
       id: "size",
       level: "error",
-      title: "Outside the " + area.name,
-      detail: `${fmtMm(w, h)} fits the box but reaches past the edge of ${where}`,
+      title: t("filum.esportazione.chk_outside_the", { area: area.name }),
+      detail: t("filum.esportazione.chk_outside_detail", { size: fmtMm(w, h), where }),
     });
   else
     out.push({
       id: "size",
       level: "error",
-      title: "Larger than the " + area.name,
-      detail: `${fmtMm(w, h)} in ${fmtMm(area.width, area.height)} — the machine rejects or ignores it`,
+      title: t("filum.esportazione.chk_larger_than", { area: area.name }),
+      detail: t("filum.esportazione.chk_larger_detail", { size: fmtMm(w, h), area: fmtMm(area.width, area.height) }),
     });
   if (frame?.note)
     out.push({
       id: "frame",
       level: "ok",
-      title: `Special frame: ${frame.note}`,
-      detail: `${frame.name} — hoop the item as the manual shows`,
+      title: t("filum.esportazione.chk_special_frame", { note: frame.note }),
+      detail: t("filum.esportazione.chk_special_frame_detail", { name: frame.name }),
     });
   // jumps the machine doesn't cut stay on the fabric (drawn as thread)
   const cuts = opts.cuts;
-  const n = (k: number) => `${k} jump${k === 1 ? "" : "s"}`;
+  
   if (cuts && cuts.uncut > 0 && cuts.cutter.kind === "none")
     out.push({
       id: "hand-trims",
       level: "warn",
-      title: `${n(cuts.uncut)} to snip by hand`,
-      detail: "The machine has no thread cutter: the preview shows these jump threads as thread. Snip them after sewing, or as you go where the hoop could catch them",
+      title: tn("filum.esportazione.chk_jumps_to_snip", cuts.uncut),
+      detail: t("filum.esportazione.chk_no_cutter_detail"),
     });
   else if (cuts && cuts.uncut > 0 && cuts.cutter.kind === "jumps")
     out.push({
       id: "hand-trims",
       level: "warn",
-      title: `${n(cuts.uncut)} the machine won't cut`,
-      detail: `It cuts only jumps longer than ${cuts.cutter.over} mm (its jump trimming length): lower that length on the machine, or snip these by hand`,
+      title: tn("filum.esportazione.chk_jumps_wont_cut", cuts.uncut),
+      detail: t("filum.esportazione.chk_cuts_only_longer", { over: cuts.cutter.over }),
     });
   else if (cuts && cuts.cutter.kind === "trims" && cuts.brother > 0 && (format === "pes" || format === "pec"))
     // Brother machines cut a jump only from their "jump stitch trimming"
@@ -837,8 +838,8 @@ export function exportChecks(opts: {
     out.push({
       id: "short-trims",
       level: "warn",
-      title: `${n(cuts.brother)} under 5 mm stay uncut on Brother machines`,
-      detail: "Brother and Baby Lock machines cut only jumps longer than their trimming length (5 mm by default): lower it on the machine or snip these by hand. Set the thread cutter in Machine settings to see them in the preview",
+      title: tn("filum.esportazione.chk_brother_uncut", cuts.brother),
+      detail: t("filum.esportazione.chk_brother_uncut_detail"),
     });
   if (format === "jef") {
     const j = jefHoop(w, h);
@@ -846,16 +847,16 @@ export function exportChecks(opts: {
       out.push({
         id: "jef",
         level: "warn",
-        title: "The JEF names the 110 × 110 mm hoop",
-        detail: "Ink/Stitch's writer gives designs over 200 × 200 mm that code — choose the larger hoop on the machine",
+        title: t("filum.esportazione.chk_jef_110"),
+        detail: t("filum.esportazione.chk_jef_110_detail"),
       });
     else {
       const differs = machine.brand === "Janome" && !!frame && !j.frames.some((f) => frame.name.startsWith(f));
       out.push({
         id: "jef",
         level: "ok",
-        title: `The machine asks for the ${j.name} hoop`,
-        detail: differs ? `The JEF names the smallest Janome hoop that fits; to use the ${frame!.name}, choose it on the machine` : "The hoop code in the JEF file (as Ink/Stitch writes it)",
+        title: t("filum.esportazione.chk_machine_asks_hoop", { name: j.name }),
+        detail: differs ? t("filum.esportazione.chk_jef_smallest", { frame: frame!.name }) : t("filum.esportazione.chk_jef_code"),
       });
     }
   }
@@ -863,15 +864,15 @@ export function exportChecks(opts: {
     out.push({
       id: "field",
       level: "error",
-      title: "Larger than the machine's field",
-      detail: `${fmtMm(machine.field.width, machine.field.height)} at most`,
+      title: t("filum.esportazione.chk_larger_field"),
+      detail: t("filum.esportazione.chk_at_most", { size: fmtMm(machine.field.width, machine.field.height) }),
     });
   if (opts.outsideHoop)
     out.push({
       id: "hoop",
       level: "warn",
-      title: "Outside the design hoop",
-      detail: `Parts of the design are outside the ${hoop.name} hoop in the editor (the export is centred anyway)`,
+      title: t("filum.esportazione.chk_outside_design_hoop"),
+      detail: t("filum.esportazione.chk_outside_design_hoop_detail", { name: hoop.name }),
     });
   // limits
   const lim = (id: string, label: string, value: number, l?: Limit) => {
@@ -880,40 +881,40 @@ export function exportChecks(opts: {
       out.push({
         id,
         level: l.documented ? "error" : "warn",
-        title: `${value.toLocaleString()} ${label} (limit ${l.value.toLocaleString()})`,
-        detail: `${l.documented ? "Documented" : "Reported"}: ${l.source}`,
+        title: t("filum.esportazione.chk_value_limit", { value: value.toLocaleString(), label, limit: l.value.toLocaleString() }),
+        detail: l.documented ? t("filum.esportazione.chk_documented", { source: l.source }) : t("filum.esportazione.chk_reported", { source: l.source }),
       });
     else
       out.push({
         id,
         level: "ok",
-        title: `${value.toLocaleString()} ${label}`,
-        detail: `Limit ${l.value.toLocaleString()} (${l.documented ? "documented" : "reported"})`,
+        title: t("filum.esportazione.chk_value_label", { value: value.toLocaleString(), label }),
+        detail: l.documented ? t("filum.esportazione.chk_limit_documented", { limit: l.value.toLocaleString() }) : t("filum.esportazione.chk_limit_reported", { limit: l.value.toLocaleString() }),
       });
   };
-  lim("stitches", "stitches", stats.stitches, machine.maxStitches);
-  lim("colours", "colour changes", stats.colorChanges, machine.maxColorChanges);
+  lim("stitches", t("filum.esportazione.chk_label_stitches"), stats.stitches, machine.maxStitches);
+  lim("colours", t("filum.esportazione.chk_label_colour_changes"), stats.colorChanges, machine.maxColorChanges);
   // format
   if (machine.id !== "doc" && !machine.formats.includes(format))
     out.push({
       id: "format",
       level: "warn",
-      title: `${machine.brand} machines read ${machine.formats.map((f) => "." + f.toUpperCase()).join(" / ")}`,
-      detail: `.${format.toUpperCase()} may not be recognised`,
+      title: t("filum.esportazione.chk_machines_read", { brand: machine.brand, formats: machine.formats.map((f) => "." + f.toUpperCase()).join(" / ") }),
+      detail: t("filum.esportazione.chk_may_not_be_recognised", { ext: format.toUpperCase() }),
     });
   if (format === "pes" && opts.distinctColours > 61)
     out.push({
       id: "table",
       level: "warn",
-      title: `${opts.distinctColours} different threads`,
-      detail: "Brother's thread table has 61 colours: some threads are shown with the same colour on the machine",
+      title: t("filum.esportazione.chk_different_threads", { n: opts.distinctColours }),
+      detail: t("filum.esportazione.chk_brother_61"),
     });
   if (["dst", "exp", "u01", "gcode"].includes(format))
     out.push({
       id: "nocolours",
       level: "warn",
-      title: "No colours in the file",
-      detail: "The machine stops at every change; load the threads in the order listed below",
+      title: t("filum.esportazione.chk_no_colours"),
+      detail: t("filum.esportazione.chk_no_colours_detail"),
     });
   return out;
 }

@@ -59,6 +59,8 @@ export interface ToolbarButtonEntry extends Entry {
   title?: string;
   run: () => void;
   active?: () => boolean;
+  /** Lesson anchor ("<module>.<name>", listed in the module's anchors.json): data-nova-anchor on the button. */
+  anchor?: string;
 }
 
 let version = 0;

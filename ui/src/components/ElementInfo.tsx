@@ -3,6 +3,7 @@
 // longest / shortest stitch — and the totals of the selection (or the whole
 // design): colours, colour changes, jumps, trims, stops. Copy as a table.
 
+import { t, tn } from "../nova/i18n/filum";
 import { Copy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { engine } from "../engine/client";
@@ -41,6 +42,9 @@ const METHOD: Record<string, string> = {
 /** "streamline" → "Streamline", "linearGradient" → "Linear gradient". */
 const words = (id: string) => (id ? (id[0].toUpperCase() + id.slice(1)).replace(/([a-z])([A-Z])/g, (_, a, b) => `${a} ${b.toLowerCase()}`) : "");
 export const methodLabel = (o: Pick<ObjectInfo, "kind" | "method">) => (o.method ? (METHOD[o.method] ?? `${words(o.method)}${o.kind === "fill" ? " fill" : ""}`) : (KIND[o.kind] ?? words(o.kind)));
+/** Il nome mostrato a schermo (tradotto); la tabella copiata (infoTable) resta quella di Ink/Stitch. */
+const kindShown = (kind: string) => (kind in KIND ? t(`filum.pannelli.tipo.${kind}`) : words(kind));
+const methodShown = (o: Pick<ObjectInfo, "kind" | "method">) => (o.method ? (o.method in METHOD ? t(`filum.pannelli.metodo.${o.method}`) : methodLabel(o)) : kindShown(o.kind));
 const mm = (v: number) => v.toFixed(2);
 
 /** Ink/Stitch's export text: one tab-separated line per object. */
@@ -76,30 +80,29 @@ function useElementInfo(ids: string[]): ElementInfo | null {
 function ObjectRows({ o }: { o: ObjectInfo }) {
   return (
     <dl className="ei-grid">
-      <dt>Type</dt>
-      <dd>{KIND[o.kind] ?? words(o.kind)}</dd>
+      <dt>{t("filum.pannelli.type")}</dt>
+      <dd>{kindShown(o.kind)}</dd>
       {o.method && (
         <>
-          <dt>Method</dt>
-          <dd>{methodLabel(o)}</dd>
+          <dt>{t("filum.pannelli.method")}</dt>
+          <dd>{methodShown(o)}</dd>
         </>
       )}
-      <dt>Dimensions</dt>
+      <dt>{t("filum.pannelli.dimensions")}</dt>
       <dd>
-        {mm(o.width)} × {mm(o.height)} mm
-      </dd>
-      <dt>Stitches</dt>
-      <dd className={o.stitches ? "" : "warn"} title={o.hidden ? "Not stitched: hidden, or covered by objects on top (remove hidden stitching)" : undefined}>
+        {t("filum.pannelli.n_n2_mm", { n: mm(o.width), n2: mm(o.height) })}</dd>
+      <dt>{t("filum.pannelli.stitches")}</dt>
+      <dd className={o.stitches ? "" : "warn"} title={o.hidden ? t("filum.pannelli.not_stitched_hidden_or_covered") : undefined}>
         {o.stitches.toLocaleString()}
       </dd>
-      <dt title="Stitches shorter than the minimum stitch length (Design ▸ Stitch-out) are left out">Small stitches (removed)</dt>
+      <dt title={t("filum.pannelli.stitches_shorter_than_the_minimum")}>{t("filum.pannelli.small_stitches_removed")}</dt>
       <dd>{o.smallRemoved.toLocaleString()}</dd>
-      <dt title="Jumps inside the object (not the one that brings the needle to it)">Jumps</dt>
+      <dt title={t("filum.pannelli.jumps_inside_the_object_not")}>{t("filum.pannelli.jumps")}</dt>
       <dd>{o.jumps}</dd>
-      <dt>Max stitch length</dt>
-      <dd>{mm(o.maxStitch)} mm</dd>
-      <dt>Min stitch length</dt>
-      <dd>{mm(o.minStitch)} mm</dd>
+      <dt>{t("filum.pannelli.max_stitch_length")}</dt>
+      <dd>{t("filum.pannelli.n_mm", { n: mm(o.maxStitch) })}</dd>
+      <dt>{t("filum.pannelli.min_stitch_length")}</dt>
+      <dd>{t("filum.pannelli.n_mm", { n: mm(o.minStitch) })}</dd>
     </dl>
   );
 }
@@ -107,15 +110,15 @@ function ObjectRows({ o }: { o: ObjectInfo }) {
 function Panel({ ids }: { ids: string[] }) {
   const info = useElementInfo(ids);
   const toast = useStore((s) => s.toast);
-  if (!info) return <p className="hint">Counting…</p>;
-  const t = info.total;
+  if (!info) return <p className="hint">{t("filum.pannelli.counting")}</p>;
+  const th = info.total;
   const single = ids.length === 1 && info.objects.length === 1;
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(infoTable(info));
-      toast(`Copied the info of ${info.objects.length} object${info.objects.length === 1 ? "" : "s"} as a table`, "success");
+      toast(tn("filum.pannelli.copied_info_n_objects", info.objects.length), "success");
     } catch {
-      toast("Could not copy to the clipboard", "error");
+      toast(t("filum.pannelli.could_not_copy_to_the"), "error");
     }
   };
   return (
@@ -125,35 +128,34 @@ function Panel({ ids }: { ids: string[] }) {
       ) : (
         <>
           <dl className="ei-grid">
-            <dt>{ids.length ? "Selected objects" : "Objects"}</dt>
-            <dd>{t.objects}</dd>
-            <dt>Dimensions</dt>
+            <dt>{ids.length ? t("filum.pannelli.selected_objects") : t("filum.pannelli.objects_2")}</dt>
+            <dd>{th.objects}</dd>
+            <dt>{t("filum.pannelli.dimensions")}</dt>
             <dd>
-              {mm(t.width)} × {mm(t.height)} mm
-            </dd>
-            <dt>Colours</dt>
-            <dd>{t.colors}</dd>
-            <dt>Colour changes</dt>
-            <dd>{t.colorChanges}</dd>
-            <dt>Jumps</dt>
-            <dd>{t.jumps}</dd>
-            <dt>Trims</dt>
-            <dd>{t.trims}</dd>
-            <dt>Stops</dt>
-            <dd>{t.stops}</dd>
-            <dt>Stitches</dt>
-            <dd>{t.stitches.toLocaleString()}</dd>
-            <dt>Small stitches (removed)</dt>
-            <dd>{t.smallRemoved.toLocaleString()}</dd>
-            <dt>Min stitch length</dt>
-            <dd>{mm(t.minStitch)} mm</dd>
-            <dt>Max stitch length</dt>
-            <dd>{mm(t.maxStitch)} mm</dd>
-            <dt title="Design ▸ Stitch-out ▸ Min. stitch">Filter stitches smaller than</dt>
-            <dd>{mm(t.minStitchFilter)} mm</dd>
+              {t("filum.pannelli.n_n2_mm", { n: mm(th.width), n2: mm(th.height) })}</dd>
+            <dt>{t("filum.pannelli.colours")}</dt>
+            <dd>{th.colors}</dd>
+            <dt>{t("filum.pannelli.colour_changes")}</dt>
+            <dd>{th.colorChanges}</dd>
+            <dt>{t("filum.pannelli.jumps")}</dt>
+            <dd>{th.jumps}</dd>
+            <dt>{t("filum.pannelli.trims")}</dt>
+            <dd>{th.trims}</dd>
+            <dt>{t("filum.pannelli.stops")}</dt>
+            <dd>{th.stops}</dd>
+            <dt>{t("filum.pannelli.stitches")}</dt>
+            <dd>{th.stitches.toLocaleString()}</dd>
+            <dt>{t("filum.pannelli.small_stitches_removed")}</dt>
+            <dd>{th.smallRemoved.toLocaleString()}</dd>
+            <dt>{t("filum.pannelli.min_stitch_length")}</dt>
+            <dd>{t("filum.pannelli.n_mm", { n: mm(th.minStitch) })}</dd>
+            <dt>{t("filum.pannelli.max_stitch_length")}</dt>
+            <dd>{t("filum.pannelli.n_mm", { n: mm(th.maxStitch) })}</dd>
+            <dt title={t("filum.pannelli.design_stitch_out_min_stitch")}>{t("filum.pannelli.filter_stitches_smaller_than")}</dt>
+            <dd>{t("filum.pannelli.n_mm", { n: mm(th.minStitchFilter) })}</dd>
           </dl>
           {info.objects.length > 1 && info.objects.length <= 40 && (
-            <Section title={`Each object (${info.objects.length})`} defaultOpen={false}>
+            <Section title={t("filum.pannelli.each_object_length", { length: info.objects.length })} defaultOpen={false}>
               {info.objects.map((o) => (
                 <div key={o.id} className="ei-obj">
                   <div className="ei-obj-head">
@@ -168,8 +170,8 @@ function Panel({ ids }: { ids: string[] }) {
         </>
       )}
       <div className="ei-actions">
-        <button className="btn sm ghost" onClick={copy} title="Copy every object's info as a tab-separated table (Ink/Stitch's element info export) — paste it into a spreadsheet">
-          <Copy size={12} /> Copy table
+        <button className="btn sm ghost" onClick={copy} title={t("filum.pannelli.copy_every_object_s_info")}>
+          <Copy size={12} />{t("filum.pannelli.copy_table")}
         </button>
       </div>
     </div>
@@ -179,7 +181,7 @@ function Panel({ ids }: { ids: string[] }) {
 /** "Info" section of the Properties panel: the selection, or the whole design when `ids` is empty. */
 export function ElementInfoSection({ ids, defaultOpen = false, title }: { ids: string[]; defaultOpen?: boolean; title?: string }) {
   return (
-    <Section title={title ?? "Element info"} defaultOpen={defaultOpen}>
+    <Section title={title ?? t("filum.pannelli.element_info")} defaultOpen={defaultOpen}>
       <Panel ids={ids} />
     </Section>
   );

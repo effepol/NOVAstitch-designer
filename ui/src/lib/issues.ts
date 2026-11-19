@@ -2,6 +2,7 @@
 // in the design and the generated stitches, locates them on the canvas and
 // offers one-click fixes.
 
+import { t } from "../nova/i18n/filum";
 import type { DesignObject, PlanData, StitchDocument, Vec2 } from "../types";
 import { FLAG } from "../types";
 import { objectBoundsCached, transformObject, translateMat } from "./geometry";
@@ -9,6 +10,7 @@ import { rowAngleFor, rowsAlongGradient } from "./gradient";
 import { ovalNorm, threadWeightInfo } from "./materials";
 import { shapeProblems } from "./shapeCheck";
 import { lineOverlaps } from "./lineOverlaps";
+import { issueChecksVersion, moduleIssues } from "../nova/core/issueChecks";
 
 export interface Issue {
   id: string;
@@ -22,7 +24,7 @@ export interface Issue {
   fix?: { label: string; apply: (o: DesignObject) => DesignObject | null; scope?: (o: DesignObject) => boolean };
 }
 
-const cache = new WeakMap<StitchDocument, { plan: PlanData | null; issues: Issue[] }>();
+const cache = new WeakMap<StitchDocument, { plan: PlanData | null; checks: number; issues: Issue[] }>();
 
 /** Per-object statistics of a plan (by object index). */
 interface PlanStats {
@@ -92,7 +94,7 @@ function shapeProblemsCached(o: DesignObject) {
 
 export function computeIssues(doc: StitchDocument, plan: PlanData | null): Issue[] {
   const hit = cache.get(doc);
-  if (hit && hit.plan === plan) return hit.issues;
+  if (hit && hit.plan === plan && hit.checks === issueChecksVersion()) return hit.issues;
   const out: Issue[] = [];
   const hw = doc.hoop.width;
   const hh = doc.hoop.height;
@@ -107,7 +109,7 @@ export function computeIssues(doc: StitchDocument, plan: PlanData | null): Issue
 
   // lines lying on top of each other (auto-routed lines travel back on purpose)
   const overlaps = new Map(lineOverlaps(doc.objects, { skipSelf: (o) => !!o.routed }).map((x) => [x.id, x]));
-  const nameOf = (id: string) => doc.objects.find((o) => o.id === id)?.name ?? "another line";
+  const nameOf = (id: string) => doc.objects.find((o) => o.id === id)?.name ?? t("filum.messaggi.another_line");
 
   // lettering smaller than the thread weight allows (once per text group)
   const weight = threadWeightInfo(doc.options?.threadWeight);
@@ -127,20 +129,20 @@ export function computeIssues(doc: StitchDocument, plan: PlanData | null): Issue
       if (ov.other && ov.share >= 0.95)
         add({
           level: "warning",
-          title: "Line on top of another line",
-          detail: `It lies on “${nameOf(ov.other)}”: the thread is sewn twice there (${mm} mm).`,
+          title: t("filum.messaggi.line_on_top_of_another"),
+          detail: t("filum.messaggi.it_lies_on_v1_the", { v1: nameOf(ov.other), mm }),
           at: ov.at,
-          fix: { label: "Delete it", apply: () => null },
+          fix: { label: t("filum.messaggi.delete_it"), apply: () => null },
         });
       else
         add({
           level: ov.other ? "warning" : "info",
-          title: ov.other ? "Lines on top of each other" : "Line runs over itself",
+          title: ov.other ? t("filum.messaggi.lines_on_top_of_each") : t("filum.messaggi.line_runs_over_itself"),
           detail: ov.other
-            ? `${mm} mm of it lies on “${nameOf(ov.other)}” and is sewn twice.`
-            : `${mm} mm of it goes back over itself and is sewn twice (fine for an underpath you meant).`,
+            ? t("filum.messaggi.mm_mm_of_it_lies", { mm, v2: nameOf(ov.other) })
+            : t("filum.messaggi.mm_mm_of_it_goes", { mm }),
           at: ov.at,
-          fix: { label: "Cut out the doubled part", apply: () => ov.cut() },
+          fix: { label: t("filum.messaggi.cut_out_the_doubled_part"), apply: () => ov.cut() },
         });
     }
 
@@ -149,20 +151,20 @@ export function computeIssues(doc: StitchDocument, plan: PlanData | null): Issue
     if (outsideOval) {
       add({
         level: "error",
-        title: "Outside the oval hoop",
-        detail: "Part of this object lies outside the ellipse the machine can reach.",
+        title: t("filum.messaggi.outside_the_oval_hoop"),
+        detail: t("filum.messaggi.part_of_this_object_lies"),
         at: c,
-        fix: { label: "Move to the centre", apply: (x) => transformObject(x, translateMat(hw / 2 - c[0], hh / 2 - c[1])) },
+        fix: { label: t("filum.messaggi.move_to_the_centre"), apply: (x) => transformObject(x, translateMat(hw / 2 - c[0], hh / 2 - c[1])) },
       });
     }
     if (outsideBox) {
       add({
         level: "error",
-        title: "Outside the hoop",
-        detail: "Part of this object can't be reached by the machine.",
+        title: t("filum.messaggi.outside_the_hoop"),
+        detail: t("filum.messaggi.part_of_this_object_can"),
         at: [Math.min(Math.max(c[0], 0), hw), Math.min(Math.max(c[1], 0), hh)],
         fix: {
-          label: "Move inside",
+          label: t("filum.messaggi.move_inside"),
           apply: (x) => {
             const dx = b.x < 0 ? -b.x : b.x + b.w > hw ? hw - (b.x + b.w) : 0;
             const dy = b.y < 0 ? -b.y : b.y + b.h > hh ? hh - (b.y + b.h) : 0;
@@ -175,32 +177,32 @@ export function computeIssues(doc: StitchDocument, plan: PlanData | null): Issue
       smallText.add(o.text.group);
       add({
         level: "warning",
-        title: "Lettering too small for the thread",
-        detail: `${o.text.size.toFixed(1)} mm letters — No. ${weight.weight} thread needs ${weight.minText} mm (${weight.minTextSource}). Use finer thread or larger text.`,
+        title: t("filum.messaggi.lettering_too_small_for_the"),
+        detail: t("filum.messaggi.v1_mm_letters_no_weight", { v1: o.text.size.toFixed(1), weight: weight.weight, minText: weight.minText, minTextSource: weight.minTextSource }),
         at: c,
       });
     }
     if (plan && st.type !== "none" && !stitchesOf(index)) {
-      add({ level: "warning", title: "Produces no stitches", detail: "The shape may be too small or invalid for this stitch type.", at: c });
+      add({ level: "warning", title: t("filum.messaggi.produces_no_stitches"), detail: t("filum.messaggi.the_shape_may_be_too"), at: c });
     }
     if (st.type === "satin") {
       const w = o.paths.length === 1 ? st.width : undefined;
       if (w !== undefined && w > 9 && st.maxStitchLength === 0) {
         add({
           level: "warning",
-          title: "Satin too wide",
-          detail: `${w.toFixed(1)} mm stitches can snag and loop. Split them or use a fill.`,
+          title: t("filum.messaggi.satin_too_wide"),
+          detail: t("filum.messaggi.v1_mm_stitches_can_snag", { v1: w.toFixed(1) }),
           at: c,
-          fix: { label: "Split at 7 mm", apply: (x) => (x.stitch.type === "satin" ? { ...x, stitch: { ...x.stitch, maxStitchLength: 7 } } : x) },
+          fix: { label: t("filum.messaggi.split_at_7_mm"), apply: (x) => (x.stitch.type === "satin" ? { ...x, stitch: { ...x.stitch, maxStitchLength: 7 } } : x) },
         });
       }
       if (w !== undefined && w < 0.8) {
         add({
           level: "warning",
-          title: "Satin too narrow",
-          detail: "Columns under 0.8 mm don't show; a running stitch looks cleaner.",
+          title: t("filum.messaggi.satin_too_narrow"),
+          detail: t("filum.messaggi.columns_under_0_8_mm"),
           at: c,
-          fix: { label: "Use triple run", apply: (x) => ({ ...x, stitch: { type: "running", length: 1.8, tolerance: 0.2, repeats: 1, beanRepeats: 2 } }) },
+          fix: { label: t("filum.messaggi.use_triple_run"), apply: (x) => ({ ...x, stitch: { type: "running", length: 1.8, tolerance: 0.2, repeats: 1, beanRepeats: 2 } }) },
         });
       }
     }
@@ -211,47 +213,49 @@ export function computeIssues(doc: StitchDocument, plan: PlanData | null): Issue
         const across = rowAngleFor(g.from, g.to);
         add({
           level: "warning",
-          title: "Rows run along the gradient",
-          detail: "Every row is split between the colours, so each colour sews short pieces joined by trims. Rows across the gradient give each colour whole rows.",
+          title: t("filum.messaggi.rows_run_along_the_gradient"),
+          detail: t("filum.messaggi.every_row_is_split_between"),
           at: c,
           fix: {
-            label: "Turn rows across",
+            label: t("filum.messaggi.turn_rows_across"),
             apply: (x) => (x.stitch.type === "fill" ? { ...x, stitch: { ...x.stitch, angle: across } } : x),
             scope: (x) => x.stitch.type === "fill" && x.stitch.gradient?.group === g.group,
           },
         });
       }
       if (Math.max(b.w, b.h) < 2.5) {
-        add({ level: "info", title: "Very small fill", detail: "Fills under ~2.5 mm look lumpy; consider satin or running stitch.", at: c });
+        add({ level: "info", title: t("filum.messaggi.very_small_fill"), detail: t("filum.messaggi.fills_under_2_5_mm"), at: c });
       }
       if (st.rowSpacing < 0.2 && (st.method === "tatami" || st.method === "contour" || st.method === "spiral")) {
         add({
           level: "warning",
-          title: "Very dense fill",
-          detail: `Row spacing ${st.rowSpacing} mm can make the fabric stiff and break needles.`,
+          title: t("filum.messaggi.very_dense_fill"),
+          detail: t("filum.messaggi.row_spacing_rowspacing_mm_can", { rowSpacing: st.rowSpacing }),
           at: c,
-          fix: { label: "Set 0.25 mm (Ink/Stitch)", apply: (x) => (x.stitch.type === "fill" ? { ...x, stitch: { ...x.stitch, rowSpacing: 0.25 } } : x) },
+          fix: { label: t("filum.messaggi.set_0_25_mm_ink"), apply: (x) => (x.stitch.type === "fill" ? { ...x, stitch: { ...x.stitch, rowSpacing: 0.25 } } : x) },
         });
       }
     }
     if (st.type === "running" && st.length < 1) {
       add({
         level: "warning",
-        title: "Very short running stitches",
-        detail: "Stitches under 1 mm tend to break the thread.",
+        title: t("filum.messaggi.very_short_running_stitches"),
+        detail: t("filum.messaggi.stitches_under_1_mm_tend"),
         at: c,
-        fix: { label: "Set 1.5 mm", apply: (x) => (x.stitch.type === "running" ? { ...x, stitch: { ...x.stitch, length: 1.5 } } : x) },
+        fix: { label: t("filum.messaggi.set_1_5_mm"), apply: (x) => (x.stitch.type === "running" ? { ...x, stitch: { ...x.stitch, length: 1.5 } } : x) },
       });
     }
     // shape geometry (Ink/Stitch troubleshoot)
     for (const pr of shapeProblemsCached(o)) add({ level: pr.level, title: pr.title, detail: pr.detail, at: pr.at ?? c });
     const lg = longestOf(index);
     if (lg && lg.len > 8 && st.type !== "satin") {
-      add({ level: "warning", title: "Long stitches", detail: `Contains a ${lg.len.toFixed(1)} mm stitch that may snag.`, at: lg.at });
+      add({ level: "warning", title: t("filum.messaggi.long_stitches"), detail: t("filum.messaggi.contains_a_v1_mm_stitch", { v1: lg.len.toFixed(1) }), at: lg.at });
     }
   });
   const total = plan?.stats.stitches ?? 0;
-  if (total > 100000) out.push({ id: "big", objId: "", level: "info", title: "Very large design", detail: `${total.toLocaleString()} stitches.`, at: [hw / 2, hh / 2] });
-  cache.set(doc, { plan, issues: out });
+  if (total > 100000) out.push({ id: "big", objId: "", level: "info", title: t("filum.messaggi.very_large_design"), detail: t("filum.messaggi.v1_stitches", { v1: total.toLocaleString() }), at: [hw / 2, hh / 2] });
+  // NOVAstitch: the modules' checks (module 0's registry), after Filum's own
+  out.push(...moduleIssues(doc, plan));
+  cache.set(doc, { plan, checks: issueChecksVersion(), issues: out });
   return out;
 }

@@ -494,7 +494,7 @@ try {
         const words = s.match(/\p{L}+/gu) ?? [];
         // …o sigle in maiuscolo («CC BY-NC-SA #», «SIL OFL»), estensioni («.COL»), elenchi di tasti
         // («Ctrl+X / Ctrl+C / Ctrl+V»), indirizzi e nomi di archivi GitHub («inkstitch/embroidery-fonts»)
-        if (/^\.[A-Z0-9#]+$/.test(s) || /^https?:\/\/\S+$/.test(s) || /^[\w.-]+\/[\w.-]+( \([\w.-]+\))?$/.test(s)) return true;
+        if (/^\.([A-Z0-9#]+|[a-z0-9#]+)$/.test(s) || /^https?:\/\/\S+$/.test(s) || /^[\w.-]+\/[\w.-]+( \([\w.-]+\))?$/.test(s)) return true;
         if (s.split(" / ").every((k) => KEYS.test(k.trim()))) return true;
         return allowed.has(s) || allowed.has(bare) || !/\p{L}/u.test(bare) || SIGLA.test(s) || words.every((w) => allowed.has(w) || /^\p{Lu}{2,}$/u.test(w));
       };

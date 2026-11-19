@@ -1,6 +1,7 @@
 // The Transform panel for the selection: a 9-point reference
 // point, X / Y / W / H (with a proportion lock), rotate, skew and flip.
 
+import { t } from "../nova/i18n/filum";
 import { FlipHorizontal2, FlipVertical2, Link2, Link2Off, RotateCcw, RotateCw } from "lucide-react";
 import { useState } from "react";
 import { mirrorSelection } from "../lib/arrange";
@@ -62,10 +63,10 @@ export function TransformPanel({ objects }: { objects: DesignObject[] }) {
   return (
     <div className={`transform-panel ${locked ? "disabled" : ""}`}>
       <div className="tp-top">
-        <div className="refgrid" role="group" aria-label="Reference point" title="Reference point for position, size and rotation">
+        <div className="refgrid" role="group" aria-label={t("filum.pannelli.reference_point")} title={t("filum.pannelli.reference_point_for_position_size")}>
           {[0, 0.5, 1].map((y) =>
             [0, 0.5, 1].map((x) => (
-              <button key={`${x}${y}`} className={ref[0] === x && ref[1] === y ? "on" : ""} onClick={() => pickRef([x, y])} aria-label={`Reference ${x},${y}`} />
+              <button key={`${x}${y}`} className={ref[0] === x && ref[1] === y ? "on" : ""} onClick={() => pickRef([x, y])} aria-label={t("filum.pannelli.reference_x_y", { x, y })} />
             )),
           )}
         </div>
@@ -89,7 +90,7 @@ export function TransformPanel({ objects }: { objects: DesignObject[] }) {
         </div>
         <button
           className={`icon-btn tp-lock ${lock ? "on" : ""}`}
-          title={lock ? "Proportions locked" : "Proportions free"}
+          title={lock ? t("filum.pannelli.proportions_locked") : t("filum.pannelli.proportions_free")}
           onClick={() => {
             setLock(!lock);
             safeSetItem(LOCK_KEY, lock ? "0" : "1");
@@ -99,31 +100,31 @@ export function TransformPanel({ objects }: { objects: DesignObject[] }) {
         </button>
       </div>
       <div className="tp-row">
-        <label className="tp-field" title="Rotate by (around the reference point)">
+        <label className="tp-field" title={t("filum.pannelli.rotate_by_around_the_reference")}>
           <span>⟲</span>
           <Num value={0} unit="°" step={15} onChange={(v) => v && apply(rotateAbout(v, rp[0], rp[1]), v)} />
         </label>
-        <button className="icon-btn" title="Rotate 90° left" onClick={() => apply(rotateAbout(-90, rp[0], rp[1]), -90)}>
+        <button className="icon-btn" title={t("filum.pannelli.rotate_90_left")} onClick={() => apply(rotateAbout(-90, rp[0], rp[1]), -90)}>
           <RotateCcw size={14} />
         </button>
-        <button className="icon-btn" title="Rotate 90° right" onClick={() => apply(rotateAbout(90, rp[0], rp[1]), 90)}>
+        <button className="icon-btn" title={t("filum.pannelli.rotate_90_right")} onClick={() => apply(rotateAbout(90, rp[0], rp[1]), 90)}>
           <RotateCw size={14} />
         </button>
         <span className="tp-sep" />
-        <button className="icon-btn" title="Mirror horizontally" onClick={() => mirrorSelection("h")}>
+        <button className="icon-btn" title={t("filum.pannelli.mirror_horizontally")} onClick={() => mirrorSelection("h")}>
           <FlipHorizontal2 size={14} />
         </button>
-        <button className="icon-btn" title="Mirror vertically" onClick={() => mirrorSelection("v")}>
+        <button className="icon-btn" title={t("filum.pannelli.mirror_vertically")} onClick={() => mirrorSelection("v")}>
           <FlipVertical2 size={14} />
         </button>
       </div>
       <div className="tp-row">
-        <label className="tp-field" title="Skew horizontally by (around the reference point)">
-          <span>⧄ H</span>
+        <label className="tp-field" title={t("filum.pannelli.skew_horizontally_by_around_the")}>
+          <span>{t("filum.pannelli.h")}</span>
           <Num value={0} unit="°" step={5} onChange={(v) => v && Math.abs(v) < 80 && apply(skewAbout(Math.tan((v * Math.PI) / 180), 0, rp[0], rp[1]))} />
         </label>
-        <label className="tp-field" title="Skew vertically by (around the reference point)">
-          <span>⧄ V</span>
+        <label className="tp-field" title={t("filum.pannelli.skew_vertically_by_around_the")}>
+          <span>{t("filum.pannelli.v")}</span>
           <Num value={0} unit="°" step={5} onChange={(v) => v && Math.abs(v) < 80 && apply(skewAbout(0, Math.tan((v * Math.PI) / 180), rp[0], rp[1]))} />
         </label>
       </div>

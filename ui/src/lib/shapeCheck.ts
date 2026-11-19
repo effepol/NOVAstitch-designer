@@ -2,6 +2,7 @@
 // cleanup of tiny objects (Ink/Stitch "Cleanup document"). Shared: the Issues
 // panel, the cleanup action and the export checks use them.
 
+import { t } from "../nova/i18n/filum";
 import type { DesignObject, StitchDocument, SubPath, Vec2 } from "../types";
 import { flattenSubPath } from "./bezier";
 import { satinRailIndices } from "./geometry";
@@ -71,19 +72,19 @@ export function shapeProblems(o: DesignObject): ShapeProblem[] {
   const st = o.stitch;
   if (st.type === "fill") {
     const closed = o.paths.filter((sp) => sp.closed && sp.nodes.length >= 3);
-    if (!closed.length) out.push({ level: "error", title: "Not a closed shape", detail: "A fill needs a closed outline — close the path or use a running stitch." });
-    else if (fillArea(o) < 0.05) out.push({ level: "error", title: "Invalid shape", detail: "The outline encloses no area." });
+    if (!closed.length) out.push({ level: "error", title: t("filum.messaggi.not_a_closed_shape"), detail: t("filum.messaggi.a_fill_needs_a_closed") });
+    else if (fillArea(o) < 0.05) out.push({ level: "error", title: t("filum.messaggi.invalid_shape"), detail: t("filum.messaggi.the_outline_encloses_no_area") });
     for (const sp of closed) {
       const x = selfCrossing(sp);
       if (x) {
-        out.push({ level: "warning", title: "Border crosses itself", detail: "Parts of the shape may be left out or sewn twice — untangle the outline (Path ▸ Shape builder can split it).", at: x });
+        out.push({ level: "warning", title: t("filum.messaggi.border_crosses_itself"), detail: t("filum.messaggi.parts_of_the_shape_may"), at: x });
         break;
       }
     }
-    if (st.method === "guided" && !st.guide) out.push({ level: "warning", title: "Guided fill without a guide line", detail: "Draw a guide line, or the rows fall back to straight ones." });
+    if (st.method === "guided" && !st.guide) out.push({ level: "warning", title: t("filum.messaggi.guided_fill_without_a_guide"), detail: t("filum.messaggi.draw_a_guide_line_or") });
     if (st.method === "cross") {
       const cell = st.crossSize ?? 2.5;
-      if (fillArea(o) < cell * cell * 0.5) out.push({ level: "warning", title: "Shape too small for its crosses", detail: `Smaller than half a ${cell} mm cell — no cross fits. Use a smaller cell.` });
+      if (fillArea(o) < cell * cell * 0.5) out.push({ level: "warning", title: t("filum.messaggi.shape_too_small_for_its"), detail: t("filum.messaggi.smaller_than_half_a_cell", { cell }) });
     }
   }
   if (st.type === "satin") {
@@ -100,9 +101,9 @@ export function shapeProblems(o: DesignObject): ShapeProblem[] {
         return false;
       };
       const dangling = rungs.find((r) => !(crosses(r, r0) && crosses(r, r1)));
-      if (dangling) out.push({ level: "warning", title: "Rung misses a rail", detail: "A rung that doesn't cross both rails is ignored — lengthen it across the column.", at: dangling.nodes[0].p });
+      if (dangling) out.push({ level: "warning", title: t("filum.messaggi.rung_misses_a_rail"), detail: t("filum.messaggi.a_rung_that_doesn_t"), at: dangling.nodes[0].p });
       if (!rungs.length && !(st.guides?.length) && r0.nodes.length !== r1.nodes.length)
-        out.push({ level: "info", title: "Rails with unequal points", detail: "The rails pair up by length only. Add direction guides (D) to control the stitch angle." });
+        out.push({ level: "info", title: t("filum.messaggi.rails_with_unequal_points"), detail: t("filum.messaggi.the_rails_pair_up_by") });
     }
   }
   return out;

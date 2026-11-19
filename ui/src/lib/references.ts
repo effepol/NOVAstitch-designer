@@ -1,6 +1,7 @@
 // Reference pictures: images placed on the canvas to trace over. They live in
 // the document (saved, undoable) but are never stitched or sent to the engine.
 
+import { t } from "../nova/i18n/filum";
 import { useStore } from "../store";
 import type { ReferenceImage, Vec2 } from "../types";
 import { uid } from "./geometry";
@@ -174,9 +175,9 @@ export async function addReference(name: string, bytes: Uint8Array, at?: Vec2) {
     };
     s.commit((d) => ({ ...d, references: [...(d.references ?? []), ref] }));
     s.set({ refEdit: ref.id });
-    s.toast("Reference added — drag to place, corners to scale · Enter when done", "success");
+    s.toast(t("filum.messaggi.reference_added_drag_to_place"), "success");
   } catch (e) {
-    s.toast(`Could not read ${name}: ${(e as Error).message}`, "error");
+    s.toast(t("filum.messaggi.could_not_read_name_message", { name, message: (e as Error).message }), "error");
   }
 }
 

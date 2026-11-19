@@ -5,6 +5,7 @@
 // iframe, so "Save as PDF" in the print dialog makes the PDF.
 
 import { FLAG, type PlanData, type Thread } from "../types";
+import { t } from "../nova/i18n/filum";
 
 export type PrintView = "clientOverview" | "clientDetailed" | "operatorOverview" | "operatorDetailed" | "pattern" | "info";
 
@@ -44,7 +45,7 @@ export const PRINT_DEFAULTS: PrintSettings = {
   spm: 700,
   thumbnail: 20,
   showFooter: true,
-  footer: "Made with Filum",
+  get footer() { return t("filum.finestre.foglio_footer"); },
   logo: "",
   infoText: "",
 };
@@ -146,36 +147,36 @@ export function sheetHtml(input: SheetInput, job: PrintJob, s: PrintSettings): s
   const head = `<header>
   ${s.logo ? `<img class="logo" src="${s.logo}" alt="">` : ""}
   <div class="headline">
-    <h1>${esc(job.title || input.name || "Untitled")}</h1>
-    ${job.client ? `<p><span>Client:</span> ${esc(job.client)}</p>` : ""}
-    ${job.purchaseOrder ? `<p><span>Purchase order #:</span> ${esc(job.purchaseOrder)}</p>` : ""}
+    <h1>${esc(job.title || input.name || t("filum.finestre.foglio_untitled"))}</h1>
+    ${job.client ? `<p><span>${t("filum.finestre.foglio_client")}</span> ${esc(job.client)}</p>` : ""}
+    ${job.purchaseOrder ? `<p><span>${t("filum.finestre.foglio_po")}</span> ${esc(job.purchaseOrder)}</p>` : ""}
   </div>
   <div class="date">${esc(date)}</div>
 </header>`;
   const details = (time: boolean) => `<div class="details">
-  <dl><dt>Unique colours</dt><dd>${colours}</dd><dt>Colour blocks</dt><dd>${blocks.length}</dd><dt>Total stops</dt><dd>${stops}</dd><dt>Total trims</dt><dd>${trims}</dd>${input.handTrims ? `<dt>Snip by hand</dt><dd>${input.handTrims} jumps</dd>` : ""}</dl>
-  <dl><dt>Design box size</dt><dd>${input.width.toFixed(1)} × ${input.height.toFixed(1)} mm</dd><dt>Total stitch count</dt><dd>${stitches.toLocaleString()}</dd><dt>Total thread used</dt><dd>${input.threadM.toFixed(1)} m top · ${input.bobbinM.toFixed(1)} m bobbin</dd></dl>
-  ${time ? `<dl class="time"><dt>Job estimated time</dt><dd>${total}</dd><dt>Machine speed</dt><dd>${s.spm} spm</dd></dl>` : ""}
+  <dl><dt>${t("filum.finestre.foglio_unique_colours")}</dt><dd>${colours}</dd><dt>${t("filum.finestre.foglio_colour_blocks")}</dt><dd>${blocks.length}</dd><dt>${t("filum.finestre.foglio_total_stops")}</dt><dd>${stops}</dd><dt>${t("filum.finestre.foglio_total_trims")}</dt><dd>${trims}</dd>${input.handTrims ? `<dt>${t("filum.finestre.foglio_snip_by_hand")}</dt><dd>${t("filum.finestre.foglio_n_jumps", { n: input.handTrims })}</dd>` : ""}</dl>
+  <dl><dt>${t("filum.finestre.foglio_design_box_size")}</dt><dd>${input.width.toFixed(1)} × ${input.height.toFixed(1)} mm</dd><dt>${t("filum.finestre.foglio_total_stitch_count")}</dt><dd>${stitches.toLocaleString()}</dd><dt>${t("filum.finestre.foglio_total_thread_used")}</dt><dd>${t("filum.finestre.foglio_top_bobbin", { top: input.threadM.toFixed(1), bobbin: input.bobbinM.toFixed(1) })}</dd></dl>
+  ${time ? `<dl class="time"><dt>${t("filum.finestre.foglio_job_time")}</dt><dd>${total}</dd><dt>${t("filum.finestre.foglio_machine_speed")}</dt><dd>${t("filum.finestre.foglio_spm", { spm: s.spm })}</dd></dl>` : ""}
 </div>`;
   const swatch = (b: BlockStats, i: number) => `<div class="swatch" style="background:${b.thread.color};color:${inkOn(b.thread.color)}">
   <b>${i + 1}. ${esc(b.thread.name)}</b>
   ${blocks.length < 13 ? `<span>rgb ${rgbOf(b.thread.color).join(", ")}</span>` : ""}
   ${threadLabel(b.thread) && blocks.length < 13 ? `<span>${esc(threadLabel(b.thread))}</span>` : ""}
-  ${blocks.length < 49 ? `<span>${b.stitches.toLocaleString()} stitches</span>` : ""}
-  ${blocks.length < 13 ? `<span>${b.trims} trims · ${b.stops} stops</span>` : ""}
+  ${blocks.length < 49 ? `<span>${t("filum.finestre.foglio_n_stitches", { n: b.stitches.toLocaleString() })}</span>` : ""}
+  ${blocks.length < 13 ? `<span>${t("filum.finestre.foglio_trims_stops", { trims: b.trims, stops: b.stops })}</span>` : ""}
 </div>`;
   const pages: string[] = [];
   if (s.views.clientOverview)
     pages.push(`<section class="page">${head}${details(s.clientTimes)}
 <figure class="big"><img src="${input.overview}" alt=""></figure>
 <div class="palette">${blocks.map(swatch).join("")}</div>
-<div class="signature">Client signature</div></section>`);
+<div class="signature">${t("filum.finestre.foglio_client_signature")}</div></section>`);
   if (s.views.clientDetailed)
     blocks.forEach((b, i) =>
       pages.push(`<section class="page">${head}
-<div class="details"><dl><dt>Colour ${i + 1}</dt><dd>${esc(b.thread.name)}</dd><dt>rgb</dt><dd>${rgbOf(b.thread.color).join(", ")}</dd><dt>Thread</dt><dd>${esc(threadLabel(b.thread) || "—")}</dd></dl>
-<dl><dt># stitches</dt><dd>${b.stitches.toLocaleString()}</dd><dt># trims</dt><dd>${b.trims}</dd><dt>Stop after?</dt><dd>${b.stops ? "yes" : "no"}</dd></dl>
-${s.clientTimes ? `<dl class="time"><dt>Estimated time</dt><dd>${duration(blockSeconds(b, s))}</dd></dl>` : ""}</div>
+<div class="details"><dl><dt>${t("filum.finestre.foglio_colour_n", { n: i + 1 })}</dt><dd>${esc(b.thread.name)}</dd><dt>rgb</dt><dd>${rgbOf(b.thread.color).join(", ")}</dd><dt>${t("filum.finestre.foglio_thread")}</dt><dd>${esc(threadLabel(b.thread) || "—")}</dd></dl>
+<dl><dt>${t("filum.finestre.foglio_hash_stitches")}</dt><dd>${b.stitches.toLocaleString()}</dd><dt>${t("filum.finestre.foglio_hash_trims")}</dt><dd>${b.trims}</dd><dt>${t("filum.finestre.foglio_stop_after")}</dt><dd>${b.stops ? t("filum.finestre.foglio_yes") : t("filum.finestre.foglio_no")}</dd></dl>
+${s.clientTimes ? `<dl class="time"><dt>${t("filum.finestre.foglio_estimated_time")}</dt><dd>${duration(blockSeconds(b, s))}</dd></dl>` : ""}</div>
 <figure class="big"><img src="${input.blockPictures[i]}" alt=""><i class="chip" style="background:${b.thread.color}"></i></figure></section>`),
     );
   if (s.views.operatorOverview)
@@ -190,18 +191,18 @@ ${input.materials.length ? `<dl class="materials">${input.materials.map(([k, v])
   <td class="sw" style="background:${b.thread.color};color:${inkOn(b.thread.color)}">#${i + 1}</td>
   <td class="th"><img src="${input.blockPictures[i]}" alt="" style="width:${th}mm;height:${th}mm"></td>
   <td><b>${esc(b.thread.name)}</b><span>rgb ${rgbOf(b.thread.color).join(", ")}</span><span>${esc(threadLabel(b.thread))}</span></td>
-  <td><span>${b.stitches.toLocaleString()} stitches</span><span>${b.threadM.toFixed(1)} m thread</span><span>${duration(blockSeconds(b, s))}</span></td>
-  <td><span>${b.trims} trims</span><span>${b.stops} stops</span></td>
+  <td><span>${t("filum.finestre.foglio_n_stitches", { n: b.stitches.toLocaleString() })}</span><span>${t("filum.finestre.foglio_m_thread", { m: b.threadM.toFixed(1) })}</span><span>${duration(blockSeconds(b, s))}</span></td>
+  <td><span>${t("filum.finestre.foglio_n_trims", { n: b.trims })}</span><span>${t("filum.finestre.foglio_n_stops", { n: b.stops })}</span></td>
   <td class="notes">${esc(job.notes[i] ?? "").replace(/\n/g, "<br>")}</td>
 </tr>`,
       )
       .join("");
     pages.push(`<section class="page">${head}
-<table class="opd"><thead><tr><th></th><th></th><th>Colour</th><th>Thread consumption</th><th>Stops and trims</th><th>Notes</th></tr></thead><tbody>
+<table class="opd"><thead><tr><th></th><th></th><th>${t("filum.finestre.foglio_th_colour")}</th><th>${t("filum.finestre.foglio_th_consumption")}</th><th>${t("filum.finestre.foglio_th_stops_trims")}</th><th>${t("filum.finestre.foglio_th_notes")}</th></tr></thead><tbody>
 <tr class="sum"><td class="sw">##</td><td class="th"><img src="${input.overview}" alt="" style="width:${th}mm;height:${th}mm"></td>
-<td><span>Unique colours: ${colours}</span><span>Colour blocks: ${blocks.length}</span></td>
-<td><span>${input.width.toFixed(1)} × ${input.height.toFixed(1)} mm</span><span>${stitches.toLocaleString()} stitches</span><span>${total}</span></td>
-<td><span>${stops} stops</span><span>${trims} trims</span></td><td></td></tr>
+<td><span>${t("filum.finestre.foglio_unique_colours_n", { n: colours })}</span><span>${t("filum.finestre.foglio_colour_blocks_n", { n: blocks.length })}</span></td>
+<td><span>${input.width.toFixed(1)} × ${input.height.toFixed(1)} mm</span><span>${t("filum.finestre.foglio_n_stitches", { n: stitches.toLocaleString() })}</span><span>${total}</span></td>
+<td><span>${t("filum.finestre.foglio_n_stops", { n: stops })}</span><span>${t("filum.finestre.foglio_n_trims", { n: trims })}</span></td><td></td></tr>
 ${rows}</tbody></table></section>`);
   }
   if (s.views.pattern) pages.push(`<section class="page pattern"><figure class="full"><img src="${input.overview}" alt=""></figure></section>`);
@@ -252,5 +253,5 @@ footer { position: fixed; bottom: 0; left: 0; right: 0; text-align: center; font
   footer { display: none; }
   .page::after { content: ${JSON.stringify(s.showFooter ? s.footer : "")}; position: absolute; bottom: 5mm; left: 0; right: 0; text-align: center; font-size: 8pt; color: #888; }
 }
-</style></head><body>${pages.join("\n") || `<section class="page"><p>Choose at least one layout.</p></section>`}${footer}</body></html>`;
+</style></head><body>${pages.join("\n") || `<section class="page"><p>${t("filum.finestre.foglio_choose_layout")}</p></section>`}${footer}</body></html>`;
 }

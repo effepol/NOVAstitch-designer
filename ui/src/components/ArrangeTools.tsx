@@ -2,6 +2,7 @@
 // dialogs: Wreath · Kaleidoscope · Mirror-merge, Outlines & offsets, Colour
 // blending.
 
+import { t, tn } from "../nova/i18n/filum";
 import { AlignCenterHorizontal, AlignCenterVertical, AlignEndHorizontal, AlignEndVertical, AlignHorizontalDistributeCenter, AlignStartHorizontal, AlignStartVertical, AlignVerticalDistributeCenter, Crosshair, FlipHorizontal2, FlipVertical2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { align, distribute, mirrorSelection, outlineObject, repeatSelection, repeatTransforms, withOutline, type OutlineKind, type OutlineOptions, type RepeatMode } from "../lib/arrange";
@@ -19,27 +20,27 @@ export function ArrangeButtons({ count }: { count: number }) {
       {icon}
     </button>
   );
-  const to = count > 1 ? "selection" : "hoop";
+  const sel = count > 1;
   return (
     <>
-      <div className="seg" role="group" aria-label="Align">
-        {b(`Align left edges (to the ${to})`, <AlignStartVertical size={14} />, () => align("left"))}
-        {b(`Centre horizontally (to the ${to})`, <AlignCenterVertical size={14} />, () => align("hcenter"))}
-        {b(`Align right edges (to the ${to})`, <AlignEndVertical size={14} />, () => align("right"))}
-        {b(`Align top edges (to the ${to})`, <AlignStartHorizontal size={14} />, () => align("top"))}
-        {b(`Centre vertically (to the ${to})`, <AlignCenterHorizontal size={14} />, () => align("vcenter"))}
-        {b(`Align bottom edges (to the ${to})`, <AlignEndHorizontal size={14} />, () => align("bottom"))}
+      <div className="seg" role="group" aria-label={t("filum.pannelli.align")}>
+        {b(sel ? t("filum.pannelli.align_left_selection") : t("filum.pannelli.align_left_hoop"), <AlignStartVertical size={14} />, () => align("left"))}
+        {b(sel ? t("filum.pannelli.centre_h_selection") : t("filum.pannelli.centre_h_hoop"), <AlignCenterVertical size={14} />, () => align("hcenter"))}
+        {b(sel ? t("filum.pannelli.align_right_selection") : t("filum.pannelli.align_right_hoop"), <AlignEndVertical size={14} />, () => align("right"))}
+        {b(sel ? t("filum.pannelli.align_top_selection") : t("filum.pannelli.align_top_hoop"), <AlignStartHorizontal size={14} />, () => align("top"))}
+        {b(sel ? t("filum.pannelli.centre_v_selection") : t("filum.pannelli.centre_v_hoop"), <AlignCenterHorizontal size={14} />, () => align("vcenter"))}
+        {b(sel ? t("filum.pannelli.align_bottom_selection") : t("filum.pannelli.align_bottom_hoop"), <AlignEndHorizontal size={14} />, () => align("bottom"))}
       </div>
       {count > 2 && (
-        <div className="seg" role="group" aria-label="Distribute">
-          {b("Distribute horizontally (equal gaps)", <AlignHorizontalDistributeCenter size={14} />, () => distribute("h"))}
-          {b("Distribute vertically (equal gaps)", <AlignVerticalDistributeCenter size={14} />, () => distribute("v"))}
+        <div className="seg" role="group" aria-label={t("filum.pannelli.distribute")}>
+          {b(t("filum.pannelli.distribute_h"), <AlignHorizontalDistributeCenter size={14} />, () => distribute("h"))}
+          {b(t("filum.pannelli.distribute_v"), <AlignVerticalDistributeCenter size={14} />, () => distribute("v"))}
         </div>
       )}
-      <div className="seg" role="group" aria-label="Mirror">
-        {b("Mirror horizontally", <FlipHorizontal2 size={14} />, () => mirrorSelection("h"))}
-        {b("Mirror vertically", <FlipVertical2 size={14} />, () => mirrorSelection("v"))}
-        {b("Centre in hoop", <Crosshair size={14} />, centerInHoop)}
+      <div className="seg" role="group" aria-label={t("filum.pannelli.mirror")}>
+        {b(t("filum.pannelli.mirror_h"), <FlipHorizontal2 size={14} />, () => mirrorSelection("h"))}
+        {b(t("filum.pannelli.mirror_v"), <FlipVertical2 size={14} />, () => mirrorSelection("v"))}
+        {b(t("filum.pannelli.centre_in_hoop"), <Crosshair size={14} />, centerInHoop)}
       </div>
     </>
   );
@@ -104,38 +105,38 @@ export function RepeatDialog({ onClose }: { onClose: () => void }) {
   return (
     <Dialog
       live
-      title="Wreath · Kaleidoscope · Mirror-merge"
+      title={t("filum.pannelli.wreath_kaleidoscope_mirror_merge")}
       onClose={onClose}
       footer={
         <>
-          <span className="hint">{total} copies in total</span>
+          <span className="hint">{t("filum.pannelli.total_copies_in_total", { total })}</span>
           <div className="spacer" />
           <button className="btn" onClick={onClose}>
-            Cancel
+            {t("filum.pannelli.cancel")}
           </button>
           <button
             className="btn primary"
             disabled={!box}
             onClick={() => {
               const n = repeatSelection({ mode, copies, center });
-              useStore.getState().toast(`Created ${n} objects`, "success");
+              useStore.getState().toast(t("filum.pannelli.created_n_objects", { n }), "success");
               onClose();
             }}
           >
-            Create
+            {t("filum.pannelli.create")}
           </button>
         </>
       }
     >
-      {!box && <p className="hint warn">Select the objects to repeat first.</p>}
+      {!box && <p className="hint warn">{t("filum.pannelli.select_the_objects_to_repeat")}</p>}
       <div className="seg" style={{ marginBottom: 10 }}>
         {(
           [
-            ["wreath", "Wreath"],
-            ["kaleidoscope", "Kaleidoscope"],
-            ["mirrorH", "Mirror ↔"],
-            ["mirrorV", "Mirror ↕"],
-            ["mirrorHV", "Mirror 4×"],
+            ["wreath", t("filum.pannelli.wreath")],
+            ["kaleidoscope", t("filum.pannelli.kaleidoscope")],
+            ["mirrorH", t("filum.pannelli.mirror_2")],
+            ["mirrorV", t("filum.pannelli.mirror_3")],
+            ["mirrorHV", t("filum.pannelli.mirror_4")],
           ] as [RepeatMode, string][]
         ).map(([id, label]) => (
           <button key={id} className={mode === id ? "on" : ""} onClick={() => setMode(id)}>
@@ -146,30 +147,29 @@ export function RepeatDialog({ onClose }: { onClose: () => void }) {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 200px", gap: 16, alignItems: "start" }}>
         <div>
           {rotational && (
-            <Row label="Copies" title="Number of repeats around the centre">
+            <Row label={t("filum.pannelli.copies")} title={t("filum.pannelli.number_of_repeats_around_the")}>
               <Num value={copies} step={1} min={2} max={36} digits={0} onChange={(v) => setCopies(Math.round(v))} />
             </Row>
           )}
-          <Row label="Centre">
+          <Row label={t("filum.pannelli.centre")}>
             <div className="seg">
               <button className={around === "radius" ? "on" : ""} onClick={() => setAround("radius")}>
-                {rotational ? "Below selection" : "Next to selection"}
+                {rotational ? t("filum.pannelli.below_selection") : t("filum.pannelli.next_to_selection")}
               </button>
               <button className={around === "hoop" ? "on" : ""} onClick={() => setAround("hoop")}>
-                Hoop centre
+                {t("filum.pannelli.hoop_centre")}
               </button>
             </div>
           </Row>
           {around === "radius" && rotational && (
-            <Row label="Radius" title="Distance from the selection's centre to the wreath centre">
+            <Row label={t("filum.pannelli.radius")} title={t("filum.pannelli.distance_from_the_selection_s")}>
               <Num value={radius} unit="mm" step={1} min={1} onChange={setRadius} />
             </Row>
           )}
           <p className="hint">
-            {mode === "wreath" && "Copies rotate around the centre — rings, flowers, borders."}
-            {mode === "kaleidoscope" && "Rotated copies plus their mirror images — snowflake-like symmetry."}
-            {mode.startsWith("mirror") && "Mirror images joined at the centre line (mirror-merge)."} Fill angles follow every copy; mirrored
-            lettering becomes shapes.
+            {mode === "wreath" && t("filum.pannelli.copies_rotate_around_the_centre")}
+            {mode === "kaleidoscope" && t("filum.pannelli.rotated_copies_plus_their_mirror")}
+            {mode.startsWith("mirror") && t("filum.pannelli.mirror_images_joined_at_the")}{t("filum.pannelli.fill_angles_follow_every_copy")}
           </p>
         </div>
         <RepeatPreview mode={mode} copies={copies} center={center} />
@@ -251,7 +251,7 @@ export function OutlineDialog({ onClose }: { onClose: () => void }) {
     try {
       const obj = preview ?? (await outlineObject(orig, ids, opt));
       if (!obj) {
-        useStore.getState().toast("Nothing to outline", "error");
+        useStore.getState().toast(t("filum.pannelli.nothing_to_outline"), "error");
         setBusy(false);
         return;
       }
@@ -260,7 +260,7 @@ export function OutlineDialog({ onClose }: { onClose: () => void }) {
       s.liveUpdate(() => orig);
       s.commit((d) => withOutline(d, ids, obj, behind));
       s.select([obj.id]);
-      s.toast(`${obj.name}: ${obj.paths.length} outline${obj.paths.length > 1 ? "s" : ""}`, "success");
+      s.toast(t("filum.pannelli.name_outlines", { name: obj.name, outlines: tn("filum.pannelli.n_outlines", obj.paths.length) }), "success");
       onClose();
     } catch (e) {
       useStore.getState().toast(String((e as Error).message ?? e), "error");
@@ -269,11 +269,11 @@ export function OutlineDialog({ onClose }: { onClose: () => void }) {
   };
 
   const kinds: [OutlineKind, string, string][] = [
-    ["running", "Run", "Running stitch outline"],
-    ["triple", "Triple run", "Bold triple (bean) stitch outline"],
-    ["satin", "Satin border", "Satin column along the outline — the classic patch border"],
-    ["fill", "Backing fill", "A filled shape behind the design (patches)"],
-    ["applique", "Appliqué", "Placement, tack-down and cover along the outline"],
+    ["running", t("filum.pannelli.run"), t("filum.pannelli.running_stitch_outline")],
+    ["triple", t("filum.pannelli.triple_run"), t("filum.pannelli.bold_triple_bean_stitch_outline")],
+    ["satin", t("filum.pannelli.satin_border"), t("filum.pannelli.satin_column_along_the_outline")],
+    ["fill", t("filum.pannelli.backing_fill"), t("filum.pannelli.a_filled_shape_behind_the")],
+    ["applique", t("filum.pannelli.applique"), t("filum.pannelli.placement_tack_down_and_cover")],
   ];
   // how many separate outlines the result has (outer edges and holes)
   const pieces = preview?.paths.length ?? 0;
@@ -281,22 +281,22 @@ export function OutlineDialog({ onClose }: { onClose: () => void }) {
   return (
     <Dialog
       live
-      title="Outlines & offsets"
+      title={t("filum.pannelli.outlines_offsets")}
       onClose={onClose}
       footer={
         <>
-          <span className="stat">{ids.length ? (pieces ? `${pieces} outline${pieces > 1 ? "s" : ""}` : "—") : ""}</span>
+          <span className="stat">{ids.length ? (pieces ? tn("filum.pannelli.n_outlines", pieces) : "—") : ""}</span>
           <div className="spacer" />
           <button className="btn" onClick={onClose}>
-            Cancel
+            {t("filum.pannelli.cancel")}
           </button>
           <button className="btn primary" disabled={!ids.length || busy || !preview} onClick={create}>
-            {busy ? "Working…" : "Create"}
+            {busy ? t("filum.pannelli.working") : t("filum.pannelli.create")}
           </button>
         </>
       }
     >
-      {!ids.length && <p className="hint warn">Select the objects to outline first.</p>}
+      {!ids.length && <p className="hint warn">{t("filum.pannelli.select_the_objects_to_outline")}</p>}
       <div className="seg" style={{ marginBottom: 10, flexWrap: "wrap" }}>
         {kinds.map(([id, label, title]) => (
           <button
@@ -313,32 +313,32 @@ export function OutlineDialog({ onClose }: { onClose: () => void }) {
           </button>
         ))}
       </div>
-      <Row label="Offset" title="Distance from the design (negative = inside)">
+      <Row label={t("filum.pannelli.offset")} title={t("filum.pannelli.distance_from_the_design_negative")}>
         <Num value={o.offset} unit="mm" step={0.5} min={-10} max={50} onChange={(v) => set({ offset: v })} />
       </Row>
       {(o.kind === "satin" || o.kind === "applique") && (
-        <Row label={o.kind === "satin" ? "Width" : "Cover width"}>
+        <Row label={o.kind === "satin" ? t("filum.pannelli.width") : t("filum.pannelli.cover_width")}>
           <Num value={o.width} unit="mm" step={0.1} min={0.5} max={12} onChange={(v) => set({ width: v })} />
         </Row>
       )}
-      <Row label="Bridge gaps" title="Join pieces of the art that don't touch — gaps up to twice this close — and fill narrow notches, so one border runs around everything (0: follow every gap)">
+      <Row label={t("filum.pannelli.bridge_gaps")} title={t("filum.pannelli.join_pieces_of_the_art")}>
         <Num value={o.bridge} unit="mm" step={0.5} min={0} max={50} onChange={(v) => set({ bridge: v })} />
       </Row>
-      <Row label="Outer edge only" title="No outlines around holes (letter counters, gaps inside the art)">
+      <Row label={t("filum.pannelli.outer_edge_only")} title={t("filum.pannelli.no_outlines_around_holes_letter")}>
         <Toggle on={o.outerOnly} onChange={(v) => set({ outerOnly: v })} />
       </Row>
-      <Row label="Colour">
+      <Row label={t("filum.pannelli.colour")}>
         <ThreadSwatches value={thread} onChange={setThread} />
       </Row>
-      <Row label="Sew it first" title="Place the new object behind the selection (backings, appliqué) instead of on top (borders)">
+      <Row label={t("filum.pannelli.sew_it_first")} title={t("filum.pannelli.place_the_new_object_behind")}>
         <Toggle on={behind} onChange={setBehind} />
       </Row>
       {pieces > 1 && patchKind ? (
         <p className="hint warn">
-          {pieces} separate outlines: parts of the art don't touch{o.outerOnly ? "" : " or have holes"}. For one patch border, raise Bridge gaps{o.outerOnly ? "" : " and turn on Outer edge only"}.
+          {o.outerOnly ? t("filum.pannelli.separate_outlines_outer_only", { n: pieces }) : t("filum.pannelli.separate_outlines_with_holes", { n: pieces })}
         </p>
       ) : (
-        <p className="hint">Follows the union of everything selected — lettering, satins and fills — so one outline hugs the whole group. Pieces under 1 mm² are left out.</p>
+        <p className="hint">{t("filum.pannelli.follows_the_union_of_everything")}</p>
       )}
     </Dialog>
   );

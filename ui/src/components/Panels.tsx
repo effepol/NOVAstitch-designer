@@ -37,7 +37,8 @@ import { FoldAllGroups, IssuesPanel, LayersPanel, PropertiesPanel, ScenePanel, u
 import { ElementInfoSection } from "./ElementInfo";
 import { openSection, SectionScope } from "./ui";
 import { panels, useRegistry } from "../nova/core/registry";
-import { t, useLanguage } from "../nova/core/i18n";
+import { useLanguage } from "../nova/core/i18n";
+import { t } from "../nova/i18n/filum";
 
 /* ---------------- layout ---------------- */
 
@@ -63,8 +64,8 @@ export function Workspace({ rail, center }: { rail: ReactNode; center: ReactNode
       {!stacked && showOutline && <OutlinePanel side="left" mainRef={mainRef} />}
       <div className="center-wrap">
         {center}
-        {!showOutline && <PanelEdge side={stacked ? "right" : "left"} label="Show layers" onOpen={() => useStore.getState().setLayout({ showOutline: true })} offset={stacked && showInspector} />}
-        {!showInspector && <PanelEdge side="right" label="Show properties" onOpen={() => useStore.getState().setLayout({ showInspector: true })} />}
+        {!showOutline && <PanelEdge side={stacked ? "right" : "left"} label={t("filum.pannelli.show_layers")} onOpen={() => useStore.getState().setLayout({ showOutline: true })} offset={stacked && showInspector} />}
+        {!showInspector && <PanelEdge side="right" label={t("filum.pannelli.show_properties")} onOpen={() => useStore.getState().setLayout({ showInspector: true })} />}
       </div>
       {stacked && (showOutline || showInspector) && (
         <div className={`side-stack${both ? " both" : ""}`}>
@@ -97,7 +98,7 @@ function WidthSash({ prop, edge, mainRef }: { prop: "outlineW" | "inspectorW"; e
     <Sash
       orientation="vertical"
       className={`sash-${edge}`}
-      label={prop === "outlineW" ? "Resize the layers panel" : "Resize the properties panel"}
+      label={prop === "outlineW" ? t("filum.pannelli.resize_the_layers_panel") : t("filum.pannelli.resize_the_properties_panel")}
       value={value}
       min={limits[0]}
       max={limits[1]}
@@ -122,7 +123,7 @@ function SplitSash({ mainRef }: { mainRef: MainRef }) {
   return (
     <Sash
       orientation="horizontal"
-      label="Resize the layers and properties panels"
+      label={t("filum.pannelli.resize_the_layers_and_properties")}
       value={Math.round(split * 100)}
       min={LIMITS.split[0] * 100}
       max={LIMITS.split[1] * 100}
@@ -172,7 +173,7 @@ function Sash({
       aria-valuemin={min}
       aria-valuemax={max}
       tabIndex={0}
-      title={`${label} — double-click: default size`}
+      title={t("filum.pannelli.label_double_click_default_size", { label })}
       className={`sash ${orientation} ${className} ${drag ? "dragging" : ""} ${drag === "collapse" ? "collapse" : ""}`}
       onDoubleClick={onReset}
       onKeyDown={(e) => {
@@ -216,7 +217,7 @@ function Sash({
 function PanelEdge({ side, label, onOpen, offset }: { side: "left" | "right"; label: string; onOpen: () => void; offset?: boolean }) {
   const Icon = side === "left" ? PanelLeftOpen : PanelRightOpen;
   return (
-    <button className={`panel-edge ${side}${offset ? " offset" : ""}`} title={`${label} (${navigator.platform.toLowerCase().includes("mac") ? "⌘" : "Ctrl+"}\\ shows all panels)`} aria-label={label} onClick={onOpen}>
+    <button className={`panel-edge ${side}${offset ? " offset" : ""}`} title={t("filum.pannelli.label_shows_all_panels", { label, key: navigator.platform.toLowerCase().includes("mac") ? "⌘" : "Ctrl+" })} aria-label={label} onClick={onOpen}>
       <Icon size={14} />
     </button>
   );
@@ -249,20 +250,20 @@ function OutlinePanel({ side, mainRef }: { side: "left" | "right"; mainRef: Main
   const extra = panels();
   const own = extra.find((p) => p.id === tab);
   return (
-    <section className={`side-panel outline ${side}`} aria-label="Layers and issues">
+    <section className={`side-panel outline ${side}`} aria-label={t("filum.pannelli.layers_and_issues")}>
       <PanelTabs
         value={tab}
         onChange={(v) => set({ outlineTab: v })}
         tabs={[
-          { id: "layers", label: <>Layers{count > 0 && <span className="ptab-n">{count}</span>}</> },
-          { id: "issues", label: <>Issues{issues > 0 && <span className="count">{issues}</span>}</>, title: "Problems that would sew badly — markers show on the canvas while this tab is open" },
+          { id: "layers", label: <>{t("filum.pannelli.layers")}{count > 0 && <span className="ptab-n">{count}</span>}</> },
+          { id: "issues", label: <>{t("filum.pannelli.issues")}{issues > 0 && <span className="count">{issues}</span>}</>, title: t("filum.pannelli.problems_that_would_sew_badly") },
           // NOVAstitch: panels registered by the modules (nova/core/registry)
           ...extra.map((p) => ({ id: p.id, label: <>{t(p.title)}</>, nova: p.module })),
         ]}
         actions={
           <>
             {tab === "layers" && <FoldAllGroups />}
-            <button className="icon-btn" title="Hide the layers panel" onClick={() => useStore.getState().setLayout({ showOutline: false })}>
+            <button className="icon-btn" title={t("filum.pannelli.hide_the_layers_panel")} onClick={() => useStore.getState().setLayout({ showOutline: false })}>
               <Close size={14} />
             </button>
           </>
@@ -335,16 +336,16 @@ function Inspector({ mainRef, stacked }: { mainRef: MainRef; stacked?: boolean }
   const sections = useSections(bodyRef, query, tab);
   const icons: Record<string, LucideIcon> = { ...SECTION_ICONS, "Stitch options": (stitchType && TYPE_ICONS[stitchType]) || StitchRunning };
   return (
-    <section className="side-panel inspector" aria-label="Properties">
+    <section className="side-panel inspector" aria-label={t("filum.pannelli.properties")}>
       <PanelTabs
         value={tab}
         onChange={(v) => set({ inspectorTab: v })}
         tabs={[
-          { id: "selection", label: <>Selection{nSel > 1 && <span className="ptab-n">{nSel}</span>}</>, title: "The selected objects' settings" },
-          { id: "design", label: "Design", title: "Hoop, fabric, machine and stitch-out — saved with the design" },
+          { id: "selection", label: <>{t("filum.pannelli.selection")}{nSel > 1 && <span className="ptab-n">{nSel}</span>}</>, title: t("filum.pannelli.the_selected_objects_settings") },
+          { id: "design", label: t("filum.pannelli.design"), title: t("filum.pannelli.hoop_fabric_machine_and_stitch") },
         ]}
         actions={
-          <button className="icon-btn" title="Hide the properties panel" onClick={() => useStore.getState().setLayout({ showInspector: false })}>
+          <button className="icon-btn" title={t("filum.pannelli.hide_the_properties_panel")} onClick={() => useStore.getState().setLayout({ showInspector: false })}>
             <PanelRightClose size={14} />
           </button>
         }
@@ -354,8 +355,8 @@ function Inspector({ mainRef, stacked }: { mainRef: MainRef; stacked?: boolean }
         <input
           ref={searchRef}
           type="search"
-          placeholder="Search properties"
-          aria-label="Search properties"
+          placeholder={t("filum.pannelli.search_properties")}
+          aria-label={t("filum.pannelli.search_properties")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {
@@ -366,7 +367,7 @@ function Inspector({ mainRef, stacked }: { mainRef: MainRef; stacked?: boolean }
           }}
         />
         {query ? (
-          <button className="icon-btn" title="Clear (Esc)" onClick={() => setQuery("")}>
+          <button className="icon-btn" title={t("filum.pannelli.clear_esc")} onClick={() => setQuery("")}>
             <X size={13} />
           </button>
         ) : (
@@ -374,7 +375,7 @@ function Inspector({ mainRef, stacked }: { mainRef: MainRef; stacked?: boolean }
         )}
       </div>
       <div className="insp">
-        <nav className="sec-rail" aria-label="Sections">
+        <nav className="sec-rail" aria-label={t("filum.pannelli.sections")}>
           {sections.list.map((s) => {
             const Icon = icons[s.title.replace(/ \(\d+\)$/, "")];
             return (
@@ -402,12 +403,12 @@ function Inspector({ mainRef, stacked }: { mainRef: MainRef; stacked?: boolean }
               <>
                 <ScenePanel />
                 <div className="props" style={{ paddingTop: 0 }}>
-                  <ElementInfoSection ids={[]} title="Design info" />
+                  <ElementInfoSection ids={[]} title={t("filum.pannelli.design_info")} />
                 </div>
               </>
             )}
           </SectionScope.Provider>
-          {query && sections.none && <div className="hint insp-none">No property matches “{query}”.</div>}
+          {query && sections.none && <div className="hint insp-none">{t("filum.pannelli.no_property_matches_query", { query })}</div>}
         </div>
       </div>
       {!stacked && <WidthSash prop="inspectorW" edge="left" mainRef={mainRef} />}

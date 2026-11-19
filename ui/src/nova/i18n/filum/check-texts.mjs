@@ -33,12 +33,13 @@ const ts = require("typescript");
 const json = (f) => JSON.parse(readFileSync(path.join(here, f), "utf8"));
 
 /** Attributi e proprietà che finiscono a schermo. */
-const VISIBLE_NAME = /^(title|placeholder|alt|label|hint|tip|tooltip|caption|heading|subtitle|group|text|desc|description|help|note|message|empty|emptyText|confirmText|okText|cancelText|unit|suffix|prefix|aria-(label|description|roledescription|valuetext|placeholder)|[a-z]+(Label|Title|Hint|Text|Tip|Message))$/;
+const VISIBLE_NAME = /^(title|placeholder|alt|label|hint|tip|tooltip|caption|heading|subtitle|detail|text|desc|description|help|note|message|empty|emptyText|confirmText|okText|cancelText|unit|suffix|prefix|aria-(label|description|roledescription|valuetext|placeholder)|[a-z]+(Label|Title|Hint|Text|Tip|Message))$/;
 /** Funzioni il cui primo argomento è un messaggio per l'utente. */
 const MESSAGE_FN = /^(toast|alert|confirm|prompt|setError|setStatus|setMessage|setNote|setWarning|notify|ask)$/;
 const LETTER = /\p{L}/u;
 /** Una stringa che ha l'aria di una frase o di un'etichetta: «Regions», «Sew the swatch» (non «fillToSatin», «btn sm»). */
-const LOOKS_LIKE_TEXT = (s) => /^\p{Lu}\p{Ll}/u.test(s.trim()) || /\p{L}{2,}\s+\p{L}{2,}\s+\p{L}{2,}/u.test(s);
+// …anche «0.40 mm rows — soft, flexible», «0.4 mm — the standard»: tre parole di tre lettere, o due con un trattino lungo
+const LOOKS_LIKE_TEXT = (s) => /^\p{Lu}\p{Ll}/u.test(s.trim()) || /\p{L}{2,}\s+\p{L}{2,}\s+\p{L}{2,}/u.test(s) || ((s.match(/\p{L}{3,}/gu) ?? []).length >= 3 && /\s/.test(s)) || ((s.match(/\p{L}{3,}/gu) ?? []).length >= 2 && / — /.test(s));
 /** Attributi JSX tecnici, mai testo. */
 const TECHNICAL_ATTR = /^(className|class|id|key|type|href|src|role|name|value|defaultValue|htmlFor|style|target|rel|accept|inputMode|autoComplete|lang|dir|method|d|fill|stroke|viewBox|transform|xmlns|data-[\w-]+|aria-(?!label|description|roledescription|valuetext|placeholder)[\w-]+)$/;
 
@@ -141,10 +142,22 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
     } else if (ts.isPropertyAssignment(node)) {
       const name = nameOf(node.name);
       if (name && (VISIBLE_NAME.test(name) || propsOf.has(name))) strings(node.initializer, `proprietà ${name}`);
+      // group: "Everywhere" — un titolo di gruppo mostrato; non "preview" (un nome interno)
+      else if (name === "group" && (ts.isStringLiteral(node.initializer) || ts.isNoSubstitutionTemplateLiteral(node.initializer)) && LOOKS_LIKE_TEXT(node.initializer.text))
+        strings(node.initializer, "proprietà group");
       // name: "Disc, rows across" — un nome mostrato (oggetti, fili, pezzi); non "sky" o "filum.convert"
       else if (name === "name" && (ts.isStringLiteral(node.initializer) || ts.isNoSubstitutionTemplateLiteral(node.initializer)) && LOOKS_LIKE_TEXT(node.initializer.text))
         strings(node.initializer, "proprietà name");
       else if (name === "name" && ts.isTemplateExpression(node.initializer) && LOOKS_LIKE_TEXT(node.initializer.head.text)) strings(node.initializer, "proprietà name");
+    }
+    // HTML scritto in un template (il foglio di stampa): «<dt>Total trims</dt>», «<span>${n} stitches</span>»
+    if (ts.isNoSubstitutionTemplateLiteral(node) || ts.isTemplateHead(node) || ts.isTemplateMiddle(node) || ts.isTemplateTail(node)) {
+      for (const m of node.text.matchAll(/>([^<>]*\p{L}[^<>]*)</gu)) {
+        const v = visibleText(m[1], allowed);
+        // «a < b && c > d» nel codice di uno shader non è testo: niente ; { } = & |
+        if (/[;{}=&|]/.test(m[1])) continue;
+        if (v && (m[1].match(/\p{L}+/gu) ?? []).some((w) => !allowed.has(w))) report(node, v, "testo in un template HTML");
+      }
     }
     ts.forEachChild(node, visit);
   };

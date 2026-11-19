@@ -3,12 +3,13 @@
 // properties, select similar, colour blending, appliqué and outlines.
 // A lettering (objects sharing a text group) always acts as one unit.
 
+import { t, tn } from "../nova/i18n/filum";
 import { engine } from "../engine/client";
 import { useStore } from "../store";
 import type { DesignObject, StitchDocument, StitchParams, SubPath, Vec2 } from "../types";
 import { gatherAtTop, groupInfo, isFixedMember, nextGroupName, pruneGroups } from "./layerRows";
 import { chainOf, commonGroup, groupsOf, objectsIn, parentOf, parentsOf, selectedUnits, topGroupOf, withParent } from "./groups";
-import { defaultApplique, defaultFill, defaultRunning, defaultSatin, normAngle, objectBounds, rotateAbout, scaleAbout, transformObject, translateMat, uid, unionBoxes, type Box } from "./geometry";
+import { defaultApplique, defaultFill, defaultRunning, defaultSatin, normAngle, objectBounds, rotateAbout, satinRailIndices, scaleAbout, transformObject, translateMat, uid, unionBoxes, type Box } from "./geometry";
 import { freshCopies, placeCopies, threadsOf } from "./copies";
 import { layerSetOf, oneLayerEach, pastedStitchDoc, plainGroupOf, plainLayerStitch } from "./fillLayers";
 
@@ -77,7 +78,7 @@ export function distribute(axis: "h" | "v") {
     .map((u) => ({ u, b: boxOf(u)! }))
     .filter((x) => x.b);
   if (us.length < 3) {
-    s.toast("Select three or more objects to distribute");
+    s.toast(t("filum.messaggi.select_three_or_more_objects"));
     return;
   }
   const pos = (b: Box) => (axis === "h" ? b.x : b.y);
@@ -117,14 +118,20 @@ function rotateMat(c: Vec2, deg: number): Mat {
 const det = (m: Mat) => m[0] * m[3] - m[1] * m[2];
 
 /**
- * Transform a copy of an object. Mirroring flips the fill angle and turns a
- * lettering into plain shapes (letters can't be mirrored and stay text).
+ * Transform a copy of an object. Mirroring flips the fill angle, inverts a
+ * two-rail satin's swapRails (NOVAstitch) and turns a lettering into plain shapes (letters can't be mirrored and stay text).
  */
 function transformedCopy(o: DesignObject, m: Mat, rotationDeg: number, axisDeg = 0): DesignObject {
   let c = transformObject(o, m, rotationDeg);
   if (det(m) < 0) {
     // a reflection across an axis at θ turns a fill angle a into −a − 2θ
     if (c.stitch.type === "fill") c = { ...c, stitch: { ...c.stitch, angle: normAngle(-c.stitch.angle - 2 * axisDeg) } };
+    // NOVAstitch: a satin's first stitch stays on the same side of the sewing direction (the same
+    // slant as the original). Two rails keep their order in a mirror, so swapRails is inverted; a
+    // centre line's rails are offsets to its left and right (satin.rs), which a mirror already keeps.
+    // start/end set by hand move with `m` (transformObject).
+    if (c.stitch.type === "satin" && !c.stitch.multi && satinRailIndices(c.paths))
+      c = { ...c, stitch: { ...c.stitch, swapRails: !c.stitch.swapRails } };
     if (c.text) c = { ...c, text: undefined };
   }
   return c;
@@ -202,7 +209,7 @@ export function copyProperties() {
   const o = s.doc.objects.find((x) => x.id === s.selection[0]);
   if (!o) return;
   clip = { stitch: structuredClone(o.stitch), thread: o.thread };
-  s.toast(`Copied ${o.stitch.type} settings of “${o.name}”`);
+  s.toast(t("filum.messaggi.copied_type_settings_of_name", { type: o.stitch.type, name: o.name }));
 }
 
 const hasClosed = (o: DesignObject) => o.paths.some((p) => p.closed && p.nodes.length >= 3);
@@ -210,7 +217,7 @@ const hasClosed = (o: DesignObject) => o.paths.some((p) => p.closed && p.nodes.l
 /** Apply the copied stitch settings (and optionally the colour) to the selection. */
 export function pasteProperties(withColor = false) {
   const s = store();
-  if (!clip) return s.toast("Copy an object's properties first");
+  if (!clip) return s.toast(t("filum.messaggi.copy_an_object_s_properties"));
   const c = clip;
   let n = 0;
   let skipped = 0;
@@ -223,7 +230,7 @@ export function pasteProperties(withColor = false) {
     return r.doc;
   });
   if (selection.join() !== s.selection.join()) s.select(selection);
-  s.toast(`Applied to ${n} object${n === 1 ? "" : "s"}${skipped ? ` · ${skipped} open path${skipped > 1 ? "s" : ""} skipped` : ""}`);
+  s.toast(tn("filum.messaggi.applied_to_n", n) + (skipped ? tn("filum.messaggi.open_paths_skipped", skipped) : ""));
 }
 
 export function selectSimilar(by: "color" | "type" | "both") {
@@ -235,7 +242,7 @@ export function selectSimilar(by: "color" | "type" | "both") {
     .filter((o) => (by !== "type" ? o.thread === ref.thread : true) && (by !== "color" ? o.stitch.type === ref.stitch.type : true))
     .map((o) => o.id);
   s.select(ids);
-  s.toast(`${ids.length} object${ids.length === 1 ? "" : "s"} selected`);
+  s.toast(tn("filum.messaggi.n_objects_selected", ids.length));
 }
 
 // ---------------------------------------------------------------------------
@@ -245,7 +252,7 @@ export function selectSimilar(by: "color" | "type" | "both") {
 export function makeApplique() {
   const s = store();
   const ids = s.doc.objects.filter((o) => s.selection.includes(o.id) && !o.text && hasClosed(o)).map((o) => o.id);
-  if (!ids.length) return s.toast("Select a closed shape (fill or outline) to turn into an appliqué");
+  if (!ids.length) return s.toast(t("filum.messaggi.select_a_closed_shape_fill"));
   s.commit((d) => ({
     ...d,
     objects: d.objects.map((o) =>
@@ -254,7 +261,7 @@ export function makeApplique() {
         : o,
     ),
   }));
-  s.toast(`${ids.length} appliqué${ids.length > 1 ? "s" : ""}: placement → stop → tack-down → stop → cover`, "success");
+  s.toast(tn("filum.messaggi.n_appliques", ids.length), "success");
 }
 
 export type OutlineKind = "running" | "triple" | "satin" | "fill" | "applique";
@@ -321,7 +328,7 @@ export async function createOutline(opt: OutlineOptions): Promise<number> {
   const ids = s.selection;
   const o = await outlineObject(s.doc, ids, opt);
   if (!o) {
-    s.toast("Nothing to outline", "error");
+    s.toast(t("filum.messaggi.nothing_to_outline"), "error");
     return 0;
   }
   store().commit((d) => withOutline(d, ids, o, opt.behind));
@@ -351,7 +358,7 @@ export function groupSelection() {
   const sel = new Set(s.selection);
   for (const o of s.doc.objects) if (sel.has(o.id) && isFixedMember(o)) for (const x of objectsIn(s.doc, o.group!)) sel.add(x.id);
   const { groups, objects: loose } = selectedUnits(s.doc, sel);
-  if (groups.length + loose.length < 2) return s.toast("Select two or more objects or groups to group");
+  if (groups.length + loose.length < 2) return s.toast(t("filum.messaggi.select_two_or_more_objects"));
   const g = uid("g");
   s.commit((d) => {
     // the new group sits in the deepest group that holds everything selected
@@ -367,7 +374,7 @@ export function groupSelection() {
     return pruneGroups({ ...d, objects, groupParents: parents, groupNames: { ...d.groupNames, [g]: nextGroupName(d) } });
   });
   s.select([...sel]);
-  s.toast(`Grouped ${groups.length + loose.length} items · Ctrl-click picks one inside`);
+  s.toast(t("filum.messaggi.grouped_v1_items_ctrl_click", { v1: groups.length + loose.length }));
 }
 
 /** Ungroup (Ctrl+Shift+G). Gradient colour layers stay one gradient. */
@@ -380,7 +387,7 @@ export function ungroupSelection() {
   const open = groups.filter((g) => roles.get(g)?.role === "group");
   // an object picked inside a group (Ctrl-click) leaves its group
   const out = loose.filter((o) => o.group && !isFixedMember(o));
-  if (!open.length && !out.length) return s.toast("Nothing to ungroup");
+  if (!open.length && !out.length) return s.toast(t("filum.messaggi.nothing_to_ungroup"));
   s.commit((d) => {
     let parents = d.groupParents;
     let objects = d.objects;
@@ -411,13 +418,13 @@ export async function combineShapes(op: ShapeBooleanOp) {
   const picked = doc.objects.filter((o) => s.selection.includes(o.id) && !o.locked);
   // identical layers would cancel out (Minus front, Exclude): one shape per set
   const sel = oneLayerEach(picked);
-  if (sel.length < 2) return s.toast("Select two or more shapes");
+  if (sel.length < 2) return s.toast(t("filum.messaggi.select_two_or_more_shapes"));
   const shapes = await engine.booleanShapes(doc, sel.map((o) => o.id), op);
-  if (!shapes.length) return s.toast("The result is empty", "error");
+  if (!shapes.length) return s.toast(t("filum.messaggi.the_result_is_empty"), "error");
   const style = op === "minusFront" ? sel[0] : sel[sel.length - 1];
   const stitch: StitchParams =
     style.stitch.type === "fill" ? plainLayerStitch(style.stitch) : style.stitch.type === "applique" ? style.stitch : { type: "fill", ...defaultFill() };
-  const label = { unite: "Unite", minusFront: "Minus front", intersect: "Intersect", exclude: "Exclude" }[op];
+  const label = { unite: t("filum.messaggi.op_unite"), minusFront: t("filum.messaggi.op_minus_front"), intersect: t("filum.messaggi.op_intersect"), exclude: t("filum.messaggi.op_exclude") }[op];
   const result: DesignObject = {
     id: uid(),
     name: `${style.name.replace(/ · colour \d+$/, "")} (${label.toLowerCase()})`,
@@ -441,7 +448,7 @@ export async function combineShapes(op: ShapeBooleanOp) {
     return pruneGroups({ ...d, objects: [...rest.slice(0, at), result, ...rest.slice(at)] });
   });
   st.select([result.id]);
-  st.toast(`${label}: ${shapes.length} part${shapes.length > 1 ? "s" : ""}`, "success");
+  st.toast(t("filum.messaggi.label_parts", { label, parts: tn("filum.messaggi.n_parts", shapes.length) }), "success");
 }
 
 // ---- stitch order, rotation, visibility, clipboard -------------------------
@@ -485,7 +492,7 @@ export function hideSelection() {
   if (!ids.size) return;
   s.commit((d) => ({ ...d, objects: d.objects.map((o) => (ids.has(o.id) ? { ...o, visible: false } : o)) }));
   s.select([]);
-  s.toast(`Hidden ${ids.size} object${ids.size === 1 ? "" : "s"} · Object ▸ Show all brings them back`);
+  s.toast(tn("filum.messaggi.hidden_n_objects", ids.size));
 }
 export function showAll() {
   const s = store();
@@ -527,7 +534,7 @@ export function copySelection(cut = false): string | null {
   pastes = 0;
   if (cut) {
     s.deleteSelection();
-    s.toast(`Cut ${objects.length} object${objects.length === 1 ? "" : "s"}`);
+    s.toast(tn("filum.messaggi.cut_n_objects", objects.length));
   }
   return CLIP_TAG + JSON.stringify(objectClip);
 }

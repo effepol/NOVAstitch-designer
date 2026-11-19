@@ -2,6 +2,7 @@
 // top is left out, what counts as hiding it, what gets removed, and which
 // objects are cut) and each object's own setting in the selection.
 
+import { t, tn } from "../nova/i18n/filum";
 import { Check, Eye, EyeOff, RotateCcw, Scissors, Sparkles } from "lucide-react";
 import { StitchFill, StitchRunning, StitchSatin, Underlay } from "../icons/stitch";
 import { defaultDesignOptions } from "../lib/geometry";
@@ -28,75 +29,74 @@ export function HiddenStitchingSection() {
   const changed = (Object.keys(RULE_DEFAULTS) as (keyof DesignOptions)[]).some((k) => o[k as keyof typeof o] !== RULE_DEFAULTS[k]);
   return (
     <Section
-      title="Hidden stitching"
-      extra={<Toggle on={o.removeOverlaps} title="Leave out stitching hidden under objects stacked on top" onChange={(v) => setOptions({ removeOverlaps: v })} />}
+      title={t("filum.pannelli.hidden_stitching")}
+      extra={<Toggle on={o.removeOverlaps} title={t("filum.pannelli.leave_out_stitching_hidden_under")} onChange={(v) => setOptions({ removeOverlaps: v })} />}
     >
       {!o.removeOverlaps ? (
         <p className="hint hs-off">
-          Everything is sewn, also where an object on top hides it. Turn this on to leave hidden stitching out: less bulk, fewer needle holes, faster sewing. The shapes stay as
-          drawn; you can change it any time.
+          {t("filum.pannelli.everything_is_sewn_also_where")}
         </p>
       ) : (
         <>
           <Summary report={report} show={show} />
 
-          <h6 className="hs-sub">Overlap</h6>
-          <Row label="Under the top" title="How far a cut fill (or line) still reaches under the object on top, so no gap opens when the fabric pulls">
+          <h6 className="hs-sub">{t("filum.pannelli.overlap")}</h6>
+          <Row label={t("filum.pannelli.under_the_top")} title={t("filum.pannelli.how_far_a_cut_fill")}>
             <Num value={o.overlapMargin} unit="mm" step={0.1} min={0} max={3} onChange={(v) => setOptions({ overlapMargin: v })} />
           </Row>
           {Math.abs(o.overlapMargin - sug.value) > 0.05 && (
-            <button className="hs-suggest" onClick={() => setOptions({ overlapMargin: sug.value })} title={`The overlap practitioners suggest for ${fabric.label.toLowerCase()}: ${sug.why}`}>
-              <Sparkles size={11} /> {sug.value} mm suggested for {fabric.label.toLowerCase()}
+            <button className="hs-suggest" onClick={() => setOptions({ overlapMargin: sug.value })} title={t("filum.pannelli.the_overlap_practitioners_suggest_for", { v1: fabric.label.toLowerCase(), why: sug.why })}>
+              <Sparkles size={11} /> {t("filum.pannelli.value_mm_suggested_for", { value: sug.value, fabric: fabric.label.toLowerCase() })}
             </button>
           )}
 
-          <h6 className="hs-sub">What hides stitching</h6>
-          <Row label="Narrowest" title="An object only hides what's under it where it is at least this wide: outlines, thin borders and narrow satins don't, so the fill under them stays whole">
+          <h6 className="hs-sub">{t("filum.pannelli.what_hides_stitching")}</h6>
+          <Row label={t("filum.pannelli.narrowest")} title={t("filum.pannelli.an_object_only_hides_what")}>
             <Num value={o.coverMinWidth} unit="mm" step={0.5} min={0} max={10} onChange={(v) => setOptions({ coverMinWidth: v })} />
           </Row>
-          <Row label="Rows up to" title="Fills and satins with rows further apart than this are open and show what's under them (0: any spacing hides)">
+          <Row label={t("filum.pannelli.rows_up_to")} title={t("filum.pannelli.fills_and_satins_with_rows")}>
             <Num value={o.coverMaxSpacing} unit="mm" step={0.1} min={0} max={5} onChange={(v) => setOptions({ coverMaxSpacing: v })} />
           </Row>
-          <Row label="Textures" title="Stipple, meander, Hilbert and cross stitch fills leave the fabric showing; on: they hide what's under them anyway">
+          <Row label={t("filum.pannelli.textures")} title={t("filum.pannelli.stipple_meander_hilbert_and_cross")}>
             <Toggle on={o.texturedCovers} onChange={(v) => setOptions({ texturedCovers: v })} />
           </Row>
-          <Row label="Appliqué fabric" title="The fabric of an appliqué hides what's under it (its placement, tack-down and cover are never cut)">
+          <Row label={t("filum.pannelli.applique_fabric")} title={t("filum.pannelli.the_fabric_of_an_applique")}>
             <Toggle on={o.appliqueCovers} onChange={(v) => setOptions({ appliqueCovers: v })} />
           </Row>
 
-          <h6 className="hs-sub">What is removed</h6>
+          <h6 className="hs-sub">{t("filum.pannelli.what_is_removed")}</h6>
           <p className="hs-note">
-            <StitchFill size={12} /> Fills, under anything that hides them. Satins and appliqués keep their stitches.
+            <StitchFill size={12} />{t("filum.pannelli.fills_under_anything_that_hides")}
           </p>
-          <Row label="Running stitch" title="Lines under an object that hides them are cut too, reaching the overlap under it">
+          <Row label={t("filum.pannelli.running_stitch")} title={t("filum.pannelli.lines_under_an_object_that")}>
             <Toggle on={o.trimRunning} onChange={(v) => setOptions({ trimRunning: v })} />
           </Row>
-          <Row label="Underlay" title="Kept: the cut fill's underlay is sewn in full, so the fabric under the object on top stays steady">
+          <Row label={t("filum.pannelli.underlay")} title={t("filum.pannelli.kept_the_cut_fill_s")}>
             <div className="seg hs-seg">
               <button className={!o.keepUnderlay ? "on" : ""} onClick={() => setOptions({ keepUnderlay: false })}>
-                Cut too
+                {t("filum.pannelli.cut_too")}
               </button>
               <button className={o.keepUnderlay ? "on" : ""} onClick={() => setOptions({ keepUnderlay: true })}>
-                <Underlay size={12} /> Kept
+                <Underlay size={12} />{t("filum.pannelli.kept")}
               </button>
             </div>
           </Row>
-          <Row label="Smallest piece" title="Leftover pieces smaller than this are left out (not worth a jump and a trim), and holes smaller than it aren't cut">
+          <Row label={t("filum.pannelli.smallest_piece")} title={t("filum.pannelli.leftover_pieces_smaller_than_this")}>
             <Num value={o.minFragment} unit="mm²" step={1} min={0} max={100} digits={1} onChange={(v) => setOptions({ minFragment: v })} />
           </Row>
           {changed && (
             <button className="btn sm ghost hs-reset" onClick={() => setOptions(RULE_DEFAULTS)}>
-              <RotateCcw size={12} /> Default rules
+              <RotateCcw size={12} />{t("filum.pannelli.default_rules")}
             </button>
           )}
 
-          <h6 className="hs-sub">Objects</h6>
+          <h6 className="hs-sub">{t("filum.pannelli.objects_2")}</h6>
           <ObjectList report={report} />
           {overrides.length > 0 && (
             <div className="hs-overrides">
-              <p className="hs-note">Set by hand:</p>
+              <p className="hs-note">{t("filum.pannelli.set_by_hand")}</p>
               {overrides.map(({ x }) => (
-                <button key={x.id} className="hs-chip" onClick={() => useStore.getState().select([x.id])} title="Select it (its own setting is in Selection ▸ Hidden stitching)">
+                <button key={x.id} className="hs-chip" onClick={() => useStore.getState().select([x.id])} title={t("filum.pannelli.select_it_its_own_setting")}>
                   <i style={{ background: doc.threads.find((t) => t.id === x.thread)?.color }} />
                   {x.name}
                   <span>{[x.hidden?.covers === "always" ? "always hides" : x.hidden?.covers === "never" ? "never hides" : "", x.hidden?.keep ? "keeps its stitches" : ""].filter(Boolean).join(" · ")}</span>
@@ -117,28 +117,28 @@ function Summary({ report, show }: { report: HiddenReport | null; show: boolean 
     <div className={`hs-summary ${report && saved === 0 ? "none" : ""}`}>
       <div className="hs-big">
         {report == null ? (
-          <span className="hs-wait">Working it out…</span>
+          <span className="hs-wait">{t("filum.pannelli.working_it_out")}</span>
         ) : saved > 0 ? (
           <>
-            <b>−{saved.toLocaleString()}</b> stitches <span className="hs-pct">{pctOf(saved, report.before)} %</span>
+            <b>−{saved.toLocaleString()}</b>{t("filum.pannelli.stitches_2")}<span className="hs-pct">{pctOf(saved, report.before)} %</span>
           </>
         ) : (
-          <span>Nothing is hidden under other objects.</span>
+          <span>{t("filum.pannelli.nothing_is_hidden_under_other")}</span>
         )}
       </div>
       {report && saved > 0 && (
-        <div className="hs-bar" title={`${report.after.toLocaleString()} of ${report.before.toLocaleString()} stitches are sewn`}>
+        <div className="hs-bar" title={t("filum.pannelli.v1_of_v2_stitches_are", { v1: report.after.toLocaleString(), v2: report.before.toLocaleString() })}>
           <i style={{ width: `${100 - pctOf(saved, report.before)}%` }} />
         </div>
       )}
       <div className="hs-meta">
         {report && saved > 0 && (
           <span>
-            {report.objects.length} object{report.objects.length === 1 ? "" : "s"} cut{gone ? ` · ${gone} left out completely` : ""}
+            {tn("filum.pannelli.n_objects_cut", report.objects.length)}{gone ? t("filum.pannelli.gone_left_out_completely", { gone }) : ""}
           </span>
         )}
-        <button className={`hs-show ${show ? "on" : ""}`} onClick={() => useStore.getState().set({ showHidden: !show })} title="Mark what is left out on the canvas (hatched)">
-          {show ? <Eye size={12} /> : <EyeOff size={12} />} Show on canvas
+        <button className={`hs-show ${show ? "on" : ""}`} onClick={() => useStore.getState().set({ showHidden: !show })} title={t("filum.pannelli.mark_what_is_left_out")}>
+          {show ? <Eye size={12} /> : <EyeOff size={12} />}{t("filum.pannelli.show_on_canvas")}
         </button>
       </div>
     </div>
@@ -150,7 +150,7 @@ function ObjectList({ report }: { report: HiddenReport | null }) {
   const doc = useStore((s) => s.doc);
   const selection = useStore((s) => s.selection);
   if (!report) return null;
-  if (!report.objects.length) return <p className="hs-note">No object loses stitches.</p>;
+  if (!report.objects.length) return <p className="hs-note">{t("filum.pannelli.no_object_loses_stitches")}</p>;
   return (
     <ul className="hs-list">
       {report.objects.map((r) => {
@@ -160,18 +160,18 @@ function ObjectList({ report }: { report: HiddenReport | null }) {
         const cut = r.before - r.after;
         return (
           <li key={o.id} className={selection.includes(o.id) ? "on" : ""}>
-            <button className="hs-obj" onClick={() => useStore.getState().select([o.id])} title={`Select ${o.name}`}>
+            <button className="hs-obj" onClick={() => useStore.getState().select([o.id])} title={t("filum.pannelli.select_name", { name: o.name })}>
               <i className="hs-sw" style={{ background: doc.threads.find((t) => t.id === o.thread)?.color }} />
               {Icon && <Icon size={12} />}
               <span className="hs-name">{o.name}</span>
-              <span className="hs-cut">{r.gone ? "left out" : `−${cut.toLocaleString()}`}</span>
+              <span className="hs-cut">{r.gone ? t("filum.pannelli.left_out_2") : `−${cut.toLocaleString()}`}</span>
               <span className="hs-mini" aria-hidden>
                 <i style={{ width: `${pctOf(cut, r.before)}%` }} />
               </span>
             </button>
             <button
               className="icon-btn hs-keep"
-              title={`Keep all of ${o.name}'s stitches (sew it whole)`}
+              title={t("filum.pannelli.keep_all_of_name_s", { name: o.name })}
               onClick={() => useStore.getState().updateObject(o.id, { hidden: { ...o.hidden, keep: true } })}
             >
               <Check size={12} />
@@ -202,22 +202,22 @@ export function ObjectHiddenSection({ o }: { o: DesignObject }) {
     useStore.getState().updateObject(o.id, { hidden: empty ? undefined : next });
   };
   return (
-    <Section title="Hidden stitching" defaultOpen={!!o.hidden || !!mine}>
+    <Section title={t("filum.pannelli.hidden_stitching")} defaultOpen={!!o.hidden || !!mine}>
       {!opts.removeOverlaps && (
         <p className="hint hs-off">
-          Hidden stitching is sewn in this design.{" "}
+          {t("filum.pannelli.hidden_stitching_is_sewn_in")}{" "}
           <button className="btn sm" onClick={() => setOptions({ removeOverlaps: true })}>
-            Leave it out
+            {t("filum.pannelli.leave_it_out")}
           </button>
         </p>
       )}
       {canCover && (
         <>
-          <Row label="Hides" title="Whether stitching under this object is left out">
+          <Row label={t("filum.pannelli.hides")} title={t("filum.pannelli.whether_stitching_under_this_object")}>
             <div className="seg hs-seg">
               {(["auto", "always", "never"] as const).map((m) => (
                 <button key={m} className={mode === m ? "on" : ""} onClick={() => set({ covers: m })}>
-                  {m === "auto" ? "Auto" : m === "always" ? "Always" : "Never"}
+                  {m === "auto" ? t("filum.pannelli.hides_auto") : m === "always" ? t("filum.pannelli.always") : t("filum.pannelli.never")}
                 </button>
               ))}
             </div>
@@ -228,7 +228,7 @@ export function ObjectHiddenSection({ o }: { o: DesignObject }) {
         </>
       )}
       {(canBeCut || o.hidden?.keep) && (
-        <Row label="Keep its stitches" title="Sew this object whole, also where something on top hides it">
+        <Row label={t("filum.pannelli.keep_its_stitches")} title={t("filum.pannelli.sew_this_object_whole_also")}>
           <Toggle on={!!o.hidden?.keep} onChange={(v) => set({ keep: v })} />
         </Row>
       )}
@@ -237,11 +237,11 @@ export function ObjectHiddenSection({ o }: { o: DesignObject }) {
           <Scissors size={11} />{" "}
           {mine
             ? mine.gone
-              ? "Hidden completely: it is left out."
-              : `${(mine.before - mine.after).toLocaleString()} of its ${mine.before.toLocaleString()} stitches are hidden and left out (${pctOf(mine.before - mine.after, mine.before)} %).`
+              ? t("filum.pannelli.hidden_completely_it_is_left")
+              : t("filum.pannelli.v1_of_its_v2_stitches", { v1: (mine.before - mine.after).toLocaleString(), v2: mine.before.toLocaleString(), v3: pctOf(mine.before - mine.after, mine.before) })
             : report
-              ? "Nothing on top hides it."
-              : "Working it out…"}
+              ? t("filum.pannelli.nothing_on_top_hides_it")
+              : t("filum.pannelli.working_it_out")}
         </p>
       )}
     </Section>
