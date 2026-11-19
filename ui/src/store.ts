@@ -15,6 +15,7 @@ import { safeSetItem } from "./lib/storage";
 import { checkDoc } from "./lib/docCheck";
 import { INKSTITCH_DEFAULTS } from "./lib/machines";
 import { recordEdits } from "./nova/core/edited";
+import { novaDefaults } from "./nova/format/nova";
 import { chooseFabric } from "./nova/core/fabricChoice";
 import type {
   DensityField,
@@ -24,6 +25,7 @@ import type {
   NodeRef,
   PlanData,
   StitchDocument,
+  LessonState,
   StitchParams,
   SubPath,
   Thread,
@@ -201,6 +203,8 @@ export interface State {
   /** A drag that changed nothing: take back its checkpoint (the redo steps and saved state come back). */
   dropCheckpoint: () => void;
   liveUpdate: (fn: (d: StitchDocument) => StitchDocument) => void;
+  /** NOVAstitch (module g): the document's nova.lesson, without an undo step; Undo and Redo leave it as it is. */
+  setLesson: (lesson: LessonState | null) => void;
   /** A drag transform: the document and the live matrix together; `null` ends it. */
   liveTransform: (live: { ids: string[]; m: Mat } | null, fn?: (d: StitchDocument) => StitchDocument) => void;
   commit: (fn: (d: StitchDocument) => StitchDocument) => void;
@@ -232,6 +236,15 @@ export interface State {
 
 const THEME_KEY = "filum.theme";
 /** The last checkpoint, so a drag that changed nothing can take it back. */
+/** NOVAstitch: `doc` with the nova.lesson of `now` (Undo and Redo leave the lesson's progress as it is). */
+function withLessonOf(doc: StitchDocument, now: StitchDocument): StitchDocument {
+  const lesson = now.nova?.lesson;
+  if (doc.nova?.lesson === lesson || (lesson === undefined && !doc.nova)) return doc;
+  const nova = { ...(doc.nova ?? novaDefaults()), lesson };
+  if (lesson === undefined) delete nova.lesson;
+  return { ...doc, nova };
+}
+
 let pendingCheckpoint: { doc: StitchDocument; future: StitchDocument[]; saved: boolean } | null = null;
 /** View toggles remembered between sessions. */
 const VIEW_KEY = "filum.view";
@@ -348,6 +361,7 @@ export const useStore = create<State>((set, get) => ({
   },
   // clones follow their originals; a lettering moved apart letter by letter becomes plain shapes
   // NOVAstitch: recordEdits notes the parameters changed by hand (nova.edited)
+  setLesson: (lesson) => set({ doc: { ...get().doc, nova: { ...(get().doc.nova ?? novaDefaults()), lesson } }, saved: false }),
   liveUpdate: (fn) => set({ doc: recordEdits(get().doc, settleTexts(syncClones(fn(get().doc), get().doc), get().doc)), saved: false }),
   liveTransform: (live, fn) => set(fn ? { live, doc: recordEdits(get().doc, settleTexts(syncClones(fn(get().doc), get().doc), get().doc)), saved: false } : { live }),
   commit: (fn) => {
@@ -368,7 +382,8 @@ export const useStore = create<State>((set, get) => ({
     if (!prev) return;
     pendingCheckpoint = null;
     set({
-      doc: prev,
+      // NOVAstitch: the lesson's progress is not a step of the design
+      doc: withLessonOf(prev, s.doc),
       past: s.past.slice(0, -1),
       future: [s.doc, ...s.future],
       selection: s.selection.filter((id) => prev.objects.some((o) => o.id === id)),
@@ -384,7 +399,7 @@ export const useStore = create<State>((set, get) => ({
     if (!next) return;
     pendingCheckpoint = null;
     set({
-      doc: next,
+      doc: withLessonOf(next, s.doc),
       past: [...s.past, s.doc],
       future: s.future.slice(1),
       selection: s.selection.filter((id) => next.objects.some((o) => o.id === id)),
