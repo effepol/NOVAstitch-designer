@@ -7,8 +7,12 @@
 //
 // Commands:  g.lesson.start({lessonId})  the starting design as a new design
 //            g.lesson.reset({to})         back to the start of the step or of the lesson (one undo step)
-//            g.lesson.progress({state})   nova.lesson follows the lesson (the program's, not the user's)
 // Events:    lesson.started, lesson.stepCompleted, lesson.completed
+//
+// nova.lesson (Architect, 19/11, an exception for nova.lesson only): its changes
+// make no undo step, and Undo / Redo leave the lesson's progress as it is. The
+// engine writes it with the store's setDoc without history; after an Undo or a
+// Redo brings back an older nova.lesson, it writes the progress reached again.
 
 import { useSyncExternalStore } from "react";
 import { emptyDoc, useStore } from "../../store";
@@ -169,7 +173,7 @@ function complete(a: Active): void {
   else a.index++;
   a.hint = false;
   a.waited = false;
-  runCommand("g.lesson.progress", { state: stateOf(a) });
+  writeLesson(a);
   a.stepDoc = useStore.getState().doc;
   saveProgress(a);
   listenWait();
@@ -178,6 +182,23 @@ function complete(a: Active): void {
   if (last) emit("lesson.completed", { lessonId: a.lesson.id });
   // the next step may already hold (only a check, no event to wait for)
   else evaluate(false);
+}
+
+// nova.lesson in the design, with no undo step (the store's own setDoc without history)
+let writing = false;
+function writeLesson(a: Active): void {
+  const s = useStore.getState();
+  writing = true;
+  try {
+    s.setDoc(withLesson(s.doc, stateOf(a)), { history: false, keepSelection: true });
+  } finally {
+    writing = false;
+  }
+}
+/** An Undo or a Redo brought back another nova.lesson: the progress reached goes back in, no step. */
+function syncLesson(): void {
+  const a = active;
+  if (a && JSON.stringify(useStore.getState().doc.nova?.lesson ?? null) !== JSON.stringify(stateOf(a))) writeLesson(a);
 }
 
 /** Look at the current step. `attempt`: the user did something, so a failing check shows the hint. */
@@ -215,6 +236,7 @@ function schedule(attempt: boolean): void {
     queueMicrotask(() => {
       const at = !!pending;
       pending = null;
+      syncLesson();
       evaluate(at);
     });
 }
@@ -284,12 +306,6 @@ export function installEngine(): () => void {
         return to === "start" ? active.startDoc : active.stepDoc;
       },
     }),
-    registerCommand<{ state: LessonState }>({
-      id: "g.lesson.progress",
-      label: { it: "Avanzamento della lezione", en: "Lesson progress" },
-      system: true,
-      apply: (doc, { state }) => withLesson(doc, state),
-    }),
     on("command.executed", ({ id, params }) => {
       const a = active;
       if (!a) return;
@@ -318,7 +334,7 @@ export function installEngine(): () => void {
     }),
     // the user's changes are attempts; the engine's own are not
     on("doc.changed", ({ commandId }) => {
-      if (!commandId?.startsWith("g.lesson.")) schedule(true);
+      if (!writing && !commandId?.startsWith("g.lesson.")) schedule(true);
     }),
     on("selection.changed", () => schedule(false)),
     on("view.changed", () => schedule(false)),
