@@ -1,5 +1,6 @@
 // Node tool commands on the store: used by the node tool bar and the keyboard.
 
+import { t, tn } from "../nova/i18n/filum";
 import { useStore } from "../store";
 import type { StitchDocument, Vec2 } from "../types";
 import { syncGradientGeometry } from "./gradient";
@@ -17,7 +18,7 @@ export function syncAll(before: StitchDocument, after: StitchDocument): StitchDo
 
 const apply = (fn: (d: StitchDocument) => StitchDocument) => {
   const s = useStore.getState();
-  if (!s.nodeSel.length) return s.toast("Select points first (click, Shift-click or drag a box)");
+  if (!s.nodeSel.length) return s.toast(t("filum.messaggi.select_points_first_click_shift"));
   s.commit((d) => syncAll(d, fn(d)));
 };
 
@@ -29,7 +30,7 @@ export function deleteNodes(keepShape: boolean) {
   // paths removed with their last points leave the selection too
   const left = useStore.getState().doc.objects;
   s.set({ nodeSel: [], selection: s.selection.filter((id) => left.some((o) => o.id === id)) });
-  if (r.removedObjects) s.toast(`${r.removedObjects} path${r.removedObjects > 1 ? "s" : ""} removed (fewer than two points left)`);
+  if (r.removedObjects) s.toast(tn("filum.messaggi.paths_removed_few_points", r.removedObjects));
 }
 
 export const nodeType = (t: "corner" | "smooth" | "symmetric") => apply((d) => setNodeType(d, useStore.getState().nodeSel, t));
@@ -39,7 +40,7 @@ export const alignSelected = (axis: "h" | "v") => apply((d) => alignNodes(d, use
 /** Average (Ctrl+Alt+J): the selected points onto their average point. */
 export function averageSelectedNodes() {
   const s = useStore.getState();
-  if (s.tool !== "node" || s.nodeSel.length < 2) return s.toast("Select two or more points with the node tool (A)");
+  if (s.tool !== "node" || s.nodeSel.length < 2) return s.toast(t("filum.messaggi.select_two_or_more_points"));
   apply((d) => averageNodes(d, s.nodeSel));
 }
 

@@ -1,5 +1,6 @@
 // Store-level operations for parametric lettering.
 
+import { t } from "../nova/i18n/filum";
 import { activeThreadOf, useStore } from "../store";
 import type { DesignObject, StitchDocument, Vec2 } from "../types";
 import { DEFAULT_FONT, fontLabel, loadFont } from "./fonts";
@@ -84,7 +85,7 @@ export async function createTextAt(p: Vec2, content = "Text", patch: Partial<Tex
   let objs = await generateText(await withPalette(spec));
   if (!objs.length && spec.font !== DEFAULT_FONT) {
     // the remembered font has no glyphs for this text (e.g. a Hebrew-only font)
-    useStore.getState().toast(`${fontLabel(spec.font)} has no letters for “${content}” — using ${fontLabel(DEFAULT_FONT)}`);
+    useStore.getState().toast(t("filum.messaggi.v1_has_no_letters_for", { v1: fontLabel(spec.font), content, v3: fontLabel(DEFAULT_FONT) }));
     objs = await generateText(await withPalette({ ...spec, font: DEFAULT_FONT, palette: undefined }));
   }
   useStore.getState().addObjects(objs);
@@ -103,7 +104,7 @@ export function lockedToast() {
   const now = Date.now();
   if (now - lockToastAt < 2000) return;
   lockToastAt = now;
-  useStore.getState().toast("The lettering is locked — unlock it in Layers to edit it", "error");
+  useStore.getState().toast(t("filum.messaggi.the_lettering_is_locked_unlock"), "error");
 }
 
 /** A spec as a key (the per-letter fields left out). */
@@ -186,7 +187,7 @@ async function drain(group: string) {
       try {
         ok = await applyEdit(group, e);
       } catch (err) {
-        useStore.getState().toast(`Lettering: ${(err as Error).message}`, "error");
+        useStore.getState().toast(t("filum.messaggi.lettering_message", { message: (err as Error).message }), "error");
       }
       for (const f of e.done) f(ok);
     }
@@ -198,8 +199,8 @@ async function drain(group: string) {
 /** How often an edit is laid out again because its lettering kept changing meanwhile. */
 const REBASES = 5;
 
-function droppedToast(why = "the lettering was deleted, or the design undone or replaced, while the font loaded") {
-  useStore.getState().toast(`A lettering change was left out: ${why}`, "info");
+function droppedToast(why = t("filum.messaggi.lettering_gone_while_loading")) {
+  useStore.getState().toast(t("filum.messaggi.a_lettering_change_was_left", { why }), "info");
 }
 
 async function applyEdit(group: string, edit: Edit): Promise<boolean> {
@@ -216,7 +217,7 @@ async function applyEdit(group: string, edit: Edit): Promise<boolean> {
       // the patch again on the lettering as it is now, so that edit stays
       if (r !== "rebase") return r;
       if (round >= REBASES) {
-        droppedToast("the lettering kept changing while it was laid out");
+        droppedToast(t("filum.messaggi.lettering_kept_changing"));
         return false;
       }
     }
@@ -247,7 +248,7 @@ async function layoutEdit(group: string, { patch, live, also }: Edit, again: boo
     spec = await withPalette(spec);
     [objs, base] = await Promise.all([generateText(spec), layoutOf(group, cur)]);
   } catch (e) {
-    useStore.getState().toast(`Lettering: ${(e as Error).message}`, "error");
+    useStore.getState().toast(t("filum.messaggi.lettering_message", { message: (e as Error).message }), "error");
     return false;
   }
   const s = useStore.getState();
@@ -262,7 +263,7 @@ async function layoutEdit(group: string, { patch, live, also }: Edit, again: boo
   }
   if (!objs.length) {
     // nothing to stitch (font lacks these letters): keep the current lettering
-    if (spec.content.trim() && !live) s.toast(`${fontLabel(spec.font)} has no letters for this text`, "error");
+    if (spec.content.trim() && !live) s.toast(t("filum.messaggi.v1_has_no_letters_for_2", { v1: fontLabel(spec.font) }), "error");
     return false;
   }
   lastLayout.set(group, { key: specKey(spec), objs });
@@ -318,7 +319,7 @@ export async function textOnPath(): Promise<string | null> {
   const sel = s.doc.objects.filter((o) => s.selection.includes(o.id));
   const group = sel.find((o) => o.text)?.text?.group;
   const line = sel.find((o) => !o.text && o.paths.some((sp) => sp.nodes.length >= 2));
-  if (!group || !line) return "Select a lettering and a line";
+  if (!group || !line) return t("filum.messaggi.select_lettering_and_line");
   const sp = line.paths.find((p) => p.nodes.length >= 2)!;
   const path = flattenSubPath(sp, 0.1);
   // one undo step, once the lettering is on the line: the line goes with it
@@ -364,7 +365,7 @@ export async function batchLettering(
   progress?: (done: number, total: number) => void,
 ): Promise<{ files: ZipEntry[]; failed: string[] }> {
   const spec = textSpec(group);
-  if (!spec) throw new Error("No lettering selected");
+  if (!spec) throw new Error(t("filum.messaggi.no_lettering_selected"));
   const doc = useStore.getState().doc;
   const at = doc.objects.findIndex((o) => o.text?.group === group);
   const rest = doc.objects.filter((o) => o.text?.group !== group);

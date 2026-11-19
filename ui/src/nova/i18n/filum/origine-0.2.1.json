@@ -8743,6 +8743,782 @@
     "testo": "Zoom out",
     "file": "components/menuModel.ts"
   },
+  "filum.messaggi.a_fill_needs_a_closed": {
+    "testo": "A fill needs a closed outline — close the path or use a running stitch.",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.a_lettering_change_was_left": {
+    "testo": "A lettering change was left out: {why}",
+    "file": "lib/textOps.ts"
+  },
+  "filum.messaggi.a_rung_that_doesn_t": {
+    "testo": "A rung that doesn't cross both rails is ignored — lengthen it across the column.",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.all_supported": {
+    "testo": "All supported",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.and_n_underpaths.one": {
+    "testo": " and {n} underpath",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.and_n_underpaths.other": {
+    "testo": " and {n} underpaths",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.another_line": {
+    "testo": "another line",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.applied_to_n.one": {
+    "testo": "Applied to {n} object",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.applied_to_n.other": {
+    "testo": "Applied to {n} objects",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.artwork_embroidery": {
+    "testo": "Artwork & embroidery",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.auto_routed": {
+    "testo": "Auto-routed: {satins}",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.bands": {
+    "testo": "Bands",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.border_crosses_itself": {
+    "testo": "Border crosses itself",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.centre_dense": {
+    "testo": "Centre dense",
+    "file": "lib/ramp.ts"
+  },
+  "filum.messaggi.centre_open": {
+    "testo": "Centre open",
+    "file": "lib/ramp.ts"
+  },
+  "filum.messaggi.columns_under_0_8_mm": {
+    "testo": "Columns under 0.8 mm don't show; a running stitch looks cleaner.",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.contains_a_v1_mm_stitch": {
+    "testo": "Contains a {v1} mm stitch that may snag.",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.copied_type_settings_of_name": {
+    "testo": "Copied {type} settings of “{name}”",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.copy_an_object_s_properties": {
+    "testo": "Copy an object's properties first",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.could_not_open_name_message": {
+    "testo": "Could not open {name}: {message}",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.could_not_open_name_v2": {
+    "testo": "Could not open {name}: {v2}",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.could_not_open_the_file": {
+    "testo": "Could not open the file: {v1}",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.could_not_read_name_message": {
+    "testo": "Could not read {name}: {message}",
+    "file": "lib/references.ts"
+  },
+  "filum.messaggi.could_not_save_v1": {
+    "testo": "Could not save: {v1}",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.coverage": {
+    "testo": "Coverage",
+    "file": "lib/density.ts"
+  },
+  "filum.messaggi.cut_n_objects.one": {
+    "testo": "Cut {n} object",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.cut_n_objects.other": {
+    "testo": "Cut {n} objects",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.cut_out_the_doubled_part": {
+    "testo": "Cut out the doubled part",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.damaged_left_out.one": {
+    "testo": "{n} damaged object was left out",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.damaged_left_out.other": {
+    "testo": "{n} damaged objects were left out",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.damaged_objects_left_out": {
+    "testo": "{n} damaged object(s) left out",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.delete_it": {
+    "testo": "Delete it",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.dense_and_open_ends_with": {
+    "testo": "Dense and open ends with a soft transition",
+    "file": "lib/ramp.ts"
+  },
+  "filum.messaggi.dense_in_the_middle_open": {
+    "testo": "Dense in the middle, open at both ends",
+    "file": "lib/ramp.ts"
+  },
+  "filum.messaggi.density_gradient_needs_closed": {
+    "testo": "Density gradients need a closed shape (not one with a colour gradient)",
+    "file": "lib/ramp.ts"
+  },
+  "filum.messaggi.diffusion": {
+    "testo": "Diffusion",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.discard_unsaved_changes": {
+    "testo": "Discard unsaved changes?",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.divided_into_length_shapes": {
+    "testo": "Divided into {length} shapes",
+    "file": "lib/shapeBuilder.ts"
+  },
+  "filum.messaggi.draw_a_guide_line_or": {
+    "testo": "Draw a guide line, or the rows fall back to straight ones.",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.ease_in": {
+    "testo": "Ease in",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.ease_out": {
+    "testo": "Ease out",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.embroidery_files": {
+    "testo": "Embroidery files",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.error_diffusion_the_most_even": {
+    "testo": "Error diffusion — the most even, finest mix",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.even_change_from_dense_to": {
+    "testo": "Even change from dense to open",
+    "file": "lib/ramp.ts"
+  },
+  "filum.messaggi.every_row_is_split_between": {
+    "testo": "Every row is split between the colours, so each colour sews short pieces joined by trims. Rows across the gradient give each colour whole rows.",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.export_failed_message": {
+    "testo": "Export failed: {message}",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.exported_file": {
+    "testo": "Exported {file}",
+    "file": "lib/exportFiles.ts"
+  },
+  "filum.messaggi.exported_name": {
+    "testo": "Exported {name}",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.exported_zip_n_files.one": {
+    "testo": "Exported {name}.zip · {n} file",
+    "file": "lib/exportFiles.ts"
+  },
+  "filum.messaggi.exported_zip_n_files.other": {
+    "testo": "Exported {name}.zip · {n} files",
+    "file": "lib/exportFiles.ts"
+  },
+  "filum.messaggi.fills_under_2_5_mm": {
+    "testo": "Fills under ~2.5 mm look lumpy; consider satin or running stitch.",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.filum_project": {
+    "testo": "Filum project",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.gradients_need_a_closed_shape": {
+    "testo": "Gradients need a closed shape",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.grouped_v1_items_ctrl_click": {
+    "testo": "Grouped {v1} items · Ctrl-click picks one inside",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.guided_fill_without_a_guide": {
+    "testo": "Guided fill without a guide line",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.heavy": {
+    "testo": "Heavy",
+    "file": "lib/density.ts"
+  },
+  "filum.messaggi.hidden_n_objects.one": {
+    "testo": "Hidden {n} object · Object ▸ Show all brings them back",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.hidden_n_objects.other": {
+    "testo": "Hidden {n} objects · Object ▸ Show all brings them back",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.in_parts_separate_parts": {
+    "testo": " in {parts} separate parts",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.ink_stitch_svg": {
+    "testo": "Ink/Stitch SVG",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.invalid_shape": {
+    "testo": "Invalid shape",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.it_lies_on_v1_the": {
+    "testo": "It lies on “{v1}”: the thread is sewn twice there ({mm} mm).",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.jumps_to_running.one": {
+    "testo": "{n} jump turned into running stitch",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.jumps_to_running.other": {
+    "testo": "{n} jumps turned into running stitch",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.label_parts": {
+    "testo": "{label}: {parts}",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.layers_of_thread_1_the": {
+    "testo": "Layers of thread: 1 = the fabric just covered (40 wt rows every 0.25 mm, Ink/Stitch's default fill)",
+    "file": "lib/density.ts"
+  },
+  "filum.messaggi.lettering_can_t_be_a": {
+    "testo": "Lettering can't be a gradient: convert it to shapes first",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.lettering_gone_while_loading": {
+    "testo": "the lettering was deleted, or the design undone or replaced, while the font loaded",
+    "file": "lib/textOps.ts"
+  },
+  "filum.messaggi.lettering_kept_changing": {
+    "testo": "the lettering kept changing while it was laid out",
+    "file": "lib/textOps.ts"
+  },
+  "filum.messaggi.lettering_message": {
+    "testo": "Lettering: {message}",
+    "file": "lib/textOps.ts"
+  },
+  "filum.messaggi.lettering_too_small_for_the": {
+    "testo": "Lettering too small for the thread",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.line_on_top_of_another": {
+    "testo": "Line on top of another line",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.line_runs_over_itself": {
+    "testo": "Line runs over itself",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.linear": {
+    "testo": "Linear",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.lines_on_top_of_each": {
+    "testo": "Lines on top of each other",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.loaded_name": {
+    "testo": "Loaded {name}",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.long_stitches": {
+    "testo": "Long stitches",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.mm_mm_of_it_goes": {
+    "testo": "{mm} mm of it goes back over itself and is sewn twice (fine for an underpath you meant).",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.mm_mm_of_it_lies": {
+    "testo": "{mm} mm of it lies on “{v2}” and is sewn twice.",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.move_inside": {
+    "testo": "Move inside",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.move_to_the_centre": {
+    "testo": "Move to the centre",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.n_appliques.one": {
+    "testo": "{n} appliqué: placement → stop → tack-down → stop → cover",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.n_appliques.other": {
+    "testo": "{n} appliqués: placement → stop → tack-down → stop → cover",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.n_clones_follow.one": {
+    "testo": "{n} clone: they follow the original — edit an original to change its clones",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.n_clones_follow.other": {
+    "testo": "{n} clones: they follow the originals — edit an original to change its clones",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.n_jumps_between_parts.one": {
+    "testo": " ({n} jump between separate parts)",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.n_jumps_between_parts.other": {
+    "testo": " ({n} jumps between separate parts)",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.n_lines.one": {
+    "testo": "{n} line",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.n_lines.other": {
+    "testo": "{n} lines",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.n_objects_selected.one": {
+    "testo": "{n} object selected",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.n_objects_selected.other": {
+    "testo": "{n} objects selected",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.n_parts.one": {
+    "testo": "{n} part",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.n_parts.other": {
+    "testo": "{n} parts",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.n_paths.one": {
+    "testo": "{n} path",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.n_paths.other": {
+    "testo": "{n} paths",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.n_routes_apart": {
+    "testo": " ({n} routes: one per thread and stitch settings)",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.n_satins.one": {
+    "testo": "{n} satin",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.n_satins.other": {
+    "testo": "{n} satins",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.needle_holes": {
+    "testo": "Needle holes",
+    "file": "lib/density.ts"
+  },
+  "filum.messaggi.needle_penetrations_per_mm2_what": {
+    "testo": "Needle penetrations per mm² — what perforates and tears delicate fabric",
+    "file": "lib/density.ts"
+  },
+  "filum.messaggi.no_file_formats_selected": {
+    "testo": "No file formats selected",
+    "file": "lib/exportFiles.ts"
+  },
+  "filum.messaggi.no_jumps": {
+    "testo": " — no jumps",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.no_jumps_between": {
+    "testo": "No jumps between {min} and {max} mm in the same thread",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.no_lettering_selected": {
+    "testo": "No lettering selected",
+    "file": "lib/textOps.ts"
+  },
+  "filum.messaggi.no_mixing_hard_colour_edges": {
+    "testo": "No mixing — hard colour edges",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.no_stitches_yet": {
+    "testo": "No stitches yet",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.noise": {
+    "testo": "Noise",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.not_a_closed_shape": {
+    "testo": "Not a closed shape",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.not_a_design": {
+    "testo": "not a Filum design",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.nothing_to_export": {
+    "testo": "nothing to export — the design has no stitches",
+    "file": "lib/exportFiles.ts"
+  },
+  "filum.messaggi.nothing_to_knock_down": {
+    "testo": "Nothing to knock down",
+    "file": "lib/knockdown.ts"
+  },
+  "filum.messaggi.nothing_to_outline": {
+    "testo": "Nothing to outline",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.nothing_to_route": {
+    "testo": "Nothing to route",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.nothing_to_ungroup": {
+    "testo": "Nothing to ungroup",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.one_path_no_jumps": {
+    "testo": " — one path, no jumps",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.op_exclude": {
+    "testo": "Exclude",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.op_intersect": {
+    "testo": "Intersect",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.op_minus_front": {
+    "testo": "Minus front",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.op_unite": {
+    "testo": "Unite",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.open_in_the_middle_dense": {
+    "testo": "Open in the middle, dense at both ends",
+    "file": "lib/ramp.ts"
+  },
+  "filum.messaggi.open_paths_skipped.one": {
+    "testo": " · {n} open path skipped",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.open_paths_skipped.other": {
+    "testo": " · {n} open paths skipped",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.opened_open_the_others.one": {
+    "testo": "Opened {name}. Open the other file with File → Open…",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.opened_open_the_others.other": {
+    "testo": "Opened {name}. Open the other {n} files with File → Open…",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.opens_up_quickly_then_stays": {
+    "testo": "Opens up quickly, then stays open",
+    "file": "lib/ramp.ts"
+  },
+  "filum.messaggi.optimised_colour_changes_colorchangesbefore_colorchangesafter": {
+    "testo": "Optimised: colour changes {colorChangesBefore} → {colorChangesAfter}, travel {v3} → {v4} mm",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.ordered_bayer_pattern_a_regular": {
+    "testo": "Ordered Bayer pattern — a regular woven / pixel look",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.outside_the_hoop": {
+    "testo": "Outside the hoop",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.outside_the_oval_hoop": {
+    "testo": "Outside the oval hoop",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.part_of_this_object_can": {
+    "testo": "Part of this object can't be reached by the machine.",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.part_of_this_object_lies": {
+    "testo": "Part of this object lies outside the ellipse the machine can reach.",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.parts_of_the_shape_may": {
+    "testo": "Parts of the shape may be left out or sewn twice — untangle the outline (Path ▸ Shape builder can split it).",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.paths_removed_few_points.one": {
+    "testo": "{n} path removed (fewer than two points left)",
+    "file": "lib/nodeActions.ts"
+  },
+  "filum.messaggi.paths_removed_few_points.other": {
+    "testo": "{n} paths removed (fewer than two points left)",
+    "file": "lib/nodeActions.ts"
+  },
+  "filum.messaggi.produces_no_stitches": {
+    "testo": "Produces no stitches",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.rails_with_unequal_points": {
+    "testo": "Rails with unequal points",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.random_organic_painterly_mix": {
+    "testo": "Random — organic, painterly mix",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.redwork_n_lines.one": {
+    "testo": "Redwork: {n} line sewn out and back",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.redwork_n_lines.other": {
+    "testo": "Redwork: {n} lines sewn out and back",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.reference_added_drag_to_place": {
+    "testo": "Reference added — drag to place, corners to scale · Enter when done",
+    "file": "lib/references.ts"
+  },
+  "filum.messaggi.routed_lines_into_paths": {
+    "testo": "Routed {lines} into {paths}",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.row_spacing_rowspacing_mm_can": {
+    "testo": "Row spacing {rowSpacing} mm can make the fabric stiff and break needles.",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.rows": {
+    "testo": "Rows",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.rows_run_along_the_gradient": {
+    "testo": "Rows run along the gradient",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.rung_misses_a_rail": {
+    "testo": "Rung misses a rail",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.s_curve": {
+    "testo": "S-curve",
+    "file": "lib/ramp.ts"
+  },
+  "filum.messaggi.satin_too_narrow": {
+    "testo": "Satin too narrow",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.satin_too_wide": {
+    "testo": "Satin too wide",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.saved": {
+    "testo": "Saved",
+    "file": "lib/actions.ts"
+  },
+  "filum.messaggi.select_a_closed_shape_fill": {
+    "testo": "Select a closed shape (fill or outline) to turn into an appliqué",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.select_lettering_and_line": {
+    "testo": "Select a lettering and a line",
+    "file": "lib/textOps.ts"
+  },
+  "filum.messaggi.select_overlapping_fills_to_divide": {
+    "testo": "Select overlapping fills to divide",
+    "file": "lib/shapeBuilder.ts"
+  },
+  "filum.messaggi.select_points_first_click_shift": {
+    "testo": "Select points first (click, Shift-click or drag a box)",
+    "file": "lib/nodeActions.ts"
+  },
+  "filum.messaggi.select_running_lines": {
+    "testo": "Select running-stitch lines",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.select_satin_columns": {
+    "testo": "Select satin columns",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.select_three_or_more_objects": {
+    "testo": "Select three or more objects to distribute",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.select_two_or_more_objects": {
+    "testo": "Select two or more objects or groups to group",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.select_two_or_more_points": {
+    "testo": "Select two or more points with the node tool (A)",
+    "file": "lib/nodeActions.ts"
+  },
+  "filum.messaggi.select_two_or_more_shapes": {
+    "testo": "Select two or more shapes",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.set_0_25_mm_ink": {
+    "testo": "Set 0.25 mm (Ink/Stitch)",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.set_1_5_mm": {
+    "testo": "Set 1.5 mm",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.shape_too_small_for_its": {
+    "testo": "Shape too small for its crosses",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.sharp": {
+    "testo": "Sharp",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.smaller_than_half_a_cell": {
+    "testo": "Smaller than half a {cell} mm cell — no cross fits. Use a smaller cell.",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.smooth": {
+    "testo": "Smooth",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.split_at_7_mm": {
+    "testo": "Split at 7 mm",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.stays_dense_then_opens_up": {
+    "testo": "Stays dense, then opens up quickly",
+    "file": "lib/ramp.ts"
+  },
+  "filum.messaggi.steps": {
+    "testo": "Steps",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.stiffness": {
+    "testo": "Stiffness",
+    "file": "lib/density.ts"
+  },
+  "filum.messaggi.stitches_under_1_mm_tend": {
+    "testo": "Stitches under 1 mm tend to break the thread.",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.the_design_is_too_big": {
+    "testo": "The design is too big to autosave: save it to a file",
+    "file": "store.ts"
+  },
+  "filum.messaggi.the_lettering_is_locked_unlock": {
+    "testo": "The lettering is locked — unlock it in Layers to edit it",
+    "file": "lib/textOps.ts"
+  },
+  "filum.messaggi.the_outline_encloses_no_area": {
+    "testo": "The outline encloses no area.",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.the_rails_pair_up_by": {
+    "testo": "The rails pair up by length only. Add direction guides (D) to control the stitch angle.",
+    "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.the_result_is_empty": {
+    "testo": "The result is empty",
+    "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.the_shape_may_be_too": {
+    "testo": "The shape may be too small or invalid for this stitch type.",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.thin": {
+    "testo": "Thin",
+    "file": "lib/density.ts"
+  },
+  "filum.messaggi.too_dense": {
+    "testo": "Too dense",
+    "file": "lib/density.ts"
+  },
+  "filum.messaggi.trims_between_parts": {
+    "testo": ", trims between parts",
+    "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.turn_rows_across": {
+    "testo": "Turn rows across",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.untitled": {
+    "testo": "Untitled",
+    "file": "store.ts"
+  },
+  "filum.messaggi.use_triple_run": {
+    "testo": "Use triple run",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.v1_has_no_letters_for": {
+    "testo": "{v1} has no letters for “{content}” — using {v3}",
+    "file": "lib/textOps.ts"
+  },
+  "filum.messaggi.v1_has_no_letters_for_2": {
+    "testo": "{v1} has no letters for this text",
+    "file": "lib/textOps.ts"
+  },
+  "filum.messaggi.v1_mm_letters_no_weight": {
+    "testo": "{v1} mm letters — No. {weight} thread needs {minText} mm ({minTextSource}). Use finer thread or larger text.",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.v1_mm_stitches_can_snag": {
+    "testo": "{v1} mm stitches can snag and loop. Split them or use a fill.",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.v1_stitches": {
+    "testo": "{v1} stitches.",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.very_dense_fill": {
+    "testo": "Very dense fill",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.very_large_design": {
+    "testo": "Very large design",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.very_short_running_stitches": {
+    "testo": "Very short running stitches",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.very_small_fill": {
+    "testo": "Very small fill",
+    "file": "lib/issues.ts"
+  },
+  "filum.messaggi.weight_of_thread_added_to": {
+    "testo": "Weight of thread added to the fabric (top + bobbin) against the fabric's own weight",
+    "file": "lib/density.ts"
+  },
+  "filum.messaggi.whole_rows_interleave_smooth_stripes": {
+    "testo": "Whole rows interleave — smooth stripes, fewest extra stitches",
+    "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.woven": {
+    "testo": "Woven",
+    "file": "lib/gradient.ts"
+  },
   "filum.pannelli.a_fill_or_satin_so": {
     "testo": "A fill or satin so open the fabric shows through",
     "file": "components/DensityPanel.tsx"

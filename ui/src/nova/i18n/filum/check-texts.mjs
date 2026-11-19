@@ -33,7 +33,7 @@ const ts = require("typescript");
 const json = (f) => JSON.parse(readFileSync(path.join(here, f), "utf8"));
 
 /** Attributi e proprietà che finiscono a schermo. */
-const VISIBLE_NAME = /^(title|placeholder|alt|label|hint|tip|tooltip|caption|heading|subtitle|text|desc|description|help|note|message|empty|emptyText|confirmText|okText|cancelText|unit|suffix|prefix|aria-(label|description|roledescription|valuetext|placeholder)|[a-z]+(Label|Title|Hint|Text|Tip|Message))$/;
+const VISIBLE_NAME = /^(title|placeholder|alt|label|hint|tip|tooltip|caption|heading|subtitle|detail|text|desc|description|help|note|message|empty|emptyText|confirmText|okText|cancelText|unit|suffix|prefix|aria-(label|description|roledescription|valuetext|placeholder)|[a-z]+(Label|Title|Hint|Text|Tip|Message))$/;
 /** Funzioni il cui primo argomento è un messaggio per l'utente. */
 const MESSAGE_FN = /^(toast|alert|confirm|prompt|setError|setStatus|setMessage|setNote|setWarning|notify|ask)$/;
 const LETTER = /\p{L}/u;

@@ -3,6 +3,7 @@
 // crates/core/src/stitches/gradient.rs). This module creates and edits those
 // layer groups and mirrors the core's weights / dithers for UI previews.
 
+import { t } from "../nova/i18n/filum";
 import { useStore } from "../store";
 import type { DesignObject, DitherMethod, FillParams, FreePoint, GradientKind, GradientMesh, GradientParams, GradientStop, StitchDocument, SubPath, TransitionCurve, Vec2 } from "../types";
 import { gradientLayers, gradientRefusal, plainGroupOf, removeGradientDoc } from "./fillLayers";
@@ -79,7 +80,7 @@ export function makeGradient(objId: string, from: Vec2, to: Vec2, opts: Partial<
   const s = store();
   const o = s.doc.objects.find((x) => x.id === objId);
   if (!o || !hasClosed(o) || o.text) {
-    s.toast(o?.text ? "Lettering can't be a gradient: convert it to shapes first" : "Gradients need a closed shape", "error");
+    s.toast(o?.text ? t("filum.messaggi.lettering_can_t_be_a") : t("filum.messaggi.gradients_need_a_closed_shape"), "error");
     return null;
   }
   const no = gradientRefusal(s.doc, o);
@@ -371,20 +372,20 @@ export function ditherCells(wAt: (c: number, r: number) => number[], n: number, 
 }
 
 export const DITHERS: { id: DitherMethod; label: string; title: string }[] = [
-  { id: "rows", label: "Rows", title: "Whole rows interleave — smooth stripes, fewest extra stitches" },
-  { id: "diffusion", label: "Diffusion", title: "Error diffusion — the most even, finest mix" },
-  { id: "ordered", label: "Woven", title: "Ordered Bayer pattern — a regular woven / pixel look" },
-  { id: "noise", label: "Noise", title: "Random — organic, painterly mix" },
-  { id: "bands", label: "Bands", title: "No mixing — hard colour edges" },
+  { id: "rows", get label() { return t("filum.messaggi.rows"); }, get title() { return t("filum.messaggi.whole_rows_interleave_smooth_stripes"); } },
+  { id: "diffusion", get label() { return t("filum.messaggi.diffusion"); }, get title() { return t("filum.messaggi.error_diffusion_the_most_even"); } },
+  { id: "ordered", get label() { return t("filum.messaggi.woven"); }, get title() { return t("filum.messaggi.ordered_bayer_pattern_a_regular"); } },
+  { id: "noise", get label() { return t("filum.messaggi.noise"); }, get title() { return t("filum.messaggi.random_organic_painterly_mix"); } },
+  { id: "bands", get label() { return t("filum.messaggi.bands"); }, get title() { return t("filum.messaggi.no_mixing_hard_colour_edges"); } },
 ];
 
 export const CURVES: { id: TransitionCurve; label: string }[] = [
-  { id: "linear", label: "Linear" },
-  { id: "smooth", label: "Smooth" },
-  { id: "easeIn", label: "Ease in" },
-  { id: "easeOut", label: "Ease out" },
-  { id: "sharp", label: "Sharp" },
-  { id: "steps", label: "Steps" },
+  { id: "linear", get label() { return t("filum.messaggi.linear"); } },
+  { id: "smooth", get label() { return t("filum.messaggi.smooth"); } },
+  { id: "easeIn", get label() { return t("filum.messaggi.ease_in"); } },
+  { id: "easeOut", get label() { return t("filum.messaggi.ease_out"); } },
+  { id: "sharp", get label() { return t("filum.messaggi.sharp"); } },
+  { id: "steps", get label() { return t("filum.messaggi.steps"); } },
 ];
 
 // ---------------------------------------------------------------------------
@@ -776,7 +777,7 @@ export function removeNodes(group: string, idx: number[]) {
 export function makeGradient2D(objId: string, click: Vec2, kind: "mesh" | "freeform"): string | null {
   const o = store().doc.objects.find((x) => x.id === objId);
   if (!o || !hasClosed(o) || o.text) {
-    store().toast(o?.text ? "Lettering can't be a gradient: convert it to shapes first" : "Gradients need a closed shape", "error");
+    store().toast(o?.text ? t("filum.messaggi.lettering_can_t_be_a") : t("filum.messaggi.gradients_need_a_closed_shape"), "error");
     return null;
   }
   const b = objectBounds(o) ?? { x: 0, y: 0, w: 10, h: 10 };
