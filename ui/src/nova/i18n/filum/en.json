@@ -1343,7 +1343,7 @@
   "filum.finestre.filum_includes_only_what_it": "{app} includes only what it may share with everyone. Some fonts and thread charts have licences that don't allow that, so you can download them yourself here: read the licence, then ",
   "filum.finestre.filum_is_free_software_you": "{app} is free software: you can redistribute it and/or modify it under the terms of the ",
   "filum.finestre.filum_itself_is_free_software": "{app} itself is free software under the GPL-3.0-or-later.",
-  "filum.finestre.filum_violet": "{app} violet",
+  "filum.finestre.filum_violet": "{app} red",
   "filum.finestre.finish_the_path_the_tool": "Finish the path (the tool stays) / finish / remove the last point",
   "filum.finestre.finished_piece_without_the_jump": "Finished piece: without the jump threads you snip and the basting",
   "filum.finestre.fish": "Fish",
