@@ -1795,6 +1795,10 @@
     "testo": "Cap tear-away",
     "file": "lib/materials.ts"
   },
+  "filum.dati.checks_against_doc_hoop": {
+    "testo": "Checks against the hoop set in the document",
+    "file": "lib/machines.ts"
+  },
   "filum.dati.colori_punti.mono.label": {
     "testo": "Monochrome",
     "file": "lib/threads.ts"
@@ -1854,6 +1858,10 @@
   "filum.dati.denser_underlay_always_on": {
     "testo": "Denser, underlay always on",
     "file": "lib/materials.ts"
+  },
+  "filum.dati.design_hoop": {
+    "testo": "Design hoop",
+    "file": "lib/machines.ts"
   },
   "filum.dati.disc_rows_across": {
     "testo": "Disc, rows across",

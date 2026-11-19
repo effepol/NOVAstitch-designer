@@ -199,9 +199,9 @@ function babyLock(id: string, name: string, models: string, width: number, heigh
 export const MACHINES: MachineProfile[] = [
   {
     id: "doc",
-    name: "Design hoop",
+    get name() { return t("filum.dati.design_hoop"); },
     brand: "",
-    models: "Checks against the hoop set in the document",
+    get models() { return t("filum.dati.checks_against_doc_hoop"); },
     formats: ["pes", "dst", "jef", "exp", "vp3", "xxx"],
     field: { width: 0, height: 0 },
     frames: [],
