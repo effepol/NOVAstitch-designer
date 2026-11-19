@@ -1,7 +1,4 @@
 {
-  "c.zoom.fit": "Adatta",
-  "c.zoom.fit.title": "Adatta il disegno alla finestra",
-  "c.zoom.k.title": "Zoom {k}× (1× = dimensione reale)",
   "c.zoom.uncalibrated": "non calibrato",
   "c.zoom.uncalibrated.title": "Lo schermo non è calibrato: 1× è una stima (96 punti per pollice). Vista → Calibra lo schermo",
   "c.grid.step.1": "Griglia 1 mm",

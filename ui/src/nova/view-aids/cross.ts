@@ -1,10 +1,11 @@
 // Module c, the cursor cross: one horizontal and one vertical line through the
-// cursor, compared with the previous point of the path being drawn. Zero
-// tolerance at a tenth of a mm (the DST's resolution): the vertical arm turns
-// «aligned» when round(x·10) = round(x_prev·10), the horizontal one when the
-// same holds for y, each on its own.
+// cursor, compared with the last point of the path being drawn. Zero tolerance at
+// a tenth of a mm (the DST's resolution): the vertical arm turns «aligned» when
+// round(x·10) = round(x_prev·10), the horizontal one when the same holds for y,
+// each on its own. The pointer and the last point come from module 0's hook
+// (onCanvasPointer), for Filum's tools and the registered ones (module m: m.7).
 
-import { drawingCursor, type LayerInfo } from "../core/registry";
+import { drawingCursor, type CanvasPointer, type LayerInfo } from "../core/registry";
 import type { Vec2 } from "../../types";
 
 /** A coordinate in mm as a whole number of tenths; the product is cleaned so 10,05 counts as 10,1. */
@@ -22,31 +23,11 @@ export function crossArms(cursor: Vec2, prev: Vec2 | null): CrossArms {
   return { vertical: tenth(cursor[0]) === tenth(prev[0]), horizontal: tenth(cursor[1]) === tenth(prev[1]) };
 }
 
-/**
- * The previous point of Filum's own tools (pen, lines…): module 0's hook gives
- * it (request of 18/11). Until it is in main, Filum's tools have none.
- */
-let tracePoint: (() => Vec2 | null) | null = null;
-export function setTracePoint(fn: (() => Vec2 | null) | null): void {
-  tracePoint = fn;
-}
-
-/** The cross for the tool `toolId` with the cursor at `cursor` (mm): whether it is shown and how each arm is. */
-export function crossFor(toolId: string, cursor: Vec2): CrossArms & { shown: boolean; prev: Vec2 | null } {
-  const reg = drawingCursor(toolId);
-  let prev: Vec2 | null = null;
-  let shown = true;
-  if (reg.registered) {
-    shown = reg.crosshair;
-    prev = reg.last;
-  } else {
-    try {
-      prev = tracePoint?.() ?? null;
-    } catch {
-      prev = null;
-    }
-  }
-  return { ...crossArms(cursor, prev), shown, prev };
+/** The cross for where the pointer is: hidden off the canvas and on a registered tool that refuses it (crosshair: false). */
+export function crossFor(p: Pick<CanvasPointer, "tool" | "cursor" | "last">): CrossArms & { shown: boolean } {
+  if (!p.cursor) return { vertical: false, horizontal: false, shown: false };
+  const reg = drawingCursor(p.tool);
+  return { ...crossArms(p.cursor, p.last), shown: !reg.registered || reg.crosshair };
 }
 
 /** The arms' colours: «normal» and «aligned» (green, told apart also by a thicker line). */
