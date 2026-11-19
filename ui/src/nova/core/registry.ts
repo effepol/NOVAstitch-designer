@@ -59,6 +59,8 @@ export interface ToolbarButtonEntry extends Entry {
   title?: string;
   run: () => void;
   active?: () => boolean;
+  /** Lesson anchor ("<module>.<name>", listed in the module's anchors.json): data-nova-anchor on the button. */
+  anchor?: string;
 }
 
 let version = 0;
@@ -255,4 +257,127 @@ export function useRegistry(): number {
     },
     () => version,
   );
+}
+
+// ---------------------------------------------------------------------------
+// Hook points for modules c and d (Architect, 18/11)
+
+/** Filum's 1×: 96 CSS px per inch, until a module calibrates the screen. */
+export const DEFAULT_PX_PER_MM = 96 / 25.4;
+
+/** A screen scale (module c's ruler calibration): CSS px per mm at 1×, or null while not calibrated. */
+export interface ScreenScaleEntry extends Entry {
+  pxPerMm(): number | null;
+}
+const scales = registry<ScreenScaleEntry>("Screen scale");
+export const registerScreenScale = scales.add;
+
+/** The scale of zoom 1× (px per mm): the registered screen scale, else 96/25.4. */
+export function oneToOneScale(): number {
+  for (const s of scales.list()) {
+    try {
+      const v = s.pxPerMm();
+      if (v && Number.isFinite(v) && v > 0) return v;
+    } catch (e) {
+      console.error(`nova: screen scale "${s.id}" failed`, e);
+    }
+  }
+  return DEFAULT_PX_PER_MM;
+}
+
+/** Where the pointer is on the canvas while drawing, for module c's cross (mm of the design). */
+export interface CanvasPointer {
+  tool: string;
+  /** A registered drawing tool (else one of Filum's). */
+  registered: boolean;
+  /** The pointer, or null when it is off the canvas. */
+  cursor: Vec2 | null;
+  /** The last point of the path being drawn, or null. */
+  last: Vec2 | null;
+  /** A path is being drawn (there is a last point). */
+  drawing: boolean;
+}
+
+let pointer: CanvasPointer = { tool: "select", registered: false, cursor: null, last: null, drawing: false };
+let filumLast: () => Vec2 | null = () => null;
+const pointerListeners = new Set<(p: CanvasPointer) => void>();
+
+/** The canvas tells where the last point of Filum's own drawing tools is (pen, curve, satin, freehand, shapes). */
+export function setFilumLastPoint(fn: () => Vec2 | null): void {
+  filumLast = fn;
+}
+
+/** The canvas tells where the pointer is (null: it left the canvas); modules are told. */
+export function setCanvasPointer(tool: string, cursor: Vec2 | null): void {
+  const reg = drawingTool(tool);
+  let last: Vec2 | null = null;
+  try {
+    last = reg ? reg.lastPoint?.() ?? null : filumLast();
+  } catch {
+    last = null;
+  }
+  pointer = { tool, registered: !!reg, cursor, last, drawing: !!last };
+  for (const fn of [...pointerListeners]) {
+    try {
+      fn(pointer);
+    } catch (e) {
+      console.error("nova: a canvas pointer listener failed", e);
+    }
+  }
+}
+
+export const canvasPointer = (): CanvasPointer => pointer;
+
+/** Hear the pointer's moves on the canvas; returns the function that stops listening. */
+export function onCanvasPointer(fn: (p: CanvasPointer) => void): () => void {
+  pointerListeners.add(fn);
+  return () => pointerListeners.delete(fn);
+}
+
+let hideCursor = false;
+/** Module c's cross is on: the system cursor hides over the canvas. */
+export function setSystemCursorHidden(hidden: boolean): void {
+  if (hidden === hideCursor) return;
+  hideCursor = hidden;
+  changed();
+}
+export const systemCursorHidden = (): boolean => hideCursor;
+
+/** What a needle-path line draws with: the view, the plan and how far it is sewn (the stitch-out player). */
+export interface StitchLineInfo extends LayerInfo {
+  showUnderlay?: boolean;
+}
+
+/** A line that takes the place of Filum's stitch line in the stitch view (module d's needle path). */
+export interface StitchLineEntry extends Entry {
+  /** On: Filum draws no stitch line of its own (WebGL or 2D) and this one is drawn. */
+  active(): boolean;
+  draw(ctx: CanvasRenderingContext2D, info: StitchLineInfo, plan: import("../../types").PlanData, limit: number): void;
+}
+const stitchLines = registry<StitchLineEntry>("Stitch line");
+export const registerStitchLine = stitchLines.add;
+
+/** The module's line in force, if its option is on. */
+export function activeStitchLine(): StitchLineEntry | undefined {
+  return stitchLines.list().find((l) => {
+    try {
+      return l.active();
+    } catch {
+      return false;
+    }
+  });
+}
+
+/** Draw the active needle-path line (the canvas calls this in the stitch view, in mm). */
+export function drawStitchLine(ctx: CanvasRenderingContext2D, info: StitchLineInfo, plan: import("../../types").PlanData, limit: number): void {
+  const l = activeStitchLine();
+  if (!l) return;
+  ctx.save?.();
+  try {
+    l.draw(ctx, info, plan, limit);
+  } catch (e) {
+    console.error(`nova: stitch line "${l.id}" failed`, e);
+  } finally {
+    ctx.restore?.();
+  }
 }

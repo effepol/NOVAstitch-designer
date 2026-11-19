@@ -16,5 +16,18 @@
   "b.stop.on": "Stop after: yes (click to remove it)",
   "b.stop.off": "Stop after: no (click to add one)",
   "b.start.auto": "Start point set by hand: click to go back to automatic",
-  "b.end.auto": "End point set by hand: click to go back to automatic"
+  "b.end.auto": "End point set by hand: click to go back to automatic",
+  "b.view.startEnd": "Start and end",
+  "b.view.startEnd.title": "Show the start (S) and end (E) marks of every object, with its place in the sewing order",
+  "b.view.links": "Connections",
+  "b.view.links.title": "Show the connections between one object and the next: red trim, blue jump, green sewn through; faint when the program chose it",
+  "b.link.trim": "Trim",
+  "b.link.jump": "Jump",
+  "b.link.join": "Sew through",
+  "b.link.auto": "Automatic",
+  "b.link.now.trim": "After: trim (click to change the connection)",
+  "b.link.now.jump": "After: jump (click to change the connection)",
+  "b.link.now.join": "After: sewn through to the next (click to change the connection)",
+  "b.link.now.auto": "After: the program decides (click to change the connection)",
+  "b.join.visible": "The sewn connection to the next object stays uncovered"
 }

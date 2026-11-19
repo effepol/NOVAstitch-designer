@@ -5,7 +5,7 @@ import { Sparkles, Trash2 } from "lucide-react";
 import { StitchAngle } from "../icons/stitch";
 import { autoGuides, guidesOf, selectedSatin, setGuides } from "../lib/satinGuides";
 import { useStore } from "../store";
-import { t } from "../nova/i18n/filum";
+import { t, tn } from "../nova/i18n/filum";
 
 export function GuideActions({ compact = false }: { compact?: boolean }) {
   // re-render with the document
@@ -16,22 +16,22 @@ export function GuideActions({ compact = false }: { compact?: boolean }) {
   const n = guidesOf(o).length;
   const auto = () => {
     const g = autoGuides(o);
-    if (!g.length) useStore.getState().toast("No sharp corners on this column");
+    if (!g.length) useStore.getState().toast(t("filum.pannelli.no_sharp_corners_on_this"));
     else setGuides(o.id, g);
   };
   return (
     <div className="guide-actions">
-      <span className="stat">{n ? `${n} guide${n > 1 ? "s" : ""}` : "Across"}</span>
+      <span className="stat">{n ? tn("filum.pannelli.n_guides", n) : t("filum.pannelli.across_2")}</span>
       {!compact && tool !== "guides" && (
-        <button className="btn sm" title="Edit the guides on the canvas (D)" onClick={() => useStore.getState().setTool("guides")}>
-          <StitchAngle size={12} /> Edit
+        <button className="btn sm" title={t("filum.pannelli.edit_the_guides_on_the")} onClick={() => useStore.getState().setTool("guides")}>
+          <StitchAngle size={12} />{t("filum.pannelli.edit_3")}
         </button>
       )}
-      <button className="btn sm ghost" title="Guides along the mitre of every corner sharper than 30°: the stitches fan evenly round it" onClick={auto}>
-        <Sparkles size={12} /> Corners
+      <button className="btn sm ghost" title={t("filum.pannelli.guides_along_the_mitre_of")} onClick={auto}>
+        <Sparkles size={12} />{t("filum.pannelli.corners")}
       </button>
       {n > 0 && (
-        <button className="btn sm ghost" title="Remove all guides: stitches straight across the column again" onClick={() => setGuides(o.id, [])}>
+        <button className="btn sm ghost" title={t("filum.pannelli.remove_all_guides_stitches_straight")} onClick={() => setGuides(o.id, [])}>
           <Trash2 size={12} />
         </button>
       )}

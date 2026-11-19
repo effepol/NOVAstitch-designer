@@ -11,7 +11,8 @@
 //   i.1  in italiano nessuna scritta inglese, nelle aree già tradotte (aree.json)
 //   i.3  in inglese ogni schermata ha le stesse scritte di Filum 0.2.1
 //        (riferimento-en-0.2.1.json, raccolto con --riferimento prima del modulo i);
-//        è escluso solo il nome del programma (filum.app.name)
+//        sono escluse solo le chiavi di eccezioni-i3.json (il nome del programma, filum.app.name,
+//        e il colore d'accento, decisioni dell'Architetto)
 //
 // Regola i.3 dell'Architetto (13/11): ciò che i moduli aggiungono all'interfaccia di Filum
 // porta data-nova="<modulo>" (lo mette il modulo 0). Gli elementi marcati, con tutto ciò che
@@ -493,7 +494,7 @@ try {
         const words = s.match(/\p{L}+/gu) ?? [];
         // …o sigle in maiuscolo («CC BY-NC-SA #», «SIL OFL»), estensioni («.COL»), elenchi di tasti
         // («Ctrl+X / Ctrl+C / Ctrl+V»), indirizzi e nomi di archivi GitHub («inkstitch/embroidery-fonts»)
-        if (/^\.[A-Z0-9#]+$/.test(s) || /^https?:\/\/\S+$/.test(s) || /^[\w.-]+\/[\w.-]+( \([\w.-]+\))?$/.test(s)) return true;
+        if (/^\.([A-Z0-9#]+|[a-z0-9#]+)$/.test(s) || /^https?:\/\/\S+$/.test(s) || /^[\w.-]+\/[\w.-]+( \([\w.-]+\))?$/.test(s)) return true;
         if (s.split(" / ").every((k) => KEYS.test(k.trim()))) return true;
         return allowed.has(s) || allowed.has(bare) || !/\p{L}/u.test(bare) || SIGLA.test(s) || words.every((w) => allowed.has(w) || /^\p{Lu}{2,}$/u.test(w));
       };
@@ -511,12 +512,18 @@ try {
     mkdirSync(enDir, { recursive: true });
     const en = await tour(browser, url, "en-US", enDir);
     const enBad = {};
-    // i.3 esclude solo il nome del programma (filum.app.name): in entrambi i lati diventa ‹app›
+    // i.3 esclude solo le chiavi di eccezioni-i3.json (decisioni dell'Architetto). Il nome del programma
+    // (filum.app.name) diventa ‹app› in entrambi i lati; per le altre eccezioni (il colore d'accento, «Filum violet»
+    // → «NOVAstitch Designer red») la scritta di Filum 0.2.1 e quella di oggi diventano lo stesso segnaposto ‹chiave›.
     const appNow = json("en.json")["filum.app.name"] ?? "Filum";
     const app = (l) => l.map((s) => s.replaceAll(appNow, "‹app›").replaceAll("Filum", "‹app›"));
-    for (const id of Object.keys(ref)) ref[id] = app(ref[id]);
+    const eccezioni = Object.keys(json("eccezioni-i3.json").chiavi).filter((k) => k !== "filum.app.name");
+    const prima = new Map(eccezioni.map((k) => [json("origine-0.2.1.json")[k].testo, `‹${k}›`]));
+    const oggi = new Map(eccezioni.map((k) => [json("en.json")[k].replaceAll("{app}", appNow), `‹${k}›`]));
+    const swap = (map) => (l) => l.map((s) => map.get(s) ?? s);
+    for (const id of Object.keys(ref)) ref[id] = app(swap(prima)(ref[id]));
     // le schermate modulo/… non sono di Filum: fuori da i.3 (contano per i.1 e i.4, qui sotto)
-    const now = Object.fromEntries(Object.entries(textsOf(en.screens)).filter(([id]) => !id.startsWith("modulo/") && !aParte(id)).map(([id, l]) => [id, app(l)]));
+    const now = Object.fromEntries(Object.entries(textsOf(en.screens)).filter(([id]) => !id.startsWith("modulo/") && !aParte(id)).map(([id, l]) => [id, app(swap(oggi)(l))]));
     for (const id of new Set([...Object.keys(ref), ...Object.keys(now)])) {
       const a = new Set(ref[id] ?? []);
       const b = new Set(now[id] ?? []);

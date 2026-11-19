@@ -5,8 +5,9 @@
   "b.stitches": "Il conteggio dei punti di una riga / A row's stitch count",
   "b.tieStart": "L'icona della fermatura d'inizio / The start lock stitch icon",
   "b.tieEnd": "L'icona della fermatura di fine / The end lock stitch icon",
-  "b.trim": "L'icona del rasafilo dopo / The trim after icon",
+  "b.trim": "L'icona del collegamento dopo la riga (rasafilo, salto, cucitura, automatico) / The connection after the row icon",
   "b.stop": "L'icona dello stop dopo / The stop after icon",
   "b.startAuto": "Il ritorno ad automatico della partenza / Start point back to automatic",
-  "b.endAuto": "Il ritorno ad automatico dell'arrivo / End point back to automatic"
+  "b.endAuto": "Il ritorno ad automatico dell'arrivo / End point back to automatic",
+  "b.joinWarning": "L'avviso di cucitura scoperta / The uncovered sewn connection warning"
 }

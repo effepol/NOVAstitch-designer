@@ -2,6 +2,7 @@
 // realistic / simple), Ink/Stitch's thread list, and several files at once in
 // a ZIP (Ink/Stitch zip.py, with its file names and "panelization" repeats).
 
+import { t, tn } from "../nova/i18n/filum";
 import { engine } from "../engine/client";
 import { useStore } from "../store";
 import type { ExportOptions, StitchDocument } from "../types";
@@ -45,11 +46,11 @@ export function targetFileName(t: string, name: string, inZip: boolean): string 
 }
 
 /** Bytes of one target. */
-export async function targetBytes(doc: StitchDocument, t: string, opts: ExportOptions, pics: PictureSettings): Promise<Uint8Array> {
-  if (isPicture(t)) {
+export async function targetBytes(doc: StitchDocument, th: string, opts: ExportOptions, pics: PictureSettings): Promise<Uint8Array> {
+  if (isPicture(th)) {
     const plan = await engine.exportPlan(doc, opts);
-    if (!plan.flags.length) throw new Error("nothing to export — the design has no stitches");
-    const realistic = t === "png_realistic";
+    if (!plan.flags.length) throw new Error(t("filum.messaggi.nothing_to_export"));
+    const realistic = th === "png_realistic";
     return planPng(plan, {
       kind: realistic ? "realistic" : "simple",
       dpi: realistic ? pics.dpiRealistic : pics.dpiSimple,
@@ -59,34 +60,34 @@ export async function targetBytes(doc: StitchDocument, t: string, opts: ExportOp
       threadWeight: doc.options?.threadWeight,
     });
   }
-  if (t === "filum") return new TextEncoder().encode(JSON.stringify(doc, null, 1));
-  return engine.export(doc, t, opts);
+  if (th === "filum") return new TextEncoder().encode(JSON.stringify(doc, null, 1));
+  return engine.export(doc, th, opts);
 }
 
 /** Save one target as a file. */
-export async function exportTarget(t: string, opts: ExportOptions, pics: PictureSettings, name: string) {
+export async function exportTarget(th: string, opts: ExportOptions, pics: PictureSettings, name: string) {
   const s = useStore.getState();
-  const file = targetFileName(t, name, false);
+  const file = targetFileName(th, name, false);
   try {
-    const bytes = await targetBytes(s.doc, t, opts, pics);
-    const ext = targetExtension(t);
+    const bytes = await targetBytes(s.doc, th, opts, pics);
+    const ext = targetExtension(th);
     const path = await saveFile(file, bytes, [{ name: ext.toUpperCase(), extensions: [ext] }]);
-    if (path) s.toast(`Exported ${file}`, "success");
+    if (path) s.toast(t("filum.messaggi.exported_file", { file }), "success");
   } catch (e) {
-    s.toast(`Export failed: ${(e as Error).message}`, "error");
+    s.toast(t("filum.messaggi.export_failed_message", { message: (e as Error).message }), "error");
   }
 }
 
 /** Ink/Stitch ZIP export: every chosen target in one archive. */
 export async function exportZip(targets: string[], opts: ExportOptions, pics: PictureSettings, name: string) {
   const s = useStore.getState();
-  if (!targets.length) return s.toast("No file formats selected", "error");
+  if (!targets.length) return s.toast(t("filum.messaggi.no_file_formats_selected"), "error");
   try {
     const entries = [];
     for (const t of targets) entries.push({ name: targetFileName(t, name, true), bytes: await targetBytes(s.doc, t, opts, pics) });
     const path = await saveFile(`${name}.zip`, zip(entries), [{ name: "ZIP archive", extensions: ["zip"] }]);
-    if (path) s.toast(`Exported ${name}.zip · ${entries.length} file${entries.length === 1 ? "" : "s"}`, "success");
+    if (path) s.toast(tn("filum.messaggi.exported_zip_n_files", entries.length, { name }), "success");
   } catch (e) {
-    s.toast(`Export failed: ${(e as Error).message}`, "error");
+    s.toast(t("filum.messaggi.export_failed_message", { message: (e as Error).message }), "error");
   }
 }

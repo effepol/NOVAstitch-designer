@@ -50,7 +50,7 @@
     },
     "pannelli": {
       "descrizione": "Pannelli del Dock e controlli",
-      "fatta": false,
+      "fatta": true,
       "file": [
         "components/Dock.tsx",
         "components/Panels.tsx",
@@ -74,14 +74,21 @@
         "components/RegionEditor.tsx",
         "components/MachineOptions.tsx",
         "components/ui.tsx",
-        "components/CommandsSection.tsx"
+        "components/CommandsSection.tsx",
+        "components/MachineSettings.tsx",
+        "lib/layerTools.ts",
+        "lib/hiddenStitching.ts"
       ],
       "schermate": [
         "pannello/",
         "finestra/fonts",
         "finestra/repeat",
         "finestra/outline"
-      ]
+      ],
+      "fuori": [
+        "optgroup:not([data-nova]) > option"
+      ],
+      "nota_fuori": "Fuori dal controllo i.1 di quest'area: i nomi delle macchine e dei telai preimpostati nei selettori (lib/machines.ts, lib/hoops.ts, area dati; i nomi dei telai finiscono anche nei disegni salvati)."
     },
     "digitalizza": {
       "descrizione": "Finestre per digitalizzare e provare: digitalizzazione di un'immagine, calibrazione, punto croce, campioni, ricostruzione delle forme",
@@ -125,7 +132,8 @@
         "lib/threadMatch.ts",
         "lib/convertActions.ts",
         "components/MatchPanel.tsx",
-        "components/ThreadPicker.tsx"
+        "components/ThreadPicker.tsx",
+        "lib/printSheet.ts"
       ],
       "schermate": [
         "finestra/"
@@ -141,18 +149,24 @@
     },
     "esportazione": {
       "descrizione": "Esportazione e impostazioni della macchina (file toccati anche dagli innesti del modulo a: si traducono dopo)",
-      "fatta": false,
+      "fatta": true,
       "file": [
-        "components/ExportDialog.tsx",
-        "components/MachineSettings.tsx"
+        "components/ExportDialog.tsx"
       ],
       "schermate": [
         "finestra/export"
-      ]
+      ],
+      "fuori": [
+        ".ec-name",
+        "select:has(optgroup) > option",
+        "optgroup > option",
+        ".xp-frames button"
+      ],
+      "nota_fuori": "Fuori dal controllo i.1 di quest'area: i nomi dei colori della tabella fili delle macchine (Brother…), i nomi delle macchine e dei telai (lib/machines.ts, area dati; i nomi dei telai finiscono anche nei disegni salvati)."
     },
     "messaggi": {
       "descrizione": "Messaggi, avvisi, errori (anche quelli del motore)",
-      "fatta": false,
+      "fatta": true,
       "file": [
         "store.ts",
         "lib/actions.ts",
@@ -166,7 +180,6 @@
         "lib/nodeActions.ts",
         "lib/shapeBuilder.ts",
         "lib/references.ts",
-        "lib/layerTools.ts",
         "lib/knockdown.ts",
         "lib/gradient.ts",
         "lib/ramp.ts"

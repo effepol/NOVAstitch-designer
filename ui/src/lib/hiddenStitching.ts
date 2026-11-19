@@ -8,6 +8,7 @@ import { engine } from "../engine/client";
 import { planOf, useStore } from "../store";
 import { FLAG, type DesignObject, type DesignOptions, type Fabric, type PlanData, type StitchDocument, type SubPath } from "../types";
 import { defaultDesignOptions } from "./geometry";
+import { t } from "../nova/i18n/filum";
 
 /** The options with every hidden-stitching setting filled in. */
 export const hiddenOptions = (o: Partial<DesignOptions> | undefined): Required<Pick<DesignOptions, "removeOverlaps" | "overlapMargin" | "coverMinWidth" | "coverMaxSpacing" | "texturedCovers" | "appliqueCovers" | "minFragment" | "keepUnderlay" | "trimRunning">> => {
@@ -50,27 +51,27 @@ export function coverVerdict(o: DesignObject, opts: Partial<DesignOptions> | und
   const h = hiddenOptions(opts);
   const mode = o.hidden?.covers ?? "auto";
   const st = o.stitch;
-  if (st.type !== "fill" && st.type !== "satin" && st.type !== "applique") return { hides: "no", why: "Lines never hide what's under them." };
-  if (!o.visible) return { hides: "no", why: "Hidden objects aren't stitched." };
-  if (mode === "never") return { hides: "no", why: "Set to never hide." };
-  if (mode === "always") return { hides: "yes", why: "Set to always hide, even when thin or open." };
-  const wide = `if any part is at least ${h.coverMinWidth} mm wide`;
+  if (st.type !== "fill" && st.type !== "satin" && st.type !== "applique") return { hides: "no", why: t("filum.pannelli.hs_lines_never") };
+  if (!o.visible) return { hides: "no", why: t("filum.pannelli.hs_hidden_objects") };
+  if (mode === "never") return { hides: "no", why: t("filum.pannelli.hs_set_never") };
+  if (mode === "always") return { hides: "yes", why: t("filum.pannelli.hs_set_always") };
+  const wide = t("filum.pannelli.hs_if_any_part_wide", { mm: h.coverMinWidth });
   const open = (sp: number) => h.coverMaxSpacing > 0 && sp > h.coverMaxSpacing + 1e-9;
-  if (st.type === "applique") return h.appliqueCovers ? { hides: "wide", why: `The appliqué fabric hides what's under it, ${wide}.` } : { hides: "no", why: "Appliqué fabric is set not to hide." };
-  if (st.type === "satin") return open(st.spacing) ? { hides: "no", why: `Open: rows ${st.spacing} mm apart (the limit is ${h.coverMaxSpacing} mm).` } : { hides: "wide", why: `Dense satin: hides ${wide}.` };
-  if (st.gradient || st.tartan) return { hides: "wide", why: "One colour of a gradient: the colours together hide what's under them, not each other." };
-  if (st.ramp || (st.endRowSpacing ?? 0) > 0) return { hides: "no", why: "Its rows open up towards one end, so it shows what's under it." };
-  if (TEXTURES.has(st.method) && !h.texturedCovers) return { hides: "no", why: "A texture (stipple, meander, Hilbert, cross stitch) shows what's under it." };
-  if (open(st.rowSpacing)) return { hides: "no", why: `Open: rows ${st.rowSpacing} mm apart (the limit is ${h.coverMaxSpacing} mm).` };
-  return { hides: "wide", why: `Dense fill: hides ${wide}.` };
+  if (st.type === "applique") return h.appliqueCovers ? { hides: "wide", why: t("filum.pannelli.hs_applique_hides", { wide }) } : { hides: "no", why: t("filum.pannelli.hs_applique_not") };
+  if (st.type === "satin") return open(st.spacing) ? { hides: "no", why: t("filum.pannelli.hs_open_rows", { spacing: st.spacing, limit: h.coverMaxSpacing }) } : { hides: "wide", why: t("filum.pannelli.hs_dense_satin", { wide }) };
+  if (st.gradient || st.tartan) return { hides: "wide", why: t("filum.pannelli.hs_gradient_colour") };
+  if (st.ramp || (st.endRowSpacing ?? 0) > 0) return { hides: "no", why: t("filum.pannelli.hs_rows_open_up") };
+  if (TEXTURES.has(st.method) && !h.texturedCovers) return { hides: "no", why: t("filum.pannelli.hs_texture") };
+  if (open(st.rowSpacing)) return { hides: "no", why: t("filum.pannelli.hs_open_rows", { spacing: st.rowSpacing, limit: h.coverMaxSpacing }) };
+  return { hides: "wide", why: t("filum.pannelli.hs_dense_fill", { wide }) };
 }
 
 /** Overlap under the object on top that practitioners suggest for a fabric (mm). */
 export function suggestedOverlap(fabric: Fabric): { value: number; why: string } {
-  if (fabric === "towel" || fabric === "fleece") return { value: 1.0, why: "pile fabrics move the most" };
-  if (fabric === "knit" || fabric === "pique") return { value: 0.9, why: "knits stretch: 0.8–1.0 mm" };
-  if (fabric === "sheer" || fabric === "silk") return { value: 0.4, why: "fine fabrics: every needle hole shows" };
-  return { value: 0.5, why: "stable fabrics: 0.3–0.5 mm" };
+  if (fabric === "towel" || fabric === "fleece") return { value: 1.0, why: t("filum.pannelli.hs_why_pile") };
+  if (fabric === "knit" || fabric === "pique") return { value: 0.9, why: t("filum.pannelli.hs_why_knits") };
+  if (fabric === "sheer" || fabric === "silk") return { value: 0.4, why: t("filum.pannelli.hs_why_fine") };
+  return { value: 0.5, why: t("filum.pannelli.hs_why_stable") };
 }
 
 // ---------------------------------------------------------------------------
