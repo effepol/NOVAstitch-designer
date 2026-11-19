@@ -54,7 +54,7 @@ const offLayered = registerStitchType({
   label: () => "3D a strati",
   icon: createElement("svg", { viewBox: "0 0 40 28" }),
   matches: (st) => st.type === "fill" && !!(st as { layered3d?: unknown }).layered3d,
-  apply: (o) => ({ type: "fill", method: "tatami", angle: 0, layered3d: { layers: 3 } }) as unknown as StitchParams,
+  apply: () => ({ type: "fill", method: "tatami", angle: 0, layered3d: { layers: 3 } }) as unknown as StitchParams,
   Section: () => createElement("div", { className: "j-layered" }, "Strati"),
 });
 let dup = false;
