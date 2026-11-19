@@ -2,10 +2,15 @@
 // engine's commands and listeners, the lessons in the program and those in the
 // app's «lessons» folder, and the progress file.
 
+import { createElement } from "react";
+import { useStore } from "../../store";
 import { t } from "../core/i18n";
+import { redrawCanvas, registerCanvasLayer, registerMenuItem, registerPanel } from "../core/registry";
 import { tauriPrefsStore, type PrefsStore } from "../core/prefs";
 import { declaredAnchors } from "./anchors";
-import { installEngine, setLessonProgress, setLessons } from "./engine";
+import { currentHighlight, installEngine, onLessonChange, setLessonProgress, setLessons } from "./engine";
+import { drawObjectHighlight, showAnchor } from "./highlight";
+import { LessonsPanel } from "./LessonsPanel";
 import { loadLessons, type LessonError, type LessonFiles, type LoadedLesson } from "./lesson";
 import { openLessonProgress } from "./progress";
 import { builtinFiles, readLessonFolders, tauriFolderReader, type FolderReader } from "./sources";
@@ -59,6 +64,41 @@ export async function installLessons(d: LessonDeps): Promise<() => void> {
   };
 }
 
+export const LESSONS_PANEL = "g.lessons";
+
+/** Open the Lessons tab of the layers panel. */
+export function openLessonsPanel(): void {
+  const s = useStore.getState();
+  s.setLayout({ showOutline: true });
+  s.set({ outlineTab: LESSONS_PANEL });
+}
+
+const accent = () => (globalThis.document ? getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() : "") || "red";
+
+/** The interface, through module 0's registry: the panel, the Help menu item, the highlight. */
+export function installLessonsUi(): () => void {
+  let last: unknown = undefined;
+  const follow = () => {
+    const h = currentHighlight();
+    const key = JSON.stringify(h);
+    if (key === last) return;
+    last = key;
+    showAnchor(h);
+    redrawCanvas();
+  };
+  const offs = [
+    registerPanel({ id: LESSONS_PANEL, module: "g", title: "g.panel.title", order: 60, render: () => createElement(LessonsPanel) }),
+    registerMenuItem({ id: "g.lessons", module: "g", menu: "Help", label: "g.menu.lessons", run: openLessonsPanel }),
+    registerCanvasLayer({ id: "g.highlight", module: "g", draw: (ctx, info) => drawObjectHighlight(ctx, info, useStore.getState().doc, currentHighlight(), accent()) }),
+    onLessonChange(follow),
+  ];
+  return () => {
+    offs.forEach((off) => off());
+    showAnchor(null);
+  };
+}
+
 export async function install(): Promise<void> {
+  installLessonsUi();
   await installLessons({ builtin: builtinFiles(), reader: tauriFolderReader(), store: tauriPrefsStore(), anchors: declaredAnchors() });
 }
