@@ -101,3 +101,14 @@ export function dropTarget(rows: SequenceRow[], from: string, over: string, at: 
   }
   return null;
 }
+
+/** Studio: the objects whose sewn connection to the next, chosen by hand, stays uncovered (module 0's plan.links). */
+export function uncoveredJoins(doc: StitchDocument, plan: Pick<PlanData, "links"> | null | undefined, assisted: boolean): Set<string> {
+  const out = new Set<string>();
+  if (assisted) return out;
+  for (const l of plan?.links ?? []) {
+    const id = doc.objects[l.from]?.id;
+    if (l.kind === "sew" && l.manual && l.visible && id) out.add(id);
+  }
+  return out;
+}

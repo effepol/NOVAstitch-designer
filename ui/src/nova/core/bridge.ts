@@ -5,6 +5,7 @@
 import { useStore } from "../../store";
 import { emit } from "./events";
 import { runningCommand } from "./commands";
+import { oneToOneScale } from "./registry";
 import { startModules } from "./modules";
 
 /** Filum's 1× zoom: 96 CSS px per inch (BottomBar). Module c may calibrate it. */
@@ -18,7 +19,7 @@ export function installBridge(): () => void {
     if (s.doc !== prev.doc) emit("doc.changed", { commandId: runningCommand()?.id ?? null });
     if (s.selection !== prev.selection) emit("selection.changed", { ids: s.selection });
     if (s.view !== prev.view || s.viewMode !== prev.viewMode)
-      emit("view.changed", { mode: s.viewMode, scale: s.view.scale, ox: s.view.ox, oy: s.view.oy, zoomFactor: s.view.scale / FILUM_PX_PER_MM });
+      emit("view.changed", { mode: s.viewMode, scale: s.view.scale, ox: s.view.ox, oy: s.view.oy, zoomFactor: s.view.scale / oneToOneScale() });
     if (s.plan && s.plan !== prev.plan) emit("plan.ready", { stats: s.plan.stats });
   });
   // the modules hang on Filum through the hooks: start them once
