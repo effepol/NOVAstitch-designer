@@ -4,11 +4,14 @@
 //   chooseFabric        Filum's fabric pickers apply the fabric's preset (e.preset.apply, one undo step)
 //   objectDefaults      new objects start from the preset in force (the calibration goes on top)
 //   registerIssueCheck  module e's warnings in Filum's Issues list
+//   registerSlot        the preset card under the fabric picker, the summary at export (#60)
 
 import { runCommand } from "../core/commands";
 import { registerFabricChooser } from "../core/fabricChoice";
 import { registerIssueCheck } from "../core/issueChecks";
 import { registerObjectDefaults } from "../core/objectDefaults";
+import { registerSlot } from "../core/slots";
+import { ExportSummarySlot, PresetCardSlot } from "./slots";
 import { useStore } from "../../store";
 import { newObjectDefaults } from "./apply";
 import { installPresetCommands } from "./commands";
@@ -49,6 +52,8 @@ export function install(files: Record<string, string> = shippedFiles()): () => v
     // the preset's values only: module 0 puts Filum's calibration on top
     registerObjectDefaults({ id: "e.preset", module: "e", values: () => newObjectDefaults(useStore.getState().doc, {}) }),
     registerIssueCheck({ id: "e.fabric", module: "e", check: (doc, plan) => fabricIssues(doc, plan, presetOf(doc)) }),
+    registerSlot({ id: "e.presetCard", module: "e", slot: "material", Component: PresetCardSlot }),
+    registerSlot({ id: "e.exportSummary", module: "e", slot: "export", Component: ExportSummarySlot }),
   ];
   return () => offs.forEach((off) => off());
 }

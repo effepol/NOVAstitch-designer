@@ -14,6 +14,7 @@ import { computeIssues } from "../../lib/issues";
 import { defaultFill, defaultRunning, defaultSatin, defaultStitch, setFabricDefaults } from "../../lib/geometry";
 import type { DesignObject, StitchDocument } from "../../types";
 import { install, refusedPresets } from "./install";
+import { slotEntries } from "../core/slots";
 
 const st = () => useStore.getState();
 const reset = (doc: StitchDocument) => useStore.setState({ doc, past: [], future: [], selection: [], plan: null });
@@ -62,6 +63,12 @@ check(defaultFill().pullComp === 1 && defaultFill().expand === 0.4 && defaultSat
 check(defaultRunning().length === 2.5, "running stitch: the preset sets nothing, Filum's value");
 calibration = { fill: { pullComp: 0.45 } };
 check(defaultFill().pullComp === 0.45 && defaultFill().underlayAngle === 90, "the fabric calibration's pull compensation wins, the preset's other values stay");
+// the calibration replaces the pull compensation; its expand adds to the preset's overlap (Architect, 19/11)
+st().setFabric("cotton");
+calibration = { fill: { expand: 0.1 } };
+check(defaultFill().expand === 0.3, `calibrated fabric, expand 0.1 mm, preset «cotone» 0.2 mm → 0.3 mm (${defaultFill().expand})`);
+calibration = { fill: { expand: -0.1, pullComp: 0.45 } };
+check(defaultFill().expand === 0.1 && defaultFill().pullComp === 0.45, `… a negative expand subtracts, the compensation is replaced (${defaultFill().expand}, ${defaultFill().pullComp})`);
 calibration = {};
 reset({ ...emptyDoc(), fabric: "cotton" });
 check(defaultFill().rowSpacing === 0.25 && defaultFill().pullComp === 0, "e.8 no preset in force: Filum's defaults (0.25 mm between the rows)");
@@ -85,12 +92,17 @@ useStore.setState({ doc: { ...st().doc, objects: [satin(0.15)] } });
 const ids = computeIssues(st().doc, null).map((i) => i.id);
 check(ids.includes("e.dense:s") && ids.includes("e.zigzagOnly:s"), `e.11 / e.13 in the Issues list (${ids.join(", ")})`);
 
+// ---- module 0's spaces: the preset card under the fabric picker, the summary in the export dialog
+check(slotEntries("material").some((e) => e.id === "e.presetCard" && e.module === "e"), "the preset card is in the fabric panel's space");
+check(slotEntries("export").some((e) => e.id === "e.exportSummary" && e.module === "e"), "the summary is in the export dialog's space");
+
 // ---- uninstalled: Filum's own change again
 uninstall();
 reset({ ...emptyDoc(), fabric: "cotton" });
 st().setFabric("knit");
 check(st().doc.fabric === "knit" && !st().doc.nova?.fabricPreset, "uninstalled: Filum's own fabric change");
 check(!computeIssues({ ...st().doc, objects: [satin(0.15)] }, null).some((i) => i.id.startsWith("e.")), "uninstalled: no module e warnings");
+check(!slotEntries("material").length && !slotEntries("export").length, "uninstalled: the spaces are empty");
 
 setFabricDefaults(() => ({}));
 setModeSource(null);
