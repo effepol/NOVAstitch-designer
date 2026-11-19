@@ -22,7 +22,7 @@ import { ExportDialog } from "./ExportDialog";
 import { SettingsDialog } from "./SettingsDialog";
 import { ThreadManager } from "./ThreadManager";
 import { ShapeEffectsDialog } from "./ShapeEffects";
-import { t } from "../nova/i18n/filum";
+import { keysShown, t } from "../nova/i18n/filum";
 
 // ---------------------------------------------------------------------------
 // Threads
@@ -168,7 +168,7 @@ export function ShortcutsDialog({ onClose }: { onClose: () => void }) {
                 {g.rows.map(([k, v]) => (
                   <tr key={k + v}>
                     <td>
-                      <kbd>{k}</kbd>
+                      <kbd>{keysShown(k)}</kbd>
                     </td>
                     <td>{v}</td>
                   </tr>

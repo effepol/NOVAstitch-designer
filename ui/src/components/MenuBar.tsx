@@ -6,7 +6,7 @@ import { isTauri } from "../lib/platform";
 import { useStore } from "../store";
 import { buildMenus, menuName, menuOwner, mod, type MenuItem } from "./menuModel";
 import { useWindowFocused, useWindowTitle, WindowControls } from "./WindowControls";
-import { t, useLanguage } from "../nova/i18n/filum";
+import { keysShown, t, useLanguage } from "../nova/i18n/filum";
 
 export function MenuBar() {
   useLanguage();
@@ -181,7 +181,7 @@ export function Menu({ items, x, y, alt, onClose, onBack }: { items: MenuItem[];
           >
             <span className="check">{it.checked ? <Check size={13} /> : it.icon && <it.icon size={14} />}</span>
             {it.label}
-            {it.kbd && <span className="kbd">{it.kbd}</span>}
+            {it.kbd && <span className="kbd">{keysShown(it.kbd)}</span>}
             {it.sub && <ChevronRight size={13} className="sub-arrow" />}
           </button>
         ),
