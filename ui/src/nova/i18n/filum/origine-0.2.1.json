@@ -3959,6 +3959,322 @@
     "testo": "Birds",
     "file": "sample.ts"
   },
+  "filum.esportazione.a_fixed_point_becomes_the": {
+    "testo": "A fixed point becomes the needle position: the top-left corner of the design, or the point set here (Ink/Stitch origin command)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.adds_the_exact_thread_list": {
+    "testo": "Adds the exact thread list (brand, code, name, colour) for machines and software that read PES 6",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.an_svg_with_ink_stitch": {
+    "testo": "An SVG with Ink/Stitch parameters: open it in Inkscape with Ink/Stitch to keep editing or export from there.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.at_spm_spm": {
+    "testo": "at {spm} spm",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.blocks_colours_sew_holds_at": {
+    "testo": "{blocks} colours — SEW holds at most {SEW_MAX_COLOURS}",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.cancel": {
+    "testo": "Cancel",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.centre": {
+    "testo": "Centre",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.colour_sequence_on_the_machine": {
+    "testo": "Colour sequence on the machine",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.colours_trims_trims": {
+    "testo": "colours · {trims} trims",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.copies_copies": {
+    "testo": " · {copies} copies",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.dati.col": {
+    "testo": "Only the thread colours, one per colour block. Save it next to a file without colours (such as a DST) under the same name so software shows the right threads.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.dati.csv": {
+    "testo": "Every stitch and command as a spreadsheet — for checking or scripting, not for the machine.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.dati.edr": {
+    "testo": "Only the thread colours, one per colour block (Embird). Save it next to a file without colours (such as a DST) under the same name so software shows the right threads.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.dati.inf": {
+    "testo": "Only the threads (colour, name, chart), one per colour block. Save it next to the stitch file under the same name for Viking and Pfaff software.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.dati.threadlist": {
+    "testo": "Ink/Stitch's thread list: design details and the thread of every colour block, as text for the operator. Threads ▸ Apply thread list reads it back onto a design (e.g. a DST).",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.dati.txt": {
+    "testo": "Every stitch and command as plain text (Ink/Stitch's TXT) — for checking, not for the machine.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.e_n": {
+    "testo": "ΔE {n}",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.exact": {
+    "testo": "exact",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.exact_threads_older_machines_may": {
+    "testo": "Exact threads; older machines may not read v6.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.export": {
+    "testo": "Export",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.export_anyway": {
+    "testo": "Export anyway",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.export_filename_ext": {
+    "testo": "Export {fileName}.{ext}",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.export_filename_zip": {
+    "testo": "Export {fileName}.zip",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.format": {
+    "testo": "Format",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.col": {
+    "testo": "Thread colours (text)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.csv": {
+    "testo": "Stitch list (spreadsheet)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.dst": {
+    "testo": "Tajima — every machine",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.edr": {
+    "testo": "Thread colours (Embird)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.exp": {
+    "testo": "Melco, Bernina",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.gcode": {
+    "testo": "DIY machines (G-code)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.inf": {
+    "testo": "Thread colours (Viking, Pfaff)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.jef": {
+    "testo": "Janome, Elna",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.pec": {
+    "testo": "Brother (stitches only)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.pes": {
+    "testo": "Brother, Baby Lock",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.png_realistic": {
+    "testo": "Realistic picture",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.png_simple": {
+    "testo": "Simple picture (lines)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.sew": {
+    "testo": "Janome (older machines)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.tbf": {
+    "testo": "Tajima, with colours",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.threadlist": {
+    "testo": "Thread list (Ink/Stitch)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.txt": {
+    "testo": "Stitch list (text)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.u01": {
+    "testo": "Barudan",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.vp3": {
+    "testo": "Pfaff, Husqvarna Viking",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.formato.xxx": {
+    "testo": "Singer, Compucon",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.immagine.png_realistic": {
+    "testo": "The design as it will look sewn (Ink/Stitch PNG realistic) — for mock-ups, shops and customers.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.immagine.png_simple": {
+    "testo": "Every stitch as a flat line in its thread colour (Ink/Stitch PNG simple) — clear for checking and for colouring sheets.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.machine": {
+    "testo": "Machine",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.merge_colours_or_export_a": {
+    "testo": "Merge colours, or export a JEF, which Janome machines also read",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.models_the_design_s_machine": {
+    "testo": "{models} — the design's machine (Design ▸ Machine)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.most_compatible_brother_thread_colours": {
+    "testo": "Most compatible — Brother thread colours.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.n_colours_look_different.one": {
+    "testo": "{n} colour looks different on the machine screen",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.n_colours_look_different.other": {
+    "testo": "{n} colours look different on the machine screen",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.n_notes.one": {
+    "testo": "{n} note",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.n_notes.other": {
+    "testo": "{n} notes",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.n_problems.one": {
+    "testo": "{n} problem",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.n_problems.other": {
+    "testo": "{n} problems",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.nearest_brother_far": {
+    "testo": "The nearest Brother colour is more than ΔE 10 away — the order is right, load your own spool",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.one_file": {
+    "testo": "One file",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.origin": {
+    "testo": "Origin",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.pes_v6_also_stores_the": {
+    "testo": "; PES v6 also stores the exact threads",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.pes_version": {
+    "testo": "PES version",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.pictures": {
+    "testo": "Pictures",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.point": {
+    "testo": "Point",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.ready_for_the_machine": {
+    "testo": "Ready for the machine",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.save_one_file": {
+    "testo": "Save one file",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.saved_as_file": {
+    "testo": "Saved as “{file}”",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.several_formats_the_thread_list": {
+    "testo": "Several formats, the thread list and pictures in one ZIP (Ink/Stitch ZIP export)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.several_zip": {
+    "testo": "Several · ZIP",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.stitches": {
+    "testo": "stitches",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.the_design_is_centred_on": {
+    "testo": "The design is centred on the needle position (machine default)",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.the_file_stores_table_thread": {
+    "testo": "The file stores {table} thread-table colours; load your spool when the machine shows its {table_} colour.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.the_file_stores_the_exact": {
+    "testo": "The file stores the exact threads.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.the_filum_project_keeps_every": {
+    "testo": "The Filum project keeps every object, setting and colour edit.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.the_machine_will_probably_reject": {
+    "testo": "The machine will probably reject this file",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.this_format_stores_no_colours": {
+    "testo": "This format stores no colours: the machine stops at every change — load the threads in this order.",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.thread_lists_stitch_data": {
+    "testo": "Thread lists & stitch data",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.v1_brother_colours": {
+    "testo": "v1 · Brother colours",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.v6_exact_threads": {
+    "testo": "v6 · exact threads",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.what_ink_stitch_writes_colours": {
+    "testo": "What Ink/Stitch writes: colours are entries of Brother's thread table — every Brother machine reads it",
+    "file": "components/ExportDialog.tsx"
+  },
+  "filum.esportazione.zip": {
+    "testo": ".zip",
+    "file": "components/ExportDialog.tsx"
+  },
   "filum.finestre.____four_points_per": {
     "testo": "|_|▔|_| — four points per stitch block",
     "file": "components/ConvertTools.tsx"

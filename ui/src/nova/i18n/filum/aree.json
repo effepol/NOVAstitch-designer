@@ -148,7 +148,7 @@
     },
     "esportazione": {
       "descrizione": "Esportazione e impostazioni della macchina (file toccati anche dagli innesti del modulo a: si traducono dopo)",
-      "fatta": false,
+      "fatta": true,
       "file": [
         "components/ExportDialog.tsx"
       ],
