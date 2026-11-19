@@ -102,7 +102,7 @@ import { transformable } from "../lib/textSettle";
 import { loadFont } from "../lib/fonts";
 import { onCanvasRedraw } from "../nova/core/registry";
 import { t, tn } from "../nova/i18n/filum";
-import { activateDrawingTool, drawingTool, toolKey, toolPointer, type ToolPointerEvent } from "../nova/core/registry";
+import { activateDrawingTool, activeStitchLine, drawingTool, oneToOneScale, setCanvasPointer, setFilumLastPoint, systemCursorHidden, toolKey, toolPointer, useRegistry, type ToolPointerEvent } from "../nova/core/registry";
 
 /** NOVAstitch: a canvas pointer event, as a registered drawing tool receives it (mm, left or right button). */
 const novaPointer = (kind: ToolPointerEvent["kind"], e: React.PointerEvent, p: Vec2, scale: number): ToolPointerEvent => ({
@@ -355,6 +355,20 @@ export function Canvas() {
   const rightRef = useRef<{ x: number; y: number; moved: boolean } | null>(null);
   /** NOVAstitch: a registered drawing tool got the button press (the release goes to it too). */
   const novaDownRef = useRef(false);
+  // NOVAstitch: re-render when the cursor cross hides the system cursor (nova/core/registry)
+  useRegistry();
+  // NOVAstitch: the last point of the path Filum's own tools are drawing, for module c's cross
+  useEffect(() => {
+    setFilumLastPoint(() => {
+      const pd = penRef.current;
+      if (pd?.nodes.length) return pd.nodes[pd.nodes.length - 1].p;
+      const fh = fhRef.current;
+      if (fh?.raw.length) return fh.raw[fh.raw.length - 1];
+      const d = dragRef.current;
+      return d?.kind === "shape" ? d.a : null;
+    });
+    return () => setFilumLastPoint(() => null);
+  }, []);
   const penRef = useRef<PenDraft | null>(null);
   const penHoverRef = useRef<PenHover>({ kind: "none" });
   const fhRef = useRef<FreehandStroke | null>(null);
@@ -388,7 +402,9 @@ export function Canvas() {
       // the GPU dropped the context: the 2D drawing takes over until it is back
       const gl = glRef.current && !glRef.current.isLost() ? glRef.current : null;
       const shownPlan = displayPlan(s.plan && s.finished && s.viewMode !== "vector" ? finishedPlan(s.plan) : s.plan, s.stitchColors, s.colorFocus ? activeThreadOf(s) : null, s.fabricColor);
-      const useGL = !!gl && s.viewMode !== "vector" && !!s.plan;
+      // NOVAstitch: module d's needle path on: Filum draws no stitch line, WebGL or 2D
+      const noStitches = s.viewMode === "stitch" && !!s.plan && !!activeStitchLine();
+      const useGL = !!gl && s.viewMode !== "vector" && !!s.plan && !noStitches;
       // snap to device pixels once so every layer agrees exactly
       const view = { scale: s.view.scale, ox: Math.round(s.view.ox * dpr) / dpr, oy: Math.round(s.view.oy * dpr) / dpr };
       const selIndex =
@@ -511,6 +527,7 @@ export function Canvas() {
         densityMode: s.densityMode,
         live: s.live,
         glStitches: useGL,
+        noStitches,
         doc: s.doc,
         plan: shownPlan,
         view,
@@ -686,7 +703,8 @@ export function Canvas() {
       const { w, h } = sizeRef.current;
       if (typeof which === "number") {
         // zoom to a factor of "actual size" around the centre
-        const actual = (96 / 25.4) * which;
+        // NOVAstitch: 1× from the screen calibration a module registers (module c), else 96/25.4
+        const actual = oneToOneScale() * which;
         const cx = (w / 2 - s.view.ox) / s.view.scale;
         const cy = (h / 2 - s.view.oy) / s.view.scale;
         s.setView({ scale: actual, ox: w / 2 - cx * actual, oy: h / 2 - cy * actual });
@@ -1686,6 +1704,8 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
   const onPointerMove = (e: React.PointerEvent) => {
     const s = useStore.getState();
     const p = toMm(e);
+    // NOVAstitch: where the pointer and the last point are, for module c's cross
+    setCanvasPointer(s.tool, p);
     if (s.showDensity) setDensityHover(p);
     const d = dragRef.current;
     // NOVAstitch: a registered drawing tool follows the pointer (not while panning)
@@ -2660,7 +2680,8 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
     {ctxMenu && <Menu items={contextMenu(ctxMenu.onObject)} x={ctxMenu.x} y={ctxMenu.y} onClose={() => setCtxMenu(null)} />}
     <div
       ref={wrapRef}
-      className="canvas-wrap"
+      // NOVAstitch: module c's cross is on, the system cursor hides
+      className={`canvas-wrap${systemCursorHidden() ? " nova-no-cursor" : ""}`}
       onDragOver={(e) => {
         e.preventDefault();
         if (!dropping) setDropping(isImageDrag(e) ? "none" : null);
@@ -2682,6 +2703,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         onPointerCancel={onPointerUp}
         onLostPointerCapture={(e) => dragRef.current && onPointerUp(e)}
         onPointerLeave={() => {
+          setCanvasPointer(useStore.getState().tool, null);
           setDensityHover(null);
           if (overlayRef.current.hoverId) {
             overlayRef.current.hoverId = null;
