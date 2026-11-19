@@ -266,6 +266,37 @@ const narrow = e(ip.list, "narrowRows")[0];
 check(!!narrow, `e.15 righe sotto la distanza impostata nella parte stretta: avviso con la posizione (${narrow ? narrow.at.map((v) => v.toFixed(1)).join(", ") : "nessuno"})`);
 await shot("e15-curvo");
 
+// ---- the preset card under the fabric picker (space «material» of module 0)
+await fresh();
+await pick("knit");
+const card = page.locator('[data-nova-slot="material"] [data-nova-anchor="e.presetCard"]');
+await card.waitFor({ timeout: 10000 }).catch(() => {});
+const cardText = (await card.count()) ? await card.innerText() : "";
+check(/Maglia \/ Jersey/.test(cardText) && /Da tagliare, medio/.test(cardText) && /Tonda/.test(cardText) && /non si stirano/.test(cardText), `scheda del preset sotto il selettore del tessuto: «${cardText.split("\n").slice(0, 3).join(" · ")}…»`);
+check((await page.locator('[aria-modal="true"]').count()) === 0, "la scheda non blocca il lavoro (nessuna finestra modale)");
+await shot("scheda-preset");
+await page.locator('[data-nova-anchor="e.presetCard.close"]').click();
+await page.waitForTimeout(200);
+check((await card.count()) === 0, "la scheda si chiude con la ×");
+await pick("cotton");
+await card.waitFor({ timeout: 5000 }).catch(() => {});
+check((await card.count()) === 1 && /Cotone/.test(await card.innerText()), "con un altro preset la scheda torna");
+
+// ---- the summary in the export dialog (space «export» of module 0)
+await fresh();
+await pick("cotton");
+await add([["ap", "applique", 10, 10, 20, 20]]);
+await run((m) => m.useStore.getState().setDialog("export"));
+const summary = page.locator('[data-nova-slot="export"] [data-nova-anchor="e.exportSummary"]');
+await summary.waitFor({ timeout: 10000 }).catch(() => {});
+const sumText = (await summary.count()) ? await summary.innerText() : "";
+check(/Prima di ricamare/.test(sumText) && /Cotone/.test(sumText) && /Strappabile, medio/.test(sumText) && /APPLIQUÉ/.test(sumText), `riepilogo nella finestra di esportazione: «${sumText.split("\n").join(" · ")}»`);
+await shot("riepilogo-esportazione");
+await page.locator('[data-nova-anchor="e.exportSummary.close"]').click();
+await page.waitForTimeout(200);
+check((await summary.count()) === 0 && (await page.locator(".dialog, [role=dialog]").count()) > 0, "il riepilogo si chiude con la ×; la finestra di esportazione resta aperta");
+await run((m) => m.useStore.getState().setDialog(null));
+
 check(errors.length === 0, `nessun errore nella pagina (${errors.join("; ") || "nessuno"})`);
 await browser.close();
 await server.close();
