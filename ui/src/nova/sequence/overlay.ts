@@ -151,3 +151,40 @@ export function drawMarks(ctx: CanvasRenderingContext2D, marks: Mark[], scale: n
     ctx.restore();
   }
 }
+
+/** How near the pointer must be to a connection line, in screen pixels. */
+export const HIT_PX = 6;
+
+/**
+ * The connection the user clicked (contract «b, parte 2», Architect's conditions of 19/11):
+ * only with «Connections» on, only with the selection tool and the left button, only within
+ * HIT_PX of a line, and only a connection between two objects (the one after an object) —
+ * otherwise null, and the click stays Filum's selection. The nearest line wins.
+ */
+export function connectionAt(
+  list: Connection[],
+  p: Vec2,
+  o: { scale: number; linksOn: boolean; tool: string; button: number },
+): Connection | null {
+  if (!o.linksOn || o.tool !== "select" || o.button !== 0) return null;
+  const tol = HIT_PX / o.scale;
+  let best: Connection | null = null;
+  let bestD = tol;
+  for (const c of list) {
+    if (!c.to || !c.objId) continue;
+    const d = segmentDistance(p, c.from, c.to);
+    if (d <= bestD) {
+      best = c;
+      bestD = d;
+    }
+  }
+  return best;
+}
+
+function segmentDistance(p: Vec2, a: Vec2, b: Vec2): number {
+  const dx = b[0] - a[0];
+  const dy = b[1] - a[1];
+  const len = dx * dx + dy * dy;
+  const t = len ? Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / len)) : 0;
+  return Math.hypot(p[0] - (a[0] + t * dx), p[1] - (a[1] + t * dy));
+}
