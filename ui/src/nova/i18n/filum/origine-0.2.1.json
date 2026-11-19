@@ -91,6 +91,14 @@
     "testo": "Angle {angle}°",
     "file": "canvas/handles.ts"
   },
+  "filum.barre.angles_in_15": {
+    "testo": "Angles in 15°",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.angles_in_45": {
+    "testo": "Angles in 45°",
+    "file": "components/StatusHints.tsx"
+  },
   "filum.barre.animate": {
     "testo": "Animate",
     "file": "components/BottomBar.tsx"
@@ -1585,6 +1593,10 @@
   },
   "filum.barre.tasto.rmb": {
     "testo": "RMB",
+    "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.tasto.shift": {
+    "testo": "Shift",
     "file": "components/StatusHints.tsx"
   },
   "filum.barre.tasto.space": {

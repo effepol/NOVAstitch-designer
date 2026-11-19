@@ -75,3 +75,12 @@ export function tData(key: string, original: string): string {
   const english = (en as Record<string, string>)[key];
   return english !== undefined && english.replaceAll("{app}", "Filum") === original ? t(key) : original;
 }
+
+/**
+ * Una combinazione di tasti scritta nel codice («Ctrl+Shift+Z», «Home / End») con i nomi dei
+ * tasti nella lingua corrente: Shift, Home ed End vengono da filum.barre.tasto.* (Maiusc, Inizio, Fine).
+ * Le combinazioni restano scritte com'erano: cambia solo come si leggono.
+ */
+export function keysShown(keys: string): string {
+  return keys.replace(/\b(Shift|Home|End)\b/g, (k) => t(`filum.barre.tasto.${k.toLowerCase()}`));
+}
