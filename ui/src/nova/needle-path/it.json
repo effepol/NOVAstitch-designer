@@ -1,0 +1,9 @@
+{
+  "d.bar.needlePath": "Percorso ago",
+  "d.bar.needlePath.title": "Mostra il percorso dell'ago nella vista punti: linea sottile nel colore del filo, di spessore fisso a ogni zoom; i salti non tagliati tratteggiati",
+  "d.menu.needlePath": "Percorso ago",
+  "d.menu.dots": "Percorso ago: puntini sulle penetrazioni",
+  "d.menu.width1": "Percorso ago: spessore 1 px",
+  "d.menu.width2": "Percorso ago: spessore 2 px",
+  "d.menu.width3": "Percorso ago: spessore 3 px"
+}

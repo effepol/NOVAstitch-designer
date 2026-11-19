@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/effepol/novastitch-designer/ui/src/nova/lessons/lesson.schema.json",
+  "title": "NOVAstitch Designer — lesson",
+  "description": "A lesson of the Apprentice Mode (module g): <lesson id>/lesson.json, beside its starting design. Conditions are declarative, never code. The program also refuses anchors no module declares (anchors.json), objects to highlight that the starting design lacks, and two steps with the same id. Licence: CC0-1.0.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "rev", "path", "title", "modes", "steps"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "Same as the folder's name." },
+    "rev": { "type": "integer", "minimum": 1, "description": "The lesson's revision: up by 1 when its steps change." },
+    "path": { "enum": ["theory", "vector", "image", "tips"] },
+    "title": { "$ref": "#/$defs/text" },
+    "modes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["assisted", "studio"] } },
+    "startDesign": {
+      "type": "string",
+      "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9 _.-]*\\.([Nn][Ss][Dd]|[Ff][Ii][Ll][Uu][Mm])$",
+      "description": "A file of the lesson's folder (.nsd, or .filum), opened as a new design when the lesson starts."
+    },
+    "steps": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/step" } }
+  },
+  "$defs": {
+    "text": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["it", "en"],
+      "properties": { "it": { "type": "string", "pattern": "\\S" }, "en": { "type": "string", "pattern": "\\S" } }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text", "hint", "reset"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$" },
+        "text": { "$ref": "#/$defs/text" },
+        "highlight": {
+          "description": "An anchor (data-nova-anchor, declared in a module's anchors.json) or an object of the starting design.",
+          "oneOf": [
+            { "type": "string", "pattern": "^[a-z0-9]+\\.[A-Za-z0-9_.-]+$" },
+            { "type": "object", "additionalProperties": false, "required": ["object"], "properties": { "object": { "type": "string", "minLength": 1 } } }
+          ]
+        },
+        "waitFor": { "type": "string", "pattern": "^[a-z][A-Za-z0-9_-]*(\\.[A-Za-z0-9_-]+)+$", "description": "An event of the bus: the step is checked once it has come." },
+        "check": { "$ref": "#/$defs/condition" },
+        "hint": { "$ref": "#/$defs/text" },
+        "reset": { "enum": ["start", "step"], "description": "Where the step's reset goes back to." }
+      }
+    },
+    "range": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": { "min": { "type": "number" }, "max": { "type": "number" } }
+    },
+    "count": { "oneOf": [{ "type": "number" }, { "$ref": "#/$defs/range" }] },
+    "conditionList": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/condition" } },
+    "condition": {
+      "oneOf": [
+        { "type": "object", "additionalProperties": false, "required": ["all"], "properties": { "all": { "$ref": "#/$defs/conditionList" } } },
+        { "type": "object", "additionalProperties": false, "required": ["any"], "properties": { "any": { "$ref": "#/$defs/conditionList" } } },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["not"],
+          "properties": { "not": { "$ref": "#/$defs/conditionList" } },
+          "description": "None of the listed conditions holds."
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["exists"],
+          "properties": {
+            "exists": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type"],
+              "properties": {
+                "type": { "type": "string", "pattern": "^[a-z][A-Za-z0-9]*$", "description": "The stitch type (satin, fill, running, …)." },
+                "method": { "type": "string", "minLength": 1 },
+                "param": {
+                  "type": "object",
+                  "minProperties": 1,
+                  "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" },
+                  "additionalProperties": { "$ref": "#/$defs/range" },
+                  "description": "Stitch parameters (in mm where they are lengths), e.g. width."
+                },
+                "count": { "$ref": "#/$defs/count", "description": "How many such objects (default: at least one)." }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["plan"],
+          "properties": {
+            "plan": {
+              "type": "object",
+              "additionalProperties": false,
+              "minProperties": 1,
+              "properties": { "stitches": { "$ref": "#/$defs/range" }, "colorChanges": { "$ref": "#/$defs/range" }, "trims": { "$ref": "#/$defs/range" } }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["view"],
+          "properties": {
+            "view": {
+              "type": "object",
+              "additionalProperties": false,
+              "minProperties": 1,
+              "properties": { "mode": { "enum": ["vector", "stitch", "realistic"] }, "zoom": { "$ref": "#/$defs/range" } }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["selection"],
+          "properties": {
+            "selection": { "type": "object", "additionalProperties": false, "required": ["count"], "properties": { "count": { "$ref": "#/$defs/count" } } }
+          }
+        }
+      ]
+    }
+  }
+}

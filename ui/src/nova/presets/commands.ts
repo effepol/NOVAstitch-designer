@@ -1,6 +1,7 @@
-// Module e's commands, all marked system (contract, module e): what they
-// change is the program's doing, not a manual edit, so nova.edited is not
-// touched by module 0's record. Each is one undo step.
+// Module e's commands, one undo step each. e.preset.apply and e.param.reset are
+// marked system (the program's doing: module 0's record leaves nova.edited
+// alone). e.issue.fix is not (Architect, 19/11): fixing a warning is the user's
+// choice, recorded in nova.edited, so a later preset does not bring the problem back.
 //   e.preset.apply({presetId})  the preset in force, its values in the objects
 //   e.param.reset({id, param})  the parameter out of nova.edited, back to the preset's value
 //   e.issue.fix({issueId})      the one-click fix of one of module e's warnings
@@ -57,7 +58,6 @@ export function installPresetCommands(plan: () => PlanData | null = () => useSto
     registerCommand<FixParams>({
       id: "e.issue.fix",
       label: { it: "Correggi", en: "Fix" },
-      system: true,
       apply(doc, { issueId }) {
         const issue = fabricIssues(doc, plan(), presetOf(doc)).find((i) => i.id === issueId);
         if (!issue?.fix) return doc;

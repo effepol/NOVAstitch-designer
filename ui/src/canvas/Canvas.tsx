@@ -100,7 +100,7 @@ import { pruneGroups } from "../lib/layerRows";
 import { freshCopies } from "../lib/copies";
 import { transformable } from "../lib/textSettle";
 import { loadFont } from "../lib/fonts";
-import { onCanvasRedraw } from "../nova/core/registry";
+import { layerClick, layerHit, onCanvasRedraw } from "../nova/core/registry";
 import { t, tn } from "../nova/i18n/filum";
 import { activateDrawingTool, activeStitchLine, drawingTool, oneToOneScale, setCanvasPointer, setFilumLastPoint, systemCursorHidden, toolKey, toolPointer, useRegistry, type ToolPointerEvent } from "../nova/core/registry";
 
@@ -344,6 +344,9 @@ export function stopCapture() {
   capture = null;
 }
 
+/** NOVAstitch: how far (screen px) a press on a module's canvas layer may move and still be a click. */
+const CLICK_SLOP = 4;
+
 export function Canvas() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -355,6 +358,9 @@ export function Canvas() {
   const rightRef = useRef<{ x: number; y: number; moved: boolean } | null>(null);
   /** NOVAstitch: a registered drawing tool got the button press (the release goes to it too). */
   const novaDownRef = useRef(false);
+  /** NOVAstitch: a left press (select tool) on a module's canvas layer that answered hit: a click on release, Filum's press if it drags. */
+  const layerPressRef = useRef<{ e: React.PointerEvent; p: Vec2 } | null>(null);
+  const layerReplayRef = useRef(false);
   // NOVAstitch: re-render when the cursor cross hides the system cursor (nova/core/registry)
   useRegistry();
   // NOVAstitch: the last point of the path Filum's own tools are drawing, for module c's cross
@@ -1407,6 +1413,11 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         return;
       }
       case "select": {
+        // NOVAstitch: a press on a module's layer that is on and answers hit (nova/core/registry.ts): kept for the release
+        if (!layerReplayRef.current && layerHit(p, { scale: s.view.scale, ox: s.view.ox, oy: s.view.oy })) {
+          layerPressRef.current = { e, p };
+          return;
+        }
         // parameter handles (reverse order: pins are drawn on top)
         const hh = [...handlesRef.current].reverse().find((h) => dist(h.p, p) < HANDLE_HIT_PX / s.view.scale);
         if (hh?.group) {
@@ -1702,6 +1713,17 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
+    // NOVAstitch: a press on a module's layer that turns into a drag is Filum's press after all
+    const lp = layerPressRef.current;
+    if (lp && Math.hypot(e.clientX - lp.e.clientX, e.clientY - lp.e.clientY) > CLICK_SLOP) {
+      layerPressRef.current = null;
+      layerReplayRef.current = true;
+      try {
+        onPointerDown(lp.e);
+      } finally {
+        layerReplayRef.current = false;
+      }
+    } else if (lp) return;
     const s = useStore.getState();
     const p = toMm(e);
     // NOVAstitch: where the pointer and the last point are, for module c's cross
@@ -2328,6 +2350,14 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
 
   const onPointerUp = (e: React.PointerEvent) => {
     const s = useStore.getState();
+    // NOVAstitch: released without dragging: the click goes to the module's layer
+    const lp = layerPressRef.current;
+    if (lp) {
+      layerPressRef.current = null;
+      layerClick(lp.p, { scale: s.view.scale, ox: s.view.ox, oy: s.view.oy }, lp.e.clientX, lp.e.clientY);
+      draw();
+      return;
+    }
     // NOVAstitch: the button released, for a registered drawing tool that got the press
     if (novaDownRef.current) {
       novaDownRef.current = false;
