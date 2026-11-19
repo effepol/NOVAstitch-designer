@@ -9671,6 +9671,10 @@
     "testo": "Cut out the doubled part",
     "file": "lib/issues.ts"
   },
+  "filum.messaggi.cutwork_needle_n": {
+    "testo": "Cutwork needle {n}",
+    "file": "lib/cutwork.ts"
+  },
   "filum.messaggi.damaged_left_out.one": {
     "testo": "{n} damaged object was left out",
     "file": "lib/actions.ts"
@@ -9682,6 +9686,10 @@
   "filum.messaggi.damaged_objects_left_out": {
     "testo": "{n} damaged object(s) left out",
     "file": "lib/actions.ts"
+  },
+  "filum.messaggi.default_thread_name": {
+    "testo": "Thread",
+    "file": "lib/docCheck.ts"
   },
   "filum.messaggi.delete_it": {
     "testo": "Delete it",
