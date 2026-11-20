@@ -40,10 +40,10 @@ export function installNeedlePath(): () => void {
   const offSettings = onNeedlePathSettings(addButton);
   const off = () => !s().enabled;
   const menu = [
-    registerMenuItem({ id: "d.needlePath", module: "d", menu: "View", label: "d.menu.needlePath", order: 20, run: () => void setNeedlePathSetting("enabled", !s().enabled), checked: () => s().enabled }),
-    registerMenuItem({ id: "d.needlePath.dots", module: "d", menu: "View", label: "d.menu.dots", order: 21, run: () => void setNeedlePathSetting("dots", !s().dots), checked: () => s().dots, disabled: off }),
+    registerMenuItem({ id: "d.needlePath", module: "d", menu: "View", label: "d.menu.needlePath", anchor: "d.menu.needlePath", order: 20, run: () => void setNeedlePathSetting("enabled", !s().enabled), checked: () => s().enabled }),
+    registerMenuItem({ id: "d.needlePath.dots", module: "d", menu: "View", label: "d.menu.dots", anchor: "d.menu.dots", order: 21, run: () => void setNeedlePathSetting("dots", !s().dots), checked: () => s().dots, disabled: off }),
     ...WIDTHS.map((w, i) =>
-      registerMenuItem({ id: `d.needlePath.width${w}`, module: "d", menu: "View", label: `d.menu.width${w}`, order: 22 + i, run: () => void setNeedlePathSetting("widthPx", w), checked: () => s().widthPx === w, disabled: off }),
+      registerMenuItem({ id: `d.needlePath.width${w}`, module: "d", menu: "View", label: `d.menu.width${w}`, anchor: `d.menu.width${w}`, order: 22 + i, run: () => void setNeedlePathSetting("widthPx", w), checked: () => s().widthPx === w, disabled: off }),
     ),
   ];
   return () => {

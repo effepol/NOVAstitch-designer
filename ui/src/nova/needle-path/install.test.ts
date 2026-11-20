@@ -20,6 +20,10 @@ import { planOf } from "./fixture";
   const anchors = JSON.parse(readFileSync(path.resolve(process.cwd(), "src/nova/needle-path/anchors.json"), "utf8")) as Record<string, string>;
   check(button()!.anchor === "d.needlePath" && typeof anchors["d.needlePath"] === "string" && !!anchors["d.needlePath"].trim(), `the button carries the lesson anchor d.needlePath, listed in anchors.json (${button()!.anchor})`);
   check(Object.keys(anchors).every((k) => k.startsWith("d.")), "anchors.json: only module d's anchors");
+  // the View menu items too (module 0's anchor on registered menu items, #75)
+  const menuAnchors = menuItems().filter((m) => m.module === "d").map((m) => [m.id, m.anchor] as const);
+  check(menuAnchors.every(([, a]) => !!a && typeof anchors[a] === "string" && !!anchors[a].trim()), `every View menu item carries a lesson anchor listed in anchors.json (${menuAnchors.map(([id, a]) => `${id}=${a}`).join(", ")})`);
+  check(new Set([button()!.anchor, ...menuAnchors.map(([, a]) => a)]).size === menuAnchors.length + 1, "the anchors are all different");
   const items = menuItems().filter((m) => m.module === "d");
   check(items.length === 5 && items.every((m) => m.menu === "View"), `the View menu has the needle path, its dots and three widths (${items.map((m) => m.id).join(", ")})`);
   check(items.filter((m) => m.id !== "d.needlePath").every((m) => m.disabled?.() === true), "with the needle path off its dots and widths are greyed");
