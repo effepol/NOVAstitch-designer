@@ -1,3 +1,8 @@
 {
-  "d.needlePath": "Il pulsante «Percorso ago» nella barra in basso / The «Needle path» button in the bottom bar"
+  "d.needlePath": "Il pulsante «Percorso ago» nella barra in basso / The «Needle path» button in the bottom bar",
+  "d.menu.needlePath": "La voce «Percorso ago» del menu Visualizza / The «Needle path» item of the View menu",
+  "d.menu.dots": "La voce dei puntini sulle penetrazioni nel menu Visualizza / The penetration dots item of the View menu",
+  "d.menu.width1": "La voce «spessore 1 px» del percorso ago nel menu Visualizza / The needle path «1 px wide» item of the View menu",
+  "d.menu.width2": "La voce «spessore 2 px» del percorso ago nel menu Visualizza / The needle path «2 px wide» item of the View menu",
+  "d.menu.width3": "La voce «spessore 3 px» del percorso ago nel menu Visualizza / The needle path «3 px wide» item of the View menu"
 }
