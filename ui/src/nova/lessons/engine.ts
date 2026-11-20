@@ -11,7 +11,7 @@
 //
 // nova.lesson (Architect, 19/11, an exception for nova.lesson only): its changes
 // make no undo step, and Undo / Redo leave the lesson's progress as it is. The
-// engine writes it with the store's setDoc without history; after an Undo or a
+// engine writes it with module 0's store.setLesson; after an Undo or a
 // Redo brings back an older nova.lesson, it writes the progress reached again.
 
 import { useSyncExternalStore } from "react";
@@ -184,13 +184,13 @@ function complete(a: Active): void {
   else evaluate(false);
 }
 
-// nova.lesson in the design, with no undo step (the store's own setDoc without history)
+// nova.lesson in the design, with no undo step (module 0's store.setLesson, #76)
 let writing = false;
 function writeLesson(a: Active): void {
   const s = useStore.getState();
   writing = true;
   try {
-    s.setDoc(withLesson(s.doc, stateOf(a)), { history: false, keepSelection: true });
+    s.setLesson(stateOf(a));
   } finally {
     writing = false;
   }
