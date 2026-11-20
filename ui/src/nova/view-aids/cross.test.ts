@@ -6,7 +6,8 @@ import { check, done } from "../core/testkit";
 import { activateDrawingTool, canvasPointer, setCanvasPointer, setFilumLastPoint, toolPointer, type ToolPointerEvent } from "../core/registry";
 import { openPrefs } from "../core/prefs";
 import { setLanguage } from "../core/i18n";
-import type { Vec2 } from "../../types";
+import type { DesignObject, Vec2 } from "../../types";
+import { emptyDoc, useStore } from "../../store";
 import { installSatinTools } from "../satin-tools/install";
 import { crossArms, crossFor, tenth, type CrossArms } from "./cross";
 import { createViewAids } from "./settings";
@@ -82,9 +83,36 @@ import { installViewAids } from "./install";
   setCanvasPointer("m.twoRails", [70, 39.96]);
   a = cross();
   check(a.horizontal && !a.vertical, "m.7 after the second click: compared with the last click (50; 40)");
-  setCanvasPointer("m.split", [1, 1]);
-  check(cross().shown, "m.7 «Dividi e dirigi» takes the cross too");
   setCanvasPointer("m.twoRails", null);
+
+  // m.7 with «Dividi e dirigi»: while a line is drawn, the cross compares with where it started
+  const square: DesignObject = {
+    id: "Q",
+    name: "Q",
+    thread: "T1",
+    visible: true,
+    locked: false,
+    paths: [{ closed: true, nodes: ([[0, 0], [40, 0], [40, 40], [0, 40]] as Vec2[]).map((p) => ({ p })) }],
+    stitch: { type: "fill", method: "tatami", angle: 0, rowSpacing: 0.4, maxStitchLength: 3, underlay: true } as DesignObject["stitch"],
+    trimAfter: false,
+    stopAfter: false,
+  };
+  useStore.getState().setDoc({ ...emptyDoc(), threads: [{ id: "T1", name: "Rosso", color: "#cc0000", brand: "", code: "" }], objects: [square] });
+  useStore.getState().select(["Q"]);
+  activateDrawingTool("m.split");
+  setCanvasPointer("m.split", [20, 10]);
+  check(cross().shown && !cross().vertical && !cross().horizontal, "m.7 «Dividi e dirigi», no line yet: the cross is there, no previous point");
+  toolPointer("m.split", ev("down", [20, 10]));
+  toolPointer("m.split", ev("move", [20.04, 30]));
+  setCanvasPointer("m.split", [20.04, 30]);
+  a = cross();
+  check(!!a.shown && a.vertical && !a.horizontal, "m.7 «Dividi e dirigi», a cut drawn downwards: vertical arm aligned with where it started");
+  toolPointer("m.split", ev("move", [35, 10.03]));
+  setCanvasPointer("m.split", [35, 10.03]);
+  a = cross();
+  check(a.horizontal && !a.vertical, "m.7 «Dividi e dirigi», drawn sideways: horizontal arm aligned");
+  toolPointer("m.split", ev("up", [35, 10.03]));
+  setCanvasPointer("m.split", null);
   activateDrawingTool("select");
   offM();
   offC();

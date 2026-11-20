@@ -7607,3 +7607,21 @@ tr.on .cal-letter {
 .canvas-wrap.nova-no-cursor canvas {
   cursor: none !important;
 }
+
+/* NOVAstitch: the layers side panel's column is the panel's own width, not the row of tabs
+   (the modules' tabs make it wider than the panel: a registered panel was cut on the right);
+   the row of tabs scrolls sideways when they do not fit. Filum's tabs alone fit: nothing changes. */
+.side-panel.outline {
+  grid-template-columns: minmax(0, 1fr);
+}
+.side-panel.outline .ptabs {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+.side-panel.outline .ptab {
+  flex: none;
+}
+.side-panel.outline .panel-body {
+  min-width: 0;
+}

@@ -31,6 +31,7 @@ export function installNeedlePath(): () => void {
       label: "d.bar.needlePath",
       title: "d.bar.needlePath.title",
       order: 20,
+      anchor: "d.needlePath",
       run: () => void setNeedlePathSetting("enabled", !s().enabled),
       active: () => s().enabled,
     });
