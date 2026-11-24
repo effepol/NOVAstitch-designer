@@ -1251,18 +1251,34 @@ pub enum CoverKind {
 
 /// Automatic appliqué: placement line → stop (lay the fabric)
 /// → tack-down → stop (trim the fabric) → cover stitch along the edge.
+///
+/// NOVAstitch (module j, Punch, decisions of 12/11 and 24/11): a new appliqué
+/// has its placement line 1.25 mm inside the shape, a straight-stitch tack-down
+/// 2 mm inside the edge and a 4.5 mm satin cover that hides it. A file without
+/// these fields keeps Filum's values (placement on the edge, zig-zag tack-down
+/// 0.6 mm inside, 3 mm cover): the field defaults below are Filum's.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
 pub struct AppliqueParams {
     pub placement: bool,
     pub placement_length: f64,
+    /// Distance of the placement line inside the edge (mm; NOVAstitch).
+    #[serde(default)]
+    pub placement_inset: f64,
+    /// Free-edge appliqué (NOVAstitch): placement line 5 mm inside, no
+    /// tack-down, one stop for the spray glue and the fabric, then the cover.
+    #[serde(default)]
+    pub free_edge: bool,
+    #[serde(default = "filum_tackdown")]
     pub tackdown: TackdownKind,
     pub tackdown_width: f64,
     /// Distance of the tack-down centre inside the edge (mm).
+    #[serde(default = "filum_tackdown_inset")]
     pub tackdown_inset: f64,
     pub tackdown_spacing: f64,
     pub cover: CoverKind,
+    #[serde(default = "filum_cover_width")]
     pub cover_width: f64,
     pub cover_spacing: f64,
     /// Shift of the cover stitch centre outwards (mm, negative = inwards).
@@ -1275,17 +1291,42 @@ pub struct AppliqueParams {
     pub stops: bool,
 }
 
+/// Filum's values, for files written before the NOVAstitch defaults.
+fn filum_tackdown() -> TackdownKind {
+    TackdownKind::Zigzag
+}
+fn filum_tackdown_inset() -> f64 {
+    0.6
+}
+fn filum_cover_width() -> f64 {
+    3.0
+}
+
+/// NOVAstitch appliqué defaults (module j). The tack-down line sits this far
+/// inside the edge (Punch: its outer side at least 2 mm from the edge; a
+/// straight stitch, Signor Poletti 24/11).
+pub const APPLIQUE_TACKDOWN_INSET: f64 = 2.0;
+/// The cover, centred on the edge, reaches 2.25 mm inside: over the tack-down
+/// with 0.25 mm to spare (Signor Poletti, 24/11).
+pub const APPLIQUE_COVER_WIDTH: f64 = 4.5;
+/// Placement line inside the edge (Punch: 1–1.5 mm).
+pub const APPLIQUE_PLACEMENT_INSET: f64 = 1.25;
+/// Free-edge appliqué: placement line this far inside (Punch).
+pub const APPLIQUE_FREE_EDGE_INSET: f64 = 5.0;
+
 impl Default for AppliqueParams {
     fn default() -> Self {
         AppliqueParams {
             placement: true,
             placement_length: 2.0,
-            tackdown: TackdownKind::Zigzag,
+            placement_inset: APPLIQUE_PLACEMENT_INSET,
+            free_edge: false,
+            tackdown: TackdownKind::Run,
             tackdown_width: 1.6,
-            tackdown_inset: 0.6,
+            tackdown_inset: APPLIQUE_TACKDOWN_INSET,
             tackdown_spacing: 1.2,
             cover: CoverKind::Satin,
-            cover_width: 3.0,
+            cover_width: APPLIQUE_COVER_WIDTH,
             cover_spacing: 0.4,
             cover_offset: 0.0,
             cover_underlay: true,
