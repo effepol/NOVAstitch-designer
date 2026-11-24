@@ -9,6 +9,7 @@ import type { ExportOptions, StitchDocument } from "../types";
 import { PICTURE_DEFAULTS, planPng, type PictureBackground } from "./planImage";
 import { saveFile } from "./platform";
 import { zip } from "./zip";
+import { emit } from "../nova/core/events";
 
 /** Picture targets and Ink/Stitch's thread list (not engine formats). */
 export const PNG_TARGETS = ["png_realistic", "png_simple"] as const;
@@ -64,15 +65,18 @@ export async function targetBytes(doc: StitchDocument, th: string, opts: ExportO
   return engine.export(doc, th, opts);
 }
 
-/** Save one target as a file. */
-export async function exportTarget(th: string, opts: ExportOptions, pics: PictureSettings, name: string) {
+/** Save one target as a file.
+ *  NOVAstitch: a machine file once written sends file.exported {path, format} (module l's work sheet beside it);
+ *  `machine` comes from the export dialog, `save` is replaced only in tests. */
+export async function exportTarget(th: string, opts: ExportOptions, pics: PictureSettings, name: string, machine = false, save: typeof saveFile = saveFile) {
   const s = useStore.getState();
   const file = targetFileName(th, name, false);
   try {
     const bytes = await targetBytes(s.doc, th, opts, pics);
     const ext = targetExtension(th);
-    const path = await saveFile(file, bytes, [{ name: ext.toUpperCase(), extensions: [ext] }]);
+    const path = await save(file, bytes, [{ name: ext.toUpperCase(), extensions: [ext] }]);
     if (path) s.toast(t("filum.messaggi.exported_file", { file }), "success");
+    if (path && machine) emit("file.exported", { path, format: th });
   } catch (e) {
     s.toast(t("filum.messaggi.export_failed_message", { message: (e as Error).message }), "error");
   }

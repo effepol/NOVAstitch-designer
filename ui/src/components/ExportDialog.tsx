@@ -286,7 +286,8 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
     safeSetItem("filum.pictures", JSON.stringify(pics));
     onClose();
     if (zipMode) exportZip(zipTargets, opts, pics, fileName);
-    else exportTarget(fmt, opts, pics, fileName);
+    // NOVAstitch: a machine file sends file.exported once written (module l)
+    else exportTarget(fmt, opts, pics, fileName, isMachine(fmt));
   };
   const ext = targetExtension(fmt);
   const icon = (l: CheckLevel) => (l === "ok" ? <CheckCircle2 size={15} /> : l === "warn" ? <AlertTriangle size={15} /> : <XCircle size={15} />);
