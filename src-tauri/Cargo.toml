@@ -1,7 +1,9 @@
 [package]
-name = "filum-desktop"
-description = "NOVAstitch Designer — embroidery editor (Tauri shell for Windows, macOS and Linux)"
-version.workspace = true
+name = "novastitch-designer"
+description = "NOVAstitch Designer — vector embroidery digitizing. Based on Filum."
+version = "0.1.0"
+authors = ["Poletti Centro Cucito"]
+repository = "https://github.com/effepol/NOVAstitch-designer"
 edition.workspace = true
 license.workspace = true
 
