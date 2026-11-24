@@ -259,6 +259,6 @@ npm run wasm                  # build the engine to ui/src/wasm/pkg
 npm run dev                   # browser at http://localhost:1420
 npm run desktop:dev           # native window (Tauri)
 npm run desktop:build         # installers for the current OS
-cargo test --workspace --exclude filum-desktop
+cargo test --workspace --exclude novastitch-designer
 cargo run -p filum-cli -- convert design.svg design.pes
 ```
