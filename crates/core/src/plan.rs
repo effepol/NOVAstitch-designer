@@ -15,13 +15,16 @@ use serde::{Deserialize, Serialize};
 use crate::geom::{Point, Rect};
 use crate::model::Thread;
 
-/// Top thread per stitch of standard length (Madeira: ~5 m per 1,000 stitches).
-const TOP_PER_STITCH_MM: f64 = 5.0;
-/// Thread for the loop through the fabric on top of a stitch's length
-/// (what a standard ~3.5 mm stitch adds up to Madeira's 5 mm).
-const LOOP_MM: f64 = 1.5;
-/// Bobbin thread against top thread (Madeira: 3–3.5 m bobbin per 5 m top).
-const BOBBIN_SHARE: f64 = 0.65;
+/// Thread metres (NOVAstitch, formula of Signor Poletti, contract module l;
+/// it replaces Filum's Madeira estimate in the whole program). Per colour
+/// block, L = the distances between consecutive needle penetrations (a jump
+/// after a trim does not count, an untrimmed one does) and T = its trims plus
+/// the cut at the colour change that ends it:
+/// top = 5/3 · L + 15 mm · T, bobbin = 1/2 · L + 15 mm · T.
+const TOP_PER_LENGTH: f64 = 5.0 / 3.0;
+const BOBBIN_PER_LENGTH: f64 = 0.5;
+/// Thread taken by every cut (tail left at the needle and at the bobbin).
+const PER_CUT_MM: f64 = 15.0;
 
 pub mod flags {
     pub const JUMP: u8 = 1;
@@ -119,15 +122,21 @@ pub struct PlanStats {
     pub stops: usize,
     pub width: f64,
     pub height: f64,
-    /// Top thread length in metres (incl. penetration allowance).
+    /// Top thread in metres (the sum of the colour blocks).
     pub thread_m: f64,
-    /// Bobbin thread length in metres (estimate).
+    /// Bobbin thread in metres (the sum of the colour blocks).
     pub bobbin_m: f64,
     /// Estimated sewing time in seconds.
     pub seconds: f64,
     /// Per colour block top-thread metres.
     pub thread_per_color_m: Vec<f64>,
     pub stitches_per_color: Vec<usize>,
+    /// Per colour block bobbin metres (NOVAstitch, module l).
+    #[serde(default)]
+    pub bobbin_per_color_m: Vec<f64>,
+    /// Per colour block trim records (the cut at a colour change is not one).
+    #[serde(default)]
+    pub trims_per_color: Vec<usize>,
 }
 
 impl StitchPlan {
@@ -256,26 +265,35 @@ impl StitchPlan {
         v
     }
 
-    /// Counts, size, time and thread. Thread follows Madeira (FAQ and the
-    /// Madeira USA digitizing guide): ~5 m top thread and ~3–3.5 m bobbin per
-    /// 1,000 standard stitches.
+    /// Counts, size, time and thread (thread: see `TOP_PER_LENGTH`).
     pub fn stats(&self, spm: f64, trim_s: f64, color_s: f64) -> PlanStats {
         let mut st = PlanStats::default();
-        let mut cur: Option<Point> = None;
+        // the last penetration, while the thread still runs from it
+        let mut last: Option<Point> = None;
         let mut block_len = 0.0;
+        let mut block_trims = 0usize;
         let mut block_count = 0usize;
-        let mut total_len = 0.0;
+        let close_block = |st: &mut PlanStats, len: f64, trims: usize, cuts: usize, count: usize| {
+            let cut = (trims + cuts) as f64 * PER_CUT_MM;
+            st.thread_per_color_m.push((len * TOP_PER_LENGTH + cut) / 1000.0);
+            st.bobbin_per_color_m.push((len * BOBBIN_PER_LENGTH + cut) / 1000.0);
+            st.trims_per_color.push(trims);
+            st.stitches_per_color.push(count);
+        };
         for s in &self.stitches {
             if s.is(flags::COLOR_CHANGE) {
                 st.color_changes += 1;
-                st.thread_per_color_m.push(block_len / 1000.0);
-                st.stitches_per_color.push(block_count);
+                close_block(&mut st, block_len, block_trims, 1, block_count);
                 block_len = 0.0;
+                block_trims = 0;
                 block_count = 0;
+                last = None;
                 continue;
             }
             if s.is(flags::TRIM) {
                 st.trims += 1;
+                block_trims += 1;
+                last = None;
                 continue;
             }
             if s.is(flags::STOP) {
@@ -287,28 +305,21 @@ impl StitchPlan {
             }
             if s.is(flags::JUMP) {
                 st.jumps += 1;
-                cur = Some(s.pos());
                 continue;
             }
             st.stitches += 1;
             block_count += 1;
-            if let Some(c) = cur {
-                // Madeira: about 5 m of top thread per 1,000 stitches of
-                // standard length; a longer stitch takes its own length
-                // plus the loop through the fabric.
-                let l = (c.dist(s.pos()) + LOOP_MM).max(TOP_PER_STITCH_MM);
-                block_len += l;
-                total_len += l;
+            if let Some(c) = last {
+                block_len += c.dist(s.pos());
             }
-            cur = Some(s.pos());
+            last = Some(s.pos());
         }
-        st.thread_per_color_m.push(block_len / 1000.0);
-        st.stitches_per_color.push(block_count);
+        close_block(&mut st, block_len, block_trims, 0, block_count);
         let b = self.bounds();
         st.width = b.width();
         st.height = b.height();
-        st.thread_m = total_len / 1000.0;
-        st.bobbin_m = st.thread_m * BOBBIN_SHARE;
+        st.thread_m = st.thread_per_color_m.iter().sum();
+        st.bobbin_m = st.bobbin_per_color_m.iter().sum();
         st.seconds = st.stitches as f64 / spm.max(1.0) * 60.0
             + st.trims as f64 * trim_s
             + st.color_changes as f64 * color_s
@@ -378,5 +389,94 @@ mod tests {
         // a stop at the stop position itself: unchanged
         let at = StitchPlan { stitches: vec![st(5.0, 5.0, 0), st(5.0, 5.0, flags::STOP), st(6.0, 5.0, 0)], threads: vec![], ..Default::default() };
         assert_eq!(at.with_stop_position(Point { x: 5.0, y: 5.0 }).stitches, at.stitches);
+    }
+
+    // NOVAstitch, module l: thread metres by the formula of Signor Poletti
+    // (contract tests l.3–l.6). Per colour block, L = the distances between
+    // consecutive penetrations (trimmed jumps left out, untrimmed ones in),
+    // T = its trims plus the cut at the colour change that ends it;
+    // top = 5/3 · L + 15 mm · T, bobbin = 1/2 · L + 15 mm · T.
+
+    /// A run of `n` stitches of `len` mm along x from (x0, y), after a jump there.
+    fn run(x0: f64, y: f64, n: usize, len: f64) -> Vec<Stitch> {
+        let mut v = vec![st(x0, y, flags::JUMP)];
+        v.extend((0..=n).map(|i| st(x0 + i as f64 * len, y, 0)));
+        v
+    }
+    fn plan_of(stitches: Vec<Stitch>) -> StitchPlan {
+        StitchPlan { stitches, threads: vec![], ..Default::default() }
+    }
+    fn close(a: f64, b: f64) -> bool {
+        (a - b).abs() < 1e-9
+    }
+
+    #[test]
+    fn l3_ten_metres_and_two_trims() {
+        // L = 10 m in one block: 1,000 stitches of 10 mm, a trim in the middle, one at the end
+        let mut s = run(0.0, 0.0, 500, 10.0);
+        s.push(st(5000.0, 0.0, flags::TRIM));
+        s.extend(run(0.0, 50.0, 500, 10.0));
+        s.push(st(5000.0, 50.0, flags::TRIM));
+        s.push(st(5000.0, 50.0, flags::END));
+        let p = plan_of(s).stats(800.0, 0.0, 0.0);
+        assert!(close(p.thread_m, 10.0 * 5.0 / 3.0 + 0.03), "{}", p.thread_m);
+        assert!(close(p.bobbin_m, 5.0 + 0.03), "{}", p.bobbin_m);
+        assert_eq!(format!("{:.2} {:.2}", p.thread_m, p.bobbin_m), "16.70 5.03");
+        assert_eq!(p.trims_per_color, vec![2]);
+        assert!(close(p.thread_per_color_m[0], p.thread_m) && close(p.bobbin_per_color_m[0], p.bobbin_m));
+    }
+
+    #[test]
+    fn l4_short_stitches_take_the_formula_not_five_mm_each() {
+        let p = plan_of(run(0.0, 0.0, 1000, 1.0)).stats(800.0, 0.0, 0.0);
+        assert!(close(p.thread_m, 5.0 / 3.0), "{}", p.thread_m);
+        assert!(close(p.bobbin_m, 0.5), "{}", p.bobbin_m);
+        assert_eq!(format!("{:.2} {:.2}", p.thread_m, p.bobbin_m), "1.67 0.50");
+    }
+
+    #[test]
+    fn l5_untrimmed_jumps_count_trimmed_ones_do_not() {
+        let s = vec![
+            st(0.0, 0.0, 0),
+            st(10.0, 0.0, 0),
+            // a jump of 5 mm, not trimmed: in L
+            st(15.0, 0.0, flags::JUMP),
+            st(15.0, 0.0, 0),
+            st(25.0, 0.0, 0),
+            // trimmed, then a jump of 20 mm: not in L
+            st(25.0, 0.0, flags::TRIM),
+            st(45.0, 0.0, flags::JUMP),
+            st(45.0, 0.0, 0),
+            st(55.0, 0.0, 0),
+        ];
+        let p = plan_of(s).stats(800.0, 0.0, 0.0);
+        let l = 10.0 + 5.0 + 10.0 + 10.0;
+        assert!(close(p.thread_m * 1000.0, l * 5.0 / 3.0 + 15.0), "{}", p.thread_m);
+        assert!(close(p.bobbin_m * 1000.0, l / 2.0 + 15.0), "{}", p.bobbin_m);
+    }
+
+    #[test]
+    fn l6_the_cut_at_a_colour_change_belongs_to_the_colour_that_ends() {
+        let mut s = run(0.0, 0.0, 10, 3.0);
+        s.push(st(30.0, 0.0, flags::COLOR_CHANGE));
+        s.extend(run(0.0, 10.0, 10, 3.0));
+        s.push(st(30.0, 10.0, flags::END));
+        let p = plan_of(s).stats(800.0, 0.0, 0.0);
+        assert_eq!(p.trims_per_color, vec![0, 0], "the machine's records: no trim");
+        assert!(close(p.thread_per_color_m[0] * 1000.0, 30.0 * 5.0 / 3.0 + 15.0), "T = 1 on the colour that ends");
+        assert!(close(p.thread_per_color_m[1] * 1000.0, 30.0 * 5.0 / 3.0), "T = 0 on the next");
+        assert!(close(p.bobbin_per_color_m[0] * 1000.0, 15.0 + 15.0) && close(p.bobbin_per_color_m[1] * 1000.0, 15.0));
+        // the totals are the sum of the rows
+        assert!(close(p.thread_m, p.thread_per_color_m.iter().sum()));
+        assert!(close(p.bobbin_m, p.bobbin_per_color_m.iter().sum()));
+        // no line from the end of a colour to the start of the next
+        assert_eq!(p.stitches, 22);
+    }
+
+    #[test]
+    fn stops_do_not_cut_the_thread() {
+        let s = vec![st(0.0, 0.0, 0), st(10.0, 0.0, 0), st(10.0, 0.0, flags::STOP), st(20.0, 0.0, 0)];
+        let p = plan_of(s).stats(800.0, 0.0, 0.0);
+        assert!(close(p.thread_m * 1000.0, 20.0 * 5.0 / 3.0));
     }
 }

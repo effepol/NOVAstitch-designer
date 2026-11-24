@@ -1009,13 +1009,27 @@ mod tests {
     }
 
     #[test]
-    fn thread_use_follows_madeira() {
+    fn thread_use_follows_the_novastitch_formula() {
+        // NOVAstitch, module l (formula of Signor Poletti, replaces Madeira's):
+        // top = 5/3 · L + 15 mm · T, bobbin = 1/2 · L + 15 mm · T
         let fill = StitchParams::Fill(FillParams { underlay: false, ..Default::default() });
         let d = doc(vec![obj("a", square(0.0, 0.0, 30.0), fill)]);
-        let st = Engine::new().plan(&d).stats(800.0, 6.0, 12.0);
-        // at least 5 m per 1,000 stitches, bobbin 0.65 of the top thread
-        assert!(st.thread_m * 1000.0 / st.stitches as f64 >= 4.99);
-        assert!((st.bobbin_m / st.thread_m - 0.65).abs() < 1e-9);
+        let plan = Engine::new().plan(&d);
+        let st = plan.stats(800.0, 6.0, 12.0);
+        let mut len = 0.0;
+        let mut last: Option<Point> = None;
+        for s in &plan.stitches {
+            if s.is(flags::TRIM) || s.is(flags::COLOR_CHANGE) {
+                last = None;
+            } else if s.is_stitch() {
+                len += last.map_or(0.0, |c: Point| c.dist(s.pos()));
+                last = Some(s.pos());
+            }
+        }
+        let cut = 15.0 * st.trims as f64;
+        assert!(len > 1000.0, "{len}");
+        assert!((st.thread_m * 1000.0 - (len * 5.0 / 3.0 + cut)).abs() < 1e-6);
+        assert!((st.bobbin_m * 1000.0 - (len / 2.0 + cut)).abs() < 1e-6);
     }
 
     #[test]
