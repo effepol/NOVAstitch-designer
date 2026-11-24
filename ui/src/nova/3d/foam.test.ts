@@ -3,7 +3,8 @@
 // section of Filum's satin panel. The stitches themselves (density, contour,
 // caps, stop) are checked by cargo test, crates/core/src/stitches/foam.rs.
 // And module e's warning e.11 (stitches too close) is never given on a foam
-// satin, which is denser on purpose; a normal satin keeps it.
+// satin, which is denser on purpose; a normal satin keeps it. Module l's work
+// sheet shows the SCHIUMA 3D box for it.
 
 import { check, done } from "../core/testkit";
 import { useStore } from "../../store";
@@ -17,6 +18,7 @@ import { installStitch3d } from "./install";
 import { acceptsContourPasses, defaultFoam, FOAM_DENSITY_FACTOR, isFoam } from "./foam";
 import { parsePreset } from "../presets/preset";
 import { fabricIssues } from "../presets/issues";
+import { sheetBoxes } from "../worksheet/sheetData";
 import anchors from "./anchors.json";
 
 const line: DesignObject["paths"] = [{ closed: false, nodes: [{ p: [0, 0] }, { p: [40, 0] }] }];
@@ -58,5 +60,9 @@ const docOf = (o: DesignObject): StitchDocument => ({ ...useStore.getState().doc
 const dense = (st: DesignObject["stitch"]) => fabricIssues(docOf(obj(st)), null, stable).filter((i) => i.id.startsWith("e.dense:")).length;
 check(dense({ ...satin, spacing: 0.15 }) === 1, "satin senza foam a 0,15 mm: avviso e.11 come prima");
 check(dense({ ...foamSatin, spacing: 0.15 }) === 0, "satin con foam a 0,15 mm: nessun avviso e.11 (più fitto per scelta)");
+
+// module l's work sheet (Architect, 24/11): the SCHIUMA 3D box for a satin with foam, none for a normal satin
+check(sheetBoxes(docOf(obj(foamSatin))).includes("foam"), "satin con foam: riquadro SCHIUMA 3D nella scheda di lavoro");
+check(!sheetBoxes(docOf(obj(satin))).includes("foam"), "satin senza foam: nessun riquadro SCHIUMA 3D");
 
 done("j schiuma");

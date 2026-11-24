@@ -102,7 +102,7 @@ export function sheetBoxes(doc: StitchDocument): SheetBox[] {
   for (const o of visible) {
     if (o.stitch.type === "applique") has.add("applique");
     const type = stitchTypeOf(o.stitch)?.id;
-    if (type === "j.foam") has.add("foam");
+    if (o.stitch.type === "satin" && o.stitch.foam) has.add("foam");
     if (type === "j.layered3d") has.add("layered3d");
   }
   const used = new Set(visible.map((o) => o.thread));
