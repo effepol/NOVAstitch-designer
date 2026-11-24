@@ -41,8 +41,9 @@ const assoc = tauri.bundle.fileAssociations as { ext: string[]; exportedType?: {
 const nsd = assoc.find((a) => a.ext.includes("nsd"));
 check(nsd?.exportedType?.identifier === `${ID}.nsd`, "0.14 the .nsd type is the app's own");
 check(!assoc.some((a) => a.ext.includes("filum")), "the app is not associated with .filum files any more (it still opens them from Open)");
-// 0.11: Filum is not named in tauri.conf.json
-check(!read("src-tauri/tauri.conf.json").includes("Filum"), "0.11 tauri.conf.json does not name Filum");
+// 0.11: Filum is not named in tauri.conf.json, except «Based on Filum.» in the installers'
+// description (Architect's decision of 24/11)
+check(!read("src-tauri/tauri.conf.json").replaceAll("NOVAstitch Designer — vector embroidery digitizing. Based on Filum.", "").includes("Filum"), "0.11 tauri.conf.json does not name Filum (but for «Based on Filum.» in the description)");
 check(read("ui/index.html").includes(`<title>${NAME}</title>`), "the page title too");
 // the window title follows the design: “Design — NOVAstitch Designer”. Checked on the result, not on MenuBar.tsx's
 // source: the title comes from module i's catalog, the program's name from filum.app.name (rule i.3, 13/11, point 5)
