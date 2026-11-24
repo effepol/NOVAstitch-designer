@@ -16,8 +16,12 @@ import type { StitchDocument } from "../../types";
 
 const root = path.resolve(process.cwd(), "..");
 const enc = new TextEncoder();
-/** Numbers written with more than 6 decimals, or in exponent form, in a JSON text. */
-const tooLong = (text: string) => text.match(/-?\d+\.\d{7,}|-?\d(\.\d+)?e[-+]?\d+/gi) ?? [];
+/** Numbers written with more than 6 decimals, or in exponent form, in a JSON text.
+ *  String literals are blanked first, so text inside strings (ids like "uh-k3e4…",
+ *  names) is never mistaken for a number. */
+const tooLong = (text: string) => text.replace(/"(?:[^"\\]|\\.)*"/g, '""').match(/-?\d+\.\d{7,}|-?\d(\.\d+)?e[-+]?\d+/gi) ?? [];
+check(tooLong('{"id":"uh-k3e4ab","name":"1.23456789","w":150.3}').length === 0, "the check reads JSON numbers only, not text inside strings");
+check(tooLong('{"id":"uh-x","w":1e-7,"h":0.12345678}').length === 2, "the check still catches long and exponent numbers");
 
 // the rule, number by number
 const cases: [number, number][] = [
