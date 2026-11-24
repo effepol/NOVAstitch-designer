@@ -1,0 +1,92 @@
+# NOVAstitch Designer: the provisional build. Started by hand (Actions › Build › Run workflow):
+# Tauri's installers for Windows (.msi and .exe), macOS (.dmg, Apple silicon and Intel in one)
+# and Linux (.AppImage and .deb), attached to a GitHub release marked pre-release.
+# No code signing for now: Windows and macOS warn that the publisher is unknown.
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (e.g. v0.1.0-prova.1)"
+        required: true
+        default: "v0.1.0-prova.1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            args: --bundles msi,nsis
+          - os: macos-latest
+            rust-targets: aarch64-apple-darwin,x86_64-apple-darwin
+            args: --target universal-apple-darwin --bundles dmg
+          - os: ubuntu-22.04
+            args: --bundles deb,appimage
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            ui/package-lock.json
+
+      - name: Linux system libraries for Tauri
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Rust (stable, WebAssembly and the platform's targets)
+        shell: bash
+        run: |
+          targets="wasm32-unknown-unknown"
+          if [ -n "${{ matrix.rust-targets }}" ]; then targets="$targets,${{ matrix.rust-targets }}"; fi
+          rustup toolchain install stable --profile minimal --target "$targets"
+          rustup default stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      # the version must match wasm-bindgen in Cargo.lock
+      - name: wasm-bindgen-cli
+        uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-bindgen-cli@0.2.130
+
+      - name: JavaScript dependencies
+        run: |
+          npm ci
+          npm --prefix ui ci
+
+      - name: Engine to WebAssembly
+        run: npm run wasm
+
+      # builds the interface (tauri.conf.json beforeBuildCommand: npm --prefix ui run build,
+      # which also downloads the digitizer's models), the app and its installers, and
+      # attaches them to the release (created on the first job that finishes)
+      - name: Installers and pre-release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tauriScript: npx tauri
+          args: ${{ matrix.args }}
+          tagName: ${{ inputs.tag }}
+          releaseName: "NOVAstitch Designer ${{ inputs.tag }} (provvisoria)"
+          releaseBody: "Build provvisoria, senza firma digitale: Windows e macOS avvisano che l'editore è sconosciuto. / Provisional build, not code-signed: Windows and macOS warn that the publisher is unknown."
+          releaseDraft: false
+          prerelease: true
