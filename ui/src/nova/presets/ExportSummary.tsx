@@ -1,23 +1,24 @@
 // The summary at export (module e): what to put in the machine before sewing,
-// not blocking and closable. Module e's data (summary.ts) until module l's
-// sheetData arrives. Module 0's hook (export dialog) shows it; until that is in
-// main it is not on screen.
+// not blocking and closable. Its data come from module l's sheetData
+// (summary.ts), so the thread metres are the work sheet's (contract test l.7).
+// Shown in module 0's space in the export dialog.
 
 import { TriangleAlert, X } from "lucide-react";
-import type { StitchDocument } from "../../types";
+import type { PlanData, StitchDocument } from "../../types";
+import { metres } from "../worksheet/format";
 import { getLanguage, t, useLanguage } from "../core/i18n";
 import { exportSummary } from "./summary";
 import "./texts";
 
 /** Follows the program's language. */
-export function ExportSummary(props: { doc: StitchDocument; onClose: () => void }) {
+export function ExportSummary(props: { doc: StitchDocument; plan?: PlanData | null; onClose: () => void }) {
   useLanguage();
   return <ExportSummaryView {...props} />;
 }
 
 /** The card itself, in the current language. */
-export function ExportSummaryView({ doc, onClose }: { doc: StitchDocument; onClose: () => void }) {
-  const { preset, needlePoint, boxes } = exportSummary(doc);
+export function ExportSummaryView({ doc, plan = null, onClose }: { doc: StitchDocument; plan?: PlanData | null; onClose: () => void }) {
+  const { preset, needlePoint, boxes, thread } = exportSummary(doc, plan);
   const lang = getLanguage();
   return (
     <div className="mt-card" data-nova-anchor="e.exportSummary">
@@ -40,6 +41,12 @@ export function ExportSummaryView({ doc, onClose }: { doc: StitchDocument; onClo
         )}
         <dt>{t("e.needle")}</dt>
         <dd>{t(`e.needle.${needlePoint}`)}</dd>
+        {thread && (
+          <>
+            <dt>{t("e.summary.thread")}</dt>
+            <dd>{t("e.summary.metres", { top: metres(thread.topM, lang), bobbin: metres(thread.bobbinM, lang) })}</dd>
+          </>
+        )}
       </dl>
       {boxes.map((b) => (
         <p key={b} className="mt-note conflict">

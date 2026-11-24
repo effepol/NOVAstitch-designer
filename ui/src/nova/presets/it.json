@@ -37,5 +37,7 @@
   "e.box.foam.note": "Ago a punta tonda, tensione più morbida, schiuma mai nel telaio, non per abiti da bambino.",
   "e.box.layered3d": "3D A STRATI",
   "e.box.metallic": "FILO METALLICO",
-  "e.box.metallic.note": "Ago apposito; siliconare il filo: il filo in un sacchetto di plastica, silicone spray, si scuote e poi si infila."
+  "e.box.metallic.note": "Ago apposito; siliconare il filo: il filo in un sacchetto di plastica, silicone spray, si scuote e poi si infila.",
+  "e.summary.thread": "Filo",
+  "e.summary.metres": "{top} m superiore, {bobbin} m spolina"
 }

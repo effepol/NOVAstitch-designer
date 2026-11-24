@@ -37,5 +37,7 @@
   "e.box.foam.note": "Ballpoint needle, softer tension, never hoop the foam, not for children's clothes.",
   "e.box.layered3d": "LAYERED 3D",
   "e.box.metallic": "METALLIC THREAD",
-  "e.box.metallic.note": "Metallic needle; silicone the thread: thread in a plastic bag, silicone spray, shake, then thread the machine."
+  "e.box.metallic.note": "Metallic needle; silicone the thread: thread in a plastic bag, silicone spray, shake, then thread the machine.",
+  "e.summary.thread": "Thread",
+  "e.summary.metres": "{top} m top, {bobbin} m bobbin"
 }

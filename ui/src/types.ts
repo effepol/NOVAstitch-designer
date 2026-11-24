@@ -443,6 +443,14 @@ export interface Thread {
   code: string;
   /** Weight number (No. 40 …) when it differs from the design's thread weight. */
   weight?: number;
+  /** NOVAstitch: the thread's own data (contract, section 2; module l). */
+  nova?: NovaThread;
+}
+
+/** NOVAstitch: a thread's `nova` block. */
+export interface NovaThread {
+  /** Standard (default) or metallic: the work sheet's needle and notes (module l). */
+  kind?: "standard" | "metallic";
 }
 
 export type Fabric = "cotton" | "polyester" | "denim" | "knit" | "sheer" | "felt" | "towel" | "cap" | "fleece" | "pique" | "leather" | "canvas" | "silk";

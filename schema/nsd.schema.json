@@ -11,9 +11,23 @@
     "references": { "type": "array", "items": { "$ref": "#/$defs/ReferenceImage" } },
     "groupNames": { "description": "Names of object groups (an object's group → name).", "type": "object", "additionalProperties": { "type": "string" } },
     "groupParents": { "description": "Nested groups: the group each group sits in.", "type": "object", "additionalProperties": { "type": "string" } },
-    "objects": { "type": "array", "items": { "$ref": "#/$defs/InterfaceObject" } }
+    "objects": { "type": "array", "items": { "$ref": "#/$defs/InterfaceObject" } },
+    "threads": { "type": "array", "items": { "$ref": "#/$defs/NovaThreadEntry" } }
   },
   "$defs": {
+    "NovaThreadEntry": {
+      "description": "A thread of the design: Filum's fields (filum-core) plus NOVAstitch's own nova block.",
+      "type": "object",
+      "properties": {
+        "nova": {
+          "description": "The thread's NOVAstitch data (module l).",
+          "type": "object",
+          "properties": {
+            "kind": { "description": "Standard (default) or metallic: the work sheet's needle and notes.", "enum": ["standard", "metallic"], "default": "standard" }
+          }
+        }
+      }
+    },
     "Vec2": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
     "NovaDocument": {
       "description": "Everything of NOVAstitch Designer's own. The engine never reads it: doc.hoop, doc.fabric and the stitch parameters stay the truth.",
