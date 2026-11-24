@@ -12,5 +12,20 @@
   "j.foam.densityFactor.title": "Divide la distanza del satin normale (1,45: valore provvisorio, da verificare al primo ricamo)",
   "j.foam.caps": "Cappucci",
   "j.foam.caps.title": "Chiudono le estremità aperte (T, L, E) sul bordo della forma, perché la schiuma non sporga",
-  "j.foam.sheetNote": "Schiuma 3D: ago a punta tonda, tensione più morbida, la schiuma mai nel telaio, non per abiti da bambino."
+  "j.foam.sheetNote": "Schiuma 3D: ago a punta tonda, tensione più morbida, la schiuma mai nel telaio, non per abiti da bambino.",
+  "j.layered3d.name": "3D a strati",
+  "j.layered3d.title": "Colonna in rilievo: strati interni crescenti cuciti uno sull'altro, poi lo strato finale che li avvolge",
+  "j.layered3d.hint": "Dalla colonna il programma fa da solo gli strati interni: l'anima (due strati di underlay e il contorno), poi strati più larghi, infine lo strato che avvolge tutto. I bordi sono sfalsati: nessun punto entro 0,3 mm da uno dello strato prima.",
+  "j.layered3d.width": "Larghezza",
+  "j.layered3d.spacing": "Densità",
+  "j.layered3d.layers": "Strati interni",
+  "j.layered3d.layers.title": "Da 2 a 4 strati interni, più quello finale",
+  "j.layered3d.underlayZigzagSpacing": "Zigzag dell'anima",
+  "j.layered3d.underlayZigzagSpacing.title": "Distanza dello zigzag di underlay dell'anima: più larga = più alto",
+  "j.layered3d.shrinkPerLayer": "Restringimento per strato",
+  "j.layered3d.shrinkPerLayer.title": "Quanto ogni strato interno è più stretto del successivo, sui due lati (0,6 mm: valore provvisorio, da tarare al ricamo; non meno di 0,6 per sfalsare i bordi di 0,3 mm)",
+  "j.layered3d.baseThread": "Filo degli strati interni",
+  "j.layered3d.baseThread.title": "Il filo che metti in macchina per gli strati interni (con un filo metallico: poliestere sotto, il metallico solo sopra)",
+  "j.layered3d.baseThread.same": "Lo stesso dell'oggetto",
+  "j.layered3d.sheetNote": "3D a strati: gli strati interni con il filo scelto per loro, il filo speciale solo nello strato finale."
 }

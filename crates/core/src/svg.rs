@@ -1984,7 +1984,10 @@ xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}mm\" height=\"{}mm\" view
         let mut attrs: Vec<(String, String)> = Vec::new();
         let mut paths = o.paths.clone();
         let style;
-        match &o.stitch {
+        // NOVAstitch (module j): a layered 3D is drawn as its column with its final layer, its type named (Ink/Stitch has none)
+        let nova = if let StitchParams::Layered3d(l) = &o.stitch { attrs.push(("nova_stitch_type".into(), "layered3d".into())); Some(StitchParams::Satin(l.satin.clone())) } else { None };
+        match nova.as_ref().unwrap_or(&o.stitch) {
+            StitchParams::Layered3d(_) => unreachable!("drawn as its satin"),
             StitchParams::Fill(p) => {
                 style = format!("fill:{color};stroke:none");
                 let method = match p.method {

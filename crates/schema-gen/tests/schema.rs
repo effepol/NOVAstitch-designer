@@ -52,7 +52,7 @@ fn fill_params_by_hand() {
     // the fill is the "fill" variant of StitchParams, tagged by `type`
     let variants = schema["$defs"]["StitchParams"]["oneOf"].as_array().expect("StitchParams is oneOf");
     let tags: Vec<&str> = variants.iter().filter_map(|v| v["properties"]["type"]["const"].as_str()).collect();
-    assert_eq!(tags, ["none", "running", "satin", "fill", "applique", "manual"]);
+    assert_eq!(tags, ["none", "running", "satin", "fill", "applique", "layered3d", "manual"]);
 }
 
 /// a.17: without the feature, crates/core builds as before: no normal build

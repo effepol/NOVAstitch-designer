@@ -68,6 +68,7 @@ fn kind_method(st: &StitchParams) -> (&'static str, String) {
         StitchParams::None => ("none", String::new()),
         StitchParams::Manual(_) => ("manual", String::new()),
         StitchParams::Applique(_) => ("applique", String::new()),
+        StitchParams::Layered3d(_) => ("layered3d", String::new()),
         StitchParams::Fill(p) => ("fill", enum_id(&p.method)),
         StitchParams::Satin(p) => ("satin", enum_id(&p.method)),
         StitchParams::Running(p) => (
