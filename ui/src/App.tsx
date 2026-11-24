@@ -27,6 +27,7 @@ import { compoundSelection, joinSelection, releaseSelection } from "./lib/pathAc
 import { averageSelectedNodes } from "./lib/nodeActions";
 import { t } from "./nova/i18n/filum";
 import { drawingTool } from "./nova/core/registry";
+import { printSheet } from "./nova/core/print";
 
 const TOOL_KEYS: Record<string, Tool> = {
   v: "select",
@@ -118,7 +119,8 @@ function useShortcuts() {
           o: openDocument,
           i: importFile,
           e: () => s.setDialog("export"),
-          p: () => s.setDialog(e.shiftKey ? "palette" : "production"),
+          // NOVAstitch: Ctrl+P as File › Print PDF (module l's sheet when registered)
+          p: () => (e.shiftKey ? s.setDialog("palette") : printSheet(() => s.setDialog("production"))),
           n: newDocument,
         };
         if (map[k]) {
