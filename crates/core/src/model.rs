@@ -482,6 +482,9 @@ pub struct SatinParams {
     /// The second rail's own values where Ink/Stitch gives two ("0.2 0.5").
     #[serde(skip_serializing_if = "Option::is_none")]
     pub second_rail: Option<SecondRail>,
+    /// NOVAstitch (module j): satin over 3D foam (absent: a normal satin).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub foam: Option<FoamOptions>,
 }
 
 impl Default for SatinParams {
@@ -525,6 +528,7 @@ impl Default for SatinParams {
             multi: false,
             reverse: false,
             second_rail: None,
+            foam: None,
         }
     }
 }
@@ -1334,6 +1338,47 @@ impl Default for AppliqueParams {
             flip: false,
             stops: true,
         }
+    }
+}
+
+/// NOVAstitch (module j): a satin over 3D foam (the satin's `foam` block;
+/// Architect, 24/11). The column is sewn over a foam sheet: no fill underlay,
+/// only a straight-stitch contour (and a centre walk on wide columns), denser
+/// stitches, caps on the open ends, and a machine stop before it to lay the foam.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
+#[serde(rename_all = "camelCase", default)]
+pub struct FoamOptions {
+    /// Straight-stitch contour passes: 1 or 2 (more is refused).
+    #[serde(deserialize_with = "foam_contour_passes")]
+    #[cfg_attr(feature = "schema", schemars(range(min = 1, max = 2)))]
+    pub contour_passes: u32,
+    /// The satin's spacing is divided by this (denser over foam).
+    pub density_factor: f64,
+    /// Caps on the open ends of the columns.
+    pub caps: bool,
+}
+
+/// Most contour passes over foam (contract j.2: 3 is refused).
+pub const FOAM_MAX_CONTOUR_PASSES: u32 = 2;
+/// Foam satin density: "40–50 % heavier" (Punch), read as density.
+/// PROVISIONAL, to check at the first stitch-out: 0.40 → 0.28 mm.
+pub const FOAM_DENSITY_FACTOR: f64 = 1.45;
+/// From this column width on, a centre walk joins the contour (Punch: "wide").
+pub const FOAM_WIDE: f64 = 4.0;
+
+fn foam_contour_passes<'de, D: serde::Deserializer<'de>>(d: D) -> Result<u32, D::Error> {
+    let n = u32::deserialize(d)?;
+    if (1..=FOAM_MAX_CONTOUR_PASSES).contains(&n) {
+        Ok(n)
+    } else {
+        Err(serde::de::Error::custom(format!("contourPasses {n}: foam takes 1 or {FOAM_MAX_CONTOUR_PASSES} contour passes")))
+    }
+}
+
+impl Default for FoamOptions {
+    fn default() -> Self {
+        FoamOptions { contour_passes: 1, density_factor: FOAM_DENSITY_FACTOR, caps: true }
     }
 }
 

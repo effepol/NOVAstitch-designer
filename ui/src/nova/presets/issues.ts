@@ -15,7 +15,6 @@ import type { Issue } from "../../lib/issues";
 import { flatten, objectBoundsCached } from "../../lib/geometry";
 import { threadWeightInfo } from "../../lib/materials";
 import { t } from "../core/i18n";
-import { stitchTypeOf } from "../core/stitchTypes";
 import type { FabricPreset } from "./preset";
 import { tidyNumber } from "../format/numbers";
 import "./texts";
@@ -157,7 +156,7 @@ export function fabricIssues(doc: StitchDocument, plan: PlanData | null, preset:
     // for the thread (Filum's THREAD_WEIGHTS, Madeira's guide). Satin only: Filum already warns about
     // dense fills ("Very dense fill") and maps needle holes per mm² (density.rs). Never on foam (3D),
     // denser on purpose.
-    if (preset && st.type === "satin" && stitchTypeOf(st)?.id !== "j.foam") {
+    if (preset && st.type === "satin" && !st.foam) {
       const w = weightOf(doc, o);
       const limit = tidyNumber(Math.round(preset.limits.minSpacingRatio * threadWeightInfo(w as 40).spacing * 1000) / 1000);
       if (st.spacing < limit)

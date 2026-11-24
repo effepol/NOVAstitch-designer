@@ -993,6 +993,31 @@
       },
       "type": "object"
     },
+    "FoamOptions": {
+      "description": "NOVAstitch (module j): a satin over 3D foam (the satin's `foam` block;\nArchitect, 24/11). The column is sewn over a foam sheet: no fill underlay,\nonly a straight-stitch contour (and a centre walk on wide columns), denser\nstitches, caps on the open ends, and a machine stop before it to lay the foam.",
+      "properties": {
+        "caps": {
+          "default": true,
+          "description": "Caps on the open ends of the columns.",
+          "type": "boolean"
+        },
+        "contourPasses": {
+          "default": 1,
+          "description": "Straight-stitch contour passes: 1 or 2 (more is refused).",
+          "format": "uint32",
+          "maximum": 2,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "densityFactor": {
+          "default": 1.45,
+          "description": "The satin's spacing is divided by this (denser over foam).",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
     "FreePoint": {
       "description": "A colour point of a freeform gradient.",
       "properties": {
@@ -2254,6 +2279,17 @@
           "format": "uint32",
           "minimum": 0,
           "type": "integer"
+        },
+        "foam": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FoamOptions"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "NOVAstitch (module j): satin over 3D foam (absent: a normal satin)."
         },
         "guides": {
           "description": "Direction guides: lines across the column that set the stitch angle\nthere (Ink/Stitch rungs); between two guides the angle turns evenly.\nKept apart from the paths so editing the outline keeps them.",
