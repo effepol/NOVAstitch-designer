@@ -11,6 +11,7 @@ pub mod fill;
 pub mod foam;
 pub mod gradient;
 pub mod inkfills;
+pub mod layered3d;
 pub mod meander_tiles;
 pub mod ripple;
 pub mod running;
@@ -252,6 +253,7 @@ fn generate_plain(obj: &Object, fabric: &FabricProfile) -> Vec<Run> {
         }
         StitchParams::Applique(p) => applique::applique(&obj.paths, p, fabric.pull_comp, fabric.density_scale),
         StitchParams::Fill(p) => fill::fill_on(&obj.paths, p, fabric, start, end),
+        StitchParams::Layered3d(p) => layered3d::layered3d(&obj.paths, p, fabric),
     }
 }
 

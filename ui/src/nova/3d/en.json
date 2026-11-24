@@ -12,5 +12,20 @@
   "j.foam.densityFactor.title": "Divides the normal satin's spacing (1.45: provisional, to check at the first stitch-out)",
   "j.foam.caps": "Caps",
   "j.foam.caps.title": "They close the open ends (T, L, E) on the shape's edge, so the foam does not stick out",
-  "j.foam.sheetNote": "3D foam: ballpoint needle, softer tension, never put the foam in the hoop, not for children's clothing."
+  "j.foam.sheetNote": "3D foam: ballpoint needle, softer tension, never put the foam in the hoop, not for children's clothing.",
+  "j.layered3d.name": "Layered 3D",
+  "j.layered3d.title": "Raised column: growing inner layers sewn one over the other, then the final layer that wraps them",
+  "j.layered3d.hint": "From the column the program makes the inner layers by itself: the core (two underlay layers and the contour), then wider layers, last the layer that wraps them all. The edges are staggered: no stitch within 0.3 mm of one of the layer before.",
+  "j.layered3d.width": "Width",
+  "j.layered3d.spacing": "Density",
+  "j.layered3d.layers": "Inner layers",
+  "j.layered3d.layers.title": "2 to 4 inner layers, plus the final one",
+  "j.layered3d.underlayZigzagSpacing": "Core zig-zag",
+  "j.layered3d.underlayZigzagSpacing.title": "Spacing of the core's zig-zag underlay: wider = higher",
+  "j.layered3d.shrinkPerLayer": "Shrink per layer",
+  "j.layered3d.shrinkPerLayer.title": "How much narrower each inner layer is than the next, both sides together (0.6 mm: provisional, to tune at the first stitch-out; not under 0.6 to stagger the edges by 0.3 mm)",
+  "j.layered3d.baseThread": "Inner layers' thread",
+  "j.layered3d.baseThread.title": "The thread you put in the machine for the inner layers (with a metallic thread: polyester under, the metallic only on top)",
+  "j.layered3d.baseThread.same": "The object's own",
+  "j.layered3d.sheetNote": "Layered 3D: the inner layers in the thread chosen for them, the special thread only on the final layer."
 }

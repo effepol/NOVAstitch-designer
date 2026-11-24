@@ -4,5 +4,8 @@
   "j.foam.section": "The 3D foam section in the satin's properties",
   "j.foam.contourPasses": "The foam's contour passes (1–2)",
   "j.foam.caps": "The foam's caps switch",
-  "j.foam.on": "The 3D foam switch of a satin"
+  "j.foam.on": "The 3D foam switch of a satin",
+  "j.layered3d.section": "The layered 3D section in the properties panel",
+  "j.layered3d.layers": "The layered 3D's number of inner layers (2–4)",
+  "j.layered3d.baseThread": "The thread of the layered 3D's inner layers"
 }

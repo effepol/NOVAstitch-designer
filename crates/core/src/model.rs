@@ -1382,6 +1382,65 @@ impl Default for FoamOptions {
     }
 }
 
+/// NOVAstitch (module j): layered 3D. From a satin column the program makes
+/// growing inner layers by itself: a core (two underlay layers and a contour),
+/// wider layers, and the final layer that wraps them all (the column itself).
+/// The edges are staggered: no needle point of a layer within 0.3 mm of one of
+/// the layer before. The inner layers are sewn with the thread the operator
+/// chooses (`base_thread`); a special thread (metallic) only on the final layer.
+/// Only in .nsd files (Filum does not read it).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
+#[serde(rename_all = "camelCase", default)]
+pub struct Layered3dParams {
+    /// The column and its final layer: the satin's own fields.
+    #[serde(flatten)]
+    pub satin: SatinParams,
+    /// Inner layers: 2 to 4 (Signor Poletti, 24/11; 5 or more is refused).
+    #[serde(deserialize_with = "layered3d_layers")]
+    #[cfg_attr(feature = "schema", schemars(range(min = 2, max = 4)))]
+    pub layers: u32,
+    /// Spacing of the core's zig-zag underlay (mm; wider = higher).
+    pub underlay_zigzag_spacing: f64,
+    /// How much narrower each inner layer is than the next (mm, both sides together).
+    pub shrink_per_layer: f64,
+    /// Thread id of the inner layers (none: the object's thread).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub base_thread: Option<String>,
+}
+
+/// Inner layers of a layered 3D: 2 by default, 4 at most (Signor Poletti, 24/11).
+pub const LAYERED3D_MIN_LAYERS: u32 = 2;
+pub const LAYERED3D_MAX_LAYERS: u32 = 4;
+/// Each inner layer this much narrower than the next, both sides together:
+/// 0.3 mm a side, the staggering of test j.6. PROVISIONAL (Signor Poletti,
+/// 24/11), to tune at the first stitch-out (Punch gives no value).
+pub const LAYERED3D_SHRINK: f64 = 0.6;
+/// No needle point of a layer this close to one of the layer before (mm; PROVISIONAL, j.6).
+pub const LAYERED3D_MIN_GAP: f64 = 0.3;
+
+fn layered3d_layers<'de, D: serde::Deserializer<'de>>(d: D) -> Result<u32, D::Error> {
+    let n = u32::deserialize(d)?;
+    if (LAYERED3D_MIN_LAYERS..=LAYERED3D_MAX_LAYERS).contains(&n) {
+        Ok(n)
+    } else {
+        Err(serde::de::Error::custom(format!("layers {n}: layered 3D takes {LAYERED3D_MIN_LAYERS} to {LAYERED3D_MAX_LAYERS} layers")))
+    }
+}
+
+impl Default for Layered3dParams {
+    fn default() -> Self {
+        Layered3dParams {
+            satin: SatinParams::default(),
+            layers: LAYERED3D_MIN_LAYERS,
+            // Filum's zig-zag underlay spacing
+            underlay_zigzag_spacing: SatinParams::default().zigzag_underlay_spacing,
+            shrink_per_layer: LAYERED3D_SHRINK,
+            base_thread: None,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(tag = "type", rename_all = "camelCase")]
@@ -1392,6 +1451,8 @@ pub enum StitchParams {
     Satin(SatinParams),
     Fill(FillParams),
     Applique(AppliqueParams),
+    /// NOVAstitch (module j): layered 3D from a satin column.
+    Layered3d(Layered3dParams),
     /// Every node is a needle penetration (imported embroidery files).
     Manual(ManualParams),
 }

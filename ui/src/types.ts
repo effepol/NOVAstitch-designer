@@ -386,13 +386,26 @@ export interface AppliqueParams {
   stops: boolean;
 }
 
+/** NOVAstitch (module j): layered 3D from a satin column; the satin's fields (the column and its final layer) plus these. Only in .nsd files. */
+export interface Layered3dParams extends SatinParams {
+  /** Inner layers: 2 to 4 (5 or more is refused). */
+  layers: number;
+  /** Spacing of the core's zig-zag underlay, mm (wider = higher). */
+  underlayZigzagSpacing: number;
+  /** How much narrower each inner layer is than the next, mm, both sides together (provisional 0.6). */
+  shrinkPerLayer: number;
+  /** Thread id of the inner layers (absent: the object's thread). */
+  baseThread?: string;
+}
+
 export type StitchParams =
   | { type: "none" }
   | { type: "manual"; maxLength?: number; beanPattern?: number[] }
   | ({ type: "running" } & RunningParams)
   | ({ type: "satin" } & SatinParams)
   | ({ type: "fill" } & FillParams)
-  | ({ type: "applique" } & AppliqueParams);
+  | ({ type: "applique" } & AppliqueParams)
+  | ({ type: "layered3d" } & Layered3dParams);
 
 export type StitchType = StitchParams["type"];
 

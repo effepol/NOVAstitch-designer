@@ -68,7 +68,9 @@ pub fn object_cover(obj: &Object) -> Vec<Cover> {
             }
             out
         }
-        StitchParams::Satin(p) => {
+        // NOVAstitch (module j): a layered 3D covers its satin column
+        st @ (StitchParams::Satin(_) | StitchParams::Layered3d(_)) => {
+            let p = match st { StitchParams::Layered3d(l) => &l.satin, StitchParams::Satin(p) => p, _ => unreachable!() };
             let subpaths: Vec<SubPath> = if p.multi { obj.paths.clone() } else { vec![] };
             let groups: Vec<Vec<SubPath>> = if p.multi { subpaths.into_iter().map(|s| vec![s]).collect() } else { vec![obj.paths.clone()] };
             let mut polys = Vec::new();
