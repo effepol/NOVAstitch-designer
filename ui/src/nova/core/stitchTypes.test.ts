@@ -93,7 +93,7 @@ const offFields = [
 ];
 check(stitchFieldsFor("applique", "placement").length === 1 && stitchFieldsFor("applique", "cover").length === 1 && stitchFieldsFor("satin").length === 0, "fields by stitch type and place");
 const pApp2 = show("A");
-check(/data-nova="j"[^>]*>(<[^>]+>)*Rientro 0 mm/.test(pApp2) && /data-nova="j"[^>]*>(<[^>]+>)*Bordo libero/.test(pApp2), "the appliqué fields, marked data-nova=\"j\"");
+check(/data-nova="j"[^>]*>(<[^>]+>)*Rientro [0-9.]+ mm/.test(pApp2) && /data-nova="j"[^>]*>(<[^>]+>)*Bordo libero/.test(pApp2), "the appliqué fields, marked data-nova=\"j\"");
 const at = (s: string) => pApp2.indexOf(s);
 const step = (n: number) => pApp2.search(new RegExp(`data-section="${n} ·`));
 check(step(1) > 0 && step(2) > step(1) && step(3) > step(2), "(reference) Filum's three appliqué steps");

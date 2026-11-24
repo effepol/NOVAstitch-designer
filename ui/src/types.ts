@@ -356,6 +356,10 @@ export type CoverKind = "none" | "satin" | "eStitch";
 export interface AppliqueParams {
   placement: boolean;
   placementLength: number;
+  /** NOVAstitch (module j): placement line inside the edge, mm (absent: 0, on the edge as in Filum). */
+  placementInset?: number;
+  /** NOVAstitch (module j): free-edge appliqué — placement 5 mm inside, no tack-down, one stop, cover. */
+  freeEdge?: boolean;
   tackdown: TackdownKind;
   tackdownWidth: number;
   tackdownInset: number;
