@@ -63,17 +63,15 @@ check(s.preset?.topping === "water-soluble-film", "l.9 spugna: topping film idro
 s = sheetData(withPreset("cotone"), p3, "x");
 check(s.preset?.topping === "none" && !!s.preset.stabilizer.type, "l.9 cotone: nessun topping; stabilizzatore dal preset");
 
-// ---- l.10 appliqué, foam, layered 3D (module j's types through module 0's registry)
-const offFoam = registerStitchType({ id: "j.foam", module: "j", group: "line", label: () => "Schiuma", icon: null, matches: (st) => !!(st as { foam?: unknown }).foam, apply: (o) => o.stitch, Section: () => null });
+// ---- l.10 appliqué, foam (a satin with its foam block, Architect 24/11), layered 3D (module j's type through module 0's registry)
 const offLayer = registerStitchType({ id: "j.layered3d", module: "j", group: "fill", label: () => "3D a strati", icon: null, matches: (st) => !!(st as { layered3d?: unknown }).layered3d, apply: (o) => o.stitch, Section: () => null });
 const obj = (id: string, stitch: unknown): DesignObject => ({ ...line(id, "A", 10), stitch: stitch as DesignObject["stitch"] });
-const special = design([obj("ap", defaultStitch("applique")), obj("fo", { ...defaultStitch("satin"), foam: { passes: 1 } }), obj("la", { ...defaultStitch("fill"), layered3d: { layers: 2 } })], [thread("A", "#cc0000")]);
+const special = design([obj("ap", defaultStitch("applique")), obj("fo", { ...defaultStitch("satin"), foam: { contourPasses: 1, densityFactor: 1.45, caps: true } }), obj("la", { ...defaultStitch("fill"), layered3d: { layers: 2 } })], [thread("A", "#cc0000")]);
 s = sheetData(special, null, "x");
 check(["applique", "foam", "layered3d"].every((b) => s.boxes.includes(b as never)), `l.10 riquadri APPLIQUÉ, SCHIUMA 3D, 3D A STRATI (${s.boxes.join(", ")})`);
 check(s.needlePoint === "ballpoint", "con la schiuma: punta tonda");
 const hidden = design([{ ...obj("ap", defaultStitch("applique")), visible: false }], [thread("A", "#cc0000")]);
 check(!sheetData(hidden, null, "x").boxes.length, "un oggetto nascosto non si cuce: nessun riquadro");
-offFoam();
 offLayer();
 
 // ---- l.11 a metallic colour

@@ -28,7 +28,7 @@ npm run desktop:build                    # release build and installers
 ```
 
 `npm run desktop:build` writes its output to `target/release/`:
-- the app itself, `filum-desktop`
+- the app itself, `novastitch-designer`
 - the installers, under `bundle/`. On Linux these are `deb/`, `rpm/` and `appimage/`. To build the AppImage, Tauri downloads `linuxdeploy` the first time.
 
 > **npm and install scripts:** recent npm versions block install scripts unless you allow them. Filum builds fine without them. npm will mention esbuild, protobufjs and tesseract.js, but their scripts are optional.
@@ -39,7 +39,7 @@ npm run desktop:build                    # release build and installers
 npm test
 ```
 
-This runs the Rust tests (`cargo test --workspace --exclude filum-desktop`), the TypeScript type check, the UI logic checks (`ui/src/lib/*.test.ts`, including the check that nothing with a non-redistributable licence is bundled) and the wording check (`scripts/check-wording.mjs`).
+This runs the Rust tests (`cargo test --workspace --exclude novastitch-designer`), the TypeScript type check, the UI logic checks (`ui/src/lib/*.test.ts`, including the check that nothing with a non-redistributable licence is bundled) and the wording check (`scripts/check-wording.mjs`).
 
 ## Contributing
 

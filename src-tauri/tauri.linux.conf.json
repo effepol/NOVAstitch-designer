@@ -1,0 +1,10 @@
+{
+  "productName": "Novastitch Designer",
+  "bundle": {
+    "linux": {
+      "deb": {
+        "desktopTemplate": "linux/novastitch-designer.desktop"
+      }
+    }
+  }
+}

@@ -1,7 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "NOVAstitch Designer",
-  "version": "0.2.1",
+  "mainBinaryName": "novastitch-designer",
+  "version": "0.1.0",
   "identifier": "app.novastitch.designer",
   "build": {
     "frontendDist": "../ui/dist",
@@ -34,7 +35,10 @@
     "active": true,
     "targets": "all",
     "category": "GraphicsAndDesign",
-    "shortDescription": "Modern machine-embroidery editor",
+    "shortDescription": "NOVAstitch Designer — vector embroidery digitizing. Based on Filum.",
+    "longDescription": "NOVAstitch Designer — vector embroidery digitizing. Based on Filum.",
+    "publisher": "Poletti Centro Cucito",
+    "homepage": "https://github.com/effepol/NOVAstitch-designer",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

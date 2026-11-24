@@ -1,6 +1,7 @@
 {
   "name": "novastitch-designer",
   "private": true,
+  "version": "0.1.0",
   "description": "NOVAstitch Designer workspace scripts (Rust engine + React UI + Tauri desktop shell)",
   "scripts": {
     "setup": "npm --prefix ui install && npm run wasm",
@@ -9,7 +10,7 @@
     "licenses": "node ui/scripts/gen-licenses.mjs",
     "desktop:dev": "npm run wasm && tauri dev",
     "desktop:build": "npm run wasm && tauri build",
-    "test": "cargo test --workspace --exclude filum-desktop && npm --prefix ui run typecheck && npm --prefix ui run test:match && node scripts/check-wording.mjs && node ui/scripts/check-design.mjs && node ui/src/nova/i18n/filum/check-texts.mjs && node ui/src/nova/i18n/filum/giro.mjs"
+    "test": "cargo test --workspace --exclude novastitch-designer && npm --prefix ui run typecheck && npm --prefix ui run test:match && node scripts/check-wording.mjs && node ui/scripts/check-design.mjs && node ui/src/nova/i18n/filum/check-texts.mjs && node ui/src/nova/i18n/filum/giro.mjs"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2",

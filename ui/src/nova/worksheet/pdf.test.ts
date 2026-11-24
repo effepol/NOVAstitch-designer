@@ -66,11 +66,10 @@ const [w, h] = [pdf60.getPage(0).getWidth(), pdf60.getPage(0).getHeight()];
 check(Math.abs(w - 595.28) < 0.1 && Math.abs(h - 841.89) < 0.1, `pagine A4 (${w.toFixed(1)} × ${h.toFixed(1)} pt)`);
 
 // ---- what page 1 says: the job, the table, the boxes
-const offFoam = registerStitchType({ id: "j.foam", module: "j", group: "line", label: () => "Schiuma", icon: null, matches: (st) => !!(st as { foam?: unknown }).foam, apply: (o) => o.stitch, Section: () => null });
 const offLayer = registerStitchType({ id: "j.layered3d", module: "j", group: "fill", label: () => "3D a strati", icon: null, matches: (st) => !!(st as { layered3d?: unknown }).layered3d, apply: (o) => o.stitch, Section: () => null });
 const obj = (id: string, stitch: unknown): DesignObject => ({ ...line(id, "A", 10), stitch: stitch as DesignObject["stitch"], paths: [{ closed: true, nodes: [{ p: [10, 10] }, { p: [40, 10] }, { p: [40, 30] }, { p: [10, 30] }] }] });
 const full = design(
-  [obj("ap", defaultStitch("applique")), obj("fo", { ...defaultStitch("satin"), foam: { passes: 1 } }), obj("la", { ...defaultStitch("fill"), layered3d: { layers: 2 } }), line("m", "G", 50), line("f", "B", 60)],
+  [obj("ap", defaultStitch("applique")), obj("fo", { ...defaultStitch("satin"), foam: { contourPasses: 1, densityFactor: 1.45, caps: true } }), obj("la", { ...defaultStitch("fill"), layered3d: { layers: 2 } }), line("m", "G", 50), line("f", "B", 60)],
   [thread("A", "#cc0000", { name: "Rosso" }), thread("G", "#c9a227", { name: "Oro", nova: { kind: "metallic" } }), thread("B", "#0000cc", { name: "Blu", weight: 60 })],
   { nova: { schemaVersion: 1, hoopKind: "cap", fabricPreset: { id: "spugna", rev: 1 } } },
 );
@@ -85,7 +84,6 @@ check(all.includes("ago apposito") && all.includes("! 65/9") && all.includes("pu
 check(!/densit/i.test(all), "l.11 nessun valore di densità");
 check(all.includes(data.rows[0].topM.toFixed(2).replace(".", ",")) && all.includes(data.totals.bobbinM.toFixed(2).replace(".", ",")), "l.7 i metri della scheda sono quelli di sheetData");
 check(lay.pages[0].some((i) => i.k === "text" && i.color === "#CC1219" && i.bold), "titoli rossi #CC1219");
-offFoam();
 offLayer();
 
 // ---- l.16 no estimated time anywhere
