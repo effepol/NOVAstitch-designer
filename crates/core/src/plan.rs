@@ -265,6 +265,14 @@ impl StitchPlan {
         v
     }
 
+    /// Top and bobbin thread of the whole plan in metres: the same numbers as
+    /// `stats` (formula of Signor Poletti, see `TOP_PER_LENGTH`), for every
+    /// view that shows thread (NOVAstitch, module l: one formula in the program).
+    pub fn thread_m(&self) -> (f64, f64) {
+        let st = self.stats(1.0, 0.0, 0.0);
+        (st.thread_m, st.bobbin_m)
+    }
+
     /// Counts, size, time and thread (thread: see `TOP_PER_LENGTH`).
     pub fn stats(&self, spm: f64, trim_s: f64, color_s: f64) -> PlanStats {
         let mut st = PlanStats::default();

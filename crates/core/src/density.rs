@@ -316,7 +316,6 @@ pub fn density_field(doc: &Document, plan: &StitchPlan, opts: &DensityOptions) -
         thread_spec(w)
     };
     let mut specs: std::collections::HashMap<u32, ThreadSpec> = std::collections::HashMap::new();
-    let (mut top_mm, mut bobbin_mm) = (0.0, 0.0);
     let mut prev: Option<Point> = None;
     for s in &plan.stitches {
         if s.flags & (flags::COLOR_CHANGE | flags::TRIM | flags::STOP | flags::END) != 0 {
@@ -334,8 +333,6 @@ pub fn density_field(doc: &Document, plan: &StitchPlan, opts: &DensityOptions) -
         }
         if let Some(a) = prev {
             let len = a.dist(p);
-            top_mm += len;
-            bobbin_mm += len * BOBBIN_SHARE;
             // the length laid along the segment, a sample every half cell
             let k = ((len / (cell * 0.5)).ceil() as usize).max(1);
             let share = len / k as f64;
@@ -390,7 +387,9 @@ pub fn density_field(doc: &Document, plan: &StitchPlan, opts: &DensityOptions) -
 
     // classes and statistics
     f.class = vec![0u8; n];
-    let mut st = DensityStats { top_m: top_mm / 1000.0, bobbin_m: bobbin_mm / 1000.0, ..Default::default() };
+    // thread metres: the program's one formula (plan.rs, module l)
+    let (top_m, bobbin_m) = plan.thread_m();
+    let mut st = DensityStats { top_m, bobbin_m, ..Default::default() };
     let a1 = cell * cell;
     let mut added_sum = 0.0;
     for i in 0..n {
@@ -600,5 +599,19 @@ mod tests {
         let f = field(&d);
         let heavy = f.layers[at(&f, PX, PY)];
         assert!((base - 0.625).abs() < 0.12 && (heavy - base).abs() < 0.12, "{base} → {heavy}");
+    }
+
+    #[test]
+    fn thread_metres_follow_the_one_formula_of_the_program() {
+        // NOVAstitch, module l: the density view's thread is the plan's (formula of
+        // Signor Poletti, plan.rs), not an estimate of its own
+        let fill = StitchParams::Fill(FillParams { underlay: false, ..Default::default() });
+        let mut d = doc(vec![obj("a", square(0.0, 0.0, 30.0), fill.clone()), obj("b", square(50.0, 0.0, 20.0), fill)]);
+        let plan = crate::Engine::new().plan(&d);
+        let st = plan.stats(800.0, 0.0, 0.0);
+        let f = density_field(&d, &plan, &DensityOptions::default());
+        assert!(st.thread_m > 1.0);
+        assert_eq!(f.stats.top_m, st.thread_m);
+        assert_eq!(f.stats.bobbin_m, st.bobbin_m);
     }
 }
