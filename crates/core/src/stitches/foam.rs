@@ -1,4 +1,5 @@
-//! NOVAstitch (module j): satin over 3D foam (Punch; contract, module j).
+//! NOVAstitch (module j): satin over 3D foam (Punch; contract, module j): a
+//! satin with its `foam` block (Architect, 24/11).
 //!
 //! The operator lays a foam sheet on the fabric at a machine stop; the needle
 //! perforates it along the satin's edges and the rest is torn away. So:
@@ -15,7 +16,7 @@ use super::applique::stop_here;
 use super::satin::{plot_points_on_rails, satin_geometry, satin_on};
 use super::Run;
 use crate::geom::{point_in_ring, Point, Ring};
-use crate::model::{FabricProfile, FoamParams, SatinParams, SubPath, FOAM_DENSITY_FACTOR, FOAM_MAX_CONTOUR_PASSES, FOAM_WIDE};
+use crate::model::{FabricProfile, FoamOptions, SatinParams, SubPath, FOAM_DENSITY_FACTOR, FOAM_MAX_CONTOUR_PASSES, FOAM_WIDE};
 use crate::plan::flags;
 
 /// Depth of a cap, from the end's edge inwards (mm). PROVISIONAL (Signor
@@ -73,24 +74,27 @@ fn cap(a: Point, b: Point, out: Point, spacing: f64) -> Run {
 }
 
 /// The column's satin params for foam: contour (and centre walk when wide), no fill underlay, denser.
-fn foam_satin(p: &FoamParams, width: f64) -> SatinParams {
-    let factor = if p.density_factor.is_finite() && p.density_factor > 0.0 { p.density_factor } else { FOAM_DENSITY_FACTOR };
+fn foam_satin(satin: &SatinParams, f: &FoamOptions, width: f64) -> SatinParams {
+    let factor = if f.density_factor.is_finite() && f.density_factor > 0.0 { f.density_factor } else { FOAM_DENSITY_FACTOR };
     SatinParams {
         multi: false,
         underlay_auto: false,
         contour_underlay: true,
-        contour_underlay_repeats: p.contour_passes.clamp(1, FOAM_MAX_CONTOUR_PASSES),
+        contour_underlay_repeats: f.contour_passes.clamp(1, FOAM_MAX_CONTOUR_PASSES),
         center_walk: width >= FOAM_WIDE - 1e-9,
         zigzag_underlay: false,
-        spacing: p.satin.spacing / factor,
-        ..p.satin.clone()
+        spacing: satin.spacing / factor,
+        foam: None,
+        ..satin.clone()
     }
 }
 
-pub fn foam(paths: &[SubPath], p: &FoamParams, fabric: &FabricProfile) -> Vec<Run> {
+/// The runs of a satin over foam (`p.foam` set; absent, its defaults).
+pub fn foam(paths: &[SubPath], p: &SatinParams, fabric: &FabricProfile) -> Vec<Run> {
+    let f = p.foam.unwrap_or_default();
     // the columns: every sub-path its own (multi), else the whole object
-    let groups: Vec<Vec<SubPath>> = if p.satin.multi && paths.len() > 1 { paths.iter().map(|s| vec![s.clone()]).collect() } else { vec![paths.to_vec()] };
-    let single = SatinParams { multi: false, ..p.satin.clone() };
+    let groups: Vec<Vec<SubPath>> = if p.multi && paths.len() > 1 { paths.iter().map(|s| vec![s.clone()]).collect() } else { vec![paths.to_vec()] };
+    let single = SatinParams { multi: false, foam: None, ..p.clone() };
     let columns: Vec<(Vec<SubPath>, Column)> = groups
         .into_iter()
         .filter_map(|g| {
@@ -102,14 +106,14 @@ pub fn foam(paths: &[SubPath], p: &FoamParams, fabric: &FabricProfile) -> Vec<Ru
     let (mut under, mut caps, mut top) = (Vec::new(), Vec::new(), Vec::new());
     let rings: Vec<Ring> = columns.iter().map(|(_, c)| c.ring()).collect();
     for (i, (g, c)) in columns.iter().enumerate() {
-        let sp = foam_satin(p, c.width());
+        let sp = foam_satin(p, &f, c.width());
         for run in satin_on(g, &sp, fabric) {
             under.push(run.iter().copied().filter(|x| x.1 & flags::UNDERLAY != 0).collect::<Run>());
             top.push(run.into_iter().filter(|x| x.1 & flags::UNDERLAY == 0).collect::<Run>());
         }
         // closed columns (a ring) have no ends; an end inside another column is not open
         let closed = g.len() == 1 && g[0].closed;
-        if p.caps && !closed {
+        if f.caps && !closed {
             for (a, b, out) in c.ends() {
                 let m = a.lerp(b, 0.5) - out * 0.05;
                 let open = !rings.iter().enumerate().any(|(j, r)| j != i && point_in_ring(m, r));
@@ -138,11 +142,15 @@ mod tests {
     fn line(a: Point, b: Point) -> SubPath {
         SubPath::polyline(&[a, b], false)
     }
-    fn foam_of(paths: Vec<SubPath>, f: FoamParams) -> Vec<Run> {
-        foam(&paths, &f, &Fabric::Cotton.profile())
+    fn foam_of(paths: Vec<SubPath>, p: SatinParams) -> Vec<Run> {
+        foam(&paths, &p, &Fabric::Cotton.profile())
     }
-    fn column(width: f64) -> FoamParams {
-        FoamParams { satin: SatinParams { width, spacing: 0.4, ..Default::default() }, ..Default::default() }
+    /// A satin with the foam block.
+    fn column(width: f64) -> SatinParams {
+        SatinParams { width, spacing: 0.4, foam: Some(FoamOptions::default()), ..Default::default() }
+    }
+    fn with(f: FoamOptions, width: f64) -> SatinParams {
+        SatinParams { foam: Some(f), ..column(width) }
     }
     fn obj(id: &str, paths: Vec<SubPath>, stitch: StitchParams) -> Object {
         let mut o: Object = serde_json::from_value(serde_json::json!({ "id": id, "thread": "t", "paths": [] })).unwrap();
@@ -180,28 +188,44 @@ mod tests {
         let narrow = foam_of(vec![line(pt(0.0, 0.0), pt(40.0, 0.0))], column(3.0));
         assert!(!narrow.iter().flatten().any(|x| x.1 & flags::UNDERLAY != 0 && x.0.y.abs() < 0.05), "under 4 mm: no centre walk");
         // two passes: the contour twice
-        let two = foam_of(vec![line(pt(0.0, 0.0), pt(40.0, 0.0))], FoamParams { contour_passes: 2, ..column(5.0) });
+        let two = foam_of(vec![line(pt(0.0, 0.0), pt(40.0, 0.0))], with(FoamOptions { contour_passes: 2, ..Default::default() }, 5.0));
         let side2 = two.iter().flatten().filter(|x| x.1 & flags::UNDERLAY != 0 && (x.0.y - 2.1).abs() < 0.05).count();
         assert!(side2 >= 2 * side - 2, "two passes: {side2} vs {side}");
     }
 
     #[test]
     fn j2_three_contour_passes_are_refused() {
-        // NOVAstitch j.2
-        let read = |n: u32| serde_json::from_value::<StitchParams>(serde_json::json!({ "type": "foam", "contourPasses": n }));
+        // NOVAstitch j.2: a satin's foam block with 3 contour passes is refused
+        let read = |n: u32| serde_json::from_value::<StitchParams>(serde_json::json!({ "type": "satin", "foam": { "contourPasses": n } }));
         let err = read(3).unwrap_err().to_string();
         assert!(err.contains("contourPasses 3"), "{err}");
         assert!(read(0).is_err());
-        assert!(matches!(read(2).unwrap(), StitchParams::Foam(FoamParams { contour_passes: 2, .. })));
-        let StitchParams::Foam(f) = serde_json::from_value(serde_json::json!({ "type": "foam", "spacing": 0.5 })).unwrap() else { panic!() };
-        assert_eq!((f.contour_passes, f.density_factor, f.caps, f.satin.spacing), (1, 1.45, true, 0.5), "defaults, the satin's own fields flat");
+        let StitchParams::Satin(s) = read(2).unwrap() else { panic!() };
+        assert_eq!(s.foam.unwrap().contour_passes, 2);
+        let StitchParams::Satin(s) = serde_json::from_value(serde_json::json!({ "type": "satin", "foam": {} })).unwrap() else { panic!() };
+        let f = s.foam.unwrap();
+        assert_eq!((f.contour_passes, f.density_factor, f.caps), (1, 1.45, true), "the block's defaults");
+    }
+
+    #[test]
+    fn a_satin_without_the_block_is_a_normal_satin() {
+        // no foam block: Filum's satin, and the block is not written
+        let StitchParams::Satin(s) = serde_json::from_value(serde_json::json!({ "type": "satin" })).unwrap() else { panic!() };
+        assert!(s.foam.is_none());
+        assert!(!serde_json::to_string(&s).unwrap().contains("foam"));
+        let paths = vec![line(pt(0.0, 0.0), pt(30.0, 0.0))];
+        let o = |s: SatinParams| obj("s", paths.clone(), StitchParams::Satin(s));
+        let plain = crate::stitches::generate(&o(SatinParams::default()), &Fabric::Cotton.profile());
+        assert_eq!(plain, satin_on(&paths, &SatinParams::default(), &Fabric::Cotton.profile()), "as before");
+        let foamed = crate::stitches::generate(&o(column(5.0)), &Fabric::Cotton.profile());
+        assert!(is_stop(&foamed[0]), "with the block: the foam's stitches (a stop first)");
     }
 
     #[test]
     fn j3_letter_t_three_caps_contour_caps_satin() {
         // NOVAstitch j.3: a T of two centre lines (5 mm): the bar's two ends and the stem's foot are open
         let paths = vec![line(pt(0.0, 20.0), pt(30.0, 20.0)), line(pt(15.0, 20.0), pt(15.0, 0.0))];
-        let p = FoamParams { satin: SatinParams { width: 5.0, multi: true, ..Default::default() }, ..Default::default() };
+        let p = SatinParams { multi: true, ..column(5.0) };
         let runs = foam_of(paths, p);
         assert!(is_stop(&runs[0]));
         let kinds: Vec<&str> = runs[1..]
@@ -225,7 +249,7 @@ mod tests {
         let (lo, hi) = near(foot, &|q| q.y);
         assert!(lo.abs() < 1e-6 && hi <= CAP_DEPTH + 1e-6, "foot cap {lo}..{hi}");
         // caps off: none
-        let none = foam_of(vec![line(pt(0.0, 0.0), pt(30.0, 0.0))], FoamParams { caps: false, ..column(5.0) });
+        let none = foam_of(vec![line(pt(0.0, 0.0), pt(30.0, 0.0))], with(FoamOptions { caps: false, ..Default::default() }, 5.0));
         assert_eq!(none.len(), 3, "stop, contour, satin");
     }
 
@@ -234,7 +258,7 @@ mod tests {
         // NOVAstitch j.4: a satin, then the foam: the machine stops right before the foam's first stitch
         let d = doc(vec![
             obj("s", vec![line(pt(0.0, 0.0), pt(30.0, 0.0))], StitchParams::Satin(Default::default())),
-            obj("f", vec![line(pt(0.0, 10.0), pt(30.0, 10.0))], StitchParams::Foam(column(5.0))),
+            obj("f", vec![line(pt(0.0, 10.0), pt(30.0, 10.0))], StitchParams::Satin(column(5.0))),
         ]);
         let plan = Engine::new().plan(&d);
         let stops: Vec<usize> = plan.stitches.iter().enumerate().filter(|(_, s)| s.is(flags::STOP)).map(|(i, _)| i).collect();
@@ -245,22 +269,5 @@ mod tests {
         assert!(plan.stitches[stops[0]..first_foam].iter().all(|s| s.flags & flags::COMMANDS != 0), "nothing but the jump between the stop and the foam");
         assert!(plan.stitches[stops[0] + 1..].iter().all(|s| s.object != 0), "nothing of the satin after the stop");
         assert!(plan.stitches[..stops[0]].iter().all(|s| s.object != 1 || s.flags & flags::COMMANDS != 0), "no foam stitch before it");
-    }
-
-    #[test]
-    fn foam_in_info_cover_and_svg() {
-        // the contract's exception of 24/11: info names it, it covers its column, SVG draws it as a satin
-        let st = |s: StitchParams| obj("f", vec![line(pt(0.0, 0.0), pt(30.0, 0.0))], s);
-        let f = StitchParams::Foam(column(5.0));
-        let s = StitchParams::Satin(column(5.0).satin);
-        let d = doc(vec![st(f.clone())]);
-        let info = crate::info::element_info(&d, &mut Engine::new(), &[]);
-        assert_eq!(info.objects[0].kind, "foam");
-        let (cf, cs) = (crate::region::object_cover(&st(f.clone())), crate::region::object_cover(&st(s.clone())));
-        assert!(!cf.is_empty() && crate::region::covers_bounds(&cf) == crate::region::covers_bounds(&cs), "covers its satin column");
-        let strip = |svg: String| svg.lines().map(|l| l.split(" filum:params=").next().unwrap().replace(" inkstitch:nova_stitch_type=\"foam\"", "")).collect::<Vec<_>>().join("\n");
-        let (sf, ss) = (crate::svg::export_svg(&d), crate::svg::export_svg(&doc(vec![st(s)])));
-        assert!(sf.contains("inkstitch:nova_stitch_type=\"foam\""), "the type, named");
-        assert_eq!(strip(sf), strip(ss), "otherwise a normal satin");
     }
 }

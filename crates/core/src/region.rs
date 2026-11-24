@@ -68,9 +68,7 @@ pub fn object_cover(obj: &Object) -> Vec<Cover> {
             }
             out
         }
-        // NOVAstitch (module j): foam covers its satin column
-        st @ (StitchParams::Satin(_) | StitchParams::Foam(_)) => {
-            let p = match st { StitchParams::Satin(p) => p, _ => st.nova_satin().unwrap().1 };
+        StitchParams::Satin(p) => {
             let subpaths: Vec<SubPath> = if p.multi { obj.paths.clone() } else { vec![] };
             let groups: Vec<Vec<SubPath>> = if p.multi { subpaths.into_iter().map(|s| vec![s]).collect() } else { vec![obj.paths.clone()] };
             let mut polys = Vec::new();

@@ -247,11 +247,11 @@ fn generate_plain(obj: &Object, fabric: &FabricProfile) -> Vec<Run> {
                     }
                 }
             }
-            satin::satin_on(&obj.paths, &p, fabric)
+            // NOVAstitch (module j): a satin with its foam block is sewn over 3D foam
+            if p.foam.is_some() { foam::foam(&obj.paths, &p, fabric) } else { satin::satin_on(&obj.paths, &p, fabric) }
         }
         StitchParams::Applique(p) => applique::applique(&obj.paths, p, fabric.pull_comp, fabric.density_scale),
         StitchParams::Fill(p) => fill::fill_on(&obj.paths, p, fabric, start, end),
-        StitchParams::Foam(p) => foam::foam(&obj.paths, p, fabric),
     }
 }
 

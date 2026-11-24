@@ -152,6 +152,18 @@ export interface SatinParams {
     randomWider?: number;
     randomNarrower?: number;
   };
+  /** NOVAstitch (module j): satin over 3D foam (absent: a normal satin). Only in .nsd files. */
+  foam?: FoamOptions;
+}
+
+/** NOVAstitch (module j): a satin's foam block (Architect, 24/11). */
+export interface FoamOptions {
+  /** Straight-stitch contour passes: 1 or 2 (more is refused). */
+  contourPasses: number;
+  /** The satin's spacing is divided by this (provisional 1.45). */
+  densityFactor: number;
+  /** Caps on the open ends. */
+  caps: boolean;
 }
 
 export type FillMethod = "tatami" | "contour" | "spiral" | "radial" | "hilbert" | "stipple" | "meander" | "guided" | "circular" | "flow" | "curved" | "cross" | "tartan";
@@ -374,24 +386,13 @@ export interface AppliqueParams {
   stops: boolean;
 }
 
-/** NOVAstitch (module j): satin over 3D foam; the satin's fields plus these. Only in .nsd files. */
-export interface FoamParams extends SatinParams {
-  /** Straight-stitch contour passes: 1 or 2 (more is refused). */
-  contourPasses: number;
-  /** The satin's spacing is divided by this (provisional 1.45). */
-  densityFactor: number;
-  /** Caps on the open ends. */
-  caps: boolean;
-}
-
 export type StitchParams =
   | { type: "none" }
   | { type: "manual"; maxLength?: number; beanPattern?: number[] }
   | ({ type: "running" } & RunningParams)
   | ({ type: "satin" } & SatinParams)
   | ({ type: "fill" } & FillParams)
-  | ({ type: "applique" } & AppliqueParams)
-  | ({ type: "foam" } & FoamParams);
+  | ({ type: "applique" } & AppliqueParams);
 
 export type StitchType = StitchParams["type"];
 

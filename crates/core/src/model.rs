@@ -482,6 +482,9 @@ pub struct SatinParams {
     /// The second rail's own values where Ink/Stitch gives two ("0.2 0.5").
     #[serde(skip_serializing_if = "Option::is_none")]
     pub second_rail: Option<SecondRail>,
+    /// NOVAstitch (module j): satin over 3D foam (absent: a normal satin).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub foam: Option<FoamOptions>,
 }
 
 impl Default for SatinParams {
@@ -525,6 +528,7 @@ impl Default for SatinParams {
             multi: false,
             reverse: false,
             second_rail: None,
+            foam: None,
         }
     }
 }
@@ -1337,17 +1341,14 @@ impl Default for AppliqueParams {
     }
 }
 
-/// NOVAstitch (module j): satin over 3D foam. A satin column sewn over a
-/// foam sheet: no fill underlay, only a straight-stitch contour (and a centre
-/// walk on wide columns), denser stitches, caps on the open ends, and a machine
-/// stop before it to lay the foam. Only in .nsd files (Filum does not read it).
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+/// NOVAstitch (module j): a satin over 3D foam (the satin's `foam` block;
+/// Architect, 24/11). The column is sewn over a foam sheet: no fill underlay,
+/// only a straight-stitch contour (and a centre walk on wide columns), denser
+/// stitches, caps on the open ends, and a machine stop before it to lay the foam.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(feature = "schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", default)]
-pub struct FoamParams {
-    /// The satin's own fields (spacing is the normal satin's: the foam's is denser).
-    #[serde(flatten)]
-    pub satin: SatinParams,
+pub struct FoamOptions {
     /// Straight-stitch contour passes: 1 or 2 (more is refused).
     #[serde(deserialize_with = "foam_contour_passes")]
     #[cfg_attr(feature = "schema", schemars(range(min = 1, max = 2)))]
@@ -1375,9 +1376,9 @@ fn foam_contour_passes<'de, D: serde::Deserializer<'de>>(d: D) -> Result<u32, D:
     }
 }
 
-impl Default for FoamParams {
+impl Default for FoamOptions {
     fn default() -> Self {
-        FoamParams { satin: SatinParams::default(), contour_passes: 1, density_factor: FOAM_DENSITY_FACTOR, caps: true }
+        FoamOptions { contour_passes: 1, density_factor: FOAM_DENSITY_FACTOR, caps: true }
     }
 }
 
@@ -1391,8 +1392,6 @@ pub enum StitchParams {
     Satin(SatinParams),
     Fill(FillParams),
     Applique(AppliqueParams),
-    /// NOVAstitch (module j): satin over 3D foam.
-    Foam(FoamParams),
     /// Every node is a needle penetration (imported embroidery files).
     Manual(ManualParams),
 }
@@ -1400,17 +1399,6 @@ pub enum StitchParams {
 impl Default for StitchParams {
     fn default() -> Self {
         StitchParams::Fill(FillParams::default())
-    }
-}
-
-impl StitchParams {
-    /// NOVAstitch (module j): the satin a module j stitch is drawn as (its
-    /// column, its cover, its SVG export), and the stitch type's name.
-    pub fn nova_satin(&self) -> Option<(&'static str, &SatinParams)> {
-        match self {
-            StitchParams::Foam(f) => Some(("foam", &f.satin)),
-            _ => None,
-        }
     }
 }
 

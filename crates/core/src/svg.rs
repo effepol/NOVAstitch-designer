@@ -1097,6 +1097,7 @@ fn ink_satin(ink: &Ink) -> SatinParams {
         swap_rails: ink.b("swap_satin_rails", false),
         reverse: false,
         second_rail: (rail != SecondRail::default()).then_some(rail),
+        foam: None,
         multi: false,
     }
 }
@@ -1983,10 +1984,7 @@ xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}mm\" height=\"{}mm\" view
         let mut attrs: Vec<(String, String)> = Vec::new();
         let mut paths = o.paths.clone();
         let style;
-        // NOVAstitch (module j): drawn as its satin, its type named (Ink/Stitch has none of these)
-        let nova = o.stitch.nova_satin().map(|(k, s)| (k, StitchParams::Satin(s.clone())));
-        if let Some((k, _)) = &nova { attrs.push(("nova_stitch_type".into(), (*k).into())); }
-        match nova.as_ref().map_or(&o.stitch, |x| &x.1) {
+        match &o.stitch {
             StitchParams::Fill(p) => {
                 style = format!("fill:{color};stroke:none");
                 let method = match p.method {
@@ -2318,7 +2316,6 @@ xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}mm\" height=\"{}mm\" view
                     attrs.push(("bean_stitch_repeats".into(), beans.join(" ")));
                 }
             }
-            StitchParams::Foam(_) => unreachable!("module j: drawn as its satin"),
             StitchParams::None => {
                 style = format!("fill:{color};fill-opacity:0.35;stroke:none");
                 attrs.push(("fill".into(), "False".into()));
