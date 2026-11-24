@@ -13,6 +13,8 @@ export interface CoreEvents {
   "selection.changed": { ids: string[] };
   "plan.ready": { stats: PlanStats };
   "view.changed": { mode: ViewMode; scale: number; ox: number; oy: number; zoomFactor: number };
+  /** A machine file written by the export dialog (module l: the work sheet beside it). */
+  "file.exported": { path: string; format: string };
 }
 
 /** Modules add their own events here by declaration merging (e.g. "sequence.rowFocused"). */

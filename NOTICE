@@ -95,7 +95,7 @@ downloads (Preferences → Downloads)
   LLC): nessuna licenza dichiarata / no licence stated.
 
 Dipendenze / Dependencies
-  42 pacchetti npm e 446 crate Rust, ciascuno con autore, licenza e testo
-  della licenza / 42 npm packages and 446 Rust crates, each with its
+  47 pacchetti npm e 449 crate Rust, ciascuno con autore, licenza e testo
+  della licenza / 47 npm packages and 449 Rust crates, each with its
   author, licence and licence text: ui/public/licenses/third-party.json
   (nell'app / in the app: Help → Licences).
