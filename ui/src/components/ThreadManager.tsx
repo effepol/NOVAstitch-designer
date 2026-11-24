@@ -6,6 +6,7 @@ import { ArrowDownUp, Check, ChevronDown, ChevronUp, Copy, Crosshair, Download, 
 import { SewOrder, Spool } from "../icons/stitch";
 import { THREAD_WEIGHTS } from "../lib/materials";
 import { MatchButton, useMatchOptions } from "./MatchPanel";
+import { NovaSlot } from "../nova/core/Slot";
 import { quality as qualityOf, type MatchCandidate } from "../lib/threadMatch";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { optimizeOrder } from "../lib/actions";
@@ -226,6 +227,8 @@ function ThreadRow({
             ))}
           </select>
         </div>
+        {/* NOVAstitch: the modules' space on every thread (nova/core/slots.ts; module l: standard / metallic) */}
+        <NovaSlot name="thread" props={{ thread: th }} />
       </div>
       <div className="tm-usage">
         {used ? (

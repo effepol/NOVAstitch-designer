@@ -63,6 +63,7 @@ import { lastChart } from "./ThreadPicker";
 import { compoundSelection, joinSelection, releaseSelection } from "../lib/pathActions";
 import { averageSelectedNodes } from "../lib/nodeActions";
 import { menuItems } from "../nova/core/registry";
+import { printSheet } from "../nova/core/print";
 import { inEnglish, t, tn } from "../nova/i18n/filum";
 
 /** The name of a menu on screen: Filum's own menus are translated, a module's new menu shows its own name. */
@@ -180,7 +181,7 @@ export function buildMenus(): Record<string, MenuItem[]> {
       "-",
       { label: t("filum.menu.export_embroidery"), icon: FileDown, kbd: `${mod}E`, run: () => s.setDialog("export") },
       { label: t("filum.menu.export_ink_stitch_svg"), icon: FileCode, run: () => exportDesign("svg") },
-      { label: t("filum.menu.print_pdf"), icon: Printer, kbd: `${mod}P`, run: () => s.setDialog("production") },
+      { label: t("filum.menu.print_pdf"), icon: Printer, kbd: `${mod}P`, run: () => printSheet(() => s.setDialog("production")) },
     ],
     Edit: [
       { label: t("filum.menu.undo"), icon: Undo2, kbd: `${mod}Z`, run: s.undo, disabled: !s.past.length },

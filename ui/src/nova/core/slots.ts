@@ -1,15 +1,19 @@
-// Spaces a module can fill (module 0, for module e): Filum's fabric panel
-// (components/MaterialPanel.tsx, under the fabric picker) and the export
-// dialog (components/ExportDialog.tsx, in the settings column). Each
+// Spaces a module can fill (module 0, for modules e and l): Filum's fabric panel
+// (components/MaterialPanel.tsx, under the fabric picker), the export
+// dialog (components/ExportDialog.tsx, in the settings column) and every
+// thread of the thread panel (components/ThreadManager.tsx). Each
 // registered component is drawn in a box marked data-nova; with nothing
 // registered nothing changes. Texts come from the registering module.
 
 import { useSyncExternalStore, type ComponentType } from "react";
+import type { Thread } from "../../types";
 
 export interface SlotProps {
   material: Record<string, never>;
   /** The export format chosen in the dialog (e.g. "dst", "pes", "png"). */
   export: { format: string };
+  /** On every thread of Filum's thread panel (Thread colours): the thread of that row. */
+  thread: { thread: Thread };
 }
 export type SlotName = keyof SlotProps;
 
