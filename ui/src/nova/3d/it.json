@@ -2,5 +2,18 @@
   "j.applique.placementInset": "Rientro",
   "j.applique.placementInset.title": "Distanza della linea di posizionamento dentro il bordo (libro Punch: 1–1,5 mm)",
   "j.applique.freeEdge": "Bordo libero",
-  "j.applique.freeEdge.title": "Appliqué a bordo libero: posizionamento 5 mm dentro il bordo, nessun tack-down, uno stop per la colla spray e il tessuto, poi la copertura"
+  "j.applique.freeEdge.title": "Appliqué a bordo libero: posizionamento 5 mm dentro il bordo, nessun tack-down, uno stop per la colla spray e il tessuto, poi la copertura",
+  "j.foam.name": "Satin su schiuma 3D",
+  "j.foam.title": "Satin cucito sopra un foglio di schiuma: rilievo 3D. Stop prima dell'oggetto per posare la schiuma; va cucito per ultimo",
+  "j.foam.hint": "Solo satin, niente underlay di riempimento: contorno a punto steso (e al centro da 4 mm), satin più fitto, cappucci alle estremità aperte. La macchina si ferma prima per posare la schiuma.",
+  "j.foam.width": "Larghezza",
+  "j.foam.spacing": "Densità del satin normale",
+  "j.foam.spacing.title": "La distanza del satin normale; sulla schiuma i punti sono più fitti: {mm} mm",
+  "j.foam.contourPasses": "Passate di contorno",
+  "j.foam.contourPasses.title": "Contorno a punto steso: 1 passata, al massimo 2",
+  "j.foam.densityFactor": "Fattore di densità",
+  "j.foam.densityFactor.title": "Divide la distanza del satin normale (1,45: valore provvisorio, da verificare al primo ricamo)",
+  "j.foam.caps": "Cappucci",
+  "j.foam.caps.title": "Chiudono le estremità aperte (T, L, E) sul bordo della forma, perché la schiuma non sporga",
+  "j.foam.sheetNote": "Schiuma 3D: ago a punta tonda, tensione più morbida, la schiuma mai nel telaio, non per abiti da bambino."
 }

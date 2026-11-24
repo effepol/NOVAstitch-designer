@@ -8,6 +8,7 @@ pub mod fields;
 pub mod travel;
 pub mod underlay;
 pub mod fill;
+pub mod foam;
 pub mod gradient;
 pub mod inkfills;
 pub mod meander_tiles;
@@ -250,6 +251,7 @@ fn generate_plain(obj: &Object, fabric: &FabricProfile) -> Vec<Run> {
         }
         StitchParams::Applique(p) => applique::applique(&obj.paths, p, fabric.pull_comp, fabric.density_scale),
         StitchParams::Fill(p) => fill::fill_on(&obj.paths, p, fabric, start, end),
+        StitchParams::Foam(p) => foam::foam(&obj.paths, p, fabric),
     }
 }
 

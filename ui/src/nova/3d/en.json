@@ -2,5 +2,18 @@
   "j.applique.placementInset": "Inset",
   "j.applique.placementInset.title": "Distance of the placement line inside the edge (Punch: 1–1.5 mm)",
   "j.applique.freeEdge": "Free edge",
-  "j.applique.freeEdge.title": "Free-edge appliqué: placement 5 mm inside the edge, no tack-down, one stop for the spray glue and the fabric, then the cover"
+  "j.applique.freeEdge.title": "Free-edge appliqué: placement 5 mm inside the edge, no tack-down, one stop for the spray glue and the fabric, then the cover",
+  "j.foam.name": "Satin over 3D foam",
+  "j.foam.title": "Satin sewn over a foam sheet: 3D relief. A stop before the object to lay the foam; sew it last",
+  "j.foam.hint": "Satin only, no fill underlay: straight-stitch contour (and a centre walk from 4 mm), denser satin, caps on the open ends. The machine stops first to lay the foam.",
+  "j.foam.width": "Width",
+  "j.foam.spacing": "Normal satin density",
+  "j.foam.spacing.title": "The normal satin's spacing; over foam the stitches are denser: {mm} mm",
+  "j.foam.contourPasses": "Contour passes",
+  "j.foam.contourPasses.title": "Straight-stitch contour: 1 pass, 2 at most",
+  "j.foam.densityFactor": "Density factor",
+  "j.foam.densityFactor.title": "Divides the normal satin's spacing (1.45: provisional, to check at the first stitch-out)",
+  "j.foam.caps": "Caps",
+  "j.foam.caps.title": "They close the open ends (T, L, E) on the shape's edge, so the foam does not stick out",
+  "j.foam.sheetNote": "3D foam: ballpoint needle, softer tension, never put the foam in the hoop, not for children's clothing."
 }
