@@ -1,0 +1,4 @@
+{
+  "l.thread.kind": "The thread type (standard / metallic) on every thread of the thread panel",
+  "l.export.sheet": "The option of the export dialog: the work sheet (PDF) beside the stitch file"
+}
