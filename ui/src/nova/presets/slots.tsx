@@ -28,6 +28,7 @@ export function PresetCardSlot() {
 
 export function ExportSummarySlot() {
   const doc = useStore((s) => s.doc);
+  const plan = useStore((s) => s.plan);
   const [closed, setClosed] = useState(false);
-  return closed ? null : <ExportSummary doc={doc} onClose={() => setClosed(true)} />;
+  return closed ? null : <ExportSummary doc={doc} plan={plan} onClose={() => setClosed(true)} />;
 }
