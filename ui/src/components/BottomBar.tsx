@@ -48,7 +48,7 @@ export function BottomBar() {
   const actual = oneToOneScale();
   // NOVAstitch (Signor Poletti, 25/11): every button stays reachable; without room the least used go into «More»
   const registered = toolbarButtons();
-  const order = overflowOrder(zooms.map((z) => `zoom:${z}`), registered.map((b) => b.id));
+  const order = overflowOrder(Array.from(zooms, (z) => `zoom:${z}`), registered.map((b) => b.id));
   const { barRef, hidden, measuring } = useBarOverflow(order, `${sewOrder.length}|${registered.map((b) => b.id).join()}|${playerOpen}|${stats?.stitches ?? 0}`);
   const shown = (key: string) => measuring || !hidden.includes(key);
   const zoomButton = (z: number, inMenu = false) => (
@@ -133,7 +133,7 @@ export function BottomBar() {
       <button className="icon-btn" title={t("filum.barre.fit_hoop_0")} onClick={() => fit("hoop")}>
         <Hoop size={15} />
       </button>
-      {zooms.filter((z) => shown(`zoom:${z}`)).map((z) => zoomButton(z))}
+      {zooms.map((z) => (shown(`zoom:${z}`) ? zoomButton(z) : null))}
       {/* NOVAstitch: buttons registered by the modules (nova/core/registry) */}
       {registered.filter((b) => shown(b.id)).map((b) => registeredButton(b))}
       <div className="vsep" />
