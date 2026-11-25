@@ -104,3 +104,13 @@ next row).
 | Lock stitches | on, half stitch, 100 %, 0.7 mm | machine settings `ties`, `lockStart`, `lockEnd`, `lockScale`, `lockLength` |
 | Minimum stitch | 0.3 mm | machine settings `minStitch`, object `minStitch` |
 | Maximum stitch | 12.1 mm | machine settings `maxStitch` |
+
+## Changes
+
+Every change to the DST export (the writer, the plan's trims, ties, jumps or
+stitch lengths, the defaults above) is written down here, with its date and
+pull request, in the same change that makes it (Architect, 25/11).
+
+| Date | Change | Pull request |
+|---|---|---|
+| 25/11/2026 | This document: the conventions as they are | #95 |

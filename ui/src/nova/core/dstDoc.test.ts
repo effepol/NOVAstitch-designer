@@ -27,4 +27,6 @@ check(num(machine, /min_stitch: ([\d.]+),/) === 0.3 && doc.includes("0.3 mm by\n
 check(num(machine, /max_stitch: ([\d.]+),/) === 12.1 && doc.includes("*maximum stitch* (12.1 mm by default)"), "maximum stitch 12.1 mm");
 check(doc.includes("`novastitch convert design.nsd design.dst`") && doc.includes("cliConvert.test.ts"), "the command line writes the same file (and the test that checks it)");
 
+check(/## Changes\n/.test(doc) && /Every change to the DST export .* is written down here/s.test(doc) && /\| 25\/11\/2026 \| This document/.test(doc), "a register of the changes to the DST export (every future change is written down there)");
+
 done("documento dell'esportazione DST");
