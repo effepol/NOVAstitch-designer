@@ -2151,7 +2151,7 @@
   "filum.finestre.zoom_the_timeline": "Zoom the timeline",
   "filum.menu.a_net_that_flattens_pile": "A net that flattens pile fabrics — under the whole design or the selection",
   "filum.menu.a_picture_to_trace_over": "A picture to trace over — never stitched",
-  "filum.menu.about_filum": "About Filum",
+  "filum.menu.about_filum": "About {app}",
   "filum.menu.actual_size": "Actual size",
   "filum.menu.add_reference_picture": "Add reference picture…",
   "filum.menu.added_threads": "Added {n} threads",

@@ -2151,7 +2151,7 @@
   "filum.finestre.zoom_the_timeline": "Ingrandisci la linea del tempo",
   "filum.menu.a_net_that_flattens_pile": "Una rete che appiattisce i tessuti a pelo — sotto tutto il disegno o sotto la selezione",
   "filum.menu.a_picture_to_trace_over": "Un'immagine da ricalcare — non viene mai ricamata",
-  "filum.menu.about_filum": "Informazioni su Filum",
+  "filum.menu.about_filum": "Informazioni su {app}",
   "filum.menu.actual_size": "Dimensione reale",
   "filum.menu.add_reference_picture": "Aggiungi immagine di riferimento…",
   "filum.menu.added_threads": "Aggiunti {n} fili",
