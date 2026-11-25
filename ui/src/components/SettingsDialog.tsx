@@ -8,7 +8,7 @@ import { useState, type ReactNode } from "react";
 import { machineById } from "../lib/machines";
 import { MachineOptions } from "./MachineOptions";
 import { DownloadsPanel } from "./DownloadsPanel";
-import { ACCENTS, APP_COLOR, DEFAULT_PREFS } from "../lib/prefs";
+import { ACCENTS, DEFAULT_PREFS } from "../lib/prefs";
 import { loadMatchOptions, saveMatchOptions, useMyThreads } from "../lib/threads";
 import { MATCH_PRESETS } from "../lib/threadMatch";
 import { DEFAULT_TOOL_OPTIONS, useStore } from "../store";
@@ -116,7 +116,7 @@ function Appearance() {
           {ACCENTS.map((a) => (
             <button key={a.color} className={prefs.accent === a.color ? "on" : ""} title={a.label} style={{ ["--c" as string]: a.color }} onClick={() => setPrefs({ accent: a.color })}>
               <i />
-              <span>{a.color === APP_COLOR ? "Filum" : a.label}</span>
+              <span>{a.label}</span>
             </button>
           ))}
           <label className={`st-custom ${custom ? "on" : ""}`} title={t("filum.finestre.your_own_colour")}>
