@@ -1,6 +1,6 @@
 # Command line
 
-Filum includes a small command-line tool, `filum`, that uses the same stitch engine as the editor. It's handy for converting a folder of files, checking designs in a script, or digitizing in bulk.
+NOVAstitch Designer includes a small command-line tool, `novastitch`, that uses the same stitch engine as the editor (Filum's `filum` command, renamed). It's handy for converting a folder of files, checking designs in a script, or digitizing in bulk.
 
 ## Install
 
@@ -8,7 +8,7 @@ Build it from the repository (see [Building from source](Building-from-Source.md
 
 ```bash
 cargo build -p filum-cli --release
-# the program is target/release/filum
+# the program is target/release/novastitch
 ```
 
 Or run it straight through Cargo: `cargo run -p filum-cli -- <command>`.
@@ -16,22 +16,23 @@ Or run it straight through Cargo: `cargo run -p filum-cli -- <command>`.
 ## Commands
 
 ```text
-filum convert <in> <out>
-filum info <file>
-filum optimize <in> <out>
-filum digitize <image> <out> [--colors N] [--width MM]
-filum formats
+novastitch convert <in> <out>
+novastitch info <file>
+novastitch optimize <in> <out>
+novastitch digitize <image> <out> [--colors N] [--width MM]
+novastitch formats
 ```
 
 The file extension decides the format, both for reading and for writing.
 
 ### convert
 
-Converts between any formats Filum can read and write. For example:
+Converts between any formats NOVAstitch Designer can read and write. Projects (`.nsd`, `.filum`) are read, not written: open and save them in the editor, which keeps every field. For example:
 
 ```bash
-filum convert design.svg design.pes        # Ink/Stitch SVG → Brother PES
-filum convert logo.dst logo.filum      # machine file → editable project
+novastitch convert design.svg design.pes        # Ink/Stitch SVG → Brother PES
+novastitch convert logo.dst logo.svg        # machine file → Ink/Stitch SVG
+novastitch convert stemma.nsd stemma.dst    # project → machine file
 ```
 
 ### info
@@ -39,7 +40,7 @@ filum convert logo.dst logo.filum      # machine file → editable project
 Prints the size, stitch count, colours, trims, jumps, thread use and running time:
 
 ```text
-$ filum info cactus.pes
+$ novastitch info cactus.pes
 Design      cactus
 Objects     7
 Size        60.4 × 68.6 mm
@@ -56,14 +57,14 @@ Run time    15m 06s @ 800 spm
 
 The thread names here are Brother's: by default a PES file stores its colours as entries of Brother's thread table, which every Brother machine reads (see *PES version* in [Export and print](Export-and-Print.md)).
 
-> **Where did my colours go?** Some formats, such as DST, store only the stitches and the colour changes, not the thread colours. `info` on a DST file shows placeholder colours. Use PES, JEF, VP3 or a `.filum` project to keep the real threads.
+> **Where did my colours go?** Some formats, such as DST, store only the stitches and the colour changes, not the thread colours. `info` on a DST file shows placeholder colours. Use PES, JEF, VP3 or a `.nsd` project to keep the real threads.
 
 ### optimize
 
 Reorders the objects for fewer colour changes and less travel, without changing which object sits on top, then saves the result:
 
 ```text
-$ filum optimize cactus.pes cactus-optimised.pes
+$ novastitch optimize cactus.pes cactus-optimised.pes
 colour changes 6 → 5, travel 131 → 202 mm
 ```
 
@@ -74,7 +75,7 @@ Colour changes cost far more time than a few centimetres of travel, so the optim
 Auto-digitizes a picture with the default settings:
 
 ```text
-$ filum digitize cactus.png cactus.pes --colors 6 --width 80
+$ novastitch digitize cactus.png cactus.pes --colors 6 --width 80
 Design      Digitized
 Objects     11
 Size        60.4 × 68.6 mm
@@ -93,7 +94,7 @@ The hoop is sized to fit the design. For presets, line art, AI helpers or cross 
 Lists every format, with whether it can be read, written, or both:
 
 ```text
-$ filum formats
+$ novastitch formats
 dst          Tajima Embroidery Format     read write
 pes          Brother Embroidery Format    read write
 jef          Janome Embroidery Format     read write
@@ -105,5 +106,5 @@ jef          Janome Embroidery Format     read write
 Convert every PES file in a folder to DST:
 
 ```bash
-for f in *.pes; do filum convert "$f" "${f%.pes}.dst"; done
+for f in *.pes; do novastitch convert "$f" "${f%.pes}.dst"; done
 ```
