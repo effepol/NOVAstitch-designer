@@ -8,7 +8,7 @@ import type { NovaDocument } from "../../types";
 export const NOVA_SCHEMA = 1;
 
 /** Who writes the file (nova.app), for diagnosis. */
-export const APP = { name: "NOVAstitch Designer", version: "0.1.0" } as const;
+export const APP = { name: "NOVAstitch Designer", version: "0.1.1" } as const;
 
 /** The nova block of a design that has none (a Filum file): every field at its default. nova.app stays absent. */
 export function novaDefaults(): NovaDocument {

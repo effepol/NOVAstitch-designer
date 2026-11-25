@@ -1,5 +1,5 @@
 // The NOVAstitch brand in the installers (module 0, Architect's decision of
-// 24/11): version 0.1.0 wherever it is written (tauri.conf.json, src-tauri's
+// 24/11): the version wherever it is written (0.1.1 since 25/11, build 2) (tauri.conf.json, src-tauri's
 // Cargo.toml, package.json, and nova.app.version in the .nsd files); the
 // installed program and the Linux package are «novastitch-designer»; the
 // description, the publisher and the site are NOVAstitch's. Internal names that
@@ -12,7 +12,7 @@ import { APP } from "../format/nova";
 
 const root = path.resolve(process.cwd(), "..");
 const read = (f: string) => (existsSync(path.join(root, f)) ? readFileSync(path.join(root, f), "utf8") : "");
-const VERSION = "0.1.0";
+const VERSION = "0.1.1";
 const NAME = "novastitch-designer";
 const DESCRIPTION = "NOVAstitch Designer — vector embroidery digitizing. Based on Filum.";
 const PUBLISHER = "Poletti Centro Cucito";
@@ -28,11 +28,12 @@ for (const f of files) {
 
 const conf = JSON.parse(read("src-tauri/tauri.conf.json") || "{}");
 const cargo = read("src-tauri/Cargo.toml");
-check(conf.version === VERSION, "tauri.conf.json: version 0.1.0");
-check(new RegExp(`^version = "${VERSION}"`, "m").test(cargo), "src-tauri/Cargo.toml: version 0.1.0");
-check(JSON.parse(read("package.json") || "{}").version === VERSION && JSON.parse(read("ui/package.json") || "{}").version === VERSION, "package.json and ui/package.json: version 0.1.0");
-check(APP.version === VERSION && APP.version === conf.version, "nova.app.version in the .nsd files: 0.1.0, the same as the installers");
+check(conf.version === VERSION, `tauri.conf.json: version ${VERSION}`);
+check(new RegExp(`^version = "${VERSION}"`, "m").test(cargo), `src-tauri/Cargo.toml: version ${VERSION}`);
+check(JSON.parse(read("package.json") || "{}").version === VERSION && JSON.parse(read("ui/package.json") || "{}").version === VERSION, `package.json and ui/package.json: version ${VERSION}`);
+check(APP.version === VERSION && APP.version === conf.version, `nova.app.version in the .nsd files: ${VERSION}, the same as the installers`);
 
+check(new RegExp(`^version = "${VERSION}"`, "m").test(read("crates/cli/Cargo.toml")), `the command line (novastitch): version ${VERSION}`);
 check(new RegExp(`^name = "${NAME}"`, "m").test(cargo) && conf.mainBinaryName === NAME, "the installed program is «novastitch-designer»");
 check(/^\[lib\]\nname = "filum_desktop_lib"/m.test(cargo), "(the internal library name stays)");
 check(conf.productName === "NOVAstitch Designer", "the program's name everywhere it is shown: NOVAstitch Designer");

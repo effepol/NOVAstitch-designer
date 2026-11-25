@@ -8,7 +8,7 @@ fn the_command_is_novastitch_and_its_help_says_so() {
     let out = Command::new(env!("CARGO_BIN_EXE_novastitch")).output().unwrap();
     let help = String::from_utf8_lossy(&out.stderr);
     assert!(!out.status.success(), "no command: the help, and a failure");
-    assert!(help.starts_with("novastitch 0.1.0 (NOVAstitch Designer)"), "the help names the command and its version: {help}");
+    assert!(help.starts_with("novastitch 0.1.1 (NOVAstitch Designer)"), "the help names the command and its version: {help}");
     for cmd in ["convert <in> <out>", "info <file>", "optimize <in> <out>", "digitize <image> <out>", "formats"] {
         assert!(help.contains(&format!("novastitch {cmd}")), "the help shows `novastitch {cmd}`: {help}");
     }

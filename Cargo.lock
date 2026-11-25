@@ -998,7 +998,7 @@ dependencies = [
 
 [[package]]
 name = "filum-cli"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "filum-core",
  "serde_json",
@@ -2237,7 +2237,7 @@ dependencies = [
 
 [[package]]
 name = "novastitch-designer"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "tauri",
  "tauri-build",

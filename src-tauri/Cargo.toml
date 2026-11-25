@@ -1,7 +1,7 @@
 [package]
 name = "novastitch-designer"
 description = "NOVAstitch Designer — vector embroidery digitizing. Based on Filum."
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Poletti Centro Cucito"]
 repository = "https://github.com/effepol/NOVAstitch-designer"
 edition.workspace = true
