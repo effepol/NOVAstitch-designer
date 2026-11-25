@@ -11,6 +11,7 @@ import { cubicAt, type Cubic } from "../lib/bezier";
 import { rowDir, type Handle } from "./handles";
 import type { PenHover } from "./penTool";
 import { railMap } from "../lib/nodeOps";
+import { hintPosition } from "../nova/core/canvasHint";
 
 export interface InteractiveOverlay {
   handles?: Handle[];
@@ -565,19 +566,19 @@ export function paintInteractive(c: Ctx, o: { selected: DesignObject[]; overlay:
     ctx.restore();
   }
 
-  // value read-out next to the cursor
+  // value read-out / hint: NOVAstitch (Signor Poletti, 25/11) at the bottom of the canvas, centred,
+  // away from the cursor and its cross (nova/core/canvasHint.ts)
   if (ov.tooltip) {
     const { p, text } = ov.tooltip;
     ctx.save();
     ctx.setTransform(c.dpr, 0, 0, c.dpr, 0, 0);
     ctx.font = "600 12px Inter, system-ui, sans-serif";
     const tw = ctx.measureText(text).width;
-    // keep the tip inside the view: flip to the left / below near the edges
     const vw = ctx.canvas.width / c.dpr;
-    const px = c.ox + p[0] * scale;
-    const py = c.oy + p[1] * scale;
-    const sx = px + 14 + tw + 10 > vw ? Math.max(8, px - 14 - tw) : px + 14;
-    const sy = py - 14 < 40 ? py + 30 : py - 14;
+    const vh = ctx.canvas.height / c.dpr;
+    const at = hintPosition(vw, vh, tw, [c.ox + p[0] * scale, c.oy + p[1] * scale]);
+    const sx = at.x;
+    const sy = at.y;
     ctx.fillStyle = c.dark ? "rgba(20,20,20,.92)" : "rgba(30,30,30,.88)";
     ctx.beginPath();
     ctx.roundRect(sx - 7, sy - 15, tw + 14, 22, 6);
