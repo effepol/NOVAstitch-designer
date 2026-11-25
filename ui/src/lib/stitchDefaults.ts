@@ -3,6 +3,7 @@
 // panel's "Ink/Stitch" defaults button, and whether an object holds them.
 // The values themselves are in lib/inkDefaults.ts (new objects start there).
 
+import { t } from "../nova/i18n/filum";
 import { INK_FILL_METHODS, INK_RUNNING, INK_SATIN, INK_TATAMI } from "./inkDefaults";
 import type { FillParams, StitchParams } from "../types";
 
@@ -71,36 +72,36 @@ export function holdsInkDefaults(st: StitchParams): boolean {
 }
 
 const LABELS: Record<string, string> = {
-  length: "stitch length",
-  tolerance: "tolerance",
-  spacing: "spacing",
-  pullComp: "pull compensation",
-  pullCompPct: "pull compensation %",
-  maxStitchLength: "max. stitch length",
-  shortStitchInset: "short stitch inset",
-  centerWalk: "centre-walk underlay",
-  contourUnderlay: "contour underlay",
-  contourInset: "contour inset",
-  zigzagUnderlay: "zig-zag underlay",
-  zigzagUnderlaySpacing: "zig-zag underlay spacing",
-  zigzagUnderlayInset: "zig-zag underlay inset",
-  rowSpacing: "row spacing",
-  endRowSpacing: "end row spacing",
-  staggers: "staggers",
-  underlay: "underlay",
-  underlayAngle: "underlay angle",
-  underlaySpacing: "underlay spacing",
-  underlayInset: "underlay inset",
-  underlayStitchLength: "underlay stitch length",
-  underlayAuto: "auto underlay",
-  travelLength: "travel length",
-  meanderScale: "meander scale",
-  smoothness: "smoothness",
-  crossSize: "cross size",
-  crossCoverage: "coverage",
+  get length() { return t("filum.pannelli.impostazione.length"); },
+  get tolerance() { return t("filum.pannelli.impostazione.tolerance"); },
+  get spacing() { return t("filum.pannelli.impostazione.spacing"); },
+  get pullComp() { return t("filum.pannelli.impostazione.pullComp"); },
+  get pullCompPct() { return t("filum.pannelli.impostazione.pullCompPct"); },
+  get maxStitchLength() { return t("filum.pannelli.impostazione.maxStitchLength"); },
+  get shortStitchInset() { return t("filum.pannelli.impostazione.shortStitchInset"); },
+  get centerWalk() { return t("filum.pannelli.impostazione.centerWalk"); },
+  get contourUnderlay() { return t("filum.pannelli.impostazione.contourUnderlay"); },
+  get contourInset() { return t("filum.pannelli.impostazione.contourInset"); },
+  get zigzagUnderlay() { return t("filum.pannelli.impostazione.zigzagUnderlay"); },
+  get zigzagUnderlaySpacing() { return t("filum.pannelli.impostazione.zigzagUnderlaySpacing"); },
+  get zigzagUnderlayInset() { return t("filum.pannelli.impostazione.zigzagUnderlayInset"); },
+  get rowSpacing() { return t("filum.pannelli.impostazione.rowSpacing"); },
+  get endRowSpacing() { return t("filum.pannelli.impostazione.endRowSpacing"); },
+  get staggers() { return t("filum.pannelli.impostazione.staggers"); },
+  get underlay() { return t("filum.pannelli.impostazione.underlay"); },
+  get underlayAngle() { return t("filum.pannelli.impostazione.underlayAngle"); },
+  get underlaySpacing() { return t("filum.pannelli.impostazione.underlaySpacing"); },
+  get underlayInset() { return t("filum.pannelli.impostazione.underlayInset"); },
+  get underlayStitchLength() { return t("filum.pannelli.impostazione.underlayStitchLength"); },
+  get underlayAuto() { return t("filum.pannelli.impostazione.underlayAuto"); },
+  get travelLength() { return t("filum.pannelli.impostazione.travelLength"); },
+  get meanderScale() { return t("filum.pannelli.impostazione.meanderScale"); },
+  get smoothness() { return t("filum.pannelli.impostazione.smoothness"); },
+  get crossSize() { return t("filum.pannelli.impostazione.crossSize"); },
+  get crossCoverage() { return t("filum.pannelli.impostazione.crossCoverage"); },
 };
 
-const fmt = (v: unknown) => (typeof v === "boolean" ? (v ? "on" : "off") : typeof v === "number" ? String(+v.toFixed(3)) : String(v));
+const fmt = (v: unknown) => (typeof v === "boolean" ? (v ? t("filum.pannelli.impostazione_on") : t("filum.pannelli.impostazione_off")) : typeof v === "number" ? String(+v.toFixed(3)) : String(v));
 
 /** "row spacing 0.25, underlay off …": what the Ink/Stitch defaults would change on this object. */
 export function inkChanges(st: StitchParams): string[] {

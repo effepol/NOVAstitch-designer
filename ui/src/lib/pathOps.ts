@@ -2,6 +2,7 @@
 // nearest ends, make a compound path from several objects and release it
 // again. Pure functions on the document (the menu actions: lib/pathActions.ts).
 
+import { t } from "../nova/i18n/filum";
 import type { DesignObject, NodeRef, StitchDocument, SubPath } from "../types";
 import { vdist } from "./bezier";
 import { isRailSatin, joinNodes } from "./nodeOps";
@@ -12,8 +13,8 @@ type End = { ref: NodeRef; p: [number, number] };
 
 /** Objects whose paths these commands must not rewrite: a gradient's or tartan's colour layers (they share one shape) and linked clones (their paths follow the original). */
 function untouchable(objs: DesignObject[]): string | null {
-  if (objs.some((o) => o.clone)) return "Linked clones follow their original: unlink them first";
-  if (objs.some((o) => o.stitch.type === "fill" && (o.stitch.gradient || o.stitch.tartan))) return "Gradients and tartans keep one shape for all their colours: remove the gradient or tartan first";
+  if (objs.some((o) => o.clone)) return t("filum.messaggi.clones_unlink_first");
+  if (objs.some((o) => o.stitch.type === "fill" && (o.stitch.gradient || o.stitch.tartan))) return t("filum.messaggi.gradients_one_shape");
   return null;
 }
 
@@ -37,18 +38,18 @@ export function joinObjects(doc: StitchDocument, ids: string[]): { doc: StitchDo
   const objs = doc.objects.filter((o) => ids.includes(o.id) && !o.locked);
   const no = untouchable(objs);
   if (no) return { doc, error: no };
-  if (objs.some(isRailSatin)) return { doc, error: "Satin rails are joined in pairs: use the satin tool" };
+  if (objs.some(isRailSatin)) return { doc, error: t("filum.messaggi.satin_rails_pairs") };
   if (objs.length === 1) {
     const o = objs[0];
     const open = o.paths.findIndex((sp) => !sp.closed && sp.nodes.length >= 2);
-    if (open < 0) return { doc, error: "The path is closed already" };
+    if (open < 0) return { doc, error: t("filum.messaggi.path_closed_already") };
     const sp = o.paths[open];
     return joinNodes(doc, [
       { id: o.id, sp: open, ni: 0 },
       { id: o.id, sp: open, ni: sp.nodes.length - 1 },
     ]);
   }
-  if (objs.length < 2) return { doc, error: "Select open paths to join" };
+  if (objs.length < 2) return { doc, error: t("filum.messaggi.select_open_paths_join") };
   let d = doc;
   const into = objs[0].id;
   let left = objs.slice(1).map((o) => o.id);
@@ -63,7 +64,7 @@ export function joinObjects(doc: StitchDocument, ids: string[]): { doc: StitchDo
           if (!best || dd < best.dist) best = { x, y, dist: dd };
         }
     }
-    if (!best) return { doc, error: "Only open paths can be joined" };
+    if (!best) return { doc, error: t("filum.messaggi.only_open_paths_join") };
     const r = joinNodes(d, [best.x.ref, best.y.ref]);
     if (r.error) return { doc, error: r.error };
     d = r.doc;
@@ -82,8 +83,8 @@ export function makeCompound(doc: StitchDocument, ids: string[]): { doc: StitchD
   const objs = doc.objects.filter((o) => ids.includes(o.id) && !o.locked && !o.text);
   const no = untouchable(objs);
   if (no) return { doc, error: no };
-  if (objs.length < 2) return { doc, error: "Select two or more shapes" };
-  if (objs.some(isRailSatin)) return { doc, error: "Satin columns can't be combined into one path" };
+  if (objs.length < 2) return { doc, error: t("filum.messaggi.select_shapes") };
+  if (objs.some(isRailSatin)) return { doc, error: t("filum.messaggi.satin_no_combine") };
   const base = objs[0];
   const paths: SubPath[] = objs.flatMap((o) => o.paths);
   const merged: DesignObject = { ...base, paths, name: base.name };
@@ -114,6 +115,6 @@ export function releaseCompound(doc: StitchDocument, ids: string[]): { doc: Stit
       return { ...o, id, name: k === 0 ? o.name : `${o.name} ${k + 1}`, paths: [sp], start: k === 0 ? o.start : undefined, end: undefined };
     });
   });
-  if (!changed) return { doc, ids, error: "Nothing to release: select an object made of several paths" };
+  if (!changed) return { doc, ids, error: t("filum.messaggi.nothing_to_release") };
   return { doc: { ...doc, objects }, ids: out };
 }

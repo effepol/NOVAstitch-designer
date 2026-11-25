@@ -188,10 +188,12 @@ export function calibrate(m: Measurements): CalibrationResult {
     const expand = round(-grow / 2);
     const pullComp = round(Math.max(0, (shrink + grow) / 2));
     fill = { pullComp, expand, shrink, grow };
-    if (shrink < -0.3) notes.push("The discs came out wider along their rows than drawn: the fills need no pull compensation on this fabric.");
+    if (shrink < -0.3) notes.push(t("filum.finestre.cal_note_discs_wider"));
     if (m.aAlong != null && m.bAlong != null && Math.abs(m.aAlong - m.bAlong) > 0.5)
       notes.push(
-        `Disc ${m.aAlong < m.bAlong ? "A" : "B"} pulled in ${Math.abs(m.aAlong - m.bAlong).toFixed(1)} mm more than the other: the fabric gives more ${m.aAlong < m.bAlong ? "across" : "up and down"} the hoop. Hoop it the same way for real designs, or use a firmer backing.`,
+        m.aAlong < m.bAlong
+          ? t("filum.finestre.cal_note_disc_across", { disc: "A", mm: Math.abs(m.aAlong - m.bAlong).toFixed(1) })
+          : t("filum.finestre.cal_note_disc_updown", { disc: "B", mm: Math.abs(m.aAlong - m.bAlong).toFixed(1) }),
       );
   }
 
@@ -201,8 +203,8 @@ export function calibrate(m: Measurements): CalibrationResult {
     const shrink = BAR_W - sAlong;
     const grow = sAcross - BAR_L;
     satin = { pullComp: round(Math.max(0, shrink)), pushComp: round(Math.max(0, grow / 2)), shrink, grow };
-    if (shrink < -0.2) notes.push("The bars came out wider than drawn: satins need no pull compensation on this fabric.");
-    if (grow < -0.4) notes.push("The bars came out shorter than drawn, so their ends aren't pulled in.");
+    if (shrink < -0.2) notes.push(t("filum.finestre.cal_note_bars_wider"));
+    if (grow < -0.4) notes.push(t("filum.finestre.cal_note_bars_shorter"));
   }
 
   const odd = PIECES.flatMap((p) =>
@@ -212,7 +214,7 @@ export function calibrate(m: Measurements): CalibrationResult {
       return v != null && (v <= 0 || Math.abs(v - drawn) > Math.max(1.5, drawn * 0.15));
     }).map((d) => `${p.letter} ${d}`),
   );
-  if (odd.length) notes.unshift(`Check ${odd.join(", ")}: that's far from what was drawn. Measure the stitched area only, without thread tails or the lettering.`);
+  if (odd.length) notes.unshift(t("filum.finestre.cal_note_check", { list: odd.join(", ") }));
   return { satin, fill, notes, odd };
 }
 

@@ -35,6 +35,10 @@ const cases: [string, string][] = [
   ["template", "export const A = (n: number) => <b title={`${n} stitches`} />;"],
   ["messaggio", `declare const s: { toast(m: string): void }; s.toast("Saved");`],
   ["proprietà group", `export const groups = [{ group: "Everywhere", rows: [] }];`],
+  ["tabella di testi", `export const HINTS: Record<string, string> = { none: "Click for a corner, drag for a curve" };`],
+  ["stringa composta", "export const label = (w: number) => `Satin ${w} mm · click for corners, drag for curves`;"],
+  ["messaggio restituito", `export function why(n: number) { return n ? null : "Select open paths to join"; }`],
+  ["messaggio d'errore", `export const fail = () => { throw new Error("The font is not installed"); };`],
   ["template HTML", "export const page = (n: number) => `<dl><dt>Total trims</dt><dd>${n}</dd></dl>`;"],
   ["template in un elenco", "export const tabs = (n: number) => [[\"fonts\", `Fonts (${n})`]];"],
 ];
@@ -53,6 +57,7 @@ const ok = lint(
     `export const C = () => <i className="icon-x" data-id="Hello" />;`,
     `// testo-ok: nome del file d'esempio`,
     `export const D = () => <span>Sample.filum</span>;`,
+    "export const E = ({ at }: { at: boolean }) => <button className={`btn sm bb-overflow ${at ? \"on\" : \"\"}`} />;",
   ].join("\n"),
 );
 check(ok.code === 0, `i.2 t("…"), sigle e testo-ok passano (${ok.out.trim()})`);

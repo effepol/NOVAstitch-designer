@@ -2,11 +2,12 @@
 // NOVAstitch Designer is a desktop app only (Windows, macOS, Linux): the
 // browser fallbacks of Filum are gone (contract, section 2).
 
+import { t } from "../nova/i18n/filum";
 export const isTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
 
 /** Outside the desktop app (a page opened in a browser) there is no file access. */
 const desktopOnly = (): never => {
-  throw new Error("NOVAstitch Designer works as a desktop app only");
+  throw new Error(t("filum.messaggi.desktop_only"));
 };
 
 /** Open a web page in the system browser. */

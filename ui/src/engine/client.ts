@@ -1,3 +1,4 @@
+import { t } from "../nova/i18n/filum";
 import type {
   DensityField,
   DigitizeOptions,
@@ -88,7 +89,7 @@ class EngineClient {
     const giveUp = this.restarts.length > 3;
     if (!giveUp) this.spawn();
     else this.broken = true;
-    const msg = giveUp ? "The stitch engine keeps stopping: undo the last change, or reload the app" : "The stitch engine stopped and was restarted";
+    const msg = giveUp ? t("filum.messaggi.engine_stopping") : "The stitch engine stopped and was restarted";
     for (const p of waiting) p.reject(new Error(msg));
     // after a pause it may try again (the design may have changed)
     if (giveUp)
@@ -103,7 +104,7 @@ class EngineClient {
 
   private call<T>(op: string, args: unknown[], transfer: Transferable[] = []): Promise<T> {
     const id = ++this.seq;
-    if (this.broken) return Promise.reject(new Error("The stitch engine keeps stopping: undo the last change, or reload the app"));
+    if (this.broken) return Promise.reject(new Error(t("filum.messaggi.engine_stopping")));
     return new Promise<T>((resolve, reject) => {
       this.pending.set(id, { resolve: resolve as (v: unknown) => void, reject });
       this.worker.postMessage({ id, op, args }, transfer);

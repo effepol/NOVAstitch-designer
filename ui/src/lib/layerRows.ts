@@ -17,6 +17,7 @@
 // - gradient and tartan colour layers (whose `group` is their gradient's or
 //   tartan's) keep their group whatever happens: they are one fill.
 
+import { t } from "../nova/i18n/filum";
 import type { DesignObject, StitchDocument } from "../types";
 import { chainOf, liveGroups, objectsIn, parentOf, withParent, within, type GroupDoc } from "./groups";
 
@@ -92,7 +93,7 @@ export function groupInfo(objects: DesignObject[], names: Record<string, string>
     let name = names[g];
     if (!name) {
       if (role === "group") {
-        do name = `Group ${++n}`;
+        do name = t("filum.pannelli.group_n", { n: ++n });
         while (taken.has(name));
       } else name = baseName(ms[0]);
     }
@@ -105,8 +106,8 @@ export function groupInfo(objects: DesignObject[], names: Record<string, string>
 export function nextGroupName(doc: Pick<StitchDocument, "objects" | "groupNames"> & Partial<Pick<StitchDocument, "groupParents">>): string {
   const shown = new Set([...groupInfo(doc.objects, doc.groupNames, doc.groupParents).values()].map((x) => x.name));
   let n = 1;
-  while (shown.has(`Group ${n}`)) n++;
-  return `Group ${n}`;
+  while (shown.has(t("filum.pannelli.group_n", { n }))) n++;
+  return t("filum.pannelli.group_n", { n });
 }
 
 const tri = (k: number, n: number) => (k === n ? "all" : k ? "some" : "none");

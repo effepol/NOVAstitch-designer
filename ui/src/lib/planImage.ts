@@ -4,6 +4,7 @@
 // WebGL thread renderer, drawn in tiles so large designs at high DPI fit the
 // GPU's limits; without WebGL it falls back to the 2D renderer.
 
+import { t } from "../nova/i18n/filum";
 import { StitchGL } from "../canvas/gl";
 import { getChunks, renderPlanPreview, type Theme } from "../canvas/render";
 import { FLAG, type PlanData, type ThreadWeight } from "../types";
@@ -183,7 +184,7 @@ export function renderPicture(plan: PlanData, opts: PictureOptions): HTMLCanvasE
 /** The canvas as PNG bytes. */
 export function canvasPng(c: HTMLCanvasElement): Promise<Uint8Array> {
   return new Promise((resolve, reject) =>
-    c.toBlob((b) => (b ? b.arrayBuffer().then((a) => resolve(new Uint8Array(a)), reject) : reject(new Error("the picture is too large to encode"))), "image/png"),
+    c.toBlob((b) => (b ? b.arrayBuffer().then((a) => resolve(new Uint8Array(a)), reject) : reject(new Error(t("filum.messaggi.picture_too_large")))), "image/png"),
   );
 }
 

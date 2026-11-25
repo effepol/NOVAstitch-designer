@@ -222,7 +222,11 @@
     "sett": "termine di ricamo lasciato in inglese (glossario rivisto dal Signor Poletti, 19/11)",
     "Arch": "deformazione dei tracciati lasciata in inglese (glossario rivisto dal Signor Poletti, 19/11)",
     "Fish": "deformazione dei tracciati lasciata in inglese (glossario rivisto dal Signor Poletti, 19/11)",
-    "Inflate": "deformazione dei tracciati lasciata in inglese (glossario rivisto dal Signor Poletti, 19/11)"
+    "Inflate": "deformazione dei tracciati lasciata in inglese (glossario rivisto dal Signor Poletti, 19/11)",
+    "SIL Open Font License 1.1": "nome di una licenza",
+    "SIL Open Font License v1.1": "nome di una licenza, scritto nel font.json esportato",
+    "SE / PE series, Innov-is F420 / F440E / F540E / F580": "modelli di macchine (nomi di prodotto)",
+    "Pfaff creative icon 2, Viking Designer Epic 3": "modelli di macchine (nomi di prodotto)"
   },
   "chiavi_con_filum": {
     "filum.messaggi.filum_project": "il nome del formato di file di Filum (.filum) nel filtro della finestra Apri: resta Filum"

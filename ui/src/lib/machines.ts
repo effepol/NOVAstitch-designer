@@ -72,7 +72,7 @@ const COLOR_CHANGES: Limit = {
   source: BROTHER_FAQ,
   documented: true,
 };
-const BROTHER_NOTE = "Brother machines ignore a design that is larger than the field, even by 0.1 mm. They also trim jumps themselves (Jump stitch trim, 5–50 mm).";
+const BROTHER_NOTE = () => t("filum.dati.brother_note");
 
 // frames shared by several profiles (embroidery area, as mounted)
 const F = {
@@ -191,7 +191,7 @@ function babyLock(id: string, name: string, models: string, width: number, heigh
     field: { width, height },
     frames,
     needles,
-    speed: { spm, source: "babylock.com specifications" },
+    speed: { spm, get source() { return t("filum.dati.fonte.babylock_com_specifications"); } },
     fileNames: "brother",
   };
 }
@@ -216,15 +216,15 @@ export const MACHINES: MachineProfile[] = [
     field: { width: 100, height: 100 },
     frames: [{ ...F.bS, name: "S frame 2 × 6 cm (EF82)" }, F.bM],
     needles: 1,
-    speed: { spm: 400, source: "SE600 specification (embroidery)" },
+    speed: { spm: 400, get source() { return t("filum.dati.fonte.se600_specification_embroidery"); } },
     maxStitches: {
       value: 30000,
-      source: "reported by users (SE600, Ink/Stitch discussion #1699)",
+      get source() { return t("filum.dati.fonte.reported_by_users_se600_ink_stitch_discu"); },
       documented: false,
     },
     maxColorChanges: COLOR_CHANGES,
     fileNames: "brother",
-    notes: BROTHER_NOTE,
+    get notes() { return BROTHER_NOTE(); },
   },
   {
     // Brother Australia spec page + Brother UK leaflet: 100 × 100 mm area,
@@ -243,11 +243,11 @@ export const MACHINES: MachineProfile[] = [
     needles: 1,
     speed: {
       spm: 400,
-      source: "Brother Australia M380D specification (embroidery speed max.)",
+      get source() { return t("filum.dati.fonte.brother_australia_m380d_specification_em"); },
     },
     maxColorChanges: COLOR_CHANGES,
     fileNames: "brother",
-    notes: `${BROTHER_NOTE} Send designs by USB stick or over WLAN with Artspira / Design Database Transfer.`,
+    get notes() { return t("filum.dati.brother_note_m380d", { note: BROTHER_NOTE() }); },
   },
   {
     id: "brother-13x18",
@@ -258,11 +258,11 @@ export const MACHINES: MachineProfile[] = [
     field: { width: 130, height: 180 },
     frames: [{ ...F.bS, name: "S frame 2 × 6 cm" }, F.bM, F.bL],
     needles: 1,
-    speed: { spm: 650, source: "PE800 / SE1900 specification (embroidery)" },
+    speed: { spm: 650, get source() { return t("filum.dati.fonte.pe800_se1900_specification_embroidery"); } },
     maxStitches: { value: 500000, source: BROTHER_MANUALS, documented: true },
     maxColorChanges: COLOR_CHANGES,
     fileNames: "brother",
-    notes: BROTHER_NOTE,
+    get notes() { return BROTHER_NOTE(); },
   },
   {
     id: "brother-16x26",
@@ -276,7 +276,7 @@ export const MACHINES: MachineProfile[] = [
     maxStitches: { value: 500000, source: BROTHER_MANUALS, documented: true },
     maxColorChanges: COLOR_CHANGES,
     fileNames: "brother",
-    notes: BROTHER_NOTE,
+    get notes() { return BROTHER_NOTE(); },
   },
   {
     id: "brother-20x30",
@@ -287,11 +287,11 @@ export const MACHINES: MachineProfile[] = [
     field: { width: 200, height: 300 },
     frames: [{ ...F.bM, name: "10 × 10 cm" }, { ...F.bL, name: "13 × 18 cm" }, F.bXL],
     needles: 1,
-    speed: { spm: 1050, source: "Brother 20 × 30 cm class, dealer listings" },
+    speed: { spm: 1050, get source() { return t("filum.dati.fonte.brother_20_30_cm_class_dealer_listings"); } },
     maxStitches: { value: 500000, source: BROTHER_MANUALS, documented: true },
     maxColorChanges: COLOR_CHANGES,
     fileNames: "brother",
-    notes: BROTHER_NOTE,
+    get notes() { return BROTHER_NOTE(); },
   },
   {
     id: "brother-stellaire",
@@ -307,11 +307,11 @@ export const MACHINES: MachineProfile[] = [
       { id: "xxl", name: "24 × 36 cm (EF95S)", width: 240, height: 360 },
     ],
     needles: 1,
-    speed: { spm: 1050, source: "Stellaire XE2, dealer listings" },
+    speed: { spm: 1050, get source() { return t("filum.dati.fonte.stellaire_xe2_dealer_listings"); } },
     maxStitches: { value: 500000, source: BROTHER_MANUALS, documented: true },
     maxColorChanges: COLOR_CHANGES,
     fileNames: "brother",
-    notes: BROTHER_NOTE,
+    get notes() { return BROTHER_NOTE(); },
   },
   {
     id: "brother-xp",
@@ -322,23 +322,23 @@ export const MACHINES: MachineProfile[] = [
     field: { width: 272, height: 408 },
     frames: [{ ...F.bL, name: "13 × 18 cm" }, F.bXL, { id: "xxl", name: "27.2 × 40.8 cm (EF99)", width: 272, height: 408 }],
     needles: 1,
-    speed: { spm: 1050, source: "Luminaire XP3, dealer listings" },
+    speed: { spm: 1050, get source() { return t("filum.dati.fonte.luminaire_xp3_dealer_listings"); } },
     maxStitches: { value: 750000, source: BROTHER_FAQ, documented: true },
     maxColorChanges: COLOR_CHANGES,
     fileNames: "brother",
-    notes: BROTHER_NOTE,
+    get notes() { return BROTHER_NOTE(); },
   },
   // Brother PR — multi-needle, frames mounted landscape
   {
     id: "brother-pr6",
     name: "Brother PR 6-needle",
     brand: "Brother",
-    models: "PR680W and other 6-needle PR machines (20 × 30 cm)",
+    get models() { return t("filum.dati.modelli.pr680w_and_other_6_needle_pr_m"); },
     formats: ["pes", "dst"],
     field: { width: 300, height: 200 },
     frames: [F.prClampS, F.prS, F.prCompact, F.prCylinder, F.prM, F.prR100, F.prR130, F.prCap, F.prR160, F.prL, F.prSleeve, F.prQuilt, F.prBorder, F.prXL],
     needles: 6,
-    speed: { spm: 1000, source: "Brother PR specification" },
+    speed: { spm: 1000, get source() { return t("filum.dati.fonte.brother_pr_specification"); } },
     maxColorChanges: COLOR_CHANGES,
     fileNames: "brother",
   },
@@ -346,7 +346,7 @@ export const MACHINES: MachineProfile[] = [
     id: "brother-pr10",
     name: "Brother PR 10-needle",
     brand: "Brother",
-    models: "PR1055X, PR1000e and other 10-needle PR machines (36 × 20 cm; 36 × 36 cm with the Jumbo frame)",
+    get models() { return t("filum.dati.modelli.pr1055x_pr1000e_and_other_10_n"); },
     formats: ["pes", "dst"],
     field: { width: 360, height: 360 },
     frames: [
@@ -386,7 +386,7 @@ export const MACHINES: MachineProfile[] = [
       },
     ],
     needles: 10,
-    speed: { spm: 1000, source: "Brother PR1055X specification" },
+    speed: { spm: 1000, get source() { return t("filum.dati.fonte.brother_pr1055x_specification"); } },
     maxColorChanges: COLOR_CHANGES,
     fileNames: "brother",
   },
@@ -418,7 +418,7 @@ export const MACHINES: MachineProfile[] = [
     needles: 1,
     speed: {
       spm: 860,
-      source: "Janome specification (400–860 spm embroidery)",
+      get source() { return t("filum.dati.fonte.janome_specification_400_860_spm_embroid"); },
     },
   },
   {
@@ -432,7 +432,7 @@ export const MACHINES: MachineProfile[] = [
     needles: 1,
     speed: {
       spm: 860,
-      source: "Janome specification (400–860 spm embroidery)",
+      get source() { return t("filum.dati.fonte.janome_specification_400_860_spm_embroid"); },
     },
   },
   {
@@ -446,7 +446,7 @@ export const MACHINES: MachineProfile[] = [
     needles: 1,
     speed: {
       spm: 860,
-      source: "Janome specification (400–860 spm embroidery)",
+      get source() { return t("filum.dati.fonte.janome_specification_400_860_spm_embroid"); },
     },
   },
   {
@@ -460,7 +460,7 @@ export const MACHINES: MachineProfile[] = [
     needles: 1,
     speed: {
       spm: 860,
-      source: "Janome specification (400–860 spm embroidery)",
+      get source() { return t("filum.dati.fonte.janome_specification_400_860_spm_embroid"); },
     },
   },
   {
@@ -472,7 +472,7 @@ export const MACHINES: MachineProfile[] = [
     field: { width: 240, height: 200 },
     frames: [],
     needles: 7,
-    speed: { spm: 800, source: "MB-7 specification" },
+    speed: { spm: 800, get source() { return t("filum.dati.fonte.mb_7_specification"); } },
   },
   // Bernina (.EXP, also .DST)
   {
@@ -484,7 +484,7 @@ export const MACHINES: MachineProfile[] = [
     field: { width: 210, height: 400 },
     frames: [F.beS, F.beM, F.beL, F.beMidi, F.beMaxi],
     needles: 1,
-    speed: { spm: 1000, source: "B 790 PRO specification (embroidery)" },
+    speed: { spm: 1000, get source() { return t("filum.dati.fonte.b_790_pro_specification_embroidery"); } },
   },
   {
     id: "bernina-8",
@@ -505,14 +505,14 @@ export const MACHINES: MachineProfile[] = [
     field: { width: 430, height: 500 },
     frames: [],
     needles: 16,
-    speed: { spm: 1400, source: "E 16 PRO specification" },
+    speed: { spm: 1400, get source() { return t("filum.dati.fonte.e_16_pro_specification"); } },
   },
   // Pfaff / Husqvarna Viking (.VP3): hoops are named long side first, mounted portrait
   {
     id: "vp3-generic",
     name: "Pfaff / Viking 20 × 36 cm",
     brand: "Pfaff / Viking",
-    models: "Pfaff creative 4.5 / Viking Designer Ruby and other VP3 machines",
+    get models() { return t("filum.dati.modelli.pfaff_creative_4_5_viking_desi"); },
     formats: ["vp3", "dst"],
     field: { width: 200, height: 360 },
     frames: [
@@ -538,7 +538,7 @@ export const MACHINES: MachineProfile[] = [
     needles: 1,
     speed: {
       spm: 1050,
-      source: "creative icon 2 / Designer Epic 3, dealer listings",
+      get source() { return t("filum.dati.fonte.creative_icon_2_designer_epic_3_dealer_l"); },
     },
   },
   // Singer (.XXX)
@@ -560,12 +560,12 @@ export const MACHINES: MachineProfile[] = [
     id: "commercial-15",
     name: "Commercial 15-needle",
     brand: "Commercial",
-    models: "Tajima TMEZ, Ricoma MT-1501 and similar (36 × 50 cm)",
+    get models() { return t("filum.dati.modelli.tajima_tmez_ricoma_mt_1501_and"); },
     formats: ["dst", "exp"],
     field: { width: 360, height: 500 },
     frames: [],
     needles: 15,
-    speed: { spm: 1200, source: "Tajima TMEZ-SC specification" },
+    speed: { spm: 1200, get source() { return t("filum.dati.fonte.tajima_tmez_sc_specification"); } },
   },
 ];
 

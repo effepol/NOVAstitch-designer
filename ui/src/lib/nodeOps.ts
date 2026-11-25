@@ -3,6 +3,7 @@
 // close, align, and moving several points at once. Pure functions on the
 // document; the canvas and the node tool bar call them.
 
+import { t } from "../nova/i18n/filum";
 import type { DesignObject, NodeRef, PathNode, StitchDocument, SubPath, Vec2 } from "../types";
 import { cubicAt, segmentOf, vdist } from "./bezier";
 
@@ -334,15 +335,15 @@ const isEnd = (sp: SubPath, i: number) => !sp.closed && (i === 0 || i === sp.nod
  * merge, others are joined by a straight segment.
  */
 export function joinNodes(doc: StitchDocument, sel: NodeRef[]): { doc: StitchDocument; error?: string } {
-  if (sel.length !== 2) return { doc, error: "Select two end points to join" };
+  if (sel.length !== 2) return { doc, error: t("filum.messaggi.select_two_ends") };
   const [a, b] = sel;
   const oa = doc.objects.find((o) => o.id === a.id);
   const ob = doc.objects.find((o) => o.id === b.id);
   if (!oa || !ob) return { doc };
-  if (isRailSatin(oa) || isRailSatin(ob)) return { doc, error: "Satin rails are joined in pairs — use the satin tool" };
+  if (isRailSatin(oa) || isRailSatin(ob)) return { doc, error: t("filum.messaggi.satin_rails_pairs_2") };
   const spa = oa.paths[a.sp];
   const spb = ob.paths[b.sp];
-  if (!spa || !spb || !isEnd(spa, a.ni) || !isEnd(spb, b.ni)) return { doc, error: "Only end points of open paths can be joined" };
+  if (!spa || !spb || !isEnd(spa, a.ni) || !isEnd(spb, b.ni)) return { doc, error: t("filum.messaggi.only_end_points") };
   const merge = (x: PathNode, y: PathNode): PathNode => ({ p: x.p, ...(x.i ? { i: x.i } : {}), ...(y.o ? { o: y.o } : {}) });
   if (oa.id === ob.id && a.sp === b.sp) {
     // close this path

@@ -12,6 +12,7 @@
 //   Alt-click a point     delete it             double-click a point: smooth ↔ corner
 //   Enter / Esc           finish                Backspace: remove the last point
 
+import { t } from "../nova/i18n/filum";
 import type { PathNode, SubPath, Vec2 } from "../types";
 import { constrainAngle, deleteNode, insertNode, nearestOnSubPath, toggleSmooth, vdist, type Cubic } from "../lib/bezier";
 
@@ -263,20 +264,20 @@ export function continueFrom(sp: SubPath, atStart: boolean): PathNode[] {
 }
 
 export const PEN_HINTS: Record<PenHover["kind"], string> = {
-  none: "Click for a corner, drag for a curve · Shift: angles · snaps to points (Ctrl: off) · Enter to finish",
-  close: "Click to close the path · drag to shape the closing curve",
-  last: "Click to finish · drag to pull out a new direction",
-  anchor: "Drag to move · Alt-click to delete · double-click: smooth ↔ corner",
-  handle: "Drag to reshape · Alt: move this handle alone",
-  segment: "Click to add a point here",
+  get none() { return t("filum.barre.pen_hint.none"); },
+  get close() { return t("filum.barre.pen_hint.close"); },
+  get last() { return t("filum.barre.pen_hint.last"); },
+  get anchor() { return t("filum.barre.pen_hint.anchor"); },
+  get handle() { return t("filum.barre.pen_hint.handle"); },
+  get segment() { return t("filum.barre.pen_hint.segment"); },
 };
 
 /** The curvature tool's hints (its points follow their neighbours). */
 export const CURVE_HINTS: Record<PenHover["kind"], string> = {
-  none: "Click to add a point: the path curves through it · snaps to points (Ctrl: off) · Enter to finish",
-  close: "Click to close the path",
-  last: "Click to finish · drag to move the point",
-  anchor: "Drag to move · double-click: corner ↔ smooth · Alt-click to delete",
-  handle: "Drag to reshape (the point keeps these handles from now on)",
-  segment: "Click to add a smooth point here",
+  get none() { return t("filum.barre.curve_hint.none"); },
+  get close() { return t("filum.barre.curve_hint.close"); },
+  get last() { return t("filum.barre.curve_hint.last"); },
+  get anchor() { return t("filum.barre.curve_hint.anchor"); },
+  get handle() { return t("filum.barre.curve_hint.handle"); },
+  get segment() { return t("filum.barre.curve_hint.segment"); },
 };

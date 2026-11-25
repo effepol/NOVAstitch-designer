@@ -107,6 +107,10 @@
     "testo": "Animate the stitch-out, with a timeline of the colour blocks",
     "file": "components/BottomBar.tsx"
   },
+  "filum.barre.arc_deg": {
+    "testo": "Arc {arc}°",
+    "file": "canvas/Canvas.tsx"
+  },
   "filum.barre.arch_spacing": {
     "testo": "Arch · spacing",
     "file": "components/StatusHints.tsx"
@@ -247,6 +251,10 @@
     "testo": "Click outside or press Enter when done",
     "file": "canvas/Canvas.tsx"
   },
+  "filum.barre.click_to_continue_path": {
+    "testo": "Click to continue this path",
+    "file": "canvas/Canvas.tsx"
+  },
   "filum.barre.click_to_cut_here": {
     "testo": "Click to cut here",
     "file": "canvas/Canvas.tsx"
@@ -362,6 +370,30 @@
   "filum.barre.curve_fitting_turns_sharper_than": {
     "testo": "Curve fitting: turns sharper than this stay corners",
     "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.curve_hint.anchor": {
+    "testo": "Drag to move · double-click: corner ↔ smooth · Alt-click to delete",
+    "file": "canvas/penTool.ts"
+  },
+  "filum.barre.curve_hint.close": {
+    "testo": "Click to close the path",
+    "file": "canvas/penTool.ts"
+  },
+  "filum.barre.curve_hint.handle": {
+    "testo": "Drag to reshape (the point keeps these handles from now on)",
+    "file": "canvas/penTool.ts"
+  },
+  "filum.barre.curve_hint.last": {
+    "testo": "Click to finish · drag to move the point",
+    "file": "canvas/penTool.ts"
+  },
+  "filum.barre.curve_hint.none": {
+    "testo": "Click to add a point: the path curves through it · snaps to points (Ctrl: off) · Enter to finish",
+    "file": "canvas/penTool.ts"
+  },
+  "filum.barre.curve_hint.segment": {
+    "testo": "Click to add a smooth point here",
+    "file": "canvas/penTool.ts"
   },
   "filum.barre.curve_point": {
     "testo": "Curve point",
@@ -811,6 +843,46 @@
     "testo": "Group",
     "file": "components/StatusHints.tsx"
   },
+  "filum.barre.handle_hint.angle": {
+    "testo": "Drag to set the fill angle (Shift: 15° steps)",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.handle_hint.center": {
+    "testo": "Drag to move the radial centre",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.handle_hint.end": {
+    "testo": "Drag to move the end · double-click for auto",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.handle_hint.reverse": {
+    "testo": "Click to sew the other way",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.handle_hint.spacing": {
+    "testo": "Drag to change the density",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.handle_hint.start": {
+    "testo": "Drag to move the start · double-click for auto",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.handle_hint.text_arc": {
+    "testo": "Drag up or down to bend the text (Shift: 15° steps) · double-click to straighten",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.handle_hint.text_spacing": {
+    "testo": "Drag to change the letter spacing · double-click to reset",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.handle_hint.width_l": {
+    "testo": "Drag to change the column width",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.handle_hint.width_r": {
+    "testo": "Drag to change the column width",
+    "file": "canvas/Canvas.tsx"
+  },
   "filum.barre.heavy": {
     "testo": "Heavy",
     "file": "components/Bars.tsx"
@@ -893,6 +965,10 @@
   },
   "filum.barre.length_points": {
     "testo": "{length} points · ",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.letter_spacing_mm": {
+    "testo": "Letter spacing {mm} mm",
     "file": "canvas/Canvas.tsx"
   },
   "filum.barre.lettering": {
@@ -1111,6 +1187,34 @@
     "testo": "Pen",
     "file": "components/ToolOptions.tsx"
   },
+  "filum.barre.pen_click_corners": {
+    "testo": "Pen · click for corners, drag for curves",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.pen_hint.anchor": {
+    "testo": "Drag to move · Alt-click to delete · double-click: smooth ↔ corner",
+    "file": "canvas/penTool.ts"
+  },
+  "filum.barre.pen_hint.close": {
+    "testo": "Click to close the path · drag to shape the closing curve",
+    "file": "canvas/penTool.ts"
+  },
+  "filum.barre.pen_hint.handle": {
+    "testo": "Drag to reshape · Alt: move this handle alone",
+    "file": "canvas/penTool.ts"
+  },
+  "filum.barre.pen_hint.last": {
+    "testo": "Click to finish · drag to pull out a new direction",
+    "file": "canvas/penTool.ts"
+  },
+  "filum.barre.pen_hint.none": {
+    "testo": "Click for a corner, drag for a curve · Shift: angles · snaps to points (Ctrl: off) · Enter to finish",
+    "file": "canvas/penTool.ts"
+  },
+  "filum.barre.pen_hint.segment": {
+    "testo": "Click to add a point here",
+    "file": "canvas/penTool.ts"
+  },
   "filum.barre.pen_p_click_for_corners": {
     "testo": "Pen (P) — click for corners, drag for curves; click first point to close",
     "file": "components/Bars.tsx"
@@ -1138,6 +1242,14 @@
   "filum.barre.plain_delete": {
     "testo": "Plain delete",
     "file": "components/StatusHints.tsx"
+  },
+  "filum.barre.point_width_mm": {
+    "testo": "Point width {mm} mm",
+    "file": "canvas/Canvas.tsx"
+  },
+  "filum.barre.point_width_scroll": {
+    "testo": "{mm} mm · scroll to change · {text}",
+    "file": "canvas/Canvas.tsx"
   },
   "filum.barre.points": {
     "testo": "Points",
@@ -1275,6 +1387,10 @@
     "testo": "Sample",
     "file": "App.tsx"
   },
+  "filum.barre.satin_click_corners": {
+    "testo": "Satin {mm} mm · click for corners, drag for curves",
+    "file": "canvas/Canvas.tsx"
+  },
   "filum.barre.satin_column": {
     "testo": "Satin column",
     "file": "components/Bars.tsx"
@@ -1282,6 +1398,10 @@
   "filum.barre.satin_column_s_click_drag": {
     "testo": "Satin column (S) — click / drag for curves, scroll or [ ] for width, Enter to finish",
     "file": "components/Bars.tsx"
+  },
+  "filum.barre.satin_width_scroll": {
+    "testo": "{mm} mm · scroll or [ ] for width · {text}",
+    "file": "canvas/Canvas.tsx"
   },
   "filum.barre.saved": {
     "testo": "Saved",
@@ -1534,6 +1654,10 @@
   "filum.barre.straight_segments_between_the_selected": {
     "testo": "Straight segments between the selected points (Shift+L)",
     "file": "components/ToolOptions.tsx"
+  },
+  "filum.barre.straight_text": {
+    "testo": "Straight",
+    "file": "canvas/Canvas.tsx"
   },
   "filum.barre.straighten_rotation": {
     "testo": "Straighten ({rotation}°)",
@@ -1791,6 +1915,14 @@
     "testo": "Bar standing",
     "file": "lib/calibration.ts"
   },
+  "filum.dati.brother_note": {
+    "testo": "Brother machines ignore a design that is larger than the field, even by 0.1 mm. They also trim jumps themselves (Jump stitch trim, 5–50 mm).",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.brother_note_m380d": {
+    "testo": "{note} Send designs by USB stick or over WLAN with Artspira / Design Database Transfer.",
+    "file": "lib/machines.ts"
+  },
   "filum.dati.calibration_swatch_fabric": {
     "testo": "Calibration swatch ({fabric})",
     "file": "lib/calibration.ts"
@@ -1895,6 +2027,18 @@
     "testo": "Fine sharp (Microtex) 65/9–75/11",
     "file": "lib/materials.ts"
   },
+  "filum.dati.fit_all_mine": {
+    "testo": "All my threads",
+    "file": "lib/threads.ts"
+  },
+  "filum.dati.fit_my_brand": {
+    "testo": "My {brand} threads",
+    "file": "lib/threads.ts"
+  },
+  "filum.dati.fit_my_line": {
+    "testo": "My {line}",
+    "file": "lib/threads.ts"
+  },
   "filum.dati.flat_colours_outlines_as_even": {
     "testo": "Flat colours, outlines as even satin on top, every enclosed area stitched, the outlines sewn as one network",
     "file": "lib/digitizePresets.ts"
@@ -1902,6 +2046,70 @@
   "filum.dati.fleece": {
     "testo": "Fleece",
     "file": "lib/materials.ts"
+  },
+  "filum.dati.fonte.b_790_pro_specification_embroidery": {
+    "testo": "B 790 PRO specification (embroidery)",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.babylock_com_specifications": {
+    "testo": "babylock.com specifications",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.brother_20_30_cm_class_dealer_listings": {
+    "testo": "Brother 20 × 30 cm class, dealer listings",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.brother_australia_m380d_specification_em": {
+    "testo": "Brother Australia M380D specification (embroidery speed max.)",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.brother_pr1055x_specification": {
+    "testo": "Brother PR1055X specification",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.brother_pr_specification": {
+    "testo": "Brother PR specification",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.creative_icon_2_designer_epic_3_dealer_l": {
+    "testo": "creative icon 2 / Designer Epic 3, dealer listings",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.e_16_pro_specification": {
+    "testo": "E 16 PRO specification",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.janome_specification_400_860_spm_embroid": {
+    "testo": "Janome specification (400–860 spm embroidery)",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.luminaire_xp3_dealer_listings": {
+    "testo": "Luminaire XP3, dealer listings",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.mb_7_specification": {
+    "testo": "MB-7 specification",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.pe800_se1900_specification_embroidery": {
+    "testo": "PE800 / SE1900 specification (embroidery)",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.reported_by_users_se600_ink_stitch_discu": {
+    "testo": "reported by users (SE600, Ink/Stitch discussion #1699)",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.se600_specification_embroidery": {
+    "testo": "SE600 specification (embroidery)",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.stellaire_xe2_dealer_listings": {
+    "testo": "Stellaire XE2, dealer listings",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.fonte.tajima_tmez_sc_specification": {
+    "testo": "Tajima TMEZ-SC specification",
+    "file": "lib/machines.ts"
   },
   "filum.dati.fusible_woven_interfacing_tear_away": {
     "testo": "Fusible woven interfacing + tear-away",
@@ -1922,6 +2130,14 @@
   "filum.dati.knit_jersey": {
     "testo": "Knit / Jersey",
     "file": "lib/materials.ts"
+  },
+  "filum.dati.knockdown_circle": {
+    "testo": "Knockdown (circle)",
+    "file": "lib/knockdown.ts"
+  },
+  "filum.dati.knockdown_rect": {
+    "testo": "Knockdown (rectangle)",
+    "file": "lib/knockdown.ts"
   },
   "filum.dati.leather_vinyl": {
     "testo": "Leather / Vinyl",
@@ -1962,6 +2178,30 @@
   "filum.dati.merged_similar.other": {
     "testo": "{n} similar threads now share a spool — Revert undoes it",
     "file": "lib/threads.ts"
+  },
+  "filum.dati.mintext_melco": {
+    "testo": "Melco small-lettering guide (6.4 mm on caps)",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.mintext_scaled": {
+    "testo": "no published minimum — scaled from No. 40 by the spacing",
+    "file": "lib/materials.ts"
+  },
+  "filum.dati.modelli.pfaff_creative_4_5_viking_desi": {
+    "testo": "Pfaff creative 4.5 / Viking Designer Ruby and other VP3 machines",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.modelli.pr1055x_pr1000e_and_other_10_n": {
+    "testo": "PR1055X, PR1000e and other 10-needle PR machines (36 × 20 cm; 36 × 36 cm with the Jumbo frame)",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.modelli.pr680w_and_other_6_needle_pr_m": {
+    "testo": "PR680W and other 6-needle PR machines (20 × 30 cm)",
+    "file": "lib/machines.ts"
+  },
+  "filum.dati.modelli.tajima_tmez_ricoma_mt_1501_and": {
+    "testo": "Tajima TMEZ, Ricoma MT-1501 and similar (36 × 50 cm)",
+    "file": "lib/machines.ts"
   },
   "filum.dati.more_colours_and_finer_detail": {
     "testo": "More colours and finer detail; lines keep the width they are drawn with",
@@ -2099,6 +2339,10 @@
     "testo": "Smoothed colours, gradient fills, rows that follow the picture",
     "file": "lib/digitizePresets.ts"
   },
+  "filum.dati.source_madeira": {
+    "testo": "Madeira colour card",
+    "file": "lib/threads.ts"
+  },
   "filum.dati.sprites_and_icons_smooth_depixelized": {
     "testo": "Sprites and icons: smooth, depixelized shapes",
     "file": "lib/digitizePresets.ts"
@@ -2138,6 +2382,30 @@
   "filum.dati.towel_terry": {
     "testo": "Towel / Terry",
     "file": "lib/materials.ts"
+  },
+  "filum.dati.ul_edge_crosshatch": {
+    "testo": "edge run + cross-hatched tatami",
+    "file": "lib/underlay.ts"
+  },
+  "filum.dati.ul_edge_tatami": {
+    "testo": "edge run + tatami",
+    "file": "lib/underlay.ts"
+  },
+  "filum.dati.ul_fill_hint": {
+    "testo": "None under {tiny} wide, an edge run up to {narrow}, then {big}.",
+    "file": "lib/underlay.ts"
+  },
+  "filum.dati.ul_knockdown_on": {
+    "testo": "Knockdown is on: the net is the underlay, so shapes only get an edge run.",
+    "file": "lib/underlay.ts"
+  },
+  "filum.dati.ul_satin_hint": {
+    "testo": "None under {none}, centre walk up to {center}, contour up to {contour}, then contour + zig-zag.",
+    "file": "lib/underlay.ts"
+  },
+  "filum.dati.ul_satin_knockdown": {
+    "testo": "None under {none}, centre walk up to {center}, then contour (the knockdown carries the rest).",
+    "file": "lib/underlay.ts"
   },
   "filum.dati.underlay_always_on": {
     "testo": "Underlay always on",
@@ -4919,6 +5187,70 @@
     "testo": "By downloading you accept the {licence} licence.",
     "file": "components/DownloadsPanel.tsx"
   },
+  "filum.finestre.cal_as_drawn": {
+    "testo": "as drawn",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.finestre.cal_each_side": {
+    "testo": "{mm} each side",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.finestre.cal_larger_each_side": {
+    "testo": "{mm} larger each side",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.finestre.cal_note_bars_shorter": {
+    "testo": "The bars came out shorter than drawn, so their ends aren't pulled in.",
+    "file": "lib/calibration.ts"
+  },
+  "filum.finestre.cal_note_bars_wider": {
+    "testo": "The bars came out wider than drawn: satins need no pull compensation on this fabric.",
+    "file": "lib/calibration.ts"
+  },
+  "filum.finestre.cal_note_check": {
+    "testo": "Check {list}: that's far from what was drawn. Measure the stitched area only, without thread tails or the lettering.",
+    "file": "lib/calibration.ts"
+  },
+  "filum.finestre.cal_note_disc_across": {
+    "testo": "Disc {disc} pulled in {mm} mm more than the other: the fabric gives more across the hoop. Hoop it the same way for real designs, or use a firmer backing.",
+    "file": "lib/calibration.ts"
+  },
+  "filum.finestre.cal_note_disc_updown": {
+    "testo": "Disc {disc} pulled in {mm} mm more than the other: the fabric gives more up and down the hoop. Hoop it the same way for real designs, or use a firmer backing.",
+    "file": "lib/calibration.ts"
+  },
+  "filum.finestre.cal_note_discs_wider": {
+    "testo": "The discs came out wider along their rows than drawn: the fills need no pull compensation on this fabric.",
+    "file": "lib/calibration.ts"
+  },
+  "filum.finestre.cal_smaller_each_side": {
+    "testo": "{mm} smaller each side",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.finestre.cal_why_across_larger": {
+    "testo": "Sewn {sewn} across the rows for {drawn} drawn: the shape is stitched larger to make up for it.",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.finestre.cal_why_across_same": {
+    "testo": "Sewn {sewn} across the rows for {drawn} drawn: the shape is stitched as drawn to make up for it.",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.finestre.cal_why_across_smaller": {
+    "testo": "Sewn {sewn} across the rows for {drawn} drawn: the shape is stitched smaller to make up for it.",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.finestre.cal_why_along": {
+    "testo": "Sewn {sewn} along the rows for {drawn} drawn: every row reaches that much further.",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.finestre.cal_why_long": {
+    "testo": "Sewn {sewn} long for {drawn} drawn: each end starts that much further in.",
+    "file": "components/CalibrateDialog.tsx"
+  },
+  "filum.finestre.cal_why_wide": {
+    "testo": "Sewn {sewn} wide for {drawn} drawn: the column is widened by that much in total.",
+    "file": "components/CalibrateDialog.tsx"
+  },
   "filum.finestre.cancel": {
     "testo": "Cancel",
     "file": "components/KnockdownDialog.tsx"
@@ -7151,6 +7483,10 @@
     "testo": "None",
     "file": "lib/convertActions.ts"
   },
+  "filum.finestre.not_included_licence": {
+    "testo": "Not included with Filum: its licence ({license}) doesn't allow it. Download it in Preferences → Downloads to see the author's licence file here.",
+    "file": "components/Licenses.tsx"
+  },
   "filum.finestre.not_included_with_filum_because": {
     "testo": "Not included with Filum because no licence is stated: download them from their author",
     "file": "components/ThreadPicker.tsx"
@@ -7246,6 +7582,10 @@
   "filum.finestre.optimise_stitch_order": {
     "testo": " Optimise stitch order",
     "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.optional_download_not_included": {
+    "testo": "optional download · not included",
+    "file": "components/Licenses.tsx"
   },
   "filum.finestre.optional_downloads": {
     "testo": "Optional downloads",
@@ -8282,6 +8622,22 @@
   "filum.finestre.thread_weight_a_heavier_or": {
     "testo": "Thread weight — a heavier or finer thread than the design's gets its own spacing and counts by its thickness in the density map",
     "file": "components/ThreadManager.tsx"
+  },
+  "filum.finestre.threadlist_kind.col": {
+    "testo": "COL thread colours",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.threadlist_kind.edr": {
+    "testo": "EDR thread colours (Embird)",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.threadlist_kind.inf": {
+    "testo": "INF threads (Viking, Pfaff)",
+    "file": "components/ThreadListDialog.tsx"
+  },
+  "filum.finestre.threadlist_kind.txt": {
+    "testo": "Text thread list",
+    "file": "components/ThreadListDialog.tsx"
   },
   "filum.finestre.threads": {
     "testo": "Threads",
@@ -9619,9 +9975,17 @@
     "testo": "Bands",
     "file": "lib/gradient.ts"
   },
+  "filum.messaggi.blend_two_layers": {
+    "testo": "Colour blends have two layers: remove the blend first",
+    "file": "lib/fillLayers.ts"
+  },
   "filum.messaggi.border_crosses_itself": {
     "testo": "Border crosses itself",
     "file": "lib/shapeCheck.ts"
+  },
+  "filum.messaggi.broken_zip": {
+    "testo": "broken ZIP directory",
+    "file": "lib/zip.ts"
   },
   "filum.messaggi.centre_dense": {
     "testo": "Centre dense",
@@ -9630,6 +9994,14 @@
   "filum.messaggi.centre_open": {
     "testo": "Centre open",
     "file": "lib/ramp.ts"
+  },
+  "filum.messaggi.clone_unlink_first": {
+    "testo": "Linked clones follow their original: unlink the clone first",
+    "file": "lib/fillLayers.ts"
+  },
+  "filum.messaggi.clones_unlink_first": {
+    "testo": "Linked clones follow their original: unlink them first",
+    "file": "lib/pathOps.ts"
   },
   "filum.messaggi.columns_under_0_8_mm": {
     "testo": "Columns under 0.8 mm don't show; a running stitch looks cleaner.",
@@ -9719,6 +10091,10 @@
     "testo": "Density gradients need a closed shape (not one with a colour gradient)",
     "file": "lib/ramp.ts"
   },
+  "filum.messaggi.desktop_only": {
+    "testo": "Filum works as a desktop app only",
+    "file": "lib/platform.ts"
+  },
   "filum.messaggi.diffusion": {
     "testo": "Diffusion",
     "file": "lib/gradient.ts"
@@ -9730,6 +10106,10 @@
   "filum.messaggi.divided_into_length_shapes": {
     "testo": "Divided into {length} shapes",
     "file": "lib/shapeBuilder.ts"
+  },
+  "filum.messaggi.download_incomplete": {
+    "testo": "{file}: expected {size} bytes, got {n} — the download may be incomplete",
+    "file": "lib/downloads.ts"
   },
   "filum.messaggi.draw_a_guide_line_or": {
     "testo": "Draw a guide line, or the rows fall back to straight ones.",
@@ -9746,6 +10126,10 @@
   "filum.messaggi.embroidery_files": {
     "testo": "Embroidery files",
     "file": "lib/actions.ts"
+  },
+  "filum.messaggi.engine_stopping": {
+    "testo": "The stitch engine keeps stopping: undo the last change, or reload the app",
+    "file": "engine/client.ts"
   },
   "filum.messaggi.error_diffusion_the_most_even": {
     "testo": "Error diffusion — the most even, finest mix",
@@ -9787,9 +10171,25 @@
     "testo": "Filum project",
     "file": "lib/actions.ts"
   },
+  "filum.messaggi.font_not_installed": {
+    "testo": "The font is not installed",
+    "file": "lib/fonts.ts"
+  },
+  "filum.messaggi.font_x_not_installed": {
+    "testo": "Font {font} is not installed",
+    "file": "lib/fonts.ts"
+  },
+  "filum.messaggi.gradient_already": {
+    "testo": "This is a gradient already: drag across it with the gradient tool to change it",
+    "file": "lib/fillLayers.ts"
+  },
   "filum.messaggi.gradients_need_a_closed_shape": {
     "testo": "Gradients need a closed shape",
     "file": "lib/gradient.ts"
+  },
+  "filum.messaggi.gradients_one_shape": {
+    "testo": "Gradients and tartans keep one shape for all their colours: remove the gradient or tartan first",
+    "file": "lib/pathOps.ts"
   },
   "filum.messaggi.grouped_v1_items_ctrl_click": {
     "testo": "Grouped {v1} items · Ctrl-click picks one inside",
@@ -9842,6 +10242,10 @@
   "filum.messaggi.layers_of_thread_1_the": {
     "testo": "Layers of thread: 1 = the fabric just covered (40 wt rows every 0.25 mm, Ink/Stitch's default fill)",
     "file": "lib/density.ts"
+  },
+  "filum.messaggi.layers_one_shape": {
+    "testo": "Gradients, tartans and colour blends keep one shape for all their colours: remove the gradient, tartan or blend first",
+    "file": "lib/fillLayers.ts"
   },
   "filum.messaggi.lettering_can_t_be_a": {
     "testo": "Lettering can't be a gradient: convert it to shapes first",
@@ -9979,9 +10383,25 @@
     "testo": "Needle penetrations per mm² — what perforates and tears delicate fabric",
     "file": "lib/density.ts"
   },
+  "filum.messaggi.no_colours_found": {
+    "testo": "{name}: no colours found",
+    "file": "lib/threads.ts"
+  },
+  "filum.messaggi.no_colours_in_chart": {
+    "testo": "{name}: no colours in the chart",
+    "file": "lib/downloads.ts"
+  },
   "filum.messaggi.no_file_formats_selected": {
     "testo": "No file formats selected",
     "file": "lib/exportFiles.ts"
+  },
+  "filum.messaggi.no_font_json": {
+    "testo": "no font.json in the folder",
+    "file": "lib/fonts.ts"
+  },
+  "filum.messaggi.no_glyph_files": {
+    "testo": "no glyph files (ltr.svg, →.svg or such a folder) next to font.json",
+    "file": "lib/fonts.ts"
   },
   "filum.messaggi.no_jumps": {
     "testo": " — no jumps",
@@ -9990,6 +10410,10 @@
   "filum.messaggi.no_jumps_between": {
     "testo": "No jumps between {min} and {max} mm in the same thread",
     "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.no_letter_files": {
+    "testo": "no letter files (e.g. Font_A.pes, Font_B.pes …) in the folder",
+    "file": "lib/fonts.ts"
   },
   "filum.messaggi.no_lettering_selected": {
     "testo": "No lettering selected",
@@ -10015,6 +10439,10 @@
     "testo": "not a Filum design",
     "file": "lib/actions.ts"
   },
+  "filum.messaggi.not_svg": {
+    "testo": "not an SVG document",
+    "file": "lib/letteringTools.ts"
+  },
   "filum.messaggi.nothing_to_export": {
     "testo": "nothing to export — the design has no stitches",
     "file": "lib/exportFiles.ts"
@@ -10027,6 +10455,10 @@
     "testo": "Nothing to outline",
     "file": "lib/arrange.ts"
   },
+  "filum.messaggi.nothing_to_release": {
+    "testo": "Nothing to release: select an object made of several paths",
+    "file": "lib/pathOps.ts"
+  },
   "filum.messaggi.nothing_to_route": {
     "testo": "Nothing to route",
     "file": "lib/autoRoute.ts"
@@ -10038,6 +10470,14 @@
   "filum.messaggi.one_path_no_jumps": {
     "testo": " — one path, no jumps",
     "file": "lib/autoRoute.ts"
+  },
+  "filum.messaggi.only_end_points": {
+    "testo": "Only end points of open paths can be joined",
+    "file": "lib/nodeOps.ts"
+  },
+  "filum.messaggi.only_open_paths_join": {
+    "testo": "Only open paths can be joined",
+    "file": "lib/pathOps.ts"
   },
   "filum.messaggi.op_exclude": {
     "testo": "Exclude",
@@ -10083,6 +10523,14 @@
     "testo": "Optimised: colour changes {colorChangesBefore} → {colorChangesAfter}, travel {v3} → {v4} mm",
     "file": "lib/actions.ts"
   },
+  "filum.messaggi.optional_download_get_it": {
+    "testo": "{name} is an optional download: get it in Preferences → Downloads",
+    "file": "lib/threads.ts"
+  },
+  "filum.messaggi.optional_download_licence": {
+    "testo": "{name} is an optional download ({license}): get it in Preferences → Downloads",
+    "file": "lib/fonts.ts"
+  },
   "filum.messaggi.ordered_bayer_pattern_a_regular": {
     "testo": "Ordered Bayer pattern — a regular woven / pixel look",
     "file": "lib/gradient.ts"
@@ -10107,6 +10555,10 @@
     "testo": "Parts of the shape may be left out or sewn twice — untangle the outline (Path ▸ Shape builder can split it).",
     "file": "lib/shapeCheck.ts"
   },
+  "filum.messaggi.path_closed_already": {
+    "testo": "The path is closed already",
+    "file": "lib/pathOps.ts"
+  },
   "filum.messaggi.paths_removed_few_points.one": {
     "testo": "{n} path removed (fewer than two points left)",
     "file": "lib/nodeActions.ts"
@@ -10114,6 +10566,10 @@
   "filum.messaggi.paths_removed_few_points.other": {
     "testo": "{n} paths removed (fewer than two points left)",
     "file": "lib/nodeActions.ts"
+  },
+  "filum.messaggi.picture_too_large": {
+    "testo": "the picture is too large to encode",
+    "file": "lib/planImage.ts"
   },
   "filum.messaggi.produces_no_stitches": {
     "testo": "Produces no stitches",
@@ -10163,6 +10619,18 @@
     "testo": "S-curve",
     "file": "lib/ramp.ts"
   },
+  "filum.messaggi.satin_no_combine": {
+    "testo": "Satin columns can't be combined into one path",
+    "file": "lib/pathOps.ts"
+  },
+  "filum.messaggi.satin_rails_pairs": {
+    "testo": "Satin rails are joined in pairs: use the satin tool",
+    "file": "lib/pathOps.ts"
+  },
+  "filum.messaggi.satin_rails_pairs_2": {
+    "testo": "Satin rails are joined in pairs — use the satin tool",
+    "file": "lib/nodeOps.ts"
+  },
   "filum.messaggi.satin_too_narrow": {
     "testo": "Satin too narrow",
     "file": "lib/issues.ts"
@@ -10183,6 +10651,10 @@
     "testo": "Select a lettering and a line",
     "file": "lib/textOps.ts"
   },
+  "filum.messaggi.select_open_paths_join": {
+    "testo": "Select open paths to join",
+    "file": "lib/pathOps.ts"
+  },
   "filum.messaggi.select_overlapping_fills_to_divide": {
     "testo": "Select overlapping fills to divide",
     "file": "lib/shapeBuilder.ts"
@@ -10199,9 +10671,17 @@
     "testo": "Select satin columns",
     "file": "lib/autoRoute.ts"
   },
+  "filum.messaggi.select_shapes": {
+    "testo": "Select two or more shapes",
+    "file": "lib/pathOps.ts"
+  },
   "filum.messaggi.select_three_or_more_objects": {
     "testo": "Select three or more objects to distribute",
     "file": "lib/arrange.ts"
+  },
+  "filum.messaggi.select_two_ends": {
+    "testo": "Select two end points to join",
+    "file": "lib/nodeOps.ts"
   },
   "filum.messaggi.select_two_or_more_objects": {
     "testo": "Select two or more objects or groups to group",
@@ -10259,6 +10739,22 @@
     "testo": "Stitches under 1 mm tend to break the thread.",
     "file": "lib/issues.ts"
   },
+  "filum.messaggi.system_font_unavailable": {
+    "testo": "System font {font} is not available",
+    "file": "lib/fonts.ts"
+  },
+  "filum.messaggi.tartan_layers": {
+    "testo": "Tartans sew a layer per colour: switch the tartan to another fill first",
+    "file": "lib/fillLayers.ts"
+  },
+  "filum.messaggi.tartan_no_stripes": {
+    "testo": "No stripes in the code: write each as (colour)width, e.g. (#b71c1c)4",
+    "file": "lib/tartan.ts"
+  },
+  "filum.messaggi.tartan_one_stripe": {
+    "testo": "A tartan needs at least one sewn stripe",
+    "file": "lib/tartan.ts"
+  },
   "filum.messaggi.the_design_is_too_big": {
     "testo": "The design is too big to autosave: save it to a file",
     "file": "store.ts"
@@ -10298,6 +10794,10 @@
   "filum.messaggi.turn_rows_across": {
     "testo": "Turn rows across",
     "file": "lib/issues.ts"
+  },
+  "filum.messaggi.unknown_font": {
+    "testo": "Unknown font {font}",
+    "file": "lib/fonts.ts"
   },
   "filum.messaggi.untitled": {
     "testo": "Untitled",
@@ -10459,6 +10959,10 @@
     "testo": "Align",
     "file": "components/ArrangeTools.tsx"
   },
+  "filum.pannelli.align_block_title": {
+    "testo": "Block: spread every line to the width of the longest (Ink/Stitch Block)",
+    "file": "components/Lettering.tsx"
+  },
   "filum.pannelli.align_bottom_hoop": {
     "testo": "Align bottom edges (to the hoop)",
     "file": "components/ArrangeTools.tsx"
@@ -10466,6 +10970,10 @@
   "filum.pannelli.align_bottom_selection": {
     "testo": "Align bottom edges (to the selection)",
     "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.align_centre_title": {
+    "testo": "Centre",
+    "file": "components/Lettering.tsx"
   },
   "filum.pannelli.align_left_hoop": {
     "testo": "Align left edges (to the hoop)",
@@ -10475,6 +10983,10 @@
     "testo": "Align left edges (to the selection)",
     "file": "components/ArrangeTools.tsx"
   },
+  "filum.pannelli.align_left_title": {
+    "testo": "Align left",
+    "file": "components/Lettering.tsx"
+  },
   "filum.pannelli.align_right_hoop": {
     "testo": "Align right edges (to the hoop)",
     "file": "components/ArrangeTools.tsx"
@@ -10482,6 +10994,10 @@
   "filum.pannelli.align_right_selection": {
     "testo": "Align right edges (to the selection)",
     "file": "components/ArrangeTools.tsx"
+  },
+  "filum.pannelli.align_right_title": {
+    "testo": "Align right",
+    "file": "components/Lettering.tsx"
   },
   "filum.pannelli.align_top_hoop": {
     "testo": "Align top edges (to the hoop)",
@@ -11955,6 +12471,10 @@
     "testo": "Group loose objects by thread",
     "file": "components/Dock.tsx"
   },
+  "filum.pannelli.group_n": {
+    "testo": "Group {n}",
+    "file": "lib/layerRows.ts"
+  },
   "filum.pannelli.group_row_aria": {
     "testo": "{role} {name}, {objects}, {state}",
     "file": "components/Dock.tsx"
@@ -12202,6 +12722,122 @@
   "filum.pannelli.import_ttf_otf": {
     "testo": "Import TTF / OTF…",
     "file": "components/Lettering.tsx"
+  },
+  "filum.pannelli.impostazione.centerWalk": {
+    "testo": "centre-walk underlay",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.contourInset": {
+    "testo": "contour inset",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.contourUnderlay": {
+    "testo": "contour underlay",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.crossCoverage": {
+    "testo": "coverage",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.crossSize": {
+    "testo": "cross size",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.endRowSpacing": {
+    "testo": "end row spacing",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.length": {
+    "testo": "stitch length",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.maxStitchLength": {
+    "testo": "max. stitch length",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.meanderScale": {
+    "testo": "meander scale",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.pullComp": {
+    "testo": "pull compensation",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.pullCompPct": {
+    "testo": "pull compensation %",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.rowSpacing": {
+    "testo": "row spacing",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.shortStitchInset": {
+    "testo": "short stitch inset",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.smoothness": {
+    "testo": "smoothness",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.spacing": {
+    "testo": "spacing",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.staggers": {
+    "testo": "staggers",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.tolerance": {
+    "testo": "tolerance",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.travelLength": {
+    "testo": "travel length",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.underlay": {
+    "testo": "underlay",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.underlayAngle": {
+    "testo": "underlay angle",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.underlayAuto": {
+    "testo": "auto underlay",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.underlayInset": {
+    "testo": "underlay inset",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.underlaySpacing": {
+    "testo": "underlay spacing",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.underlayStitchLength": {
+    "testo": "underlay stitch length",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.zigzagUnderlay": {
+    "testo": "zig-zag underlay",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.zigzagUnderlayInset": {
+    "testo": "zig-zag underlay inset",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione.zigzagUnderlaySpacing": {
+    "testo": "zig-zag underlay spacing",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione_off": {
+    "testo": "off",
+    "file": "lib/stitchDefaults.ts"
+  },
+  "filum.pannelli.impostazione_on": {
+    "testo": "on",
+    "file": "lib/stitchDefaults.ts"
   },
   "filum.pannelli.in_every_view": {
     "testo": "In every view",

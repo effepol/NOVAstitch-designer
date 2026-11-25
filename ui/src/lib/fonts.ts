@@ -9,6 +9,7 @@
 //    system's fonts via the Local Font Access API. Stitched as fill, satin
 //    border or outline.
 
+import { t } from "../nova/i18n/filum";
 import opentype from "opentype.js";
 import { buildFont, fontMetrics, variantId, VARIANTS, type PackedFont } from "./inkFontPack.mjs";
 import { engine } from "../engine/client";
@@ -244,7 +245,7 @@ async function inkPacks(): Promise<[string, InkPack][]> {
  */
 export async function packInkFolder(files: { path: string; text: () => Promise<string> }[]): Promise<InkPack & { info: Record<string, unknown>; root: string }> {
   const meta = files.find((f) => /(^|[\\/])font\.json$/i.test(f.path));
-  if (!meta) throw new Error("no font.json in the folder");
+  if (!meta) throw new Error(t("filum.messaggi.no_font_json"));
   const info = JSON.parse(await meta.text()) as Record<string, unknown>;
   const root = meta.path.replace(/font\.json$/i, "");
   const rel = (f: { path: string }) => f.path.slice(root.length);
@@ -262,7 +263,7 @@ export async function packInkFolder(files: { path: string; text: () => Promise<s
     const pack = buildFont(info, texts[v], v, texts);
     if (pack.font.chunks.length) return { ...pack, info, root };
   }
-  throw new Error("no glyph files (ltr.svg, →.svg or such a folder) next to font.json");
+  throw new Error(t("filum.messaggi.no_glyph_files"));
 }
 
 /** Import an Ink/Stitch embroidery font folder: packed and stored; returns its font key. */
@@ -299,7 +300,7 @@ export async function inkFontInfo(key: string): Promise<Record<string, unknown> 
 export async function saveInkFontInfo(key: string, info: Record<string, unknown>): Promise<void> {
   const id = key.slice(8);
   const pack = (await inkPacks()).find(([k]) => k === id)?.[1];
-  if (!pack) throw new Error("The font is not installed");
+  if (!pack) throw new Error(t("filum.messaggi.font_not_installed"));
   const font: PackedFont = withDefaultVariant({ ...pack.font, ...fontMetrics(info) }, info.default_variant);
   await putPack(id, { ...pack, font, info });
   loaded.delete(key);
@@ -384,7 +385,7 @@ export async function lettersToFont(files: { path: string; bytes: () => Promise<
     svgs.push(wrapGlyphLayer(await engine.exportSvg(doc), letter!, -b.x));
     baselines.set(letter!, (b.y + b.h) / PX);
   }
-  if (!svgs.length) throw new Error("no letter files (e.g. Font_A.pes, Font_B.pes …) in the folder");
+  if (!svgs.length) throw new Error(t("filum.messaggi.no_letter_files"));
   // size: the cap height of H, else of the tallest capital, else the tallest letter
   const caps = [...heights.entries()].filter(([g]) => /\p{Lu}/u.test(g)).map(([, h]) => h);
   const size = heights.get("H") ?? (caps.length ? Math.max(...caps) : Math.max(...heights.values()));
@@ -520,14 +521,14 @@ async function loadOutline(key: string): Promise<OutlineFont> {
   if (key.startsWith("ttf:")) buf = await (await fetch(key.slice(4))).arrayBuffer();
   else if (key.startsWith("file:")) {
     const hit = (await idbAll()).find((f) => f.name === key.slice(5));
-    if (!hit) throw new Error(`Font ${key.slice(5)} is not installed`);
+    if (!hit) throw new Error(t("filum.messaggi.font_x_not_installed", { font: key.slice(5) }));
     buf = hit.bytes;
   } else if (key.startsWith("local:")) {
     if (!localFonts) await systemFonts();
     const f = localFonts?.find((x) => x.postscriptName === key.slice(6));
-    if (!f) throw new Error(`System font ${key.slice(6)} is not available`);
+    if (!f) throw new Error(t("filum.messaggi.system_font_unavailable", { font: key.slice(6) }));
     buf = await (await f.blob()).arrayBuffer();
-  } else throw new Error(`Unknown font ${key}`);
+  } else throw new Error(t("filum.messaggi.unknown_font", { font: key }));
   return { kind: "outline", key, font: opentype.parse(buf) };
 }
 
@@ -560,12 +561,12 @@ function pathBounds(objs: DesignObject[], markers = false) {
 async function loadEmbroidery(key: string): Promise<EmbroideryFont> {
   // bundled (emb:), downloaded (emb: of a download pack) or imported (inkfont:), the last two stored packed in IndexedDB
   let imported = key.startsWith("inkfont:") ? (await inkPacks()).find(([id]) => id === key.slice(8))?.[1] : null;
-  if (key.startsWith("inkfont:") && !imported) throw new Error(`Font ${key.slice(8)} is not installed`);
+  if (key.startsWith("inkfont:") && !imported) throw new Error(t("filum.messaggi.font_x_not_installed", { font: key.slice(8) }));
   if (key.startsWith("emb:")) {
     const row = (await embroideryIndex()).fonts.find((f) => f.id === key.slice(4));
     if (row?.download) {
       imported = ((await storedFont(row.id))?.pack as InkPack | undefined) ?? null;
-      if (!imported) throw new Error(`${row.name} is an optional download (${row.license}): get it in Preferences → Downloads`);
+      if (!imported) throw new Error(t("filum.messaggi.optional_download_licence", { name: row.name, license: row.license }));
     }
   }
   const id = key.slice(4);

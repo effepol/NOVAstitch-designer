@@ -26,10 +26,10 @@ export async function chooseThreadList() {
 }
 
 const KIND: Record<string, string> = {
-  txt: "Text thread list",
-  col: "COL thread colours",
-  edr: "EDR thread colours (Embird)",
-  inf: "INF threads (Viking, Pfaff)",
+  get txt() { return t("filum.finestre.threadlist_kind.txt"); },
+  get col() { return t("filum.finestre.threadlist_kind.col"); },
+  get edr() { return t("filum.finestre.threadlist_kind.edr"); },
+  get inf() { return t("filum.finestre.threadlist_kind.inf"); },
 };
 
 export function ThreadListDialog({ onClose }: { onClose: () => void }) {
