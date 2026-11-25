@@ -1,5 +1,6 @@
-// Module c, the target grid: axes through the hoop's centre, circles every
-// target.spacing mm with their measure, drawn in mm as a canvas layer. The plain
+// Module c, the target grid: axes through the hoop's centre and circles every
+// target.spacing mm, without measures (Signor Poletti, 25/11), drawn in mm as a
+// canvas layer. The plain
 // grid is Filum's own, with its step from grid.step (Architect, 18/11).
 
 import type { LayerInfo } from "../core/registry";
@@ -18,11 +19,11 @@ export const MIN_GAP_PX = 4;
 const clean = (v: number) => Number(v.toFixed(6));
 
 /** The target grid: the centre, and a circle every `spacing` mm out to the hoop's farthest corner. */
-export function targetGrid(hoop: Pick<Hoop, "width" | "height">, spacing: number): { center: Vec2; circles: { r: number; label: string }[] } {
+export function targetGrid(hoop: Pick<Hoop, "width" | "height">, spacing: number): { center: Vec2; circles: { r: number }[] } {
   const center: Vec2 = [hoop.width / 2, hoop.height / 2];
   const reach = Math.hypot(center[0], center[1]);
-  const circles: { r: number; label: string }[] = [];
-  if (spacing > 0) for (let i = 1; clean(i * spacing) <= reach + 1e-9; i++) circles.push({ r: clean(i * spacing), label: String(clean(i * spacing)) });
+  const circles: { r: number }[] = [];
+  if (spacing > 0) for (let i = 1; clean(i * spacing) <= reach + 1e-9; i++) circles.push({ r: clean(i * spacing) });
   return { center, circles };
 }
 
@@ -35,11 +36,11 @@ export const visibleArea = (info: LayerInfo): Area => ({
 });
 
 const COLORS = {
-  light: { target: "rgba(200, 30, 30, 0.45)", axis: "rgba(200, 30, 30, 0.75)", text: "rgba(160, 20, 20, 0.9)" },
-  dark: { target: "rgba(255, 110, 110, 0.45)", axis: "rgba(255, 110, 110, 0.8)", text: "rgba(255, 150, 150, 0.95)" },
+  light: { target: "rgba(200, 30, 30, 0.45)", axis: "rgba(200, 30, 30, 0.75)" },
+  dark: { target: "rgba(255, 110, 110, 0.45)", axis: "rgba(255, 110, 110, 0.8)" },
 };
 
-/** The target grid as a layer: the two axes across the canvas, the circles, each measure at the top of its circle. */
+/** The target grid as a layer: the two axes across the canvas and the circles, no text. */
 export function drawTarget(ctx: CanvasRenderingContext2D, info: LayerInfo, hoop: Pick<Hoop, "width" | "height">, spacing: number): void {
   if (info.mode === "realistic") return;
   const c = COLORS[info.dark ? "dark" : "light"];
@@ -62,9 +63,4 @@ export function drawTarget(ctx: CanvasRenderingContext2D, info: LayerInfo, hoop:
     ctx.arc(center[0], center[1], r, 0, Math.PI * 2);
     ctx.stroke();
   }
-  ctx.fillStyle = c.text;
-  ctx.font = `${11 * px}px sans-serif`;
-  ctx.textAlign = "left";
-  ctx.textBaseline = "bottom";
-  for (const { r, label } of circles) ctx.fillText(label, center[0] + 2 * px, center[1] - r - px);
 }

@@ -8,7 +8,7 @@
   "c.grid.step.other": "Grid",
   "c.grid.step.title": "Grid step: click to change it (1, 2, 5, 10 mm)",
   "c.target": "Target",
-  "c.target.title": "Target grid: axes through the hoop's centre and circles with their measures",
+  "c.target.title": "Target grid: axes through the hoop's centre and circles",
   "c.mode.button.normal": "Cross: off",
   "c.mode.button.crossCanvas": "Cross: canvas",
   "c.mode.button.crossWindow": "Cross: window",

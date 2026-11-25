@@ -7,7 +7,7 @@ import { useStore } from "../../store";
 import { openPrefs } from "../core/prefs";
 import { toolbarButtons } from "../core/registry";
 import { setLanguage, t } from "../core/i18n";
-import { targetGrid } from "./grids";
+import { drawTarget, targetGrid } from "./grids";
 import { createViewAids } from "./settings";
 import { installViewAids } from "./install";
 
@@ -19,7 +19,13 @@ const hoop = { name: "100", width: 100, height: 100 };
 const tg = targetGrid(hoop, 10);
 check(tg.center[0] === 50 && tg.center[1] === 50, "c.7 axes X and Y through the centre (50, 50)");
 check(tg.circles.map((c) => c.r).join() === "10,20,30,40,50,60,70", `c.7 circles of radius 10…70 mm (${tg.circles.map((c) => c.r).join()})`);
-check(tg.circles.every((c) => c.label === String(c.r)), "c.7 each circle has its measure");
+check(tg.circles.every((c) => Object.keys(c).join() === "r"), "c.7 the circles carry no measure (25/11)");
+// drawn: two axes and seven circles, no text
+const ops: string[] = [];
+const ctx = new Proxy({}, { get: (_o, k) => (typeof k === "string" && ["stroke", "arc", "fillText", "strokeText"].includes(k) ? () => ops.push(k) : () => {}), set: () => true }) as unknown as CanvasRenderingContext2D;
+drawTarget(ctx, { scale: 4, ox: 0, oy: 0, width: 400, height: 400 }, hoop, 10);
+check(ops.filter((o) => o === "arc").length === 7 && ops.filter((o) => o === "stroke").length === 8, `c.7 drawn: the axes and 7 circles (${ops.join(",")})`);
+check(!ops.includes("fillText") && !ops.includes("strokeText"), "c.7 no measures written on the canvas");
 check(targetGrid({ width: 130, height: 180 }, 25).circles.at(-1)!.r === 100, "the circles reach the hoop's farthest corner (130 × 180, every 25 → 100)");
 check(targetGrid(hoop, 0).circles.length === 0, "a spacing of 0 draws no circles");
 
