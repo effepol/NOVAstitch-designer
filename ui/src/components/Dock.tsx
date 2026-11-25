@@ -1647,6 +1647,9 @@ function StitchOptions({ o }: { o: DesignObject }) {
           </Row>
         </>
       )}
+      {/* NOVAstitch: the fields the modules register for this Filum type, after its own (module j: 3D foam on a satin);
+          the appliqué places them in its steps, above */}
+      {st.type !== "applique" && novaFields("end")}
     </>
   );
 }

@@ -14,5 +14,7 @@
   "core.about.fontLicenses": "Font and component licences…",
   "core.about.back": "Back",
   "core.about.close": "Close",
-  "core.zoom.title": "{z}× magnification"
+  "core.zoom.title": "{z}× magnification",
+  "core.bar.more": "More",
+  "core.bar.more_title": "More buttons of the bar"
 }

@@ -847,6 +847,9 @@ fn assemble_basted(doc: &Document, items: &[(usize, Vec<Run>)], prefix: &[Run], 
     };
     let mut at = 0usize;
     let mut threads: Vec<Thread> = Vec::new();
+    // NOVAstitch (module j): the threads the program adds (the appliqué's «Appliqué»)
+    let applique = crate::stitches::applique::applique_thread(doc);
+    let thread_of = |id: &str, n: usize| if id == applique.id { applique.clone() } else { doc.thread(id).cloned().unwrap_or_else(|| fallback_thread(n)) };
     let mut cur_thread: Option<&str> = None;
 
     if let (Some((first, _)), false) = (items.first(), prefix.is_empty()) {
@@ -885,15 +888,15 @@ fn assemble_basted(doc: &Document, items: &[(usize, Vec<Run>)], prefix: &[Run], 
         // a colour change only when the spool changes (threads fitted or
         // merged onto the same spool are sewn as one colour)
         let after_prefix = std::mem::replace(&mut first_object, false) && own_prefix;
-        // NOVAstitch (module j): a layered 3D starts in its base thread
-        let first_thread = crate::stitches::layered3d::start_thread(obj, doc);
+        // NOVAstitch (module j): a layered 3D starts in its base thread, an appliqué in «Appliqué»
+        let first_thread = crate::stitches::layered3d::start_thread(obj, doc, runs);
         if after_prefix || cur_thread.map_or(true, |c| !doc.same_spool(c, first_thread)) {
             if cur_thread.is_some() || after_prefix {
                 // the tie-off and colour change end the prefix when it has its own colour
                 b.cut(if after_prefix { u32::MAX } else { o }, false, true);
                 b.pending = Some((ConnectionKind::ColorChange, false));
             }
-            threads.push(doc.thread(first_thread).cloned().unwrap_or_else(|| fallback_thread(threads.len())));
+            threads.push(thread_of(first_thread, threads.len()));
             cur_thread = Some(first_thread);
         }
         b.ties = object_ties(obj);
@@ -908,7 +911,15 @@ fn assemble_basted(doc: &Document, items: &[(usize, Vec<Run>)], prefix: &[Run], 
             if crate::stitches::layered3d::is_thread_switch(run) {
                 // NOVAstitch (module j): the layered 3D's final layer in the object's own thread
                 if cur_thread.map_or(true, |c| !doc.same_spool(c, &obj.thread)) {
-                    b.cut(o, false, true);
+                    if matches!(obj.stitch, StitchParams::Applique(_)) {
+                        // the appliqué (25/11): trim, then the colour change (every machine stops)
+                        b.cut(o, false, false);
+                        if let Some(p) = b.pos {
+                            b.out.push(Stitch::new(p, flags::COLOR_CHANGE, o));
+                        }
+                    } else {
+                        b.cut(o, false, true);
+                    }
                     b.pending = Some((ConnectionKind::ColorChange, false));
                     threads.push(doc.thread(&obj.thread).cloned().unwrap_or_else(|| fallback_thread(threads.len())));
                     cur_thread = Some(obj.thread.as_str());
@@ -1212,9 +1223,10 @@ mod tests {
 
     #[test]
     fn applique_emits_stops() {
+        // NOVAstitch (25/11): a stop after the placement, a colour change after the tack-down
         let d = doc(vec![obj("a", square(0.0, 0.0, 30.0), StitchParams::Applique(AppliqueParams::default()))]);
         let plan = Engine::new().plan(&d);
-        assert_eq!(count(&plan, flags::STOP), 2);
+        assert_eq!((count(&plan, flags::STOP), count(&plan, flags::COLOR_CHANGE)), (1, 1));
     }
 
     #[test]

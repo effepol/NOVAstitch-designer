@@ -1,7 +1,7 @@
 # NOVAstitch Designer: the provisional build. Started by hand (Actions › Build › Run workflow):
-# Tauri's installers for Windows (.msi and .exe), macOS (.dmg, Apple silicon and Intel in one)
-# and Linux (.AppImage and .deb), attached to a GitHub release marked pre-release.
-# No code signing for now: Windows and macOS warn that the publisher is unknown.
+# Tauri's installers for Windows (.msi and .exe) and Linux (.AppImage and .deb), attached to a
+# GitHub release marked pre-release. No code signing for now: Windows warns that the publisher is unknown.
+# macOS (.dmg) is left out until 1.0 (Architect, 25/11): see the commented lines in the matrix below.
 name: Build
 
 on:
@@ -27,9 +27,12 @@ jobs:
         include:
           - os: windows-latest
             args: --bundles msi,nsis
-          - os: macos-latest
-            rust-targets: aarch64-apple-darwin,x86_64-apple-darwin
-            args: --target universal-apple-darwin --bundles dmg
+          # macOS, left out until 1.0 (Architect, 25/11; on build 1 GitHub never gave it a machine).
+          # To turn it back on, uncomment the three lines below (remove the leading «# »): a .dmg for
+          # Apple silicon and Intel in one; it needs GitHub's macOS runners (Settings › Billing › Actions).
+          # - os: macos-latest
+          #   rust-targets: aarch64-apple-darwin,x86_64-apple-darwin
+          #   args: --target universal-apple-darwin --bundles dmg
           - os: ubuntu-22.04
             args: --bundles deb,appimage
     runs-on: ${{ matrix.os }}
@@ -87,6 +90,6 @@ jobs:
           args: ${{ matrix.args }}
           tagName: ${{ inputs.tag }}
           releaseName: "NOVAstitch Designer ${{ inputs.tag }} (provvisoria)"
-          releaseBody: "Build provvisoria, senza firma digitale: Windows e macOS avvisano che l'editore è sconosciuto. / Provisional build, not code-signed: Windows and macOS warn that the publisher is unknown."
+          releaseBody: "Build provvisoria per Windows e Linux, senza firma digitale: Windows avvisa che l'editore è sconosciuto. / Provisional build for Windows and Linux, not code-signed: Windows warns that the publisher is unknown."
           releaseDraft: false
           prerelease: true

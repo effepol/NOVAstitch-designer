@@ -225,7 +225,6 @@
     "Inflate": "deformazione dei tracciati lasciata in inglese (glossario rivisto dal Signor Poletti, 19/11)"
   },
   "chiavi_con_filum": {
-    "filum.menu.about_filum": "la voce apre la finestra Informazioni, che parla di Filum e non usa {app} (decisione dell'Architetto, 13/11)",
     "filum.messaggi.filum_project": "il nome del formato di file di Filum (.filum) nel filtro della finestra Apri: resta Filum"
   }
 }
