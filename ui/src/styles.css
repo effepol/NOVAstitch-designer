@@ -860,11 +860,7 @@ input[type="range"]:focus-visible {
   min-width: 0;
 }
 /* the canvas narrows as the panels widen: the bar drops its extras in turn */
-@container (max-width: 860px) {
-  .bb-zoom {
-    display: none;
-  }
-}
+/* NOVAstitch: the zoom buttons are no longer hidden by width: without room they go into «More» (BottomBar.tsx) */
 @container (max-width: 700px) {
   .bb-more,
   .bb-label {

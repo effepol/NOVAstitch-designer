@@ -1,4 +1,5 @@
-import { Focus, Video } from "lucide-react";
+import { Ellipsis, Focus, Video } from "lucide-react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Hoop, Spool, StitchOut } from "../icons/stitch";
 import { fit } from "../lib/actions";
 import { closePlayer, play, recordVideo, usePlayback } from "./StitchOut";
@@ -10,6 +11,7 @@ import { oneToOneScale, toolbarButtons, useRegistry } from "../nova/core/registr
 import { useLanguage } from "../nova/core/i18n";
 import { t } from "../nova/i18n/filum";
 import { t as coreT } from "../nova/core/i18n";
+import { hiddenForWidth, overflowOrder } from "../nova/core/barOverflow";
 
 export function BottomBar() {
   // NOVAstitch: registered buttons and their texts follow registrations and the language
@@ -44,8 +46,44 @@ export function BottomBar() {
   // calibration a module registers (module c), else 96/25.4
   const zooms = [0.5, 1, 2, 4, 6];
   const actual = oneToOneScale();
+  // NOVAstitch (Signor Poletti, 25/11): every button stays reachable; without room the least used go into «More»
+  const registered = toolbarButtons();
+  const order = overflowOrder(Array.from(zooms, (z) => `zoom:${z}`), registered.map((b) => b.id));
+  const { barRef, hidden, measuring } = useBarOverflow(order, `${sewOrder.length}|${registered.map((b) => b.id).join()}|${playerOpen}|${stats?.stitches ?? 0}`);
+  const shown = (key: string) => measuring || !hidden.includes(key);
+  const zoomButton = (z: number, inMenu = false) => (
+    <button
+      key={z}
+      data-bar-key={inMenu ? undefined : `zoom:${z}`}
+      data-nova={z === 2 || z === 4 ? "core" : undefined}
+      className={inMenu ? "menu-item" : "btn sm ghost bb-zoom"}
+      style={Math.abs(view.scale / actual - z) < 0.02 ? { color: "var(--accent-text)", fontWeight: "var(--fw-semibold)" } : undefined}
+      title={z === 1 ? t("filum.barre.zoom_1_actual_size") : z === 2 || z === 4 ? coreT("core.zoom.title", { z }) : t("filum.barre.zoom_z", { z })}
+      onClick={() => fit(z)}
+    >
+      {z}×
+    </button>
+  );
+  const registeredButton = (b: (typeof registered)[number], inMenu = false) => (
+    <button key={b.id} data-bar-key={inMenu ? undefined : b.id} data-nova={b.module} data-nova-anchor={b.anchor} className={inMenu ? "menu-item" : "btn sm ghost"} title={b.title ? t(b.title) : undefined} onClick={b.run} style={b.active?.() ? { color: "var(--accent-text)", fontWeight: "var(--fw-semibold)" } : undefined}>
+      {t(b.label)}
+    </button>
+  );
+  const videoButton = (inMenu = false) => (
+    <button key="video" data-bar-key={inMenu ? undefined : "video"} className={inMenu ? "menu-item" : "btn sm"} onClick={recordVideo} disabled={!total} title={t("filum.barre.record_a_stitch_out_video")}>
+      <Video size={14} /> <span className={inMenu ? undefined : "bb-label"}>{t("filum.barre.video")}</span>
+    </button>
+  );
+  const inMenu: ReactNode[] = measuring
+    ? []
+    : order.filter((k) => hidden.includes(k)).reverse().map((k) => {
+        if (k === "video") return videoButton(true);
+        if (k.startsWith("zoom:")) return zoomButton(Number(k.slice(5)), true);
+        const b = registered.find((x) => x.id === k);
+        return b ? registeredButton(b, true) : null;
+      });
   return (
-    <div className="bottombar">
+    <div className="bottombar" ref={barRef}>
       <div className="swatches">
         {sewOrder.map(({ t: th, n }, i) => {
           const u = usage.get(th.id);
@@ -95,24 +133,9 @@ export function BottomBar() {
       <button className="icon-btn" title={t("filum.barre.fit_hoop_0")} onClick={() => fit("hoop")}>
         <Hoop size={15} />
       </button>
-      {zooms.map((z) => (
-        <button
-          key={z}
-          data-nova={z === 2 || z === 4 ? "core" : undefined}
-          className="btn sm ghost bb-zoom"
-          style={Math.abs(view.scale / actual - z) < 0.02 ? { color: "var(--accent-text)", fontWeight: "var(--fw-semibold)" } : undefined}
-          title={z === 1 ? t("filum.barre.zoom_1_actual_size") : z === 2 || z === 4 ? coreT("core.zoom.title", { z }) : t("filum.barre.zoom_z", { z })}
-          onClick={() => fit(z)}
-        >
-          {z}×
-        </button>
-      ))}
+      {zooms.map((z) => (shown(`zoom:${z}`) ? zoomButton(z) : null))}
       {/* NOVAstitch: buttons registered by the modules (nova/core/registry) */}
-      {toolbarButtons().map((b) => (
-        <button key={b.id} data-nova={b.module} data-nova-anchor={b.anchor} className="btn sm ghost" title={b.title ? t(b.title) : undefined} onClick={b.run} style={b.active?.() ? { color: "var(--accent-text)", fontWeight: "var(--fw-semibold)" } : undefined}>
-          {t(b.label)}
-        </button>
-      ))}
+      {registered.filter((b) => shown(b.id)).map((b) => registeredButton(b))}
       <div className="vsep" />
       <span className="stat">
         {(stats?.stitches ?? 0).toLocaleString()}{t("filum.barre.stitches")}
@@ -127,9 +150,76 @@ export function BottomBar() {
       >
         <StitchOut size={14} /> <span className="bb-label">{t("filum.barre.animate")}</span>
       </button>
-      <button className="btn sm" onClick={recordVideo} disabled={!total} title={t("filum.barre.record_a_stitch_out_video")}>
-        <Video size={14} /> <span className="bb-label">{t("filum.barre.video")}</span>
+      {shown("video") && videoButton()}
+      {/* measured too while every button is shown, so its own width is known */}
+      {(measuring || inMenu.length > 0) && <MoreMenu>{inMenu}</MoreMenu>}
+    </div>
+  );
+}
+
+/** NOVAstitch: the bar's width, and which buttons go into «More» (nova/core/barOverflow.ts). */
+function useBarOverflow(order: string[], content: string) {
+  const barRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
+  const [state, setState] = useState<{ sig: string; hidden: string[] }>({ sig: "", hidden: [] });
+  const sig = `${width}|${order.join()}|${content}`;
+  // a new width, set of buttons or content: one pass with every button shown, measured before the paint
+  const measuring = state.sig !== sig;
+  useLayoutEffect(() => {
+    const bar = barRef.current;
+    if (!measuring || !bar) return;
+    const gap = parseFloat(getComputedStyle(bar).columnGap) || 0;
+    const widths = new Map<string, number>();
+    for (const el of bar.querySelectorAll<HTMLElement>("[data-bar-key]")) widths.set(el.dataset.barKey!, el.getBoundingClientRect().width + gap);
+    const extra = [...widths.values()].reduce((a, b) => a + b, 0);
+    const more = bar.querySelector<HTMLElement>(".bb-more-wrap");
+    const moreWidth = more ? more.getBoundingClientRect().width + gap : 0;
+    const fixed = bar.scrollWidth - extra - moreWidth;
+    // 2 px to spare: widths are fractional, the bar's are whole pixels
+    setState({ sig, hidden: hiddenForWidth(order, widths, fixed, bar.clientWidth - 2, moreWidth) });
+  });
+  useEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return;
+    const ro = new ResizeObserver(() => setWidth(Math.round(bar.clientWidth)));
+    ro.observe(bar);
+    return () => ro.disconnect();
+  }, []);
+  return { barRef, hidden: state.hidden, measuring };
+}
+
+/** NOVAstitch: «More», the buttons that have no room in the bar. */
+function MoreMenu({ children }: { children: ReactNode }) {
+  const [at, setAt] = useState<{ right: number; bottom: number } | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!at) return;
+    const close = (e: PointerEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setAt(null);
+    };
+    window.addEventListener("pointerdown", close);
+    return () => window.removeEventListener("pointerdown", close);
+  }, [at]);
+  return (
+    <div ref={ref} className="bb-more-wrap">
+      <button
+        data-nova="core"
+        className={`btn sm bb-overflow ${at ? "on" : ""}`}
+        title={coreT("core.bar.more_title")}
+        aria-haspopup="menu"
+        aria-expanded={!!at}
+        onClick={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          setAt(at ? null : { right: window.innerWidth - r.right, bottom: window.innerHeight - r.top + 4 });
+        }}
+      >
+        <Ellipsis size={14} /> <span className="bb-label">{coreT("core.bar.more")}</span>
       </button>
+      {at && (
+        <div className="menu bb-overflow-menu" role="menu" style={{ right: at.right, bottom: at.bottom, minWidth: 160 }} onClick={() => setAt(null)}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
