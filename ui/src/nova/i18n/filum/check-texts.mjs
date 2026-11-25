@@ -90,6 +90,14 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
     for (let p = n.parent; p; p = p.parent) if (ts.isVariableDeclaration(p)) return ts.isIdentifier(p.name) && /_EN$/.test(p.name.text);
     return false;
   };
+  // dentro un attributo tecnico (className={`btn ${on ? "on" : ""}`}): classi CSS, non testo
+  const inTechnicalAttr = (n) => {
+    for (let p = n.parent; p; p = p.parent) {
+      if (ts.isJsxAttribute(p)) return TECHNICAL_ATTR.test(p.name.getText(sf));
+      if (ts.isJsxElement(p) || ts.isJsxSelfClosingElement(p) || ts.isBlock(p)) return false;
+    }
+    return false;
+  };
   const seen = new Set();
   const report = (node, text, why) => {
     if (exempt(node) || ids.has(text) || seen.has(node.pos)) return;
@@ -181,7 +189,7 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
     }
     // stringhe composte ovunque: `Satin ${w} mm · click for corners, drag for curves`, `Point width ${w} mm`
     // (non il codice: HTML e CSS nei template, i messaggi per la console)
-    if (ts.isTemplateExpression(node) && !CODE_TEXT([node.head.text, ...node.templateSpans.map((s) => s.literal.text)].join(" ")) && !inConsole(node)) {
+    if (ts.isTemplateExpression(node) && !CODE_TEXT([node.head.text, ...node.templateSpans.map((s) => s.literal.text)].join(" ")) && !inConsole(node) && !inTechnicalAttr(node)) {
       const fixed = [node.head.text, ...node.templateSpans.map((s) => s.literal.text)];
       if (fixed.some((f) => SENTENCE(f)) || (LOOKS_LIKE_TEXT(node.head.text) && /^\p{Lu}\p{Ll}+ /u.test(node.head.text))) strings(node, "testo in una stringa composta");
     }

@@ -57,6 +57,7 @@ const ok = lint(
     `export const C = () => <i className="icon-x" data-id="Hello" />;`,
     `// testo-ok: nome del file d'esempio`,
     `export const D = () => <span>Sample.filum</span>;`,
+    "export const E = ({ at }: { at: boolean }) => <button className={`btn sm bb-overflow ${at ? \"on\" : \"\"}`} />;",
   ].join("\n"),
 );
 check(ok.code === 0, `i.2 t("…"), sigle e testo-ok passano (${ok.out.trim()})`);
