@@ -1,8 +1,9 @@
 // The bottom bar's «More» menu (module 0, Signor Poletti 25/11): every button
 // stays reachable. When the bar has no room, the least used buttons go into
-// the menu, in this order: Video, the modules' buttons (the last registered
-// first), the zoom buttons (6×, 0.5×, 4×, 2×, 1×). «Animate», Fit and the hoop
-// button never go.
+// the menu, in this order: the modules' buttons (the last registered first:
+// Filum's bar stays as Filum had it as long as there is room, rule i.3), then
+// Filum's least used, Video and the zoom buttons (6×, 0.5×, 4×, 2×, 1×).
+// «Animate», Fit and the hoop button never go.
 
 /** The zoom buttons, the least used first. */
 const ZOOM_ORDER = ["6", "0.5", "4", "2", "1"];
@@ -10,7 +11,7 @@ const ZOOM_ORDER = ["6", "0.5", "4", "2", "1"];
 /** The keys in the order they go into the menu. `zooms`: "zoom:<z>"; `buttons`: the registered buttons' ids, in bar order. */
 export function overflowOrder(zooms: string[], buttons: string[]): string[] {
   const z = [...zooms].sort((a, b) => ZOOM_ORDER.indexOf(a.slice(5)) - ZOOM_ORDER.indexOf(b.slice(5)));
-  return ["video", ...[...buttons].reverse(), ...z];
+  return [...[...buttons].reverse(), "video", ...z];
 }
 
 /**

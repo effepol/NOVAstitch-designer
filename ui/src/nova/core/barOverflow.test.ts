@@ -10,17 +10,18 @@ import { hiddenForWidth, overflowOrder } from "./barOverflow";
 import it from "./it.json";
 import en from "./en.json";
 
-// the order they go into the menu: Video, the modules' buttons (the last first), the zooms (6×, 0.5×, 4×, 2×, 1×)
+// the order they go into the menu: the modules' buttons (the last first; Filum's bar stays as it was as long as
+// there is room, rule i.3), then Filum's least used: Video, the zooms (6×, 0.5×, 4×, 2×, 1×)
 const order = overflowOrder(["0.5", "1", "2", "4", "6"].map((z) => `zoom:${z}`), ["b.links", "c.target", "c.cross", "d.needle"]);
-check(order.join() === "video,d.needle,c.cross,c.target,b.links,zoom:6,zoom:0.5,zoom:4,zoom:2,zoom:1", `the order: ${order.join(", ")}`);
+check(order.join() === "d.needle,c.cross,c.target,b.links,video,zoom:6,zoom:0.5,zoom:4,zoom:2,zoom:1", `the order: ${order.join(", ")}`);
 check(!order.includes("animate"), "«Animate» is never in the menu");
 
 const widths = new Map(order.map((k) => [k, k.startsWith("zoom") ? 32 : 90]));
 // room for everything: no menu
 check(hiddenForWidth(order, widths, 600, 1300, 36).length === 0, "room for everything (600 + 610 px in 1300): nothing in the menu");
-// 100 px short: Video and one module button go (the «More» button takes 36 px too)
+// 100 px short: two module buttons go (the «More» button takes 36 px too)
 const short = hiddenForWidth(order, widths, 600, 1100, 36);
-check(short.join() === "video,d.needle", `100 px short: ${short.join(", ")} in the menu`);
+check(short.join() === "d.needle,c.cross", `100 px short: ${short.join(", ")} in the menu`);
 // very narrow: everything that can go, goes; nothing is left off screen
 const all = hiddenForWidth(order, widths, 600, 500, 36);
 check(all.length === order.length, "too narrow even then: every button that can go is in the menu");
