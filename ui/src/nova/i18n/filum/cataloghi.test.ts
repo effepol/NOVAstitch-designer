@@ -72,7 +72,7 @@ check(eccezioni.includes(APP) && eccezioni.every((k) => k in en && k in origine)
 const oldName = origine[APP]?.testo ?? "Filum";
 const changed = Object.keys(en).filter((k) => !eccezioni.includes(k) && origine[k]?.testo !== en[k].replaceAll("{app}", oldName));
 check(!changed.length, `i.3 ogni testo inglese è identico a Filum 0.2.1, salvo le eccezioni (diversi o senza origine: ${changed.slice(0, 20).join(", ") || "nessuno"})`);
-// testi che nominano Filum di proposito (finestra Informazioni): non-tradurre.json, chiavi_con_filum
+// testi che nominano Filum di proposito (il formato .filum): non-tradurre.json, chiavi_con_filum
 const literal = new Set(Object.keys(read("non-tradurre.json").chiavi_con_filum ?? {}));
 const named = Object.keys(en).filter((k) => k !== APP && !literal.has(k) && en[k].includes(oldName));
 check(!named.length, `i il nome del programma nei testi è {app}, non scritto (${named.slice(0, 20).join(", ") || "nessuno"})`);
