@@ -3,7 +3,7 @@
 
 import { planOf, useStore } from "../../store";
 import { registerCanvasLayer, registerToolbarButton, type ToolbarButtonEntry } from "../core/registry";
-import { connectionAt, connections, drawConnections, drawMarks, startEndMarks } from "./overlay";
+import { connectionAt, connections, drawConnections, drawMarks, drawNeighbors, neighborPoints, startEndMarks } from "./overlay";
 import { currentMode } from "../core/mode";
 import type { Vec2 } from "../../types";
 import { linkChoice } from "./commands";
@@ -82,7 +82,18 @@ export function registerCanvasViews(): () => void {
       drawMarks(ctx, startEndMarks(doc, plan), info.scale);
     },
   });
+  // the selected object's neighbours in sewing order: where the one before ends, where the next starts
+  const offNeighbors = registerCanvasLayer({
+    id: "b.neighbors",
+    module: "b",
+    order: 12,
+    draw: (ctx, info) => {
+      const { doc, plan } = current();
+      drawNeighbors(ctx, neighborPoints(doc, plan, useStore.getState().selection), info.scale);
+    },
+  });
   return () => {
+    offNeighbors();
     offOptions();
     offLinks();
     offMarks();
