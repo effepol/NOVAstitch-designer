@@ -188,3 +188,94 @@ function segmentDistance(p: Vec2, a: Vec2, b: Vec2): number {
   const t = len ? Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / len)) : 0;
   return Math.hypot(p[0] - (a[0] + t * dx), p[1] - (a[1] + t * dy));
 }
+
+/** Lock stitch icons in the Sequence panel (Signor Poletti, 25/11): on = green, off = red. */
+export const TIE_COLOR = { on: "#1f9d55", off: "#d64545" } as const;
+
+/**
+ * What the plan does after each object (by object id), from module 0's plan.links:
+ * a trim (or a colour change, where the machine cuts), a jump, or sewn through.
+ * The row's connection icon takes the colour of its line.
+ */
+export function linkKinds(doc: StitchDocument, plan: Pick<PlanData, "links"> | null | undefined): Map<string, LinkKind> {
+  const out = new Map<string, LinkKind>();
+  for (const l of plan?.links ?? []) {
+    const id = doc.objects[l.from]?.id;
+    if (id) out.set(id, l.kind === "sew" ? "join" : l.kind === "jump" ? "jump" : "trim");
+  }
+  return out;
+}
+
+export interface Neighbor {
+  objId: string;
+  /** Place in the sewing order, from 1. */
+  n: number;
+  p: Vec2;
+}
+
+/**
+ * The selected object's neighbours in sewing order (Signor Poletti, 25/11): the last
+ * stitch of the object sewn before it and the first stitch of the one sewn after it,
+ * where they exist. The selection is one object or one run of objects in a row (a
+ * lettering); objects that sew nothing are skipped. Anything else: none.
+ */
+export function neighborPoints(
+  doc: StitchDocument,
+  plan: Pick<PlanData, "coords" | "flags" | "objects"> | null,
+  selection: string[],
+): { prev: Neighbor | null; next: Neighbor | null } {
+  const none = { prev: null, next: null };
+  if (!plan || !selection.length) return none;
+  const sel = new Set(selection);
+  const idx = doc.objects.map((o, i) => (sel.has(o.id) ? i : -1)).filter((i) => i >= 0);
+  if (!idx.length || idx[idx.length - 1] - idx[0] !== idx.length - 1) return none;
+  const ends = (i: number) => stitchEnds(plan as PlanData, i);
+  let prev: Neighbor | null = null;
+  for (let i = idx[0] - 1; i >= 0 && !prev; i--) {
+    const e = ends(i);
+    if (e) prev = { objId: doc.objects[i].id, n: i + 1, p: e[1] };
+  }
+  let next: Neighbor | null = null;
+  for (let i = idx[idx.length - 1] + 1; i < doc.objects.length && !next; i++) {
+    const e = ends(i);
+    if (e) next = { objId: doc.objects[i].id, n: i + 1, p: e[0] };
+  }
+  return { prev, next };
+}
+
+/** Rings on the neighbours' points, with their place in the sewing order. */
+export function drawNeighbors(ctx: CanvasRenderingContext2D, nb: { prev: Neighbor | null; next: Neighbor | null }, scale: number): void {
+  for (const [m, kind] of [
+    [nb.prev, "prev"],
+    [nb.next, "next"],
+  ] as const) {
+    if (!m) continue;
+    const r = 6 / scale;
+    ctx.save();
+    ctx.lineWidth = 2.5 / scale;
+    ctx.strokeStyle = "#fff";
+    ctx.beginPath();
+    ctx.arc(m.p[0], m.p[1], r, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.lineWidth = 1.5 / scale;
+    ctx.strokeStyle = kind === "prev" ? "#d64545" : "#1f9d55";
+    ctx.beginPath();
+    ctx.arc(m.p[0], m.p[1], r, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.fillStyle = ctx.strokeStyle;
+    ctx.beginPath();
+    ctx.arc(m.p[0], m.p[1], 1.8 / scale, 0, Math.PI * 2);
+    ctx.fill();
+    // the neighbour's place in the sewing order: «‹3» before, «5›» after
+    ctx.font = `700 ${10 / scale}px Inter, system-ui, sans-serif`;
+    ctx.textBaseline = "middle";
+    ctx.textAlign = kind === "prev" ? "right" : "left";
+    const x = m.p[0] + (kind === "prev" ? -1 : 1) * (r + 2 / scale);
+    const label = kind === "prev" ? `‹${m.n}` : `${m.n}›`;
+    ctx.lineWidth = 3 / scale;
+    ctx.strokeStyle = "#fff";
+    ctx.strokeText(label, x, m.p[1]);
+    ctx.fillText(label, x, m.p[1]);
+    ctx.restore();
+  }
+}

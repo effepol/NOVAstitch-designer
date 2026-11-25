@@ -17,6 +17,7 @@ import { t, useLanguage } from "../core/i18n";
 import { LINK_CHOICES, linkChoice, withTie, tiesOf, type LinkChoice } from "./commands";
 import { focusRow } from "./events";
 import { dropTarget, rowStitches, sequenceRows, stitchesPerObject, uncoveredJoins, type SequenceRow } from "./rows";
+import { LINK_COLOR, TIE_COLOR, linkKinds, type LinkKind } from "./overlay";
 import "./texts";
 
 const COLUMNS: CSSProperties = { gridTemplateColumns: "12px 18px 10px minmax(0, 1fr) auto auto 18px 18px 18px 18px" };
@@ -36,10 +37,24 @@ export function SequencePanel() {
   const assisted = currentMode() === "assisted";
   // Studio: a sewn connection chosen by hand that stays uncovered warns on its object
   const warnings = useMemo(() => uncoveredJoins(doc, plan, assisted), [doc, plan, assisted]);
-  return <SequenceView doc={doc} selection={selection} counts={counts} assisted={assisted} warnings={warnings} />;
+  // what the plan does after each row, for the colour of its connection icon
+  const kinds = useMemo(() => linkKinds(doc, plan), [doc, plan]);
+  return <SequenceView doc={doc} selection={selection} counts={counts} assisted={assisted} warnings={warnings} kinds={kinds} />;
 }
 
-const LINK_ICON = { trim: Trim, jump: Jump, join: StitchRunning, auto: Trim };
+const KIND_ICON = { trim: Trim, jump: Jump, join: StitchRunning };
+/** A lock stitch icon: green on, red off (Signor Poletti, 25/11). */
+const tieStyle = (lit: boolean, flip = false): CSSProperties => ({ color: lit ? TIE_COLOR.on : TIE_COLOR.off, ...(flip ? { transform: "scaleX(-1)" } : {}) });
+/**
+ * The connection after a row, as its line on the canvas: red trim, blue jump, green
+ * sewn through; faint when the program chose it. The kind is the plan's; without a
+ * plan, the one chosen by hand.
+ */
+function connectionLook(now: LinkChoice, kind: LinkKind | undefined): { kind: LinkKind | undefined; style: CSSProperties | undefined } {
+  const k = kind ?? (now === "auto" ? undefined : now);
+  if (!k) return { kind: undefined, style: undefined };
+  return { kind: k, style: { color: LINK_COLOR[k], opacity: now === "auto" ? 0.55 : 1 } };
+}
 
 /** The menu of the connection after an object: trim, jump, sewn through, automatic; the one in force checked. */
 export function linkMenu(id: string, now: LinkChoice): MenuItem[] {
@@ -53,6 +68,7 @@ export function SequenceView({
   counts,
   assisted,
   warnings,
+  kinds,
 }: {
   doc: StitchDocument;
   selection: string[];
@@ -60,6 +76,8 @@ export function SequenceView({
   assisted: boolean;
   /** Objects whose sewn connection to the next stays uncovered (Studio). */
   warnings?: Set<string>;
+  /** What the plan does after each object (its connection's colour). */
+  kinds?: Map<string, LinkKind>;
 }) {
   const rows = useMemo(() => sequenceRows(doc), [doc]);
   const [drag, setDrag] = useState<Drop | null>(null);
@@ -109,6 +127,7 @@ export function SequenceView({
           drop={drag?.over === r.key ? drag.at : null}
           dragging={drag?.key === r.key}
           warn={!!warnings?.has(r.last.id)}
+          kind={kinds?.get(r.last.id)}
           h={handlers}
         />
       ))}
@@ -137,6 +156,7 @@ function Row({
   drop,
   dragging,
   warn,
+  kind,
   h,
 }: {
   r: SequenceRow;
@@ -148,6 +168,7 @@ function Row({
   drop: "above" | "below" | null;
   dragging: boolean;
   warn: boolean;
+  kind: LinkKind | undefined;
   h: Handlers;
 }) {
   const name = r.text ? (r.first.text?.content?.split("\n")[0] ?? r.first.name) : r.first.name;
@@ -219,8 +240,8 @@ function Row({
         )}
       </span>
       <button
-        className={`mini ${r.startTie ? "" : "mixed"}`}
-        style={r.startTie ? on : undefined}
+        className="mini"
+        style={tieStyle(r.startTie)}
         data-nova-anchor="b.tieStart"
         aria-pressed={r.startTie}
         disabled={assisted}
@@ -231,8 +252,8 @@ function Row({
         <LockStitch size={14} />
       </button>
       <button
-        className={`mini ${r.endTie ? "" : "mixed"}`}
-        style={r.endTie ? { ...on, transform: "scaleX(-1)" } : { transform: "scaleX(-1)" }}
+        className="mini"
+        style={tieStyle(r.endTie, true)}
         data-nova-anchor="b.tieEnd"
         aria-pressed={r.endTie}
         disabled={assisted}
@@ -244,8 +265,8 @@ function Row({
       </button>
       {assisted ? (
         <button
-          className={`mini ${r.trimAfter ? "" : "mixed"}`}
-          style={r.trimAfter ? on : undefined}
+          className="mini"
+          style={connectionLook(r.trimAfter ? "trim" : "auto", r.trimAfter ? "trim" : kind).style}
           data-nova-anchor="b.trim"
           aria-pressed={r.trimAfter}
           title={t(r.trimAfter ? "b.trim.on" : "b.trim.off")}
@@ -258,11 +279,13 @@ function Row({
         (() => {
           // Studio: the connection after the row, chosen in a menu
           const now = linkChoice(r.last);
-          const Icon = LINK_ICON[now];
+          const look = connectionLook(now, kind);
+          const Icon = look.kind ? KIND_ICON[look.kind] : Trim;
           return (
             <button
-              className={`mini ${now === "auto" ? "mixed" : ""}`}
-              style={now === "auto" ? undefined : on}
+              className={`mini ${look.kind ? "" : "mixed"}`}
+              style={look.style}
+              data-kind={look.kind}
               data-nova-anchor="b.trim"
               aria-haspopup="menu"
               title={t(`b.link.now.${now}`)}
