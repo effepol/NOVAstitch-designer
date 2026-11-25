@@ -34,10 +34,16 @@ pub fn is_thread_switch(run: &Run) -> bool {
     run.len() == 1 && run[0].1 & flags::COLOR_CHANGE != 0
 }
 
-/// The thread an object starts with: a layered 3D's base thread when the design has it, else its own.
-pub fn start_thread<'a>(obj: &'a Object, doc: &Document) -> &'a str {
+/// The thread an object starts with: its own, unless its runs change thread
+/// on the way — a layered 3D's base thread (when the design has it), an
+/// appliqué's «Appliqué» thread (placement and tack-down; the program adds it).
+pub fn start_thread<'a>(obj: &'a Object, doc: &Document, runs: &[Run]) -> &'a str {
+    if !runs.iter().any(is_thread_switch) {
+        return &obj.thread;
+    }
     match &obj.stitch {
         StitchParams::Layered3d(p) => p.base_thread.as_deref().filter(|t| doc.thread(t).is_some()).unwrap_or(&obj.thread),
+        StitchParams::Applique(_) => super::applique::APPLIQUE_THREAD_ID,
         _ => &obj.thread,
     }
 }
