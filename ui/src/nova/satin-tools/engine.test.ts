@@ -1,6 +1,6 @@
 // Module m with Filum's engine: the satins made by the two tools are sewn by
-// the engine as two-rail satins — stitches across the rails at the angle of
-// the rungs, inside the shape.
+// the engine as two-rail satins — inside the shape, stitches across the column
+// along the rungs.
 
 import { check, done } from "../core/testkit";
 import { readFileSync } from "node:fs";
@@ -9,6 +9,7 @@ import { initSync, StitchEngine } from "../../wasm/pkg/filum_wasm";
 import { emptyDoc } from "../../store";
 import type { DesignObject, SatinParams, StitchDocument, SubPath, Vec2 } from "../../types";
 import { planSplit, type Line } from "./split";
+import { A_CUTS, A_HOLE as LA_HOLE, A_OUT as LA_OUT, letterA } from "./fixtures";
 import { satinFromClicks } from "./twoRails";
 
 initSync({ module: readFileSync(path.join(process.cwd(), "src", "wasm", "pkg", "filum_wasm_bg.wasm")) });
@@ -88,19 +89,19 @@ function segments(p: Plan, k: number): [Vec2, Vec2][] {
   return out;
 }
 
-// «Dividi e dirigi» on the A: the stitches of each part follow its line
+// «Dividi e dirigi» on the A: three satins, sewn inside it
 const DIRS: Line[] = [
   [
     [6, 11],
     [6, 14],
   ],
   [
-    [0.5, 2],
-    [3, 2],
+    [2.2, 6],
+    [4.4, 6],
   ],
   [
-    [11.5, 2],
-    [9, 2],
+    [9.8, 6],
+    [7.6, 6],
   ],
 ];
 const split = planSplit(base, {
@@ -119,25 +120,32 @@ const split = planSplit(base, {
 })!;
 const d = { ...split.doc, objects: split.doc.objects.map(bare) };
 const p = plan(d);
-check(p.coords.length > 100, `the engine sews the three satins (${p.coords.length / 2} stitches)`);
-d.objects.forEach((o, k) => {
-  const segs = segments(p, k);
-  // the part's own line: the one inside it
-  const want = DIRS.map((l) => angleOf(l[0], l[1])).find((_, i) => {
-    const m: Vec2 = [(DIRS[i][0][0] + DIRS[i][1][0]) / 2, (DIRS[i][0][1] + DIRS[i][1][1]) / 2];
-    return inside([[...o.paths[0].nodes.map((n) => n.p), ...o.paths[1].nodes.map((n) => n.p).reverse()]], m);
-  });
-  // a satin zig-zags: of two stitches in a row one lies on a rung, the other leans to step on
-  // (stitches under 0.5 mm, at a pointed end, have no direction to speak of)
-  const dev = segs.map(([a, b]) => (Math.hypot(b[0] - a[0], b[1] - a[1]) < 0.5 ? 0 : diff(angleOf(a, b), want ?? 0)));
-  let worst = 0;
-  for (let i = 0; i + 1 < dev.length; i++) worst = Math.max(worst, Math.min(dev[i], dev[i + 1]));
-  check(want !== undefined && segs.length > 20 && worst < 0.5, `${o.name}: ${segs.length} stitches; of every two in a row one is at the line's ${want}° (worst ${worst.toFixed(3)}°)`);
-});
+check(p.coords.length > 100 && d.objects.every((_, k) => segments(p, k).length > 20), `the engine sews the three satins (${p.coords.length / 2} stitches)`);
 const pts: Vec2[] = [];
 for (let i = 0; i < p.objects.length; i++) if (p.flags[i] === 0) pts.push([p.coords[2 * i], p.coords[2 * i + 1]]);
 const out = pts.filter((q) => !inside([A_OUT, A_HOLE], q) && !nearEdge([A_OUT, A_HOLE], q, 0.15));
 check(pts.length > 100 && out.length === 0, `every needle point is inside the A (${out.length} outside)`);
+
+// «Dividi e dirigi» on the «a»: the belly's stitches follow the ring (across it, towards its centre)
+const la = planSplit({ ...emptyDoc(), threads: base.threads, objects: [letterA()] }, { id: "a", cuts: A_CUTS, directions: [] })!;
+const da = { ...la.doc, objects: la.doc.objects.map(bare) };
+const pa = plan(da);
+const bellyK = da.objects.findIndex((o) => inside([[...o.paths[0].nodes.map((n) => n.p), ...o.paths[1].nodes.map((n) => n.p).reverse()]], [3.3, 3.5]));
+const segsA = bellyK >= 0 ? segments(pa, bellyK) : [];
+// of two stitches in a row one lies on a rung (radial here), the other leans to step on
+const radial = segsA.map(([p0, p1]) => {
+  if (Math.hypot(p1[0] - p0[0], p1[1] - p0[1]) < 0.5) return 0;
+  const m: Vec2 = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2];
+  return diff(angleOf(p0, p1), angleOf([6, 3.5], m));
+});
+let worstA = 0;
+for (let i = 0; i + 1 < radial.length; i++) worstA = Math.max(worstA, Math.min(radial[i], radial[i + 1]));
+// (at its ends the belly follows the cuts, about 15° off radial)
+check(segsA.length > 40 && worstA < 20, `the belly is sewn across the ring, not at one angle: of every two stitches one is within 20° of radial (worst ${worstA.toFixed(1)}°)`);
+const ptsA: Vec2[] = [];
+for (let i = 0; i < pa.objects.length; i++) if (pa.flags[i] === 0) ptsA.push([pa.coords[2 * i], pa.coords[2 * i + 1]]);
+const outA = ptsA.filter((q) => !inside([LA_OUT, LA_HOLE], q) && !nearEdge([LA_OUT, LA_HOLE], q, 0.15));
+check(ptsA.length > 100 && outA.length === 0, `every needle point is inside the «a» (${outA.length} outside)`);
 
 // «Satin a due binari»: a column sewn between the clicked rails
 const two = satinFromClicks({ ...emptyDoc(), threads: base.threads }, {
