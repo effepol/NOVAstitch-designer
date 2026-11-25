@@ -3,5 +3,22 @@
   "chiavi": {
     "filum.app.name": "il nome del programma: «NOVAstitch Designer» in italiano e in inglese (Architetto, 13/11)",
     "filum.finestre.filum_violet": "il colore d'accento di Filum («Filum violet») diventa il rosso di NOVAstitch: «{app} red» / «Rosso {app}» (Architetto, 18/11, contratto modulo 0, «Aspetto rosso e icona NS»)"
+  },
+  "_nota_schermate": "Eccezioni legate a una schermata (Architetto, 25/11): sulla schermata indicata la scritta «riferimento» di Filum 0.2.1 è ammessa come «oggi» (‹app› è il nome del programma). giro.mjs le legge.",
+  "schermate": {
+    "finestra/settings": [
+      {
+        "riferimento": "‹app›",
+        "oggi": "‹app› red",
+        "nota": "campione del colore del programma, come filum.finestre.filum_violet; Signor Poletti, 25/11"
+      }
+    ],
+    "finestra/settings/appearance": [
+      {
+        "riferimento": "‹app›",
+        "oggi": "‹app› red",
+        "nota": "campione del colore del programma, come filum.finestre.filum_violet; Signor Poletti, 25/11"
+      }
+    ]
   }
 }
