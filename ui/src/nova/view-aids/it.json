@@ -8,7 +8,7 @@
   "c.grid.step.other": "Griglia",
   "c.grid.step.title": "Passo della griglia: clic per cambiarlo (1, 2, 5, 10 mm)",
   "c.target": "Bersaglio",
-  "c.target.title": "Griglia bersaglio: assi nel centro del telaio e cerchi con le misure",
+  "c.target.title": "Griglia bersaglio: assi nel centro del telaio e cerchi",
   "c.mode.button.normal": "Croce: no",
   "c.mode.button.crossCanvas": "Croce: tela",
   "c.mode.button.crossWindow": "Croce: finestra",
