@@ -24,7 +24,7 @@ fn listing(dir: &Path) -> Vec<String> {
 }
 
 fn run(dir: &Path, args: &[&str]) -> std::process::Output {
-    Command::new(env!("CARGO_BIN_EXE_filum")).current_dir(dir).args(args).output().unwrap()
+    Command::new(env!("CARGO_BIN_EXE_novastitch")).current_dir(dir).args(args).output().unwrap()
 }
 
 #[test]

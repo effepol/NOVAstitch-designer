@@ -1,12 +1,12 @@
-//! `filum` command line: batch conversion, stats, auto-digitizing and
+//! `novastitch` command line (NOVAstitch Designer; Filum's `filum` command, renamed): batch conversion, stats, auto-digitizing and
 //! order optimisation using the same engine as the editor.
 //!
 //! ```text
-//! filum convert design.svg design.pes        # Ink/Stitch SVG → PES
-//! filum convert logo.dst logo.svg        # machine file → Ink/Stitch SVG (projects: .filum and .nsd are written only by the editor)
-//! filum info design.svg                       # stitch count, colours, time, thread
-//! filum digitize photo.png out.dst --colors 6 --width 90
-//! filum optimize in.svg out.svg               # fewer colour changes & jumps
+//! novastitch convert design.svg design.pes        # Ink/Stitch SVG → PES
+//! novastitch convert logo.dst logo.svg        # machine file → Ink/Stitch SVG (projects: .filum and .nsd are written only by the editor)
+//! novastitch info design.svg                       # stitch count, colours, time, thread
+//! novastitch digitize photo.png out.dst --colors 6 --width 90
+//! novastitch optimize in.svg out.svg               # fewer colour changes & jumps
 //! ```
 
 use std::io::Write;
@@ -15,7 +15,7 @@ use std::process::ExitCode;
 
 use filum_core::{io, optimize, Document, Engine};
 
-/// `println!` that stops quietly when the reader goes away (`filum formats | head`)
+/// `println!` that stops quietly when the reader goes away (`novastitch formats | head`)
 /// instead of panicking on the closed pipe.
 macro_rules! out {
     ($($arg:tt)*) => {
@@ -139,7 +139,7 @@ fn run(args: Vec<String>) -> Result<(), String> {
         }
         _ => {
             eprintln!(
-                "filum {}\n\nUSAGE:\n  filum convert <in> <out>\n  filum info <file>\n  filum optimize <in> <out>\n  filum digitize <image> <out> [--colors N] [--width MM]\n  filum formats",
+                "novastitch {} (NOVAstitch Designer)\n\nUSAGE:\n  novastitch convert <in> <out>\n  novastitch info <file>\n  novastitch optimize <in> <out>\n  novastitch digitize <image> <out> [--colors N] [--width MM]\n  novastitch formats",
                 env!("CARGO_PKG_VERSION")
             );
             return Err(String::new());
