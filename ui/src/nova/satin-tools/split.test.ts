@@ -1,6 +1,8 @@
-// Module m — «Dividi e dirigi»: tests m.4, m.5 and m.6 (contract, section 4)
-// on the command m.split.apply run through runCommand, plus the overlap of
-// the fabric preset and the cut limited to the drawn segment.
+// Module m — «Dividi e dirigi»: tests m.4, m.5 and m.6 (contract, section 4;
+// rule of 25/11: the rails are the sides of each part between the cuts, the
+// rungs follow the column, a direction line is a rung where it lies) on the
+// command m.split.apply run through runCommand, plus the overlap of the fabric
+// preset and the cut limited to the drawn segment. Curved parts: curved.test.ts (m.9).
 
 import { check, done } from "../core/testkit";
 import { useStore, emptyDoc } from "../../store";
@@ -65,18 +67,18 @@ const CUT2: Line = [
   [6, -1],
   [6, 6],
 ];
-// Three direction lines: vertical on the top, horizontal on each leg.
+// Three direction lines: vertical on the top, horizontal on each leg above the crossbar.
 const DIR_TOP: Line = [
   [6, 11],
   [6, 14],
 ];
 const DIR_LEFT: Line = [
-  [0.5, 2],
-  [3, 2],
+  [2.2, 6],
+  [4.4, 6],
 ];
 const DIR_RIGHT: Line = [
-  [11.5, 2],
-  [9, 2],
+  [9.8, 6],
+  [7.6, 6],
 ];
 
 /** Even-odd inside test on rings. */
@@ -96,12 +98,13 @@ const angleOf = (a: Vec2, b: Vec2) => {
   return ((x % 180) + 180) % 180;
 };
 const sameAngle = (x: number, y: number, e = 0.01) => Math.min(Math.abs(x - y), 180 - Math.abs(x - y)) < e;
-/** Angles of all rungs (node pairs) of a two-rail satin. */
-function rungAngles(o: DesignObject): number[] {
+/** The rungs (node pairs) of a two-rail satin. */
+function rungsOf(o: DesignObject): [Vec2, Vec2][] {
   const m = railMap(o.paths[0], o.paths[1]);
-  if (!m) return [];
-  return o.paths[0].nodes.map((n, i) => angleOf(n.p, o.paths[1].nodes[m.at(i)].p));
+  return m ? o.paths[0].nodes.map((n, i) => [n.p, o.paths[1].nodes[m.at(i)].p] as [Vec2, Vec2]) : [];
 }
+/** Angles of all rungs of a two-rail satin. */
+const rungAngles = (o: DesignObject): number[] => rungsOf(o).map(([p, q]) => angleOf(p, q));
 const bounds = (o: DesignObject) => {
   const ps = o.paths.flatMap((sp) => sp.nodes.map((n) => n.p));
   return { x0: Math.min(...ps.map((p) => p[0])), x1: Math.max(...ps.map((p) => p[0])), y0: Math.min(...ps.map((p) => p[1])), y1: Math.max(...ps.map((p) => p[1])) };
@@ -132,9 +135,11 @@ for (const [o, l, name] of [
   [left, DIR_LEFT, "left leg"],
   [right, DIR_RIGHT, "right leg"],
 ] as const) {
+  // the rung on the line's own line: both ends on it, at its angle
   const want = angleOf(l[0], l[1]);
-  const got = o ? rungAngles(o) : [];
-  check(got.length >= 2 && got.every((a) => sameAngle(a, want)), `m.4: ${name}: every rung at the line's angle ${want.toFixed(1)}° (${got.map((a) => a.toFixed(2)).join(", ")})`);
+  const off = (q: Vec2) => Math.abs((l[1][0] - l[0][0]) * (q[1] - l[0][1]) - (l[1][1] - l[0][1]) * (q[0] - l[0][0])) / Math.hypot(l[1][0] - l[0][0], l[1][1] - l[0][1]);
+  const on = o ? rungsOf(o).filter(([p, q]) => off(p) < 1e-6 && off(q) < 1e-6) : [];
+  check(on.length >= 1 && on.every(([p, q]) => sameAngle(angleOf(p, q), want)), `m.4: ${name}: the line is a rung of its satin, at the line's angle ${want.toFixed(1)}°`);
 }
 
 // no gap: every point of the A is inside at least one satin
@@ -175,7 +180,7 @@ s().undo();
 check(doc().objects.length === 3 && doc().objects[1].id === "A" && JSON.stringify(doc().objects[1]) === JSON.stringify(A()), "m.5: one Annulla brings back the original A");
 
 // --- m.6 -------------------------------------------------------------------
-// A bar 20 × 4 mm turned by 30°: no direction line → stitches across the long side
+// A bar 20 × 4 mm turned by 30°: no direction line → the satin follows the bar, stitches across its long side
 const turn = (p: Vec2): Vec2 => {
   const c = Math.cos(Math.PI / 6);
   const sn = Math.sin(Math.PI / 6);
@@ -190,7 +195,7 @@ check(splitWarnings(p6!, "assisted").length === 0, "m.6: Assisted does not (ther
 runCommand("m.split.apply", { id: "bar", cuts: [], directions: [] });
 const b6 = doc().objects[0];
 const ang6 = b6 ? rungAngles(b6) : [];
-check(doc().objects.length === 1 && isRailSatin(b6) && ang6.length >= 2 && ang6.every((a) => sameAngle(a, 120)), `m.6: direction perpendicular to the long side, 120° (${ang6.map((a) => a.toFixed(2)).join(", ")})`);
+check(doc().objects.length === 1 && isRailSatin(b6) && ang6.length >= 2 && ang6.every((a) => sameAngle(a, 120)), `m.6: the satin follows the bar: rungs across its middle line, perpendicular to the long side, 120° (${ang6.map((a) => a.toFixed(2)).join(", ")})`);
 
 // with a cut: one part has a line, the other not
 start([bar()]);
