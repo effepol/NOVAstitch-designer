@@ -172,9 +172,9 @@ export interface ThreadWeightInfo {
 export const THREAD_WEIGHTS: ThreadWeightInfo[] = [
   { weight: 75, get label() { return t("filum.dati.no_75_extra_fine"); }, spacing: 0.2, needle: "60/8", minText: 2.5, minTextSource: "Madeira Polyneon 75", tex: 11 },
   { weight: 60, get label() { return t("filum.dati.no_60_fine"); }, spacing: 0.35, needle: "60/8–65/9", minText: 3, minTextSource: "Madeira Polyneon / Classic 60", tex: 17 },
-  { weight: 40, get label() { return t("filum.dati.no_40_standard"); }, spacing: 0.4, needle: "65/9–75/11", minText: 5, minTextSource: "Melco small-lettering guide (6.4 mm on caps)", tex: 27 },
-  { weight: 30, get label() { return t("filum.dati.no_30_heavy"); }, spacing: 0.5, needle: "75/11–80/12", minText: 6.3, minTextSource: "no published minimum — scaled from No. 40 by the spacing", tex: 40 },
-  { weight: 12, get label() { return t("filum.dati.no_12_very_heavy"); }, spacing: 0.8, needle: "100/16", minText: 10, minTextSource: "no published minimum — scaled from No. 40 by the spacing", tex: 100 },
+  { weight: 40, get label() { return t("filum.dati.no_40_standard"); }, spacing: 0.4, needle: "65/9–75/11", minText: 5, get minTextSource() { return t("filum.dati.mintext_melco"); }, tex: 27 },
+  { weight: 30, get label() { return t("filum.dati.no_30_heavy"); }, spacing: 0.5, needle: "75/11–80/12", minText: 6.3, get minTextSource() { return t("filum.dati.mintext_scaled"); }, tex: 40 },
+  { weight: 12, get label() { return t("filum.dati.no_12_very_heavy"); }, spacing: 0.8, needle: "100/16", minText: 10, get minTextSource() { return t("filum.dati.mintext_scaled"); }, tex: 100 },
 ];
 
 /**

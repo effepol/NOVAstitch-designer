@@ -2,6 +2,7 @@
 // one download — batch lettering, and any other tool that exports a set of
 // files. Embroidery files hardly compress, so storing keeps it simple and fast.
 
+import { t } from "../nova/i18n/filum";
 const CRC_TABLE = (() => {
   const t = new Uint32Array(256);
   for (let n = 0; n < 256; n++) {
@@ -110,7 +111,7 @@ export function readZip(zip: Uint8Array): ZipEntry[] {
   const dec = new TextDecoder();
   const out: ZipEntry[] = [];
   for (let i = 0; i < count; i++) {
-    if (v.getUint32(p, true) !== 0x02014b50) throw new Error("broken ZIP directory");
+    if (v.getUint32(p, true) !== 0x02014b50) throw new Error(t("filum.messaggi.broken_zip"));
     const size = v.getUint32(p + 20, true);
     const nameLen = v.getUint16(p + 28, true);
     const extra = v.getUint16(p + 30, true);

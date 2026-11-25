@@ -5,6 +5,7 @@
 // manifest, converted on this device exactly like the bundling scripts do,
 // and stored (lib/downloadStore.ts). Nothing is uploaded.
 
+import { t } from "../nova/i18n/filum";
 import { useEffect, useState } from "react";
 import { corelEntries, corelTitle, gplText } from "./corelPalette.mjs";
 import { PACK_IDS, installedPacks, onDownloadsChange, writeAll, type DownloadPack, type InstalledPack } from "./downloadStore";
@@ -49,7 +50,7 @@ async function fetchFile(url: string, size: number, onBytes: (n: number) => void
     n = b.length;
     onBytes(n);
   }
-  if (size && n !== size) throw new Error(`${decodeURIComponent(url.split("/").pop() ?? url)}: expected ${size} bytes, got ${n} — the download may be incomplete`);
+  if (size && n !== size) throw new Error(t("filum.messaggi.download_incomplete", { file: decodeURIComponent(url.split("/").pop() ?? url), size, n }));
   const out = new Uint8Array(n);
   let o = 0;
   for (const p of parts) {
@@ -113,7 +114,8 @@ export async function installPack(pack: DownloadPack, onProgress: (p: Progress) 
       const xml = dec.decode(mine[0].bytes);
       const { name } = corelTitle(xml, it.name);
       const entries = corelEntries(xml);
-      if (!entries.length) throw new Error(`${it.name}: no colours in the chart`);
+      if (!entries.length) throw new Error(t("filum.messaggi.no_colours_in_chart", { name: it.name }));
+      // testo-ok: il nome della cartella colori salvata (un dato, come lo scrive Embroidery Nerds)
       changes.push({ store: "charts", key: it.id, value: gplText(`Embroidery Nerds: ${name}`, entries) });
     }
     // let the interface breathe between items

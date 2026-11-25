@@ -301,13 +301,13 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
                         label: t("filum.digitalizza.pull_compensation"),
                         value: mm(result.satin.pullComp),
                         was: saved?.satin?.pullComp ?? 0.2,
-                        why: `Sewn ${mm(BAR_W - result.satin.shrink)} wide for ${BAR_W} drawn: the column is widened by that much in total.`,
+                        why: t("filum.finestre.cal_why_wide", { sewn: mm(BAR_W - result.satin.shrink), drawn: BAR_W }),
                       },
                       {
                         label: t("filum.digitalizza.ends_pulled_in"),
                         value: mm(result.satin.pushComp),
                         was: saved?.satin?.pushComp ?? 0,
-                        why: `Sewn ${mm(BAR_L + result.satin.grow)} long for ${BAR_L} drawn: each end starts that much further in.`,
+                        why: t("filum.finestre.cal_why_long", { sewn: mm(BAR_L + result.satin.grow), drawn: BAR_L }),
                       },
                     ]
                   : []
@@ -323,15 +323,15 @@ export function CalibrateDialog({ onClose }: { onClose: () => void }) {
                   ? [
                       {
                         label: t("filum.digitalizza.pull_compensation"),
-                        value: `${mm(result.fill.pullComp)} each side`,
+                        value: t("filum.finestre.cal_each_side", { mm: mm(result.fill.pullComp) }),
                         was: saved?.fill?.pullComp ?? 0,
-                        why: `Sewn ${mm(DISC - result.fill.shrink)} along the rows for ${DISC} drawn: every row reaches that much further.`,
+                        why: t("filum.finestre.cal_why_along", { sewn: mm(DISC - result.fill.shrink), drawn: DISC }),
                       },
                       {
                         label: t("filum.digitalizza.shape"),
-                        value: result.fill.expand ? `${mm(Math.abs(result.fill.expand))} ${result.fill.expand < 0 ? "smaller" : "larger"} each side` : "as drawn",
+                        value: result.fill.expand ? (result.fill.expand < 0 ? t("filum.finestre.cal_smaller_each_side", { mm: mm(Math.abs(result.fill.expand)) }) : t("filum.finestre.cal_larger_each_side", { mm: mm(Math.abs(result.fill.expand)) })) : t("filum.finestre.cal_as_drawn"),
                         was: saved?.fill?.expand ?? 0,
-                        why: `Sewn ${mm(DISC + result.fill.grow)} across the rows for ${DISC} drawn: the shape is ${result.fill.expand < 0 ? "stitched smaller" : result.fill.expand > 0 ? "stitched larger" : "stitched as drawn"} to make up for it.`,
+                        why: result.fill.expand < 0 ? t("filum.finestre.cal_why_across_smaller", { sewn: mm(DISC + result.fill.grow), drawn: DISC }) : result.fill.expand > 0 ? t("filum.finestre.cal_why_across_larger", { sewn: mm(DISC + result.fill.grow), drawn: DISC }) : t("filum.finestre.cal_why_across_same", { sewn: mm(DISC + result.fill.grow), drawn: DISC }),
                       },
                     ]
                   : []

@@ -46,9 +46,9 @@ const fontItems = (ix: EmbroideryIndex): (Item & { fontId: string; download?: st
     fontId: f.id,
     download: f.download,
     name: f.name,
-    version: f.download ? "optional download · not included" : "",
+    version: f.download ? t("filum.finestre.optional_download_not_included") : "",
     license: f.license,
-    author: f.original ? `Based on ${f.original}` : "",
+    author: f.original ? t("filum.pannelli.based_on", { original: f.original }) : "",
     url: f.url,
     note: f.description,
     files: [],
@@ -199,7 +199,7 @@ export function LicensesDialog({ onClose, initialTab = "app" }: { onClose: () =>
                   "fontId" in i
                     ? () =>
                         embroideryLicense((i as { fontId: string }).fontId).then(
-                          (t) => t || ((i as { download?: string }).download ? `Not included with Filum: its licence (${i.license}) doesn't allow it. Download it in Preferences → Downloads to see the author's licence file here.` : ""),
+                          (text) => text || ((i as { download?: string }).download ? t("filum.finestre.not_included_licence", { license: i.license }) : ""),
                         )
                     : undefined
                 }

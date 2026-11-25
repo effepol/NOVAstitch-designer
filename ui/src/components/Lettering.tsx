@@ -150,7 +150,7 @@ function FontButton({ spec }: { spec: TextSpec }) {
 
 function AlignSeg({ spec, group }: { spec: TextSpec; group: string }) {
   const icons = { left: <AlignLeft size={13} />, center: <AlignCenter size={13} />, right: <AlignRight size={13} />, block: <AlignJustify size={13} /> };
-  const titles = { left: "Align left", center: "Centre", right: "Align right", block: "Block: spread every line to the width of the longest (Ink/Stitch Block)" };
+  const titles = { left: t("filum.pannelli.align_left_title"), center: t("filum.pannelli.align_centre_title"), right: t("filum.pannelli.align_right_title"), block: t("filum.pannelli.align_block_title") };
   const block = spec.align === "block" || spec.align === "blockLetters";
   return (
     <div className="seg" role="group" aria-label={t("filum.pannelli.alignment")}>

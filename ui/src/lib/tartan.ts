@@ -3,6 +3,7 @@
 // per colour, kept in step like the layers of a gradient. The engine sews
 // each layer (crates/core/src/stitches/tartan.rs).
 
+import { t } from "../nova/i18n/filum";
 import type { DesignObject, StitchDocument, TartanParams } from "../types";
 import { defaultFill, uid } from "./geometry";
 import { parentOf, withParent } from "./groups";
@@ -140,8 +141,8 @@ export function patchTartan<T extends Pick<TartanParams, "palette" | "symmetry">
 /** Why a palette code can't be a tartan (nothing to sew), or null. */
 export function paletteProblem(code: string): string | null {
   const { warp, weft } = parsePalette(code);
-  if (!warp.length && !weft.length) return "No stripes in the code: write each as (colour)width, e.g. (#b71c1c)4";
-  if (!tartanColors(code).length) return "A tartan needs at least one sewn stripe";
+  if (!warp.length && !weft.length) return t("filum.messaggi.tartan_no_stripes");
+  if (!tartanColors(code).length) return t("filum.messaggi.tartan_one_stripe");
   return null;
 }
 

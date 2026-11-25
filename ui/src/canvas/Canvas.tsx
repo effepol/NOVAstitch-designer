@@ -190,16 +190,16 @@ type Drag =
   | { kind: "guidedraw"; id: string; a: Vec2 };
 
 const HANDLE_HINTS: Record<string, string> = {
-  angle: "Drag to set the fill angle (Shift: 15° steps)",
-  spacing: "Drag to change the density",
-  center: "Drag to move the radial centre",
-  "width-l": "Drag to change the column width",
-  "width-r": "Drag to change the column width",
-  reverse: "Click to sew the other way",
-  start: "Drag to move the start · double-click for auto",
-  end: "Drag to move the end · double-click for auto",
-  "text-arc": "Drag up or down to bend the text (Shift: 15° steps) · double-click to straighten",
-  "text-spacing": "Drag to change the letter spacing · double-click to reset",
+  get angle() { return t("filum.barre.handle_hint.angle"); },
+  get spacing() { return t("filum.barre.handle_hint.spacing"); },
+  get center() { return t("filum.barre.handle_hint.center"); },
+  get "width-l"() { return t("filum.barre.handle_hint.width_l"); },
+  get "width-r"() { return t("filum.barre.handle_hint.width_r"); },
+  get reverse() { return t("filum.barre.handle_hint.reverse"); },
+  get start() { return t("filum.barre.handle_hint.start"); },
+  get end() { return t("filum.barre.handle_hint.end"); },
+  get "text-arc"() { return t("filum.barre.handle_hint.text_arc"); },
+  get "text-spacing"() { return t("filum.barre.handle_hint.text_spacing"); },
 };
 
 const isPathObject = (o: DesignObject) =>
@@ -1757,8 +1757,8 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
           pd.cursor = hover.kind === "none" ? (snap ?? placePoint(pd, p, e.shiftKey)) : null;
           const hints = s.tool === "curve" ? CURVE_HINTS : PEN_HINTS;
           let text = hints[hover.kind];
-          if (hover.kind === "none" && pd.kind === "satin") text = `${pd.width.toFixed(2)} mm · scroll or [ ] for width · ${text}`;
-          if (hover.kind === "anchor" && pd.kind === "satin") text = `${pd.widths[hover.index].toFixed(2)} mm · scroll to change · ${text}`;
+          if (hover.kind === "none" && pd.kind === "satin") text = t("filum.barre.satin_width_scroll", { mm: pd.width.toFixed(2), text });
+          if (hover.kind === "anchor" && pd.kind === "satin") text = t("filum.barre.point_width_scroll", { mm: pd.widths[hover.index].toFixed(2), text });
           if (hover.kind === "close" && !canClose(pd)) text = hints.none;
           penHint(text, pd.cursor ?? p);
           if (c) c.style.cursor = hover.kind === "handle" || hover.kind === "anchor" ? "move" : hover.kind === "segment" ? "copy" : hover.kind === "close" || hover.kind === "last" ? "pointer" : "";
@@ -1768,10 +1768,10 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
           overlayRef.current.snap = !cont && !e.ctrlKey && s.prefs.snapPoints ? snapToNode(p, tol) : null;
           penHint(
             cont
-              ? "Click to continue this path"
+              ? t("filum.barre.click_to_continue_path")
               : s.tool === "satin"
-                ? `Satin ${s.toolOptions.satin.width.toFixed(2)} mm · click for corners, drag for curves`
-                : "Pen · click for corners, drag for curves",
+                ? t("filum.barre.satin_click_corners", { mm: s.toolOptions.satin.width.toFixed(2) })
+                : t("filum.barre.pen_click_corners"),
             p,
           );
           if (c) c.style.cursor = cont ? "pointer" : "";
@@ -2314,7 +2314,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
           let arc = d.spec.arc + v * s.view.scale * 0.75;
           arc = Math.max(-330, Math.min(330, e.shiftKey ? Math.round(arc / 15) * 15 : Math.round(arc)));
           updateText(d.group, { arc }, true);
-          label = arc ? `Arc ${arc}°` : "Straight";
+          label = arc ? t("filum.barre.arc_deg", { arc }) : t("filum.barre.straight_text");
         } else {
           const lines = d.spec.content.split("\n").map((l) => Array.from(l).length);
           const gaps = Math.max(1, Math.max(...lines) - 1);
@@ -2323,7 +2323,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
           let ls = d.spec.letterSpacing + (v * k) / gaps / sc;
           ls = Math.max((-d.spec.size * 0.5) / sc, Math.min((d.spec.size * 3) / sc, e.shiftKey ? Math.round(ls * 2) / 2 : Math.round(ls * 20) / 20));
           updateText(d.group, { letterSpacing: ls }, true);
-          label = `Letter spacing ${ls.toFixed(2)} mm`;
+          label = t("filum.barre.letter_spacing_mm", { mm: ls.toFixed(2) });
         }
         iRef.current.tooltip = { p, text: label };
         draw();
@@ -2600,7 +2600,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         // width of the point under the pointer
         const w = Math.min(15, Math.max(0.3, Math.round((pd.widths[idx] + step) * 20) / 20));
         pd.widths[idx] = w;
-        penHint(`Point width ${w.toFixed(2)} mm`, pd.nodes[idx].p);
+        penHint(t("filum.barre.point_width_mm", { mm: w.toFixed(2) }), pd.nodes[idx].p);
         draw();
         return;
       }

@@ -90,7 +90,7 @@ export async function createKnockdown(o: KnockdownSelectionOptions): Promise<num
   const thread = existing ?? { id: uid("t"), name: "Knockdown", color, brand: "", code: "" };
   const obj: DesignObject = {
     id: uid(),
-    name: o.frame === "none" ? "Knockdown" : `Knockdown (${o.frame === "rect" ? "rectangle" : "circle"})`,
+    name: o.frame === "none" ? "Knockdown" : o.frame === "rect" ? t("filum.dati.knockdown_rect") : t("filum.dati.knockdown_circle"),
     thread: thread.id,
     visible: true,
     locked: false,

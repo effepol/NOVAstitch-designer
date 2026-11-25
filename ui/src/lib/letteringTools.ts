@@ -3,6 +3,7 @@
 // font-info editor's live metrics (Edit JSON). Pure — the store-level
 // actions are in textOps.ts.
 
+import { t } from "../nova/i18n/filum";
 import { fontMetrics, variantId, type PackedFont } from "./inkFontPack.mjs";
 import type { EmbroideryFont } from "./fonts";
 
@@ -204,7 +205,7 @@ const xmlAttr = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").
 export function wrapGlyphLayer(svg: string, name: string, dx = 0): string {
   const open = /<svg\b[^>]*>/i.exec(svg);
   const close = svg.lastIndexOf("</svg>");
-  if (!open || close < 0) throw new Error("not an SVG document");
+  if (!open || close < 0) throw new Error(t("filum.messaggi.not_svg"));
   const at = open.index + open[0].length;
   const tr = dx ? ` transform="translate(${Math.round(dx * 1000) / 1000} 0)"` : "";
   return `${svg.slice(0, at)}<g inkscape:label="GlyphLayer-${xmlAttr(name)}" inkscape:groupmode="layer"${tr}>${svg.slice(at, close)}</g></svg>`;

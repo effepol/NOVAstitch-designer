@@ -3,6 +3,7 @@
 // that keep such a set whole when commands reshape, combine or delete its
 // objects (no store here, so they can be tested in Node).
 
+import { t } from "../nova/i18n/filum";
 import type { DensityRamp, DesignObject, FillParams, GradientParams, GradientStop, StitchDocument, StitchParams, TartanParams } from "../types";
 import { parentOf } from "./groups";
 import { pruneGroups } from "./layerRows";
@@ -45,8 +46,8 @@ export function layerSetOf(o: DesignObject): string | undefined {
  * of gradients, tartans and colour blends (one shape for all their colours).
  */
 export function layeredRefusal(objs: DesignObject[]): string | null {
-  if (objs.some((o) => o.clone)) return "Linked clones follow their original: unlink them first";
-  if (objs.some((o) => layerSetOf(o))) return "Gradients, tartans and colour blends keep one shape for all their colours: remove the gradient, tartan or blend first";
+  if (objs.some((o) => o.clone)) return t("filum.messaggi.clones_unlink_first");
+  if (objs.some((o) => layerSetOf(o))) return t("filum.messaggi.layers_one_shape");
   return null;
 }
 
@@ -56,11 +57,11 @@ export function layeredRefusal(objs: DesignObject[]): string | null {
  * tartan / colour blend that has more (they would be left behind).
  */
 export function gradientRefusal(doc: StitchDocument, o: DesignObject): string | null {
-  if (o.clone) return "Linked clones follow their original: unlink the clone first";
+  if (o.clone) return t("filum.messaggi.clone_unlink_first");
   if (o.stitch.type !== "fill") return null;
-  if (o.stitch.gradient) return "This is a gradient already: drag across it with the gradient tool to change it";
-  if (o.stitch.tartan && tartanLayers(doc, o.stitch.tartan.group).length > 1) return "Tartans sew a layer per colour: switch the tartan to another fill first";
-  if (o.stitch.ramp?.group && rampMembers(doc, o.id).length > 1) return "Colour blends have two layers: remove the blend first";
+  if (o.stitch.gradient) return t("filum.messaggi.gradient_already");
+  if (o.stitch.tartan && tartanLayers(doc, o.stitch.tartan.group).length > 1) return t("filum.messaggi.tartan_layers");
+  if (o.stitch.ramp?.group && rampMembers(doc, o.id).length > 1) return t("filum.messaggi.blend_two_layers");
   return null;
 }
 

@@ -62,7 +62,7 @@ export interface ChartMeta {
   /** Not bundled: comes in this download pack (Preferences ▸ Downloads). */
   download?: string;
 }
-export const SOURCE_LABEL: Record<ChartSource, string> = { mine: "My threads", inkstitch: "Ink/Stitch", embroiderynerd: "Embroidery Nerds", madeira: "Madeira colour card", custom: "Installed" };
+export const SOURCE_LABEL: Record<ChartSource, string> = { get mine() { return t("filum.finestre.my_threads"); }, inkstitch: "Ink/Stitch", embroiderynerd: "Embroidery Nerds", get madeira() { return t("filum.dati.source_madeira"); }, get custom() { return t("filum.finestre.installed_group"); } };
 
 // until the index has loaded
 const BUILTIN: ChartMeta[] = [
@@ -262,7 +262,7 @@ export function loadChart(chart: string): Promise<ChartEntry[]> {
           const meta = indexCharts?.find((c) => c.id === chart);
           if (meta?.download) {
             const text = await storedChart(chart);
-            if (!text) throw new Error(`${meta.name} is an optional download: get it in Preferences → Downloads`);
+            if (!text) throw new Error(t("filum.messaggi.optional_download_get_it", { name: meta.name }));
             return text;
           }
           const r = await fetch(`/palettes/${chart}.gpl`);
@@ -291,7 +291,7 @@ export async function installPalette(): Promise<ChartMeta | null> {
   const f = await openFile([{ name: "GIMP palette", extensions: ["gpl"] }]);
   if (!f) return null;
   const pal = await engine.parsePalette(new TextDecoder().decode(f.bytes));
-  if (!pal.entries.length) throw new Error(`${f.name}: no colours found`);
+  if (!pal.entries.length) throw new Error(t("filum.messaggi.no_colours_found", { name: f.name }));
   const name = paletteBrand(pal.name || f.name) || "Palette";
   // unique: a name in another script gives no letters for an id, two names can give the same
   const id = chartIdFor(name, customCharts());
@@ -481,8 +481,8 @@ export function parseFitTarget(id: string): FitTarget {
   if (id.startsWith("brand:")) return { kind: "mine", brand: id.slice(6) };
   return { kind: "mine" };
 }
-export const fitTargetLabel = (t: FitTarget) =>
-  t.kind === "chart" ? chartLabel(t.chart) : t.line ? `My ${t.line}` : t.brand ? `My ${t.brand} threads` : "All my threads";
+export const fitTargetLabel = (th: FitTarget) =>
+  th.kind === "chart" ? chartLabel(th.chart) : th.line ? t("filum.dati.fit_my_line", { line: th.line }) : th.brand ? t("filum.dati.fit_my_brand", { brand: th.brand }) : t("filum.dati.fit_all_mine");
 
 /** Manufacturer of a product line ("Madeira Polyneon" → "Madeira"). */
 export function brandOfLine(line: string): string {

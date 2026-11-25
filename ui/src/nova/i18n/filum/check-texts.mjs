@@ -38,6 +38,10 @@ const VISIBLE_NAME = /^(title|placeholder|alt|label|hint|tip|tooltip|caption|hea
 const MESSAGE_FN = /^(toast|alert|confirm|prompt|setError|setStatus|setMessage|setNote|setWarning|notify|ask)$/;
 const LETTER = /\p{L}/u;
 /** Una stringa che ha l'aria di una frase o di un'etichetta: «Regions», «Sew the swatch» (non «fillToSatin», «btn sm»). */
+// codice dentro una stringa: HTML, CSS («1px solid var(--border)», «700 px Inter, system-ui»)
+const CODE_TEXT = (s) => /[<>]|var\(--|\bpx\b|\dpx\b|system-ui|sans-serif|@page|\{\s*$/.test(s);
+// una frase: almeno tre parole di lettere di fila, separate da spazi («click for corners», «Point width mm» no, «drag for curves» sì)
+const SENTENCE = (s) => /\p{L}{2,}[ ,]+\p{L}{2,}[ ,]+\p{L}{2,}/u.test(s) && !/^[\w.-]+\/[\w./-]+$/.test(s.trim());
 // …anche «0.40 mm rows — soft, flexible», «0.4 mm — the standard»: tre parole di tre lettere, o due con un trattino lungo
 const LOOKS_LIKE_TEXT = (s) => /^\p{Lu}\p{Ll}/u.test(s.trim()) || /\p{L}{2,}\s+\p{L}{2,}\s+\p{L}{2,}/u.test(s) || ((s.match(/\p{L}{3,}/gu) ?? []).length >= 3 && /\s/.test(s)) || ((s.match(/\p{L}{3,}/gu) ?? []).length >= 2 && / — /.test(s));
 /** Attributi JSX tecnici, mai testo. */
@@ -76,8 +80,20 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
     return /testo-ok:/.test(lines[l] ?? "") || /testo-ok:/.test(lines[l - 1] ?? "");
   };
   const hits = [];
+  // console.log/warn/error: messaggi per chi sviluppa, non per chi usa il programma
+  const inConsole = (n) => {
+    for (let p = n.parent; p; p = p.parent) if (ts.isCallExpression(p) && /^console\./.test(p.expression.getText(sf))) return true;
+    return false;
+  };
+  // tabelle che tengono l'inglese di proposito e si traducono a schermo (FORMAT_HINT_EN in ExportDialog.tsx)
+  const inEnglishTable = (n) => {
+    for (let p = n.parent; p; p = p.parent) if (ts.isVariableDeclaration(p)) return ts.isIdentifier(p.name) && /_EN$/.test(p.name.text);
+    return false;
+  };
+  const seen = new Set();
   const report = (node, text, why) => {
-    if (exempt(node) || ids.has(text)) return;
+    if (exempt(node) || ids.has(text) || seen.has(node.pos)) return;
+    seen.add(node.pos);
     hits.push({ line: sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1, text, why, node, sf });
   };
 
@@ -149,6 +165,25 @@ export function checkSource(fileName, source, allowed = loadAllowed(), textArgs 
       else if (name === "name" && (ts.isStringLiteral(node.initializer) || ts.isNoSubstitutionTemplateLiteral(node.initializer)) && LOOKS_LIKE_TEXT(node.initializer.text))
         strings(node.initializer, "proprietà name");
       else if (name === "name" && ts.isTemplateExpression(node.initializer) && LOOKS_LIKE_TEXT(node.initializer.head.text)) strings(node.initializer, "proprietà name");
+      // tabelle di testi (Record): { none: "Click for a corner, drag for a curve", close: "Click to close the path" }
+      else if (name && !TECHNICAL_ATTR.test(name) && !inEnglishTable(node) && (ts.isStringLiteral(node.initializer) || ts.isNoSubstitutionTemplateLiteral(node.initializer)) && SENTENCE(node.initializer.text) && !CODE_TEXT(node.initializer.text))
+        strings(node.initializer, "testo in una tabella");
+    }
+    // messaggi restituiti o lanciati: return "Select open paths to join", new Error("No lettering selected")
+    if (ts.isReturnStatement(node) && node.expression) {
+      const msg = (e) => (ts.isStringLiteral(e) || ts.isNoSubstitutionTemplateLiteral(e)) && SENTENCE(e.text) && !CODE_TEXT(e.text);
+      const walk = (e) => (ts.isConditionalExpression(e) ? (walk(e.whenTrue), walk(e.whenFalse)) : ts.isParenthesizedExpression(e) ? walk(e.expression) : msg(e) && strings(e, "messaggio restituito"));
+      walk(node.expression);
+    }
+    if (ts.isNewExpression(node) && ts.isIdentifier(node.expression) && /Error$/.test(node.expression.text) && node.arguments?.length) {
+      const a = node.arguments[0];
+      if ((ts.isStringLiteral(a) || ts.isNoSubstitutionTemplateLiteral(a)) && SENTENCE(a.text)) strings(a, "messaggio d'errore");
+    }
+    // stringhe composte ovunque: `Satin ${w} mm · click for corners, drag for curves`, `Point width ${w} mm`
+    // (non il codice: HTML e CSS nei template, i messaggi per la console)
+    if (ts.isTemplateExpression(node) && !CODE_TEXT([node.head.text, ...node.templateSpans.map((s) => s.literal.text)].join(" ")) && !inConsole(node)) {
+      const fixed = [node.head.text, ...node.templateSpans.map((s) => s.literal.text)];
+      if (fixed.some((f) => SENTENCE(f)) || (LOOKS_LIKE_TEXT(node.head.text) && /^\p{Lu}\p{Ll}+ /u.test(node.head.text))) strings(node, "testo in una stringa composta");
     }
     // HTML scritto in un template (il foglio di stampa): «<dt>Total trims</dt>», «<span>${n} stitches</span>»
     if (ts.isNoSubstitutionTemplateLiteral(node) || ts.isTemplateHead(node) || ts.isTemplateMiddle(node) || ts.isTemplateTail(node)) {
