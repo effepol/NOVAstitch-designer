@@ -522,6 +522,10 @@ try {
     const oggi = new Map(eccezioni.map((k) => [json("en.json")[k].replaceAll("{app}", appNow), `‹${k}›`]));
     const swap = (map) => (l) => l.map((s) => map.get(s) ?? s);
     for (const id of Object.keys(ref)) ref[id] = app(swap(prima)(ref[id]));
+    // eccezioni legate a una schermata (eccezioni-i3.json, «schermate»; Architetto, 25/11): su quella schermata la
+    // scritta «riferimento» di Filum 0.2.1 vale «oggi», letta come le scritte di oggi (‹app› = il nome del programma)
+    for (const [id, voci] of Object.entries(json("eccezioni-i3.json").schermate ?? {}))
+      if (ref[id]) for (const v of voci) ref[id] = ref[id].map((s) => (s === v.riferimento ? app(swap(oggi)([v.oggi.replaceAll("‹app›", appNow)]))[0] : s));
     // le schermate modulo/… non sono di Filum: fuori da i.3 (contano per i.1 e i.4, qui sotto)
     const now = Object.fromEntries(Object.entries(textsOf(en.screens)).filter(([id]) => !id.startsWith("modulo/") && !aParte(id)).map(([id, l]) => [id, app(swap(oggi)(l))]));
     for (const id of new Set([...Object.keys(ref), ...Object.keys(now)])) {
