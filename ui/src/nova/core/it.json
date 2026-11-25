@@ -14,5 +14,7 @@
   "core.about.fontLicenses": "Licenze dei font e dei componenti…",
   "core.about.back": "Indietro",
   "core.about.close": "Chiudi",
-  "core.zoom.title": "Ingrandimento {z}×"
+  "core.zoom.title": "Ingrandimento {z}×",
+  "core.bar.more": "Altro",
+  "core.bar.more_title": "Altri pulsanti della barra"
 }
