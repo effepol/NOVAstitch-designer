@@ -17,6 +17,9 @@ import { defaultFoam } from "../3d/foam";
 import { toLayered3d } from "../3d/layered3d";
 
 const root = path.resolve(process.cwd(), "..");
+// the node typings of the project know only part of child_process: the full call, typed here
+const run = execFileSync as unknown as (file: string, args: string[], opts: { cwd: string; encoding?: "utf8"; stdio?: "inherit" | "pipe" }) => string;
+const platform = (globalThis as unknown as { process: { platform: string } }).process.platform;
 initSync({ module: readFileSync(path.join(process.cwd(), "src", "wasm", "pkg", "filum_wasm_bg.wasm")) });
 const engine = new StitchEngine();
 
@@ -46,11 +49,11 @@ const opts: ExportOptions = { pesVersion: 1, xRepeats: 1, yRepeats: 1, xSpacing:
 const ui = engine.export(JSON.stringify(doc), "dst", JSON.stringify(opts)) as Uint8Array;
 
 // the command line: the .nsd as the editor saves it, `novastitch convert stemma.nsd stemma.dst`
-const bin = path.join(root, "target", "debug", process.platform === "win32" ? "novastitch.exe" : "novastitch");
-if (!existsSync(bin)) execFileSync("cargo", ["build", "-q", "-p", "filum-cli"], { cwd: root, stdio: "inherit" });
+const bin = path.join(root, "target", "debug", platform === "win32" ? "novastitch.exe" : "novastitch");
+if (!existsSync(bin)) run("cargo", ["build", "-q", "-p", "filum-cli"], { cwd: root, stdio: "inherit" });
 const dir = mkdtempSync(path.join(tmpdir(), "nova-convert-"));
 writeFileSync(path.join(dir, "stemma.nsd"), nsdText(doc));
-const said = execFileSync(bin, ["convert", "stemma.nsd", "stemma.dst"], { cwd: dir, encoding: "utf8" });
+const said = run(bin, ["convert", "stemma.nsd", "stemma.dst"], { cwd: dir, encoding: "utf8" });
 const cli = new Uint8Array(readFileSync(path.join(dir, "stemma.dst")));
 check(said.includes("wrote stemma.dst"), "novastitch convert stemma.nsd stemma.dst writes the DST");
 
@@ -68,7 +71,7 @@ const b = records(cli);
 check(a.length > 100 && a[a.length - 1].endsWith(",243"), `the interface's DST: ${a.length} records, ending with the end mark`);
 const first = a.findIndex((r, i) => r !== b[i]);
 check(a.length === b.length && first === -1, `the same stitches, jumps, trims and colour changes, record by record${first >= 0 ? ` (first difference at record ${first})` : ""}`);
-check(Buffer.from(ui).equals(Buffer.from(cli)), "the same file, byte for byte (header included)");
+check(ui.length === cli.length && ui.every((v, i) => v === cli[i]), "the same file, byte for byte (header included)");
 // the design really has what is checked: colour changes (2 threads, foam's stop) and jumps (the jump link, the trims)
 const cc = a.filter((r) => (Number(r.split(",")[2]) & 0xc3) === 0xc3 && !r.endsWith(",243")).length;
 const jumps = a.filter((r) => (Number(r.split(",")[2]) & 0xc0) === 0x80).length;
