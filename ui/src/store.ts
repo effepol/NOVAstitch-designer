@@ -17,6 +17,7 @@ import { INKSTITCH_DEFAULTS } from "./lib/machines";
 import { recordEdits } from "./nova/core/edited";
 import { novaDefaults } from "./nova/format/nova";
 import { chooseFabric } from "./nova/core/fabricChoice";
+import { markToolPicked } from "./nova/core/canvasHint";
 import type {
   DensityField,
   DesignObject,
@@ -409,7 +410,11 @@ export const useStore = create<State>((set, get) => ({
     });
   },
   select: (ids) => set({ selection: ids, gradNodes: [], nodeSel: get().nodeSel.filter((n) => ids.includes(n.id)) }),
-  setTool: (tool) => set({ tool, nodeSel: [], refEdit: null }),
+  setTool: (tool) => {
+    markToolPicked();
+    // NOVAstitch (Signor Poletti, 25/11): every choice of a tool, the same one too, shows the canvas label again for 10 s
+    set({ tool, nodeSel: [], refEdit: null });
+  },
   setViewMode: (viewMode) => set({ viewMode }),
   setTheme: (theme) => {
     safeSetItem(THEME_KEY, theme);

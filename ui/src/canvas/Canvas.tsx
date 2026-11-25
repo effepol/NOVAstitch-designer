@@ -101,6 +101,7 @@ import { freshCopies } from "../lib/copies";
 import { transformable } from "../lib/textSettle";
 import { loadFont } from "../lib/fonts";
 import { layerClick, layerHit, onCanvasRedraw } from "../nova/core/registry";
+import { HINT_MS, hintVisible, onToolPicked } from "../nova/core/canvasHint";
 import { t, tn } from "../nova/i18n/filum";
 import { activateDrawingTool, activeStitchLine, drawingTool, oneToOneScale, setCanvasPointer, setFilumLastPoint, systemCursorHidden, toolKey, toolPointer, useRegistry, type ToolPointerEvent } from "../nova/core/registry";
 
@@ -517,6 +518,8 @@ export function Canvas() {
       }
       const interactive: InteractiveOverlay = {
         ...iRef.current,
+        // NOVAstitch: the label for 10 s after a tool is chosen, a drag's values while dragging (nova/core/canvasHint.ts)
+        tooltip: hintVisible(Date.now(), !!dragRef.current) ? iRef.current.tooltip : null,
         corners: cornersOv,
         pivot,
         gradient: gradOv,
@@ -698,9 +701,19 @@ export function Canvas() {
     window.addEventListener("filum:fit", fitHandler);
     // NOVAstitch: registered canvas layers ask for a redraw (nova/core/registry)
     const offNova = onCanvasRedraw(draw);
+    // NOVAstitch: a tool chosen shows the label again; when its 10 s are over, the canvas redraws without it
+    let hintTimer: ReturnType<typeof setTimeout> | undefined;
+    const offHint = onToolPicked(() => {
+      clearTimeout(hintTimer);
+      hintTimer = setTimeout(draw, HINT_MS + 20);
+      draw();
+    });
+    hintTimer = setTimeout(draw, HINT_MS + 20);
     return () => {
       unsub();
       offNova();
+      offHint();
+      clearTimeout(hintTimer);
       window.removeEventListener("filum:fit", fitHandler);
     };
     function fitHandler(e: Event) {
