@@ -15,9 +15,13 @@ const lock = readFileSync(path.join(root, "Cargo.lock"), "utf8");
 
 const on = wf.slice(wf.indexOf("\non:"), wf.indexOf("\n", wf.indexOf("\non:") + 5) + 200);
 check(/\non:\s*\n\s*workflow_dispatch:/.test(wf) && !/\n\s*(push|pull_request|schedule|release):/.test(on), "started by hand only (workflow_dispatch)");
-check(/windows-latest/.test(wf) && /macos-latest/.test(wf) && /ubuntu-22\.04/.test(wf), "three runners: Windows, macOS, Linux");
+// macOS is left out until 1.0 (Architect, 25/11): its lines stay in the file, commented, with how to turn them back on
+const active = wf.split("\n").filter((l) => !/^\s*#/.test(l)).join("\n");
+check(/windows-latest/.test(active) && /ubuntu-22\.04/.test(active) && !/macos-latest/.test(active), "two runners for now: Windows and Linux (no macOS)");
+check(/#\s*- os: macos-latest/.test(wf) && /#\s+rust-targets: aarch64-apple-darwin,x86_64-apple-darwin/.test(wf) && /#\s+args: --target universal-apple-darwin --bundles dmg/.test(wf), "macOS's lines are in the file, commented out");
+check(/macOS.*1\.0/.test(wf) && /remove the leading «# »|togli il «# »|uncomment/i.test(wf), "the file says how to turn macOS back on (at 1.0)");
 check(/--bundles msi,nsis/.test(wf), "Windows: .msi and .exe (NSIS)");
-check(/--bundles dmg/.test(wf) && /universal-apple-darwin/.test(wf), "macOS: .dmg, one for Apple silicon and Intel (universal)");
+check(/--bundles dmg/.test(wf) && /universal-apple-darwin/.test(wf), "(macOS, when it is back: .dmg, one for Apple silicon and Intel)");
 check(/--bundles deb,appimage/.test(wf), "Linux: .deb and .AppImage");
 check(/tauri-apps\/tauri-action@v0/.test(wf) && /prerelease:\s*true/.test(wf) && /releaseDraft:\s*false/.test(wf), "the installers go to a release marked pre-release (published, not a draft)");
 check(/contents:\s*write/.test(wf), "the workflow may create the release");
