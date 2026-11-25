@@ -36,7 +36,7 @@ import { engine, type ShapeRegion } from "../engine/client";
 import { handlePoints, readTheme, Renderer, rotateHandle, RULER, type Overlay, type Theme } from "./render";
 import { StitchGL } from "./gl";
 import { threadWidth } from "../lib/materials";
-import { computeHandles, computeTextHandles, dragHandle, HANDLE_HIT_PX, reverseObject, type Handle } from "./handles";
+import { computeHandles, computeTextHandles, dragHandle, handleHit, reverseObject, type Handle } from "./handles";
 import { createTextAt, selectedTextGroup, textSpec, updateText } from "../lib/textOps";
 import { members, type TextSpec } from "../lib/text";
 import type { InteractiveOverlay } from "./interactive";
@@ -1419,7 +1419,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
           return;
         }
         // parameter handles (reverse order: pins are drawn on top)
-        const hh = [...handlesRef.current].reverse().find((h) => dist(h.p, p) < HANDLE_HIT_PX / s.view.scale);
+        const hh = [...handlesRef.current].reverse().find((h) => handleHit(h, p, s.view.scale));
         if (hh?.group) {
           const spec = textSpec(hh.group);
           if (!spec) return;
@@ -1828,7 +1828,7 @@ const runStitch = (kind: "running" | "triple", length: number): StitchParams => 
         return;
       }
       if (s.tool === "select") {
-        const hh = [...handlesRef.current].reverse().find((h) => dist(h.p, p) < HANDLE_HIT_PX / s.view.scale) ?? null;
+        const hh = [...handlesRef.current].reverse().find((h) => handleHit(h, p, s.view.scale)) ?? null;
         const changed = hh?.kind !== iRef.current.hoverHandle?.kind || hh?.objId !== iRef.current.hoverHandle?.objId;
         iRef.current.hoverHandle = hh;
         iRef.current.tooltip = hh ? { p: hh.p, text: HANDLE_HINTS[hh.kind] } : null;

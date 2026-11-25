@@ -278,6 +278,19 @@ export function reverseObject(o: DesignObject, h: Handle): DesignObject {
 
 export const HANDLE_HIT_PX = 8;
 
+/** NOVAstitch: the start / end pin's head (its letter) sits this far above its tip (px; interactive.ts pin: 1.55 × 8). */
+export const PIN_HEAD_PX = 8 * 1.55;
+/** NOVAstitch: the head takes the mouse within this radius (px), as well as the tip (Signor Poletti, 25/11). */
+export const PIN_HIT_PX = 11;
+
+/** Does a pointer at `p` (mm) take the handle? Start / end pins: their head too, not only their tip. */
+export function handleHit(h: Handle, p: Vec2, scale: number): boolean {
+  const d = Math.hypot(h.p[0] - p[0], h.p[1] - p[1]);
+  if (d < HANDLE_HIT_PX / scale) return true;
+  if (h.kind !== "start" && h.kind !== "end") return false;
+  return Math.hypot(h.p[0] - p[0], h.p[1] - PIN_HEAD_PX / scale - p[1]) < PIN_HIT_PX / scale;
+}
+
 /** Handles of a selected lettering: arc (bend) above, letter spacing on the right. */
 export function computeTextHandles(objs: DesignObject[], rotation: number, scale: number): Handle[] {
   const live = objs.filter((o) => o.visible && !o.locked);
