@@ -31,5 +31,7 @@
   "j.issue.foamLast.title": "3D goes last",
   "j.issue.foamLast.detail": "«{name}» is a satin over foam, but other objects are sewn after it: they would run over the foam and flatten it. Move the foam to the end of the sequence.",
   "j.issue.layeredThin.title": "Layered 3D under 6 mm",
-  "j.issue.layeredThin.detail": "The column is {width} mm wide: under {min} mm the layers have no room to rise and the relief does not show. Widen it or use a normal satin."
+  "j.issue.layeredThin.detail": "The column is {width} mm wide: under {min} mm the layers have no room to rise and the relief does not show. Widen it or use a normal satin.",
+  "j.foam3d.name": "3D foam",
+  "j.foam3d.title": "Satin sewn over a foam sheet: 3D relief. Makes the object a satin (its rails kept) and turns the foam on; take it off with the switch in the satin section"
 }

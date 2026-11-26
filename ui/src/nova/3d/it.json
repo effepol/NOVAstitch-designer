@@ -31,5 +31,7 @@
   "j.issue.foamLast.title": "Il 3D va cucito per ultimo",
   "j.issue.foamLast.detail": "«{name}» è un satin su schiuma, ma dopo di lui si cuciono altri oggetti: passerebbero sulla schiuma e la schiaccerebbero. Sposta la schiuma alla fine della sequenza.",
   "j.issue.layeredThin.title": "3D a strati sotto i 6 mm",
-  "j.issue.layeredThin.detail": "La colonna è larga {width} mm: sotto i {min} mm gli strati non hanno spazio per salire e il rilievo non si vede. Allargala o usa un satin normale."
+  "j.issue.layeredThin.detail": "La colonna è larga {width} mm: sotto i {min} mm gli strati non hanno spazio per salire e il rilievo non si vede. Allargala o usa un satin normale.",
+  "j.foam3d.name": "Schiuma 3D",
+  "j.foam3d.title": "Satin cucito sopra un foglio di schiuma: rilievo 3D. Fa dell'oggetto un satin (con i suoi binari) e accende la schiuma; si toglie dall'interruttore nella sezione del satin"
 }
