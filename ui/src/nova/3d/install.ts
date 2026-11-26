@@ -4,7 +4,7 @@
 // «3D goes last» and «layered 3D under 6 mm» in Filum's Issues list.
 
 import { registerAppliqueFields } from "./applique";
-import { registerFoam } from "./foam";
+import { registerFoam, registerFoamButton } from "./foam";
 import { registerLayered3d } from "./layered3d";
 import { registerIssueCheck } from "../core/issueChecks";
 import { stitch3dIssues } from "./issues";
@@ -12,7 +12,7 @@ import "./texts";
 
 /** Module j's registrations; returns the function that removes them. */
 export function installStitch3d(): () => void {
-  const offs = [registerAppliqueFields(), registerFoam(), registerLayered3d(), registerIssueCheck({ id: "j.stitch3d", module: "j", check: (doc) => stitch3dIssues(doc) })];
+  const offs = [registerAppliqueFields(), registerFoam(), registerFoamButton(), registerLayered3d(), registerIssueCheck({ id: "j.stitch3d", module: "j", check: (doc) => stitch3dIssues(doc) })];
   return () => offs.forEach((off) => off());
 }
 

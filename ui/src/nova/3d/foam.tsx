@@ -6,9 +6,10 @@
 // satin, a machine stop before it. The note for the work sheet (module l) is
 // t("j.foam.sheetNote").
 
-import type { FoamOptions, SatinParams, StitchParams } from "../../types";
+import type { DesignObject, FoamOptions, SatinParams, StitchParams } from "../../types";
+import { defaultSatin } from "../../lib/geometry";
 import { Num, Row, Toggle } from "../../components/ui";
-import { registerStitchFields, type StitchSectionProps } from "../core/stitchTypes";
+import { registerStitchFields, registerStitchType, type StitchSectionProps } from "../core/stitchTypes";
 import { t } from "../core/i18n";
 import "./texts";
 
@@ -61,3 +62,36 @@ export function FoamFields({ o, up }: StitchSectionProps) {
 }
 
 export const registerFoam = (): (() => void) => registerStitchFields({ id: "j.foam", module: "j", type: "satin", Fields: FoamFields });
+
+/** The object as a satin over foam: made a satin as Filum's Satin card does (a satin keeps its own values, rails and all;
+ *  anything else starts from the satin defaults; the paths stay), with the foam block on (its own values if it has one). */
+export function toFoamSatin(o: DesignObject): StitchParams {
+  const own: Partial<SatinParams> = o.stitch.type === "satin" ? (({ type: _t, ...rest }) => rest)(o.stitch) : {};
+  return { type: "satin", ...defaultSatin(), ...own, method: "satin", foam: own.foam ?? defaultFoam() };
+}
+
+const foamIcon = (
+  <svg viewBox="0 0 40 24" width="40" height="24" aria-hidden="true">
+    <path d="M6 18 Q20 4 34 18" fill="currentColor" opacity="0.25" />
+    <path d="M8 18 L11 10 M13 18 L16 7 M18 18 L21 6 M23 18 L26 7 M28 18 L31 10" stroke="currentColor" strokeWidth="1.4" fill="none" />
+    <line x1="4" y1="19" x2="36" y2="19" stroke="currentColor" strokeWidth="1.2" />
+  </svg>
+);
+
+/** The «Schiuma 3D» card in Filum's stitch picker, with the lines beside Satin (Architect, 26/11). It is
+ *  never the object's own type (matches: false): a type the object has replaces Filum's satin section in
+ *  the panel (module 0's hook), and a satin over foam keeps it — settings and the switch that takes the
+ *  foam off. It shows chosen once module 0's hook can keep Filum's section. */
+export const registerFoamButton = (): (() => void) =>
+  registerStitchType({
+    id: "j.foam3d",
+    module: "j",
+    group: "line",
+    label: () => t("j.foam3d.name"),
+    title: () => t("j.foam3d.title"),
+    icon: foamIcon,
+    matches: () => false,
+    apply: toFoamSatin,
+    // never shown (matches is false): the foam's fields are in Filum's satin section
+    Section: () => null,
+  });
