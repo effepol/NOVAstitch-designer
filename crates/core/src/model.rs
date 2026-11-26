@@ -877,6 +877,22 @@ pub struct FillParams {
     /// layers with opposite ramps, colour blending). Tatami, flow and curved.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ramp: Option<DensityRamp>,
+    /// NOVAstitch (module n, varieties), tatami rows: stitch lengths used in
+    /// turn along a row (mm; empty: the max stitch length).
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub length_pattern: Vec<f64>,
+    /// Row `k` starts `offsetPattern[k mod n]` of the length sequence on
+    /// (shares, 0..1; empty: the staggers).
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub offset_pattern: Vec<f64>,
+    /// Random stitch lengths between the two (mm), with `seed`; wins over
+    /// the length sequence.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub length_range: Option<[f64; 2]>,
+    /// Random row shifts between the two (shares), with `seed`; wins over
+    /// the shift sequence.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub offset_range: Option<[f64; 2]>,
 }
 
 /// How the density changes along a ramp: 0 = densest, 1 = sparsest.
@@ -1228,6 +1244,10 @@ impl Default for FillParams {
             random_length: 0.0,
             guide: None,
             flow: None,
+            length_pattern: Vec::new(),
+            offset_pattern: Vec::new(),
+            length_range: None,
+            offset_range: None,
         }
     }
 }

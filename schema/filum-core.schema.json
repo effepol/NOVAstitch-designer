@@ -754,6 +754,27 @@
           "default": "copy",
           "description": "Guided fill: copies of the guide, or rows parallel to it."
         },
+        "lengthPattern": {
+          "description": "NOVAstitch (module n, varieties), tatami rows: stitch lengths used in\nturn along a row (mm; empty: the max stitch length).",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "lengthRange": {
+          "description": "Random stitch lengths between the two (mm), with `seed`; wins over\nthe length sequence.",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": [
+            "array",
+            "null"
+          ]
+        },
         "maxStitchLength": {
           "default": 3.0,
           "format": "double",
@@ -801,6 +822,27 @@
         "method": {
           "$ref": "#/$defs/FillMethod",
           "default": "tatami"
+        },
+        "offsetPattern": {
+          "description": "Row `k` starts `offsetPattern[k mod n]` of the length sequence on\n(shares, 0..1; empty: the staggers).",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "offsetRange": {
+          "description": "Random row shifts between the two (shares), with `seed`; wins over\nthe shift sequence.",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": [
+            "array",
+            "null"
+          ]
         },
         "pullComp": {
           "default": 0.0,

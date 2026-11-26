@@ -271,6 +271,14 @@ export interface FillParams {
   flow?: FlowField;
   /** Density gradient along a vector (gradient fill / colour blending). */
   ramp?: DensityRamp;
+  /** NOVAstitch (module n), tatami: stitch lengths used in turn along a row (mm). */
+  lengthPattern?: number[];
+  /** NOVAstitch (module n), tatami: row k starts offsetPattern[k mod n] of the length sequence on (shares, 0..1). */
+  offsetPattern?: number[];
+  /** NOVAstitch (module n), tatami: random stitch lengths between the two (mm), with `seed`; wins over lengthPattern. */
+  lengthRange?: [number, number];
+  /** NOVAstitch (module n), tatami: random row shifts between the two (shares), with `seed`; wins over offsetPattern. */
+  offsetRange?: [number, number];
   /** Tartan: this fill is one colour layer of it. */
   tartan?: TartanParams;
   /** Tatami: needle points carved into a pattern (program split). */

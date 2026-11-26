@@ -26,6 +26,10 @@ use super::gradient::LayerMask;
 use super::running::running_stitch;
 use super::Run;
 
+// NOVAstitch (module n): the varieties, shared with the satin.
+#[path = "variety.rs"]
+pub(crate) mod variety;
+
 /// Closed, flattened rings of an object (open sub-paths are closed implicitly).
 pub fn fill_rings(paths: &[SubPath]) -> Vec<Ring> {
     let mut out = Vec::new();
@@ -210,6 +214,8 @@ thread_local! {
     /// Extra rows sewn into the gap at the end of each section before
     /// travelling on (Ink/Stitch `gap_fill_rows`, an even number).
     static GAP_ROWS: std::cell::Cell<u32> = const { std::cell::Cell::new(0) };
+    /// NOVAstitch (module n): the variety of the tatami being sewn (its top rows only).
+    static VARIETY: std::cell::RefCell<Option<variety::Variety>> = const { std::cell::RefCell::new(None) };
 }
 
 /// Alternate rows: the colour of every row (by row number). Each row takes
@@ -280,6 +286,19 @@ fn stitch_row(out: &mut Run, y: f64, x0: f64, x1: f64, row_num: i64, max_len: f6
     }
     let (beg, end) = if ltr { (x0, x1) } else { (x1, x0) };
     push(out, pt(beg, y), f);
+    // NOVAstitch (module n): the variety's lengths and shifts instead of Filum's
+    if let Some(mut xs) = VARIETY.with(|v| v.borrow().as_ref().map(|v| v.points(row_num, x0, x1, 0.25_f64.min(v.longest() * 0.3)))) {
+        if !ltr {
+            xs.reverse();
+        }
+        for x in xs {
+            push(out, pt(x, y), f);
+        }
+        if !SKIP_LAST.with(|c| c.get()) {
+            push(out, pt(end, y), f);
+        }
+        return;
+    }
     if let Some((jitter, seed)) = super::running::line_random() {
         // random phase and lengths (Ink/Stitch split_segment_random_phase):
         // no grid, so no stagger pattern and no moiré
@@ -1969,6 +1988,13 @@ fn fill_part(rings: &[Ring], whole: &[Ring], original: &[Ring], p: &FillParams, 
     GAP_ROWS.with(|c| c.set(if method == FillMethod::Tatami { p.gap_fill_rows.div_ceil(2) * 2 } else { 0 }));
     PULL_PCT.with(|c| c.set(if method == FillMethod::Tatami { p.pull_comp_pct.clamp(0.0, 1.0) } else { 0.0 }));
     let random = if method == FillMethod::Meander || method == FillMethod::Cross { 0.0 } else { p.random_length };
+    // NOVAstitch (module n): a tatami's variety (absent: Filum's rows)
+    let var = if method == FillMethod::Tatami {
+        variety::Variety::new(&p.length_pattern, &p.offset_pattern, p.length_range, p.offset_range, fill_stitch_len(p.max_stitch_length), p.staggers, p.seed)
+    } else {
+        None
+    };
+    VARIETY.with(|v| *v.borrow_mut() = var);
     let top = super::running::with_line_random(random, p.seed, || match method {
         FillMethod::Tatami if p.carve != crate::model::CarvePattern::None && p.gradient.is_none() => {
             // the pattern in the row frame, centred on the shape
@@ -2102,6 +2128,7 @@ fn fill_part(rings: &[Ring], whole: &[Ring], original: &[Ring], p: &FillParams, 
         FillMethod::Tartan => super::tartan::tartan(&rings, p, &p.tartan.clone().unwrap_or_default(), spacing, top_start, 0),
     });
     CENTER_OUT.with(|c| c.set(false));
+    VARIETY.with(|v| *v.borrow_mut() = None);
     ONE_WAY.with(|c| c.set(false));
     SKIP_LAST.with(|c| c.set(false));
     PULL_PCT.with(|c| c.set(0.0));
