@@ -1384,6 +1384,10 @@
             "null"
           ]
         },
+        "bisatin": {
+          "description": "Bisatin: the column split along its middle into two columns half as\nwide, the first sewn from start to end, the second back (not with foam).",
+          "type": "boolean"
+        },
         "centerWalk": {
           "default": true,
           "type": "boolean"
@@ -1565,11 +1569,53 @@
           "format": "double",
           "type": "number"
         },
+        "splitLengthPattern": {
+          "description": "NOVAstitch (module n, varieties), split satin: long stitches split in\nthese lengths, in turn (mm; empty: the max stitch length).",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "splitLengthRange": {
+          "description": "Random split lengths between the two (mm), with `randomSeed`; wins\nover the length sequence.",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": [
+            "array",
+            "null"
+          ]
+        },
         "splitMinLength": {
           "default": 0.0,
           "description": "With a random phase: stitches longer than this are split already\n(mm, 0 = the max stitch length). Ink/Stitch `min_random_split_length_mm`.",
           "format": "double",
           "type": "number"
+        },
+        "splitOffsetPattern": {
+          "description": "Stitch `k`'s split points start `splitOffsetPattern[k mod n]` of the\nlength sequence on (shares, 0..1; empty: the split staggers).",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "splitOffsetRange": {
+          "description": "Random split shifts between the two (shares), with `randomSeed`; wins\nover the shift sequence.",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": [
+            "array",
+            "null"
+          ]
         },
         "splitRandomPhase": {
           "default": false,
@@ -2548,6 +2594,10 @@
     },
     "SatinParams": {
       "properties": {
+        "bisatin": {
+          "description": "Bisatin: the column split along its middle into two columns half as\nwide, the first sewn from start to end, the second back (not with foam).",
+          "type": "boolean"
+        },
         "centerWalk": {
           "default": true,
           "type": "boolean"
@@ -2715,11 +2765,53 @@
           "format": "double",
           "type": "number"
         },
+        "splitLengthPattern": {
+          "description": "NOVAstitch (module n, varieties), split satin: long stitches split in\nthese lengths, in turn (mm; empty: the max stitch length).",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "splitLengthRange": {
+          "description": "Random split lengths between the two (mm), with `randomSeed`; wins\nover the length sequence.",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": [
+            "array",
+            "null"
+          ]
+        },
         "splitMinLength": {
           "default": 0.0,
           "description": "With a random phase: stitches longer than this are split already\n(mm, 0 = the max stitch length). Ink/Stitch `min_random_split_length_mm`.",
           "format": "double",
           "type": "number"
+        },
+        "splitOffsetPattern": {
+          "description": "Stitch `k`'s split points start `splitOffsetPattern[k mod n]` of the\nlength sequence on (shares, 0..1; empty: the split staggers).",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "splitOffsetRange": {
+          "description": "Random split shifts between the two (shares), with `randomSeed`; wins\nover the shift sequence.",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": [
+            "array",
+            "null"
+          ]
         },
         "splitRandomPhase": {
           "default": false,

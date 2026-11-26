@@ -1099,6 +1099,11 @@ fn ink_satin(ink: &Ink) -> SatinParams {
         second_rail: (rail != SecondRail::default()).then_some(rail),
         foam: None,
         multi: false,
+        split_length_pattern: Vec::new(),
+        split_offset_pattern: Vec::new(),
+        split_length_range: None,
+        split_offset_range: None,
+        bisatin: false,
     }
 }
 

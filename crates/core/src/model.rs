@@ -485,6 +485,26 @@ pub struct SatinParams {
     /// NOVAstitch (module j): satin over 3D foam (absent: a normal satin).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub foam: Option<FoamOptions>,
+    /// NOVAstitch (module n, varieties), split satin: long stitches split in
+    /// these lengths, in turn (mm; empty: the max stitch length).
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub split_length_pattern: Vec<f64>,
+    /// Stitch `k`'s split points start `splitOffsetPattern[k mod n]` of the
+    /// length sequence on (shares, 0..1; empty: the split staggers).
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub split_offset_pattern: Vec<f64>,
+    /// Random split lengths between the two (mm), with `randomSeed`; wins
+    /// over the length sequence.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub split_length_range: Option<[f64; 2]>,
+    /// Random split shifts between the two (shares), with `randomSeed`; wins
+    /// over the shift sequence.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub split_offset_range: Option<[f64; 2]>,
+    /// Bisatin: the column split along its middle into two columns half as
+    /// wide, the first sewn from start to end, the second back (not with foam).
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub bisatin: bool,
 }
 
 impl Default for SatinParams {
@@ -529,6 +549,11 @@ impl Default for SatinParams {
             reverse: false,
             second_rail: None,
             foam: None,
+            split_length_pattern: Vec::new(),
+            split_offset_pattern: Vec::new(),
+            split_length_range: None,
+            split_offset_range: None,
+            bisatin: false,
         }
     }
 }
