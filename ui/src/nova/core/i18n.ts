@@ -56,5 +56,6 @@ export function t(key: string, vars?: Record<string, string | number>): string {
 
 /** React: re-render when the language changes. */
 export function useLanguage(): Language {
-  return useSyncExternalStore(onLanguageChange, getLanguage);
+  // the same on the server (rendered in tests)
+  return useSyncExternalStore(onLanguageChange, getLanguage, getLanguage);
 }

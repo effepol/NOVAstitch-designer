@@ -9,10 +9,11 @@ import { SequencePanel } from "./SequencePanel";
 import { registerCanvasViews } from "./canvas";
 import { loadViewOptions } from "./view";
 import "./texts";
+import { ListOrdered } from "lucide-react";
 
 export function install(): void {
   registerSequenceCommands();
-  registerPanel({ id: "b.sequence", module: "b", title: "b.title", render: () => createElement(SequencePanel) });
+  registerPanel({ id: "b.sequence", module: "b", title: "b.title", icon: ListOrdered, render: () => createElement(SequencePanel) });
   registerCanvasViews();
   // the view options saved last time: the app's settings on the desktop, the browser's storage on the web
   (isTauri ? prefs() : openPrefs(browserStore()))

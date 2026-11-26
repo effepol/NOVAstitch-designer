@@ -8,13 +8,14 @@ import { watchOverflow } from "./events";
 import { createFromSelection, PatchPanel } from "./PatchPanel";
 import { installLibrary } from "./installLibrary";
 import "./texts";
+import { Shield } from "lucide-react";
 
 /** Commands, the outside-the-hoop check, the panel and the menu item; returns the function that removes them. */
 export function installPatch(): () => void {
   const offs = [
     registerPatchCommands(),
     watchOverflow(),
-    registerPanel({ id: "f.patch", module: "f", title: "f.patch.title", order: 60, render: () => createElement(PatchPanel) }),
+    registerPanel({ id: "f.patch", module: "f", title: "f.patch.title", order: 60, icon: Shield, render: () => createElement(PatchPanel) }),
     registerMenuItem({
       id: "f.patch.create",
       module: "f",
