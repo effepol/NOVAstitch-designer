@@ -32,6 +32,8 @@ export interface MenuItemEntry extends Entry {
 export interface PanelEntry extends Entry {
   /** t() key of the tab's title. */
   title: string;
+  /** The tab's icon (the title becomes its tooltip and aria-label); without one, the tab shows the title. */
+  icon?: ComponentType<{ size?: number }>;
   render: () => ReactNode;
 }
 
@@ -308,6 +310,8 @@ export function useRegistry(): number {
       listeners.add(fn);
       return () => listeners.delete(fn);
     },
+    () => version,
+    // the same on the server (rendered in tests)
     () => version,
   );
 }

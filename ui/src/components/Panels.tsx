@@ -37,6 +37,8 @@ import { FoldAllGroups, IssuesPanel, LayersPanel, PropertiesPanel, ScenePanel, u
 import { ElementInfoSection } from "./ElementInfo";
 import { openSection, SectionScope } from "./ui";
 import { panels, useRegistry } from "../nova/core/registry";
+import { MoreMenu } from "../nova/core/MoreMenu";
+import { tabsInMore } from "../nova/core/tabsOverflow";
 import { useLanguage } from "../nova/core/i18n";
 import { t } from "../nova/i18n/filum";
 
@@ -225,11 +227,11 @@ function PanelEdge({ side, label, onOpen, offset }: { side: "left" | "right"; la
 
 /* ---------------- panels ---------------- */
 
-function PanelTabs<T extends string>({ tabs, value, onChange, actions }: { tabs: { id: T; label: ReactNode; title?: string; nova?: string }[]; value: T; onChange: (v: T) => void; actions?: ReactNode }) {
+function PanelTabs<T extends string>({ tabs, value, onChange, actions, rootRef }: { tabs: { id: T; label: ReactNode; title?: string; nova?: string; ariaLabel?: string; measure?: boolean }[]; value: T; onChange: (v: T) => void; actions?: ReactNode; rootRef?: React.Ref<HTMLDivElement> }) {
   return (
-    <div className="ptabs" role="tablist">
+    <div className="ptabs" role="tablist" ref={rootRef}>
       {tabs.map((t) => (
-        <button key={t.id} role="tab" data-nova={t.nova} aria-selected={value === t.id} className={`ptab${value === t.id ? " on" : ""}`} title={t.title} onClick={() => onChange(t.id)}>
+        <button key={t.id} role="tab" data-nova={t.nova} data-tab-key={t.measure ? t.id : undefined} aria-selected={value === t.id} aria-label={t.ariaLabel} className={`ptab${value === t.id ? " on" : ""}`} title={t.title} onClick={() => onChange(t.id)}>
           {t.label}
         </button>
       ))}
@@ -239,29 +241,77 @@ function PanelTabs<T extends string>({ tabs, value, onChange, actions }: { tabs:
   );
 }
 
-function OutlinePanel({ side, mainRef }: { side: "left" | "right"; mainRef: MainRef }) {
+/** NOVAstitch (note 1 on build 0.1.1, 26/11): the module tabs that do not fit the panel's width go into «More»;
+ *  measured again when the panel's width, the tabs, the open tab or the language change. */
+function useTabsOverflow(ids: string[], active: string, content: string) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
+  const [state, setState] = useState<{ sig: string; hidden: string[] }>({ sig: "", hidden: [] });
+  const sig = `${width}|${ids.join()}|${active}|${content}`;
+  const measuring = state.sig !== sig;
+  useLayoutEffect(() => {
+    const row = rootRef.current;
+    if (!measuring || !row) return;
+    const widths = new Map<string, number>();
+    for (const el of row.querySelectorAll<HTMLElement>("[data-tab-key]")) widths.set(el.dataset.tabKey!, el.getBoundingClientRect().width);
+    const more = row.querySelector<HTMLElement>(".bb-more-wrap");
+    const moreWidth = more ? more.getBoundingClientRect().width : 0;
+    const fixed = row.scrollWidth - [...widths.values()].reduce((a, b) => a + b, 0) - moreWidth;
+    // 2 px to spare: widths are fractional, the row's are whole pixels
+    setState({ sig, hidden: tabsInMore(ids, widths, fixed, row.clientWidth - 2, moreWidth, active) });
+  });
+  useEffect(() => {
+    const row = rootRef.current;
+    if (!row || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => setWidth(Math.round(row.clientWidth)));
+    ro.observe(row);
+    return () => ro.disconnect();
+  }, []);
+  return { rootRef, hidden: measuring ? [] : state.hidden, measuring };
+}
+
+export function OutlinePanel({ side, mainRef }: { side: "left" | "right"; mainRef: MainRef }) {
   const tab = useStore((s) => s.outlineTab);
   const set = useStore((s) => s.set);
   const issues = useIssueCount();
   const count = useStore((s) => s.doc.objects.length);
   const Close = side === "left" ? PanelLeftClose : PanelRightClose;
   useRegistry();
-  useLanguage();
   const extra = panels();
   const own = extra.find((p) => p.id === tab);
+  // NOVAstitch (26/11): the modules' tabs as icons (their name as title and aria-label); without room, into «More»
+  const lang = useLanguage();
+  const { rootRef, hidden, measuring } = useTabsOverflow(extra.map((p) => p.id), tab, `${count}|${issues}|${String(lang)}`);
+  const inMore = extra.filter((p) => hidden.includes(p.id));
   return (
     <section className={`side-panel outline ${side}`} aria-label={t("filum.pannelli.layers_and_issues")}>
       <PanelTabs
         value={tab}
         onChange={(v) => set({ outlineTab: v })}
+        rootRef={rootRef}
         tabs={[
           { id: "layers", label: <>{t("filum.pannelli.layers")}{count > 0 && <span className="ptab-n">{count}</span>}</> },
           { id: "issues", label: <>{t("filum.pannelli.issues")}{issues > 0 && <span className="count">{issues}</span>}</>, title: t("filum.pannelli.problems_that_would_sew_badly") },
           // NOVAstitch: panels registered by the modules (nova/core/registry)
-          ...extra.map((p) => ({ id: p.id, label: <>{t(p.title)}</>, nova: p.module })),
+          ...extra
+            .filter((p) => !hidden.includes(p.id))
+            .map((p) =>
+              p.icon
+                ? { id: p.id, label: <p.icon size={15} />, title: t(p.title), ariaLabel: t(p.title), nova: p.module, measure: true }
+                : { id: p.id, label: <>{t(p.title)}</>, nova: p.module, measure: true },
+            ),
         ]}
         actions={
           <>
+            {(measuring ? extra.length > 0 : inMore.length > 0) && (
+              <MoreMenu below label={false}>
+                {inMore.map((p) => (
+                  <button key={p.id} role="menuitem" data-nova={p.module} className="menu-item" onClick={() => set({ outlineTab: p.id })}>
+                    {p.icon && <p.icon size={14} />} {t(p.title)}
+                  </button>
+                ))}
+              </MoreMenu>
+            )}
             {tab === "layers" && <FoldAllGroups />}
             <button className="icon-btn" title={t("filum.pannelli.hide_the_layers_panel")} onClick={() => useStore.getState().setLayout({ showOutline: false })}>
               <Close size={14} />

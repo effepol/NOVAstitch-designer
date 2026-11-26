@@ -13,6 +13,7 @@ import { installHoops, presetHoops } from "./hoops";
 import { HoopsPanel } from "./HoopsPanel";
 import { openUserHoops, type UserHoops } from "./userHoops";
 import "./texts";
+import { Frame } from "lucide-react";
 
 /** The command a hoop choice runs; null: an id module a does not know (left to Filum). */
 function asCommand(c: HoopChoice, hoops: UserHoops): { id: string; params: unknown } | null {
@@ -45,7 +46,7 @@ export async function installHoopsApp(store: PrefsStore): Promise<{ hoops: UserH
     }),
     registerHoopGroup({ id: "a.userHoops", module: "a", label: "a.hoops.mine", list: () => hoops.list() }),
     on("userHoops.changed", () => hoopGroupsChanged()),
-    registerPanel({ id: "a.hoops", module: "a", title: "a.hoops.title", order: 50, render: () => createElement(HoopsPanel, { hoops }) }),
+    registerPanel({ id: "a.hoops", module: "a", title: "a.hoops.title", order: 50, icon: Frame, render: () => createElement(HoopsPanel, { hoops }) }),
   ];
   return { hoops, uninstall: () => offs.forEach((off) => off()) };
 }

@@ -15,6 +15,7 @@ import { loadLessons, type LessonError, type LessonFiles, type LoadedLesson } fr
 import { openLessonProgress } from "./progress";
 import { builtinFiles, readLessonFolders, tauriFolderReader, type FolderReader } from "./sources";
 import "./texts";
+import { GraduationCap } from "lucide-react";
 
 /** The program's lessons and the user's: a user lesson with the id of one of the program's is refused. */
 export function mergeLessons(builtin: LessonFiles, user: LessonFiles, anchors: ReadonlySet<string>): { lessons: LoadedLesson[]; errors: LessonError[] } {
@@ -87,7 +88,7 @@ export function installLessonsUi(): () => void {
     redrawCanvas();
   };
   const offs = [
-    registerPanel({ id: LESSONS_PANEL, module: "g", title: "g.panel.title", order: 60, render: () => createElement(LessonsPanel) }),
+    registerPanel({ id: LESSONS_PANEL, module: "g", title: "g.panel.title", order: 60, icon: GraduationCap, render: () => createElement(LessonsPanel) }),
     registerMenuItem({ id: "g.lessons", module: "g", menu: "Help", label: "g.menu.lessons", run: openLessonsPanel }),
     registerCanvasLayer({ id: "g.highlight", module: "g", draw: (ctx, info) => drawObjectHighlight(ctx, info, useStore.getState().doc, currentHighlight(), accent()) }),
     onLessonChange(follow),
