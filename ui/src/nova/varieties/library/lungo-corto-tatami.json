@@ -1,0 +1,9 @@
+{
+  "id": "lungo-corto-tatami",
+  "name": { "it": "Lungo-corto", "en": "Long-short" },
+  "type": "tatami",
+  "values": {
+    "lengthPattern": [4.0, 2.0],
+    "offsetPattern": [0, 0.333333, 0.666667]
+  }
+}

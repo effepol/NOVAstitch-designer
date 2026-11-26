@@ -1,0 +1,10 @@
+{
+  "n.list": "The «Variety» list in the tatami and satin properties",
+  "n.item": "An entry of the «Variety» list (with its picture)",
+  "n.random": "The «Random» switch of the varieties",
+  "n.random.length": "The random length range (min–max)",
+  "n.random.offset": "The random shift range (min–max)",
+  "n.seed.new": "The «New seed» button of the varieties",
+  "n.bisatin": "The «Bisatin» switch of the satin",
+  "n.foam": "The note that varieties are not available on a satin over foam"
+}
