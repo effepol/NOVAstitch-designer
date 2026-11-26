@@ -14,6 +14,7 @@ use crate::geom::{cumulative_lengths, offset_closed, offset_polyline, polyline_l
 use crate::model::{SatinMethod, SatinParams, SubPath};
 use crate::plan::flags;
 
+use super::fill::variety::Variety;
 use super::running::running_stitch;
 use super::Run;
 
@@ -489,7 +490,7 @@ fn split_stagger_phase(a: Point, b: Point, len: f64, staggers: f64, row: usize, 
 /// How long satin stitches are split (Ink/Stitch `split_method`): the
 /// default (even parts, with random jitter or a random phase), or
 /// staggered — `staggers` 1 is Ink/Stitch's "simple".
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 struct Splitter {
     max_len: f64,
     staggers: u32,
@@ -497,6 +498,8 @@ struct Splitter {
     random_phase: bool,
     min_len: f64,
     seed: u32,
+    /// NOVAstitch (module n): the variety's lengths and shifts instead of Filum's split.
+    variety: Option<Variety>,
 }
 
 impl Splitter {
@@ -509,13 +512,14 @@ impl Splitter {
             random_phase: p.split_random_phase,
             min_len: if p.split_min_length > 0.0 { p.split_min_length.min(max_len) } else { max_len },
             seed: p.random_seed,
+            variety: Variety::new(&p.split_length_pattern, &p.split_offset_pattern, p.split_length_range, p.split_offset_range, max_len, p.split_staggers.max(1), p.random_seed),
         }
     }
 
     /// The same split without randomness (Ink/Stitch's `get_split_points`
     /// with its default arguments).
     fn plain(&self) -> Self {
-        Splitter { jitter: 0.0, random_phase: false, min_len: self.max_len, ..*self }
+        Splitter { jitter: 0.0, random_phase: false, min_len: self.max_len, variety: None, ..self.clone() }
     }
 
     /// Split points of the stitch from `a` to `b` (sewn from `a_short` to
@@ -525,6 +529,23 @@ impl Splitter {
     /// `get_split_points`.
     #[allow(clippy::too_many_arguments)]
     fn split(&self, a: Point, b: Point, a_short: Point, b_short: Point, count: Option<usize>, row: usize, from_end: bool) -> (Vec<Point>, Option<usize>) {
+        if let Some(v) = &self.variety {
+            // NOVAstitch (module n): the stitch split on the variety's grid, measured
+            // from the same rail every time (as the staggered split); up to the
+            // longest length it stays whole
+            let d = a.dist(b);
+            if d <= v.longest() + 1e-9 {
+                return (vec![], None);
+            }
+            let (a, b, a_short, b_short) = if from_end { (b, a, b_short, a_short) } else { (a, b, a_short, b_short) };
+            let proj = |q: Point| ((q - a).dot(b - a) / d).clamp(0.0, d);
+            let (lo, hi) = (proj(a_short), proj(b_short));
+            let mut pts: Vec<Point> = v.points(row as i64, 0.0, d, 0.25_f64.min(v.longest() * 0.3)).into_iter().filter(|t| *t > lo && *t < hi).map(|t| a.lerp(b, t / d)).collect();
+            if from_end {
+                pts.reverse();
+            }
+            return (pts, None);
+        }
         if self.max_len <= 0.0 {
             return (vec![], None);
         }
@@ -667,12 +688,70 @@ pub fn satin(paths: &[SubPath], p: &SatinParams, extra_pull: f64, density: f64) 
 
 /// A satin column on a fabric (its compensation, density and auto underlay rules).
 pub fn satin_on(paths: &[SubPath], p: &SatinParams, fabric: &crate::model::FabricProfile) -> Vec<Run> {
-    let (extra_pull, density) = (fabric.pull_comp, fabric.density_scale);
     if p.multi && paths.len() > 1 {
         let single = SatinParams { multi: false, ..p.clone() };
         return paths.iter().flat_map(|sp| satin_on(std::slice::from_ref(sp), &single, fabric)).collect();
     }
     let Some(geo) = satin_geometry(paths, p) else { return vec![] };
+    // NOVAstitch (module n): bisatin, two columns half as wide (not over foam)
+    if p.bisatin && p.foam.is_none() {
+        return vec![bisatin(&geo, p, fabric)];
+    }
+    vec![column(&geo, p, fabric)]
+}
+
+/// NOVAstitch (module n): the column split along its middle line into two
+/// columns half as wide, each with its own underlay and compensation (so
+/// they overlap in the middle by it); the first sewn from start to end, the
+/// second back from the end, joined without a trim or a jump.
+fn bisatin(geo: &SatinGeometry, p: &SatinParams, fabric: &crate::model::FabricProfile) -> Run {
+    let (first, second) = halves(geo);
+    let mut run = column(&first, p, fabric);
+    let Some(&(end, _)) = run.last() else { return column(&second, p, fabric) };
+    // the second column the way that begins nearer where the first ended
+    let (fwd, back) = (column(&second, p, fabric), column(&reversed(&second), p, fabric));
+    let near = |r: &Run| r.first().map_or(f64::INFINITY, |q| q.0.dist(end));
+    let next = if near(&back) <= near(&fwd) { back } else { fwd };
+    if let Some(&(start, _)) = next.first() {
+        for q in running_stitch(&[end, start], 2.5, 0.1).into_iter().skip(1) {
+            push(&mut run, q, flags::TRAVEL);
+        }
+    }
+    for (q, f) in next {
+        push(&mut run, q, f);
+    }
+    run
+}
+
+/// The two halves of a column: (first rail, middle) and (middle, second rail).
+fn halves(geo: &SatinGeometry) -> (SatinGeometry, SatinGeometry) {
+    let mut a = Vec::new();
+    let mut b = Vec::new();
+    for (s0, s1) in &geo.sections {
+        let (c0, c1) = (cumulative_lengths(s0), cumulative_lengths(s1));
+        let (l0, l1) = (*c0.last().unwrap_or(&0.0), *c1.last().unwrap_or(&0.0));
+        let n = ((l0.max(l1) / 0.2).ceil() as usize).clamp(1, 4000) + 1;
+        let mid: Vec<Point> = (0..n)
+            .map(|k| {
+                let t = k as f64 / (n - 1) as f64;
+                point_at(s0, &c0, l0 * t).lerp(point_at(s1, &c1, l1 * t), 0.5)
+            })
+            .collect();
+        a.push((s0.clone(), mid.clone()));
+        b.push((mid, s1.clone()));
+    }
+    (SatinGeometry { sections: a }, SatinGeometry { sections: b })
+}
+
+/// The same column sewn from its end to its start.
+fn reversed(geo: &SatinGeometry) -> SatinGeometry {
+    let rev = |v: &Vec<Point>| v.iter().rev().copied().collect::<Vec<Point>>();
+    SatinGeometry { sections: geo.sections.iter().rev().map(|(s0, s1)| (rev(s0), rev(s1))).collect() }
+}
+
+/// One column: its underlay, then its cover.
+fn column(geo: &SatinGeometry, p: &SatinParams, fabric: &crate::model::FabricProfile) -> Run {
+    let (extra_pull, density) = (fabric.pull_comp, fabric.density_scale);
     let mut run: Run = Vec::new();
     // auto underlay: by the column's mean width
     let w = if p.underlay_auto {
@@ -700,7 +779,7 @@ pub fn satin_on(paths: &[SubPath], p: &SatinParams, fabric: &crate::model::Fabri
     for q in top {
         push(&mut run, q, 0);
     }
-    vec![run]
+    run
 }
 
 /// The cover stitches (Ink/Stitch `do_satin`, `do_e_stitch`, `do_s_stitch`,

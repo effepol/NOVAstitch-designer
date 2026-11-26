@@ -154,6 +154,16 @@ export interface SatinParams {
   };
   /** NOVAstitch (module j): satin over 3D foam (absent: a normal satin). Only in .nsd files. */
   foam?: FoamOptions;
+  /** NOVAstitch (module n), split satin: long stitches split in these lengths, in turn (mm). */
+  splitLengthPattern?: number[];
+  /** NOVAstitch (module n): stitch k's split points start splitOffsetPattern[k mod n] of the sequence on (shares, 0..1). */
+  splitOffsetPattern?: number[];
+  /** NOVAstitch (module n): random split lengths between the two (mm), with randomSeed; wins over splitLengthPattern. */
+  splitLengthRange?: [number, number];
+  /** NOVAstitch (module n): random split shifts between the two (shares), with randomSeed; wins over splitOffsetPattern. */
+  splitOffsetRange?: [number, number];
+  /** NOVAstitch (module n): two columns half as wide, the second sewn back (not with foam). */
+  bisatin?: boolean;
 }
 
 /** NOVAstitch (module j): a satin's foam block (Architect, 24/11). */

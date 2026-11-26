@@ -391,4 +391,186 @@ mod tests {
             assert!(plain.get(k).is_none(), "{k} written when absent");
         }
     }
+
+    // ---- satin (n.7–n.12) ----
+
+    use crate::geom::{pt, Point};
+    use crate::model::SatinParams;
+
+    fn line(a: Point, b: Point) -> SubPath {
+        SubPath::polyline(&[a, b], false)
+    }
+
+    /// Two rails along x, `w` apart, 20 mm long.
+    fn rails(w: f64) -> Vec<SubPath> {
+        vec![line(pt(0.0, 0.0), pt(20.0, 0.0)), line(pt(0.0, w), pt(20.0, w))]
+    }
+
+    fn satin_base() -> SatinParams {
+        SatinParams { center_walk: false, short_stitch_inset: 0.0, pull_comp: 0.0, ..Default::default() }
+    }
+
+    fn sewn(paths: &[SubPath], p: &SatinParams) -> Vec<(Point, u8)> {
+        super::super::super::satin::satin(paths, p, 0.0, 1.0).into_iter().flatten().collect()
+    }
+
+    /// The cover's stitches from rail to rail, as their points (rails at y 0 and `w`).
+    fn rail_stitches(paths: &[SubPath], p: &SatinParams, w: f64) -> Vec<Vec<Point>> {
+        let top: Vec<Point> = sewn(paths, p).into_iter().filter(|x| x.1 == 0).map(|x| x.0).collect();
+        let on_rail = |q: &Point| q.y.abs() < 0.05 || (q.y - w).abs() < 0.05;
+        let mut out = Vec::new();
+        let mut cur: Vec<Point> = Vec::new();
+        for q in top {
+            cur.push(q);
+            if on_rail(&q) {
+                if cur.len() > 1 {
+                    out.push(cur.clone());
+                }
+                cur = vec![q];
+            }
+        }
+        out
+    }
+
+    fn pieces(st: &[Point]) -> Vec<f64> {
+        st.windows(2).map(|w| w[0].dist(w[1])).collect()
+    }
+
+    #[test]
+    fn n7_satin_split_length_pattern() {
+        let p = SatinParams { split_length_pattern: vec![4.0, 2.0], ..satin_base() };
+        let st = rail_stitches(&rails(10.0), &p, 10.0);
+        assert!(st.len() > 40);
+        for s in &st {
+            let g = pieces(s);
+            assert!(g.len() >= 3, "a 10 mm stitch is split: {g:?}");
+            assert!(g.iter().all(|l| *l <= 4.0 + 0.05), "{g:?}");
+            for l in &g[1..g.len() - 1] {
+                assert!((l - 4.0).abs() < 0.05 || (l - 2.0).abs() < 0.05, "{g:?}");
+            }
+        }
+        // shorter than 4 mm: whole
+        for s in rail_stitches(&rails(3.5), &p, 3.5) {
+            assert_eq!(s.len(), 2, "{s:?}");
+        }
+    }
+
+    /// A stitch's split points as distances from its end on the first rail (y 0).
+    fn from_rail0(s: &[Point]) -> Vec<f64> {
+        let a = if s[0].y.abs() < 0.05 { s[0] } else { *s.last().unwrap() };
+        s[1..s.len() - 1].iter().map(|q| q.dist(a)).collect()
+    }
+
+    #[test]
+    fn n8_satin_offsets_and_random() {
+        let p = SatinParams { split_length_pattern: vec![4.0, 2.0], split_offset_pattern: vec![0.0, 0.333333, 0.666667], ..satin_base() };
+        let st = rail_stitches(&rails(14.0), &p, 14.0);
+        let shifts: Vec<f64> = st
+            .iter()
+            .map(|s| {
+                let d = from_rail0(s);
+                [0.0, 2.0, 4.0]
+                    .into_iter()
+                    .find(|sh| d.iter().all(|x| {
+                        let m = (x - sh).rem_euclid(6.0);
+                        m.min(6.0 - m) < 0.05 || (m - 4.0).abs() < 0.05
+                    }))
+                    .unwrap_or_else(|| panic!("{d:?}"))
+            })
+            .collect();
+        // stitch k is (k mod 3) × 2 mm on
+        for w in shifts.windows(2) {
+            assert!(((w[1] - w[0]).rem_euclid(6.0) - 2.0).abs() < 1e-6, "{shifts:?}");
+        }
+        // random lengths: inside the range, repeatable with the seed
+        let r = SatinParams { split_length_range: Some([2.5, 4.5]), random_seed: 3, ..satin_base() };
+        let a = rail_stitches(&rails(14.0), &r, 14.0);
+        let inner: Vec<f64> = a.iter().flat_map(|s| { let g = pieces(s); g[1..g.len() - 1].to_vec() }).collect();
+        assert!(inner.len() > 40 && inner.iter().all(|l| (2.5 - 1e-6..=4.5 + 1e-6).contains(l)), "{inner:?}");
+        assert_eq!(a, rail_stitches(&rails(14.0), &r, 14.0));
+        assert_ne!(a, rail_stitches(&rails(14.0), &SatinParams { random_seed: 4, ..r.clone() }, 14.0));
+        // random shifts: inside the range (even 3 mm pieces)
+        let o = SatinParams { max_stitch_length: 3.0, split_offset_range: Some([0.2, 0.5]), random_seed: 5, ..satin_base() };
+        let b = rail_stitches(&rails(14.0), &o, 14.0);
+        for s in &b {
+            let sh = from_rail0(s).into_iter().fold(f64::INFINITY, f64::min).rem_euclid(3.0) / 3.0;
+            assert!((0.2 - 1e-6..=0.5 + 1e-6).contains(&sh), "{sh}");
+        }
+        assert_eq!(b, rail_stitches(&rails(14.0), &o, 14.0));
+        assert_ne!(b, rail_stitches(&rails(14.0), &SatinParams { random_seed: 6, ..o.clone() }, 14.0));
+    }
+
+    /// Bisatin checks on a column 8 mm wide (rails, or a centre line).
+    fn check_bisatin(paths: &[SubPath], p: &SatinParams, y0: f64) {
+        let p = SatinParams { bisatin: true, ..p.clone() };
+        let runs = super::super::super::satin::satin(paths, &p, 0.0, 1.0);
+        assert_eq!(runs.len(), 1, "one run: no trim, no jump");
+        let all: Vec<(Point, u8)> = runs.into_iter().flatten().collect();
+        assert!(all.iter().all(|x| x.1 & (flags::JUMP | flags::TRIM) == 0));
+        let top: Vec<(usize, Point)> = all.iter().enumerate().filter(|x| x.1 .1 == 0).map(|(i, x)| (i, x.0)).collect();
+        // every cover stitch across half the width
+        let across: Vec<f64> = top.windows(2).filter(|w| w[1].0 == w[0].0 + 1).map(|w| (w[1].1.y - w[0].1.y).abs()).filter(|d| *d > 1.0).collect();
+        assert!(across.len() > 60 && across.iter().all(|d| (d - 4.0).abs() < 0.1), "{across:?}");
+        // the first column on one half, then the second on the other, sewn back
+        let first_half = |q: Point| (q.y - y0) < 4.0 + 0.05;
+        let k = top.iter().position(|x| !first_half(x.1)).unwrap();
+        let (a, b) = (&top[..k], &top[k..]);
+        assert!(a.iter().all(|x| first_half(x.1)) && b.iter().all(|x| (x.1.y - y0) > 4.0 - 0.05));
+        assert!(a.first().unwrap().1.x < a.last().unwrap().1.x, "first: start to end");
+        assert!(b.first().unwrap().1.x > b.last().unwrap().1.x, "second: end to start");
+        // the second begins near where the first ended
+        let end_a = a.last().unwrap().0;
+        let start_b = all[end_a + 1..].iter().find(|x| x.1 & flags::TRAVEL == 0).unwrap().0;
+        assert!(all[end_a].0.dist(start_b) < 5.0, "{:?} {:?}", all[end_a].0, start_b);
+        // underlay in each column
+        let under: Vec<Point> = all.iter().filter(|x| x.1 & flags::UNDERLAY != 0).map(|x| x.0).collect();
+        assert!(under.iter().any(|q| (q.y - y0 - 2.0).abs() < 0.3) && under.iter().any(|q| (q.y - y0 - 6.0).abs() < 0.3), "{under:?}");
+    }
+
+    #[test]
+    fn n9_bisatin_two_half_columns() {
+        let p = SatinParams { center_walk: true, ..satin_base() };
+        check_bisatin(&rails(8.0), &p, 0.0);
+        // a centre line with a width
+        check_bisatin(&[line(pt(0.0, 4.0), pt(20.0, 4.0))], &SatinParams { width: 8.0, ..p.clone() }, 0.0);
+    }
+
+    #[test]
+    fn n10_bisatin_keeps_the_sequence_in_both_columns() {
+        let p = SatinParams { bisatin: true, split_length_pattern: vec![4.0, 2.0], ..satin_base() };
+        let top: Vec<Point> = sewn(&rails(16.0), &p).into_iter().filter(|x| x.1 == 0).map(|x| x.0).collect();
+        let on = |q: &Point| [0.0, 8.0, 16.0].iter().any(|y| (q.y - y).abs() < 0.05);
+        let mut split = [0usize; 2];
+        let mut cur = vec![top[0]];
+        for q in &top[1..] {
+            cur.push(*q);
+            if on(q) {
+                let g = pieces(&cur);
+                for l in &g[1..g.len().saturating_sub(1)] {
+                    assert!((l - 4.0).abs() < 0.05 || (l - 2.0).abs() < 0.05, "{g:?}");
+                }
+                if g.len() >= 3 {
+                    split[(cur[1].y > 8.0) as usize] += 1;
+                }
+                cur = vec![*q];
+            }
+        }
+        assert!(split[0] > 20 && split[1] > 20, "{split:?}");
+    }
+
+    #[test]
+    fn n12_satin_fields_round_trip_and_stay_out_when_absent() {
+        let json = r#"{"splitLengthPattern":[4.0,2.0],"splitOffsetPattern":[0.0,0.5],"splitLengthRange":[2.5,4.5],"splitOffsetRange":[0.0,1.0],"bisatin":true}"#;
+        let p: SatinParams = serde_json::from_str(json).unwrap();
+        assert!(p.bisatin);
+        let back = serde_json::to_value(&p).unwrap();
+        let want: serde_json::Value = serde_json::from_str(json).unwrap();
+        for k in ["splitLengthPattern", "splitOffsetPattern", "splitLengthRange", "splitOffsetRange", "bisatin"] {
+            assert_eq!(back[k], want[k], "{k}");
+        }
+        let plain = serde_json::to_value(SatinParams::default()).unwrap();
+        for k in ["splitLengthPattern", "splitOffsetPattern", "splitLengthRange", "splitOffsetRange", "bisatin"] {
+            assert!(plain.get(k).is_none(), "{k} written when absent");
+        }
+    }
 }
