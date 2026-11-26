@@ -1,0 +1,9 @@
+{
+  "id": "lungo-corto-satin",
+  "name": { "it": "Lungo-corto", "en": "Long-short" },
+  "type": "satin",
+  "values": {
+    "splitLengthPattern": [4.0, 2.0],
+    "splitOffsetPattern": [0, 0.333333, 0.666667]
+  }
+}

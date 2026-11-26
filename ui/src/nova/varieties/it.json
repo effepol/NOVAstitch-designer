@@ -1,0 +1,21 @@
+{
+  "n.title": "Varietà",
+  "n.title.title": "Schema dei punti: lunghezze dentro la riga e spostamenti da riga a riga",
+  "n.normal": "Normale",
+  "n.normal.title": "Nessuna varietà: i punti normali",
+  "n.custom": "Valori propri (non in libreria)",
+  "n.random": "Casuale",
+  "n.random.title": "Lunghezze e spostamenti casuali dentro gli intervalli, ripetibili con il seme",
+  "n.random.length": "Lunghezza (mm)",
+  "n.random.offset": "Spostamento",
+  "n.random.offset.title": "Spostamento da riga a riga, come quota della lunghezza (0–1)",
+  "n.random.min": "min",
+  "n.random.max": "max",
+  "n.seed": "Seme",
+  "n.seed.new": "Nuovo seme",
+  "n.seed.new.title": "Un altro seme: altri punti casuali",
+  "n.bisatin": "Bisatin (due colonne)",
+  "n.bisatin.title": "Due colonne larghe metà, la seconda cucita al ritorno: per le colonne larghe",
+  "n.foam": "Varietà e Bisatin non sono disponibili sul satin con schiuma.",
+  "n.command.set": "Varietà di punto"
+}

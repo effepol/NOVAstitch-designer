@@ -1,0 +1,21 @@
+{
+  "n.title": "Variety",
+  "n.title.title": "Stitch pattern: lengths along the row and shifts from row to row",
+  "n.normal": "Normal",
+  "n.normal.title": "No variety: the normal stitches",
+  "n.custom": "Own values (not in the library)",
+  "n.random": "Random",
+  "n.random.title": "Random lengths and shifts within the ranges, repeatable with the seed",
+  "n.random.length": "Length (mm)",
+  "n.random.offset": "Shift",
+  "n.random.offset.title": "Shift from row to row, as a share of the length (0–1)",
+  "n.random.min": "min",
+  "n.random.max": "max",
+  "n.seed": "Seed",
+  "n.seed.new": "New seed",
+  "n.seed.new.title": "Another seed: other random stitches",
+  "n.bisatin": "Bisatin (two columns)",
+  "n.bisatin.title": "Two columns half as wide, the second sewn on the way back: for wide columns",
+  "n.foam": "Variety and Bisatin are not available on a satin over foam.",
+  "n.command.set": "Stitch variety"
+}
